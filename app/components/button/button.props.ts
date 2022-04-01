@@ -32,4 +32,14 @@ export interface ButtonProps extends TouchableOpacityProps {
    * One of the different types of text presets.
    */
   children?: React.ReactNode
+
+  /**
+   * Rounded borders for the button
+   */
+  rounded?: boolean
+
+  /**
+   * Block styling for the button
+   */
+  block?: boolean
 }

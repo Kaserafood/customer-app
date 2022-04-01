@@ -43,4 +43,9 @@ export interface ScreenProps {
    * Only applies to scroll preset.
    */
   keyboardShouldPersistTaps?: "handled" | "always" | "never"
+
+  /**
+   * Background color of the status bar.
+   */
+  statusBarBackgroundColor?: string
 }

@@ -3,6 +3,7 @@ import i18n from "i18n-js"
 import { TextPresets } from "./text.presets"
 import { TxKeyPath } from "../../i18n"
 
+type TextSize = "sm" | "md" | "lg" | "xl"
 export interface TextProps extends TextProperties {
   /**
    * Children components.
@@ -34,4 +35,9 @@ export interface TextProps extends TextProperties {
    * One of the different types of text presets.
    */
   preset?: TextPresets
+
+  /**
+   * Size of preset text.
+   */
+  size?: TextSize
 }

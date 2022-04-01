@@ -1,8 +1,9 @@
 import * as React from "react"
-import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { TextStyle, TouchableOpacity, View, ViewStyle, Image } from "react-native"
 import { Text } from "../text/text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
+import SvgUri from "react-native-svg-uri"
 
 const ROOT: ViewStyle = {
   flexDirection: "row",
@@ -10,22 +11,21 @@ const ROOT: ViewStyle = {
   alignSelf: "flex-start",
 }
 
-const DIMENSIONS = { width: 16, height: 16 }
+const DIMENSIONS = { width: 30, height: 30 }
 
 const OUTLINE: ViewStyle = {
   ...DIMENSIONS,
   marginTop: 2, // finicky and will depend on font/line-height/baseline/weather
   justifyContent: "center",
   alignItems: "center",
-  borderWidth: 1,
-  borderColor: color.primaryDarker,
-  borderRadius: 1,
+  borderWidth: 2,
+  borderColor: color.palette.greenLigh,
+  borderRadius: spacing[0],
+  padding: spacing[1],
 }
 
-const FILL: ViewStyle = {
-  width: DIMENSIONS.width - 4,
-  height: DIMENSIONS.height - 4,
-  backgroundColor: color.primary,
+const CONTAINER_CHECK: ViewStyle = {
+  margin: spacing[1],
 }
 
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
@@ -35,7 +35,6 @@ export function Checkbox(props: CheckboxProps) {
 
   const rootStyle = [ROOT, props.style]
   const outlineStyle = [OUTLINE, props.outlineStyle]
-  const fillStyle = [FILL, props.fillStyle]
 
   const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
 
@@ -46,7 +45,13 @@ export function Checkbox(props: CheckboxProps) {
       onPress={onPress}
       style={rootStyle}
     >
-      <View style={outlineStyle}>{props.value && <View style={fillStyle} />}</View>
+      <View style={outlineStyle}>
+        {props.value && (
+          <View style={CONTAINER_CHECK}>
+            <SvgUri width="25" height="25" source={require("./icons/check.svg")} />
+          </View>
+        )}
+      </View>
       <Text text={props.text} tx={props.tx} numberOfLines={numberOfLines} style={LABEL} />
     </TouchableOpacity>
   )

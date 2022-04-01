@@ -1,60 +1,73 @@
 import { ViewStyle, TextStyle } from "react-native"
 import { color, spacing } from "../../theme"
+import { NO_SHADOW } from "../../theme/Util"
+import { typography } from "../../theme/typography"
 
-/**
- * All text will start off looking like this.
- */
 const BASE_VIEW: ViewStyle = {
-  paddingVertical: spacing[2],
-  paddingHorizontal: spacing[2],
-  borderRadius: 4,
+  paddingVertical: spacing[3],
+  paddingHorizontal: spacing[4],
+  borderRadius: spacing[2],
   justifyContent: "center",
   alignItems: "center",
+  width: 175,
+  shadowColor: color.palette.grayDark,
+  shadowOffset: {
+    width: 0,
+    height: 2,
+  },
+  shadowOpacity: 0.25,
+  shadowRadius: 3.84,
+  elevation: 5,
 }
 
 const BASE_TEXT: TextStyle = {
   paddingHorizontal: spacing[3],
+  fontSize: 18,
+  fontFamily: "Poppins-SemiBold",
+  marginBottom: -4,
 }
 
-/**
- * All the variations of text styling within the app.
- *
- * You want to customize these to whatever you need in your app.
- */
 export const viewPresets: Record<string, ViewStyle> = {
   /**
-   * A smaller piece of secondard information.
+   * Button primary background.
    */
-  primary: { ...BASE_VIEW, backgroundColor: color.palette.orange } as ViewStyle,
+  primary: { ...BASE_VIEW, backgroundColor: color.palette.red } as ViewStyle,
 
   /**
-   * A button without extras.
+   * Button white background.
+   */
+  white: { ...BASE_VIEW, backgroundColor: color.palette.white } as ViewStyle,
+
+  /**
+   * Button gray background.
+   */
+  gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLigth } as ViewStyle,
+
+  /**
+   * Like a link.
    */
   link: {
     ...BASE_VIEW,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    alignItems: "flex-start",
+    ...NO_SHADOW,
+    backgroundColor: color.palette.redDark,
+    borderRadius: 100,
   } as ViewStyle,
-
-   /**
-   * A smaller piece of secondard information.
-   */
-  secondary: { ...BASE_VIEW, backgroundColor: color.palette.black } as ViewStyle,
-
-
 }
 
 export const textPresets: Record<ButtonPresetNames, TextStyle> = {
-  primary: { ...BASE_TEXT, fontSize: 9, color: color.palette.white } as TextStyle,
+  primary: { ...BASE_TEXT, color: color.palette.white } as TextStyle,
+
+  white: { ...BASE_TEXT, color: color.palette.black } as TextStyle,
+
+  gray: { ...BASE_TEXT, color: color.palette.black } as TextStyle,
+
   link: {
     ...BASE_TEXT,
-    color: color.text,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
+    color: color.primary,
+    fontSize: 16,
+    fontFamily: typography.primary,
+    width: 300,
   } as TextStyle,
-
-    secondary: { ...BASE_TEXT, fontSize: 16, color: color.palette.white } as TextStyle,
 }
 
 /**

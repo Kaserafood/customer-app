@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Text as ReactNativeText } from "react-native"
-import { presets } from "./text.presets"
+import { presets, fontSize } from "./text.presets"
 import { TextProps } from "./text.props"
 import { translate } from "../../i18n"
 
@@ -11,15 +11,24 @@ import { translate } from "../../i18n"
  */
 export function Text(props: TextProps) {
   // grab the props
-  const { preset = "default", tx, txOptions, text, children, style: styleOverride, ...rest } = props
+  const {
+    preset = "default",
+    tx,
+    txOptions,
+    text,
+    children,
+    style: styleOverride,
+    size = "md",
+    ...rest
+  } = props
 
   // figure out which content to use
   const i18nText = tx && translate(tx, txOptions)
   const content = i18nText || text || children
 
   const style = presets[preset] || presets.default
-  const styles = [style, styleOverride]
-
+  const textSize = fontSize[size]
+  const styles = [style, textSize, styleOverride]
   return (
     <ReactNativeText {...rest} style={styles}>
       {content}

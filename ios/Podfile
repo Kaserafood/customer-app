@@ -18,6 +18,8 @@ target 'ClientApp' do
     :hermes_enabled => podfile_properties['expo.jsEngine'] == 'hermes'
   )
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'ClientAppTests' do
     inherit! :complete
     # Pods for testing

@@ -1,13 +1,14 @@
 import * as Localization from "expo-localization"
 import i18n from "i18n-js"
-import en from "./en.json"
-import ja from "./ja.json"
+import es from "./es.json"
 
 i18n.fallbacks = true
-i18n.translations = { en, ja }
+i18n.translations = { es }
 
-i18n.locale = Localization.locale || "en"
-
+// i18n.locale = Localization.locale || "es"
+if (!Localization.locale.includes("es")) {
+  i18n.locale = "es"
+}
 /**
  * Builds up valid keypaths for translations.
  * Update to your default locale of choice if not English.

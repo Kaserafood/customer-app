@@ -13,11 +13,6 @@ export interface CheckboxProps {
   outlineStyle?: StyleProp<ViewStyle>
 
   /**
-   * Additional fill style. Only visible when checked.
-   */
-  fillStyle?: StyleProp<ViewStyle>
-
-  /**
    * Is the checkbox checked?
    */
   value?: boolean
