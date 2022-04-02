@@ -9,9 +9,12 @@ import { color } from "../../theme/color"
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const toRegister = () => navigation.navigate("registerPager")
+    const toLogin = () => navigation.navigate("loginForm")
     return (
       <Screen
         statusBarBackgroundColor={color.primary}
+        bottomBarBackgroundColor={color.primary}
+        bottomBar="dark-content"
         backgroundColor={color.primary}
         preset="fixed"
         statusBar="light-content"
@@ -29,7 +32,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             tx="initScreen.register"
             onPress={toRegister}
           ></Button>
-          <Button preset="white" block rounded tx="initScreen.login"></Button>
+          <Button preset="white" block rounded tx="initScreen.login" onPress={toLogin}></Button>
         </View>
       </Screen>
     )

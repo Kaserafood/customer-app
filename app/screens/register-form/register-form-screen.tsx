@@ -39,6 +39,12 @@ export const RegisterFormScreen: FC<
           styleContainer={styles.input}
         ></InputText>
         <InputText
+          keyboardType="phone-pad"
+          placeholderTx="registerFormScreen.phone"
+          styleContainer={styles.input}
+        ></InputText>
+        <InputText
+          keyboardType="email-address"
           placeholderTx="registerFormScreen.email"
           styleContainer={styles.input}
         ></InputText>

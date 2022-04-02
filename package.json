@@ -29,6 +29,7 @@
     "clean-all": "npx react-native clean-project-auto"
   },
   "dependencies": {
+  
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-navigation/native": "~6.0.1",
     "@react-navigation/native-stack": "^6.0.2",
@@ -48,6 +49,7 @@
     "react-native-gesture-handler": "1.10.3",
     "react-native-keychain": "6.2.0",
     "react-native-modal": "^13.0.1",
+    "react-native-navigation-bar-color": "^2.0.1",
     "react-native-pager-view": "^5.4.15",
     "react-native-safe-area-context": "3.1.8",
     "react-native-screens": "3.8.0",

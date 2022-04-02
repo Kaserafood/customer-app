@@ -19,7 +19,7 @@ const OUTLINE: ViewStyle = {
   justifyContent: "center",
   alignItems: "center",
   borderWidth: 2,
-  borderColor: color.palette.greenLigh,
+  borderColor: color.palette.greenLigth,
   borderRadius: spacing[0],
   padding: spacing[1],
 }

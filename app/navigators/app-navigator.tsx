@@ -14,6 +14,8 @@ import {
   TermsConditionsScreen,
   PrivacyPolicyScreen,
   RegisterPagerScreen,
+  LoginFormScreen,
+  MainScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
@@ -39,6 +41,8 @@ export type NavigatorParamList = {
   termsConditions: undefined
   privacyPolicy: undefined
   registerPager: registerPageParams
+  loginForm: undefined
+  main: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -50,13 +54,15 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="registerPager"
+      initialRouteName="loginForm"
     >
       <Stack.Screen name="init" component={InitScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
       <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
       <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+      <Stack.Screen name="loginForm" component={LoginFormScreen} />
+      <Stack.Screen name="main" component={MainScreen} />
     </Stack.Navigator>
   )
 }

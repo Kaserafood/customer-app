@@ -1,23 +1,31 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle, TouchableOpacity } from "react-native"
+import {
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  TouchableOpacityProps,
+  TouchableOpacity,
+} from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
 import { TxKeyPath } from "../../i18n/i18n"
 import { SHADOW } from "../../theme/Util"
+import { typographySize } from "../../theme/typography"
 
 const CONTAINER: ViewStyle = {
-  padding: spacing[2],
+  paddingHorizontal: spacing[2],
+  paddingVertical: spacing[0],
   borderRadius: 100,
   alignSelf: "flex-start",
   ...SHADOW,
 }
 
 const TEXT: TextStyle = {
-  fontSize: 16,
+  fontSize: typographySize.md,
 }
 
-export interface ChipProps extends TouchableOpacity {
+export interface ChipProps extends TouchableOpacityProps {
   /**
    * An optional style override useful for padding & margin.
    */
@@ -26,7 +34,7 @@ export interface ChipProps extends TouchableOpacity {
   /**
    * An optional style override the style text chip
    */
-  textstyle?: StyleProp<ViewStyle>
+  textstyle?: StyleProp<TextStyle>
 
   /**
    * Text which is looked up via i18n.
@@ -51,7 +59,6 @@ export const Chip = observer(function Chip(props: ChipProps) {
   const { style, tx, text, textstyle, active, ...rest } = props
   if (active) {
     CONTAINER.backgroundColor = color.palette.grayLigth
-    CONTAINER.shadowColor = color.palette.white
   } else {
     CONTAINER.backgroundColor = color.palette.white
     CONTAINER.shadowColor = color.palette.grayDark

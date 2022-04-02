@@ -16,6 +16,7 @@
         "lastName": "Apellido:",
         "email": "Correo:",
         "password": "Contraseña:",
+        "phone" : "Teléfono:",
         "acceptThe": "Acepto los",
         "termsAndConditions": " términos y condiciones ",
         "andThe" : " y las ",
@@ -98,5 +99,67 @@
         "skip" :"Saltar",
         "next" :"Siguiente",
         "start" : "Iniciar"
+    }, 
+    "loginFormScreen": {
+        "title" :"Iniciar sesión",
+        "email" : "Correo electrónico",
+        "password" : "Contraseña",
+        "continue" : "Continuar",
+        "info" : "Ingresa los datos que se solicitan"
+    },
+    "mainScreen": {
+        "address" : "Ciudad de Guatemala, Guatemala, Guatemala",
+        "dayShipping" : "Día de entrega",
+        "tomorrow" : "Mañana",
+        "mondayShort" : "Lun.",
+        "tuesdayShort" : "Mar.",
+        "wednesdayShort" : "Mié.",
+        "thursdayShort" : "Jue.",
+        "fridayShort" : "Vie.",
+        "saturdayShort" : "Sáb.",
+        "sundayShort" : "Dom.",
+        "categories" : "Categorías",
+        "delivery" : "Entrega",
+        "monday": "lunes",
+        "tuesday": "martes",
+        "wednesday": "miércoles",
+        "thursday": "jueves",
+        "friday": "viernes",
+        "saturday": "sábado",
+        "sunday": "domingo",
+        "favoriteTomorrow": "Favoritos para mañana",
+        "of": "De ",
+        "toShare" : "Para compartir",
+        "why" : "¿Por qué?",
+      
+        "nikkei": "Nikkei",
+        "pizza": "Pizza",
+        "hamburguer" : "Hamburguesa",
+        "priceExample": "Q14",
+
+        "itemTitle": "Sopa de calabaza",
+        "itemDescription": "Sopa de calabaza con queso, tomate, lechuga, cebolla, aceitunas, pimientos y salsa de tomate",
+        "chef": "Karla y Mario",
+        "price": "Q15",
+        "modalWhy" : {
+            "title": "Pide con anticipación",
+            "description": "Pide un día antes hasta las 7pm para que el cher cocine la comida con ingredientes frescos cada dia",
+            "continue": "Continuar"
+        },
+        "modalAddress" : {
+            "title": "Elige una dirección",
+            "add" : "Ingresa una nueva dirección",
+            "addressName" : "Casa abuela",
+            "desc" : "Calle, número, colonia, ciudad, estado, código postal"
+        },
+        "home": "Inicio",
+        "chefs": "Chefs",
+        "search": "Buscar",
+        "more": "Más"
+    },
+    "placeholder": {
+        "dishTitle": "Costillas con barcaboo de pollo",
+        "chefName" : "Luis R."
     }
+        
 }

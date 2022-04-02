@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { ScreenProps } from "./screen.props"
 import { isNonScrolling, offsets, presets } from "./screen.presets"
 import { color } from "../../theme"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 const isIos = Platform.OS === "ios"
 
@@ -65,6 +66,12 @@ function ScreenWithScrolling(props: ScreenProps) {
  * @param props The screen props
  */
 export function Screen(props: ScreenProps) {
+  changeNavigationBarColor(
+    props.bottomBarBackgroundColor || color.palette.white,
+    props.bottomBar !== "light-content",
+    true,
+  )
+
   if (isNonScrolling(props.preset)) {
     return <ScreenWithoutScrolling {...props} />
   } else {

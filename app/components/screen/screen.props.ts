@@ -48,4 +48,14 @@ export interface ScreenProps {
    * Background color of the status bar.
    */
   statusBarBackgroundColor?: string
+
+  /**
+   * Background bottom bar color
+   */
+  bottomBarBackgroundColor?: string
+
+  /**
+   * An optional bottom bar setting. Defaults to light-content.
+   */
+  bottomBar?: "light-content" | "dark-content"
 }
