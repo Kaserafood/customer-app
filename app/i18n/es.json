@@ -141,17 +141,8 @@
         "itemDescription": "Sopa de calabaza con queso, tomate, lechuga, cebolla, aceitunas, pimientos y salsa de tomate",
         "chef": "Karla y Mario",
         "price": "Q15",
-        "modalWhy" : {
-            "title": "Pide con anticipación",
-            "description": "Pide un día antes hasta las 7pm para que el cher cocine la comida con ingredientes frescos cada dia",
-            "continue": "Continuar"
-        },
-        "modalAddress" : {
-            "title": "Elige una dirección",
-            "add" : "Ingresa una nueva dirección",
-            "addressName" : "Casa abuela",
-            "desc" : "Calle, número, colonia, ciudad, estado, código postal"
-        },
+      
+       
         "home": "Inicio",
         "chefs": "Chefs",
         "search": "Buscar",
@@ -160,6 +151,45 @@
     "placeholder": {
         "dishTitle": "Costillas con barcaboo de pollo",
         "chefName" : "Luis R."
-    }
+    },
+    "bottomNavigation": {
+        "home": "Inicio",
+        "chefs": "Chefs",
+        "search": "Buscar",
+        "more": "Más"
+    
+    },
+    "modalAddress" : {
+        "title": "Elige una dirección",
+        "add" : "Ingresa una nueva dirección",
+        "addressName" : "Casa abuela",
+        "desc" : "Calle, número, colonia, ciudad, estado, código postal"
+    },
+
+    "modalDeliveryDay" : {
+        "title": "Pide con anticipación",
+        "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tiene un pedido.",
+        "continue": "Continuar"
+    },
+    "categories": {
+        "title": "Categorías"
+    },
+    "chefs": {
+        "delivery": "Entrega",
+        "name": "Juana R.",
+        "description" : "Pepian de tres carnes",
+        "category": "Vegetariaono - Mexicano",
+        "price": "Q15" 
+
+    },
+    "dishDetailScreen": {
+         "title": "Platillos",
+         "unities": "Unidades",
+         "commentChef": "Comentario al chef:",
+         "placeHolderCommetChef": "Alergias, indicaciones.",
+         "moreProductsChef": "Más productos del chef",
+         "addToOrder": "Agregar a orden",
+     }
+
         
 }

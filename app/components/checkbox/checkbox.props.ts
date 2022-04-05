@@ -36,4 +36,9 @@ export interface CheckboxProps {
    * Fires when the user tabs to change the value.
    */
   onToggle?: (newValue: boolean) => void
+
+  /**
+   * Preset checkbox, tiny is samall an black, default is big and green
+   */
+  preset?: "tiny" | "default"
 }

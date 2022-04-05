@@ -14,7 +14,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       <Screen
         statusBarBackgroundColor={color.primary}
         bottomBarBackgroundColor={color.primary}
-        bottomBar="dark-content"
+        bottomBar="light-content"
         backgroundColor={color.primary}
         preset="fixed"
         statusBar="light-content"

@@ -24,7 +24,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     // const navigation = useNavigation()
     const toMain = () => navigation.navigate("main")
     return (
-      <Screen style={ROOT} preset="scroll" bottomBar="light-content">
+      <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
         <Header headerTx="loginFormScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
         <View style={styles.containerForm}>
           <Text

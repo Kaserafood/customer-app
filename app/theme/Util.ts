@@ -34,6 +34,41 @@ export const utilText = StyleSheet.create({
   },
 })
 
+export const utilFlex = StyleSheet.create({
+  flex: {
+    display: "flex",
+  },
+  flex1: {
+    display: "flex",
+    flex: 1,
+  },
+  flexCenter: {
+    alignItems: "center",
+    display: "flex",
+    justifyContent: "center",
+  },
+  flexCenterVertical: {
+    alignItems: "center",
+    display: "flex",
+    flexDirection: "row",
+  },
+  flexCenterHorizontal: {
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
+  },
+
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+  },
+
+  flexWrap: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+})
+
 export const utilSpacing = StyleSheet.create({
   m0: {
     margin: 0,

@@ -10,10 +10,11 @@ export const palette = {
   grayLigth: "#E4E4E4",
   greenLigth: "#D8EEE4",
   whiteGray: "#F1F1F1",
-  green: "#D8EEE4",
+  green: "#38CC6C",
   grayDark: "#6F6F6F",
   red: "#ED3E31",
   grayTransparent: "#60606024",
   orange: "#FF9831",
   redDark: "#d5392e",
+  blackTransparent: "#00000066",
 }

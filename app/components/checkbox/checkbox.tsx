@@ -4,7 +4,24 @@ import { Text } from "../text/text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
 import SvgUri from "react-native-svg-uri"
+import images from "assets/images"
 
+const viewPresets: Record<string, ViewStyle> = {
+  /**
+   * Checkbox small and color black
+   */
+  tiny: {
+    height: 20,
+    width: 20,
+    borderColor: color.palette.black,
+    borderWidth: 1,
+  },
+}
+
+const iconsPreset: Record<string, any> = {
+  default: images.check,
+  tiny: images.checkTiny,
+}
 const ROOT: ViewStyle = {
   flexDirection: "row",
   paddingVertical: spacing[1],
@@ -15,11 +32,11 @@ const DIMENSIONS = { width: 30, height: 30 }
 
 const OUTLINE: ViewStyle = {
   ...DIMENSIONS,
-  marginTop: 2, // finicky and will depend on font/line-height/baseline/weather
+
   justifyContent: "center",
   alignItems: "center",
   borderWidth: 2,
-  borderColor: color.palette.greenLigth,
+  borderColor: color.palette.green,
   borderRadius: spacing[0],
   padding: spacing[1],
 }
@@ -31,10 +48,11 @@ const CONTAINER_CHECK: ViewStyle = {
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
 
 export function Checkbox(props: CheckboxProps) {
+  const { preset = "default" } = props
   const numberOfLines = props.multiline ? 0 : 1
 
   const rootStyle = [ROOT, props.style]
-  const outlineStyle = [OUTLINE, props.outlineStyle]
+  const outlineStyle = [OUTLINE, viewPresets[preset], props.outlineStyle]
 
   const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
 
@@ -48,7 +66,9 @@ export function Checkbox(props: CheckboxProps) {
       <View style={outlineStyle}>
         {props.value && (
           <View style={CONTAINER_CHECK}>
-            <SvgUri width="25" height="25" source={require("./icons/check.svg")} />
+            {preset === "default" && <SvgUri width="25" height="25" source={iconsPreset[preset]} />}
+
+            {preset === "tiny" && <SvgUri width="20" height="20" source={iconsPreset[preset]} />}
           </View>
         )}
       </View>

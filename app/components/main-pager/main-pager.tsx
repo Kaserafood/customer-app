@@ -1,17 +1,17 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, typography } from "../../theme"
-import { Text } from "../text/text"
 
-const CONTAINER: ViewStyle = {
-  justifyContent: "center",
-}
+import PagerView from "react-native-pager-view"
+import { Home } from "../home/home"
+import { Chefs } from "../chefs/chefs"
 
-const TEXT: TextStyle = {
-  fontFamily: typography.primary,
-  fontSize: 14,
-  color: color.primary,
+import { useEffect } from "react"
+import { Search } from "../search/search"
+
+interface ActiveIndex {
+  getIndex: () => number
+  setIndex: (number: number) => void
 }
 
 export interface MainPagerProps {
@@ -19,18 +19,48 @@ export interface MainPagerProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Page index
+   */
+  activeIndex: ActiveIndex
 }
 
 /**
  * Describe your component here
  */
-export const MainPager = observer(function MainPager(props: MainPagerProps) {
-  const { style } = props
-  const styles = Object.assign({}, CONTAINER, style)
+export const MainPager = observer((props: MainPagerProps) => {
+  const { style, activeIndex } = props
+  let pageView = null
+
+  useEffect(() => {
+    pageView.setPage(activeIndex.getIndex())
+  }, [activeIndex.getIndex()])
 
   return (
-    <View style={styles}>
-      <Text style={TEXT}>Hello</Text>
-    </View>
+    <PagerView
+      ref={(c) => {
+        pageView = c
+      }}
+      style={[style, styles.pagerView]}
+      initialPage={activeIndex.getIndex()}
+      scrollEnabled={false}
+    >
+      <View key={0}>
+        <Home></Home>
+      </View>
+      <View key={1}>
+        <Chefs></Chefs>
+      </View>
+      <View key={2}>
+        <Search></Search>
+      </View>
+    </PagerView>
   )
+})
+
+const styles = StyleSheet.create({
+  pagerView: {
+    flex: 1,
+  },
 })

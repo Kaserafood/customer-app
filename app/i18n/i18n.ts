@@ -6,9 +6,8 @@ i18n.fallbacks = true
 i18n.translations = { es }
 
 // i18n.locale = Localization.locale || "es"
-if (!Localization.locale.includes("es")) {
-  i18n.locale = "es"
-}
+
+i18n.locale = "es"
 /**
  * Builds up valid keypaths for translations.
  * Update to your default locale of choice if not English.

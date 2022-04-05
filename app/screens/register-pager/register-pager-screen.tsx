@@ -2,13 +2,11 @@ import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle, StyleSheet } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import PagerView from "react-native-pager-view"
+import { utilSpacing, utilText } from "../../theme/Util"
 import { NavigatorParamList } from "../../navigators"
 import { AutoImage, Screen, Text, Button, Dot } from "../../components"
-
 import { color } from "../../theme"
-import PagerView from "react-native-pager-view"
-
-import { utilSpacing, utilText } from "../../theme/Util"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,

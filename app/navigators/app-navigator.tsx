@@ -16,6 +16,7 @@ import {
   RegisterPagerScreen,
   LoginFormScreen,
   MainScreen,
+  DishDetailScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
@@ -43,6 +44,7 @@ export type NavigatorParamList = {
   registerPager: registerPageParams
   loginForm: undefined
   main: undefined
+  dishDetail: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -54,7 +56,7 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="loginForm"
+      initialRouteName="main"
     >
       <Stack.Screen name="init" component={InitScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
@@ -63,6 +65,7 @@ const AppStack = () => {
       <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
       <Stack.Screen name="loginForm" component={LoginFormScreen} />
       <Stack.Screen name="main" component={MainScreen} />
+      <Stack.Screen name="dishDetail" component={DishDetailScreen} />
     </Stack.Navigator>
   )
 }

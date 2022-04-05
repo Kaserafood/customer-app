@@ -1673,6 +1673,11 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
+"@klarna/react-native-vector-drawable@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@klarna/react-native-vector-drawable/-/react-native-vector-drawable-0.3.0.tgz#b9a51a1e19aadf90cbf8c0065a43450f8cdbcb59"
+  integrity sha512-f/qnXfmb5lQRhkqd4DAmeFMtxv18XYkNuJkVeCUiMYU1hzk7UkjJeBKU2hfuRFnzE8dW9ylxPvjfvvfsg5haag==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -11643,7 +11648,7 @@ prompts@^2.0.1, prompts@^2.2.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -12076,6 +12081,13 @@ react-native-keychain@6.2.0:
   version "6.2.0"
   resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-6.2.0.tgz#8f4cff503aad367141db5aea0189ead9240c28ff"
   integrity sha512-U6fnOQRJPq+c0Abl+FoYy9v0H3kQU587tMamU/o+MoBSUScFLE3DQpkyT1PW4NF5IObgiGuqQdmjC2KgtBpjGA==
+
+react-native-material-ripple@^0.9.1:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/react-native-material-ripple/-/react-native-material-ripple-0.9.1.tgz#db1ad9dd7cf97011e4cd8475ae2041ade0f891cb"
+  integrity sha512-dHjARdKoGD3LXwPh2TkURabywM5BfdpKc/AHplJTfBMalhVZ2bc7iJoJmNhNnmT/TZ+B3szL6uV1mO7Pv8zNeA==
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-modal@^13.0.1:
   version "13.0.1"

@@ -16,7 +16,6 @@ export const RegisterFormScreen: FC<
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  // const navigation = useNavigation()
 
   const goBack = () => navigation.navigate("init")
 
@@ -25,7 +24,7 @@ export const RegisterFormScreen: FC<
 
   const [terms, setTerms] = useState(false)
   return (
-    <Screen preset="scroll" style={styles.container}>
+    <Screen preset="scroll" style={styles.container} bottomBar="dark-content">
       <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
 
       <View style={styles.containerForm}>
