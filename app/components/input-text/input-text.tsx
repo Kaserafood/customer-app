@@ -3,16 +3,19 @@ import { StyleProp, TextStyle, View, ViewStyle, TextInputProps, TextInput } from
 import { observer } from "mobx-react-lite"
 import { color, spacing, typography } from "../../theme"
 import { translate, TxKeyPath } from "../../i18n"
+import { typographySize } from "../../theme/typography"
 
 const TEXT_STYLES: TextStyle = {
   paddingHorizontal: spacing[3],
   paddingVertical: spacing[3],
   fontFamily: typography.primary,
   marginBottom: -3,
-  fontSize: 16,
+  fontSize: typographySize.md,
+  color: color.text,
 }
 const CONTAINER: ViewStyle = {
   backgroundColor: color.palette.grayLigth,
+  borderRadius: spacing[2],
 }
 
 export interface InputTextProps extends TextInputProps {

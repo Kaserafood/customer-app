@@ -46,7 +46,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           <View style={[styles.containerBtn, utilSpacing.mt9]}>
             <Button
               tx="loginFormScreen.continue"
-              rounded
               onPress={toMain}
               style={[styles.btn, utilSpacing.py5]}
             ></Button>

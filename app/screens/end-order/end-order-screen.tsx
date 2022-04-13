@@ -19,7 +19,7 @@ const ROOT: ViewStyle = {
 
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   ({ navigation }) => {
-    const toMain = () => navigation.navigate("main")
+    const toMain = () => navigation.navigate("init")
     return (
       <Screen style={ROOT} preset="scroll">
         <Header headerTx="endOrderScreen.title" />

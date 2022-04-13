@@ -1,3 +1,10 @@
+## Link assets
+
+to to folder "app/assets"
+run command yarn link
+
+then in the root path run "yarn link assets"
+
 # Welcome to your new ignited app!
 
 [![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)

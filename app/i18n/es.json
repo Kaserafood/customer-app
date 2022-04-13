@@ -26,7 +26,7 @@
         "andThe" : " y las ",
         "privacyPolicy": " políticas de privacidad",
         "info" : "Llena los espacios con la información que se solicita.",
-        "register" : "Registrar"
+        "register" : "Crear cuenta"
     },
     "errorScreen": {
         "title": "Error",
@@ -101,15 +101,15 @@
             "description" : "Olvidate de comer lo mismo de siempre y de la comida que daña tu salud"
         },
         "skip" :"Saltar",
-        "next" :"Siguiente",
-        "start" : "Iniciar"
+        "next" :"Siguiente"
+       
     }, 
     "loginFormScreen": {
         "title" :"Iniciar sesión",
         "email" : "Correo electrónico",
         "password" : "Contraseña",
         "continue" : "Continuar",
-        "info" : "Ingresa los datos que se solicitan"
+        "info" : "Accede a tu cuenta:"
     },
     "mainScreen": {
         "address" : "Ciudad de Guatemala, Guatemala, Guatemala",

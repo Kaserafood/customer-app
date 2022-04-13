@@ -49,7 +49,7 @@ export function Header(props: HeaderProps) {
   return (
     <View style={[ROOT, style]}>
       {leftIcon ? (
-        <Button preset="link" onPress={onLeftPress}>
+        <Button preset="link" rounded onPress={onLeftPress}>
           {leftIcon === "back" && (
             <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
           )}
@@ -61,7 +61,7 @@ export function Header(props: HeaderProps) {
         <Text style={[TITLE, titleStyle]} text={header} />
       </View>
       {rightIcon ? (
-        <Button preset="link" onPress={onRightPress}>
+        <Button preset="link" rounded onPress={onRightPress}>
           {rightIcon === "back" && (
             <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
           )}

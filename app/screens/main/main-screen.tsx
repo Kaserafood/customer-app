@@ -35,7 +35,12 @@ const activeIndex = new ActiveIndex()
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   function MainScreen() {
     return (
-      <Screen style={ROOT} preset="scroll">
+      <Screen
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+        style={ROOT}
+        preset="scroll"
+      >
         <MainPager activeIndex={activeIndex}></MainPager>
         <BottomNavigation activeIndex={activeIndex}></BottomNavigation>
       </Screen>

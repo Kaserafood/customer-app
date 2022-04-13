@@ -52,8 +52,10 @@ const styles = StyleSheet.create({
   },
 
   textAddress: {
+    bottom: -4,
     color: color.palette.white,
     flex: 1,
     marginLeft: spacing[2],
+    position: "relative",
   },
 })

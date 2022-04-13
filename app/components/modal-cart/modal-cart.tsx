@@ -28,13 +28,18 @@ export interface ModalCartProps {
    * Mutable class for managing component visivility.
    */
   modal: ModalState
+
+  /**
+   * onContinue
+   */
+  onContinue: () => void
 }
 
 /**
  * Describe your component here
  */
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
-  const { style, modal } = props
+  const { style, modal, onContinue } = props
 
   const showModal = (state) => {
     modal.setVisible(state)
@@ -92,6 +97,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
           <Price style={styles.price} amount={20}></Price>
         </View>
         <Button
+          onPress={onContinue}
           style={[utilSpacing.mt6, styles.button]}
           block
           rounded

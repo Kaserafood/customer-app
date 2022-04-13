@@ -1,12 +1,13 @@
 import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle, StyleSheet } from "react-native"
+import { View, ViewStyle, StyleSheet, ImageURISource } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import PagerView from "react-native-pager-view"
 import { utilSpacing, utilText } from "../../theme/Util"
 import { NavigatorParamList } from "../../navigators"
 import { AutoImage, Screen, Text, Button, Dot } from "../../components"
 import { color } from "../../theme"
+import images from "assets/images"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -17,7 +18,7 @@ const ROOT: ViewStyle = {
 interface Page {
   title: string
   description: string
-  image: string
+  image: ImageURISource
 }
 
 export const RegisterPagerScreen: FC<
@@ -34,17 +35,17 @@ export const RegisterPagerScreen: FC<
     {
       title: "registerPagerScreen.page1.title",
       description: "registerPagerScreen.page1.description",
-      image: "./page1.png",
+      image: images.step1,
     },
     {
       title: "registerPagerScreen.page2.title",
       description: "registerPagerScreen.page2.description",
-      image: "./page2.png",
+      image: images.step2,
     },
     {
       title: "registerPagerScreen.page3.title",
       description: "registerPagerScreen.page3.description",
-      image: "./page3.png",
+      image: images.step3,
     },
   ]
 
@@ -74,17 +75,7 @@ export const RegisterPagerScreen: FC<
       >
         {data.map((page, index) => (
           <View style={styles.page} key={index + 1}>
-            {index === 0 && (
-              <AutoImage style={styles.image} source={require("./page1.png")}></AutoImage>
-            )}
-
-            {index === 1 && (
-              <AutoImage style={styles.image} source={require("./page2.png")}></AutoImage>
-            )}
-
-            {index === 2 && (
-              <AutoImage style={styles.image} source={require("./page3.png")}></AutoImage>
-            )}
+            <AutoImage style={styles.image} source={page.image}></AutoImage>
 
             <Text
               style={[utilSpacing.mb3, utilText.textCenter]}
@@ -108,22 +99,23 @@ export const RegisterPagerScreen: FC<
           <View style={styles.containerButtons}>
             <Button
               tx="registerPagerScreen.skip"
-              preset={page === 0 ? "gray" : "primary"}
+              preset="white"
               style={[styles.btn, utilSpacing.mr3, utilSpacing.py5]}
               onPress={toRegister}
             ></Button>
             <Button
               onPress={nextPage}
               tx="registerPagerScreen.next"
-              style={[styles.btn, utilSpacing.ml3, utilSpacing.py5]}
+              style={[styles.btn, utilSpacing.ml3]}
             ></Button>
           </View>
         ) : (
           <View style={styles.containerButtons}>
             <Button
               onPress={toRegister}
-              tx="registerPagerScreen.start"
-              style={[styles.btn, utilSpacing.py5]}
+              tx="registerPagerScreen.next"
+              style={[utilSpacing.py5, styles.btnBlock]}
+              block
             ></Button>
           </View>
         )}
@@ -135,6 +127,9 @@ export const RegisterPagerScreen: FC<
 const styles = StyleSheet.create({
   btn: {
     width: 150,
+  },
+  btnBlock: {
+    width: "75%",
   },
   containerButtons: {
     display: "flex",

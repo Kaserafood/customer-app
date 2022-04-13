@@ -1,10 +1,10 @@
 import { ViewStyle, TextStyle } from "react-native"
 import { color, spacing } from "../../theme"
 import { NO_SHADOW } from "../../theme/Util"
-import { typography } from "../../theme/typography"
+import { typography, typographySize } from "../../theme/typography"
 
 const BASE_VIEW: ViewStyle = {
-  paddingVertical: spacing[3],
+  paddingVertical: spacing[4],
   paddingHorizontal: spacing[4],
   borderRadius: spacing[2],
   justifyContent: "center",
@@ -22,8 +22,8 @@ const BASE_VIEW: ViewStyle = {
 
 const BASE_TEXT: TextStyle = {
   paddingHorizontal: spacing[3],
-  fontSize: 18,
-  fontFamily: "Poppins-SemiBold",
+  fontSize: typographySize.lg,
+  fontFamily: typography.primaryBold,
   marginBottom: -4,
 }
 

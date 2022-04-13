@@ -1,6 +1,6 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, BackHandler } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { Screen, Text, Header, InputText, Button, Checkbox } from "../../components"
@@ -12,13 +12,8 @@ import { utilSpacing } from "../../theme/Util"
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-
   const goBack = () => navigation.navigate("init")
-
+  const goMain = () => navigation.navigate("main")
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
@@ -74,7 +69,7 @@ export const RegisterFormScreen: FC<
       </View>
       <Button
         tx="registerFormScreen.register"
-        rounded
+        onPress={goMain}
         block
         style={[styles.btn, utilSpacing.mt5]}
       ></Button>

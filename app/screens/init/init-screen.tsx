@@ -1,15 +1,23 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { Image, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme/color"
+import { useBackHandler } from "@react-native-community/hooks"
+import { utilSpacing, utilText } from "../../theme/Util"
+import { typography, typographySize } from "../../theme/typography"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm")
+
+    useEffect(() => {
+      console.log("in init screen")
+    }, [])
+
     return (
       <Screen
         statusBarBackgroundColor={color.primary}
@@ -26,13 +34,19 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
         <View style={styles.containerButtons}>
           <Button
             preset="white"
-            style={styles.buttonRegister}
-            rounded
+            style={utilSpacing.mb6}
             block
             tx="initScreen.register"
             onPress={toRegister}
+            textStyle={[styles.button]}
           ></Button>
-          <Button preset="white" block rounded tx="initScreen.login" onPress={toLogin}></Button>
+          <Button
+            preset="white"
+            textStyle={[styles.button]}
+            block
+            tx="initScreen.login"
+            onPress={toLogin}
+          ></Button>
         </View>
       </Screen>
     )
@@ -40,8 +54,8 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
 )
 
 const styles = StyleSheet.create({
-  buttonRegister: {
-    marginBottom: 35,
+  button: {
+    fontSize: typographySize.xl,
   },
   containerButtons: {
     width: "60%",

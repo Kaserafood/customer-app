@@ -71,6 +71,7 @@ export function Screen(props: ScreenProps) {
     props.bottomBar !== "light-content",
     true,
   )
+  console.log("in screen render")
 
   if (isNonScrolling(props.preset)) {
     return <ScreenWithoutScrolling {...props} />

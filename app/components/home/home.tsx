@@ -42,6 +42,7 @@ export const Home = observer(function Home(props: HomeProps) {
   const navigation = useNavigation()
 
   const toDishDetail = () => navigation.navigate("dishDetail" as never)
+  const toInit = () => navigation.navigate("init" as never)
 
   return (
     <>
@@ -88,7 +89,7 @@ export const Home = observer(function Home(props: HomeProps) {
           </Ripple>
           <Separator style={utilSpacing.my3}></Separator>
 
-          <View style={utilSpacing.my5}>
+          <Ripple style={utilSpacing.my5} rippleOpacity={0.2} rippleDuration={200} onPress={toInit}>
             <View style={styles.flex}>
               <View style={styles.containerTextDish}>
                 <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
@@ -115,7 +116,7 @@ export const Home = observer(function Home(props: HomeProps) {
                 <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
               </View>
             </View>
-          </View>
+          </Ripple>
           <Separator style={utilSpacing.my3}></Separator>
           <View style={[utilSpacing.mt5, utilSpacing.mb7]}>
             <View style={styles.flex}>

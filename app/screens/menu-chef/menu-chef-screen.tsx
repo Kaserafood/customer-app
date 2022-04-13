@@ -28,12 +28,15 @@ class ModalState {
 }
 const modalState = new ModalState()
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
-  function MenuScreen() {
+  ({ navigation }) => {
     // Pull in one of our MST stores
 
     // Pull in navigation via hook
     // const navigation = useNavigation()
 
+    const toDeliveryDetail = () => {
+      navigation.navigate("deliveryDetail")
+    }
     return (
       <Screen preset="fixed" style={[utilSpacing.pb6, styles.container]}>
         <Header headerTx="menuChefScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -147,7 +150,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           ></Text>
           <Text preset="bold" style={styles.textAddToOrder} text="Q34"></Text>
         </TouchableOpacity>
-        <ModalCart modal={modalState}></ModalCart>
+        <ModalCart onContinue={toDeliveryDetail} modal={modalState}></ModalCart>
       </Screen>
     )
   },

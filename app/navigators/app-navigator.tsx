@@ -56,14 +56,14 @@ export type NavigatorParamList = {
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
-const Drawer = createDrawerNavigator()
+
 const AppStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="deliveryDetail"
+      initialRouteName="init"
     >
       <Stack.Screen name="init" component={InitScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />

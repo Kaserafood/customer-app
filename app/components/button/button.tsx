@@ -29,6 +29,8 @@ export function Button(props: ButtonProps) {
 
   if (rounded) {
     viewStyle.borderRadius = 100
+  } else {
+    viewStyle.borderRadius = 8
   }
 
   const viewStyles = [viewStyle, styleOverride]
