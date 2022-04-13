@@ -4,33 +4,56 @@ import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Chip } from "../chip/chip"
-
+import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
 import { useStores } from "../../models"
+import i18n from "i18n-js"
 
 export interface DayDeliveryProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Hide the why? button
+   */
+  hideWhyButton?: boolean
+
+  /**
+   * Title showing top of the chips
+   */
+  titleTx?: TxKeyPath
+
+  /**
+   * Optional options to pass to i18n. Useful for interpolation
+   * as well as explicitly setting locale or translation fallbacks.
+   */
+  txOptions?: i18n.TranslateOptions
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style } = props
+  const { style, hideWhyButton, titleTx, txOptions } = props
   const { modalStore } = useStores()
 
+  const i18nText = titleTx && translate(titleTx, txOptions)
+
+  const actualTitle = i18nText || "mainScreen.dayShipping"
+
   return (
-    <>
+    <View>
       <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
-        <Text tx="mainScreen.dayShipping" preset="semiBold" style={styles.dayShipping}></Text>
-        <Chip
-          tx="mainScreen.why"
-          onPress={() => modalStore.setVisibleModalDayDelivery(true)}
-          active={modalStore.isVisibleModalDayDelivery}
-        ></Chip>
+        <Text tx={actualTitle} preset="semiBold" style={styles.dayShipping}></Text>
+        {!hideWhyButton && (
+          <Chip
+            tx="mainScreen.why"
+            onPress={() => modalStore.setVisibleModalDayDelivery(true)}
+            active={modalStore.isVisibleModalDayDelivery}
+          ></Chip>
+        )}
       </View>
       <ScrollView horizontal style={[styles.flex, utilSpacing.mt5, utilSpacing.pb3, style]}>
         <Chip tx="mainScreen.tomorrow" style={styles.chip}></Chip>
@@ -39,7 +62,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
         <Chip text="Sab. May 18" style={utilSpacing.mr3}></Chip>
         <Chip text="Dom. May 19" style={utilSpacing.mr3}></Chip>
       </ScrollView>
-    </>
+    </View>
   )
 })
 

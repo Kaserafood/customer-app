@@ -48,11 +48,16 @@ const CONTAINER_CHECK: ViewStyle = {
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
 
 export function Checkbox(props: CheckboxProps) {
-  const { preset = "default" } = props
+  const { preset = "default", rounded, style } = props
   const numberOfLines = props.multiline ? 0 : 1
-
-  const rootStyle = [ROOT, props.style]
-  const outlineStyle = [OUTLINE, viewPresets[preset], props.outlineStyle]
+  const roundedStyle: ViewStyle = {}
+  if (rounded) {
+    roundedStyle.borderRadius = 100
+    roundedStyle.height = 19
+    roundedStyle.width = 19
+  }
+  const rootStyle = [ROOT, style]
+  const outlineStyle = [OUTLINE, viewPresets[preset], roundedStyle, props.outlineStyle]
 
   const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
 
@@ -68,7 +73,7 @@ export function Checkbox(props: CheckboxProps) {
           <View style={CONTAINER_CHECK}>
             {preset === "default" && <SvgUri width="25" height="25" source={iconsPreset[preset]} />}
 
-            {preset === "tiny" && <SvgUri width="20" height="20" source={iconsPreset[preset]} />}
+            {preset === "tiny" && <SvgUri width="15" height="15" source={iconsPreset[preset]} />}
           </View>
         )}
       </View>

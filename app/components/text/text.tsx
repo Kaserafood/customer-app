@@ -1,8 +1,9 @@
 import * as React from "react"
-import { Text as ReactNativeText } from "react-native"
+import { StyleProp, Text as ReactNativeText, TextStyle } from "react-native"
 import { presets, fontSize } from "./text.presets"
 import { TextProps } from "./text.props"
 import { translate } from "../../i18n"
+import { color } from "../../theme"
 
 /**
  * For your text displaying needs.
@@ -19,16 +20,28 @@ export function Text(props: TextProps) {
     children,
     style: styleOverride,
     size = "md",
+    caption,
     ...rest
   } = props
 
-  // figure out which content to use
   const i18nText = tx && translate(tx, txOptions)
   const content = i18nText || text || children
 
   const style = presets[preset] || presets.default
   const textSize = fontSize[size]
-  const styles = [style, textSize, styleOverride]
+  let moreStyles: TextStyle = {}
+  if (caption) {
+    moreStyles = { color: color.palette.grayDark }
+  }
+  /**
+   * We set a marginBottom when a marginVertical is set, because by default the text has a
+   * marginBottom = -4 and that makes the marginVertical not work correctly
+   */
+  const styleObject: any = Object.assign([], styleOverride)
+  if (styleObject.marginVertical) {
+    moreStyles.marginBottom = styleObject.marginVertical
+  }
+  const styles = [style, textSize, moreStyles, styleOverride]
   return (
     <ReactNativeText {...rest} style={styles}>
       {content}

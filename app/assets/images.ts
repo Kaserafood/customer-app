@@ -30,6 +30,9 @@ const images = {
   cart: require("./images/iconCart.svg"),
   check: require("./images/iconCheck.svg"),
   checkTiny: require("./images/iconCheckTiny.svg"),
+  heart: require("./images/iconHeart.svg"),
+  caretRight: require("./images/iconCaretRight.svg"),
+  card: require("./images/cardPaymentMethod.png"),
 }
 
 export default images

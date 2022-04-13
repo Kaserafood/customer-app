@@ -8,6 +8,7 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+
 import {
   InitScreen,
   RegisterFormScreen,
@@ -17,6 +18,9 @@ import {
   LoginFormScreen,
   MainScreen,
   DishDetailScreen,
+  MenuChefScreen,
+  DeliveryDetailScreen,
+  EndOrderScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
@@ -45,18 +49,21 @@ export type NavigatorParamList = {
   loginForm: undefined
   main: undefined
   dishDetail: undefined
+  menuChef: undefined
+  deliveryDetail: undefined
+  endOrder: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
-
+const Drawer = createDrawerNavigator()
 const AppStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="main"
+      initialRouteName="deliveryDetail"
     >
       <Stack.Screen name="init" component={InitScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
@@ -66,6 +73,9 @@ const AppStack = () => {
       <Stack.Screen name="loginForm" component={LoginFormScreen} />
       <Stack.Screen name="main" component={MainScreen} />
       <Stack.Screen name="dishDetail" component={DishDetailScreen} />
+      <Stack.Screen name="menuChef" component={MenuChefScreen} />
+      <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+      <Stack.Screen name="endOrder" component={EndOrderScreen} />
     </Stack.Navigator>
   )
 }
@@ -99,3 +109,6 @@ AppNavigator.displayName = "AppNavigator"
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
+function createDrawerNavigator() {
+  throw new Error("Function not implemented.")
+}

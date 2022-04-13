@@ -27,7 +27,7 @@ import Ripple from "react-native-material-ripple"
 import { typographySize } from "../../theme/typography"
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
-  function DishDetailScreen() {
+  ({ navigation }) => {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
 
@@ -36,6 +36,8 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
     const [price, setPrice] = useState("Q50.4")
     const [counter, setCounter] = useState(1)
+
+    const toMenuChef = () => navigation.navigate("menuChef")
 
     return (
       <Screen preset="fixed" style={styles.container}>
@@ -93,6 +95,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           </ScrollView>
         </ScrollView>
         <TouchableOpacity
+          onPress={toMenuChef}
           activeOpacity={0.7}
           style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
         >

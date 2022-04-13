@@ -13,7 +13,7 @@ export const palette = {
   green: "#38CC6C",
   grayDark: "#6F6F6F",
   red: "#ED3E31",
-  grayTransparent: "#60606024",
+  grayTransparent: "#6060607f",
   orange: "#FF9831",
   redDark: "#d5392e",
   blackTransparent: "#00000066",

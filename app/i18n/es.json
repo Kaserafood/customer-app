@@ -1,7 +1,11 @@
 {
     "common" : {
         "ok": "Aceptar",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "continue" : "Continuar",
+        "subtotal" : "Subtotal",
+        "total" : "Total",
+         "deliveryAmount" : "Costo de envío"
         
     },
     "initScreen": {
@@ -183,13 +187,43 @@
 
     },
     "dishDetailScreen": {
-         "title": "Platillos",
-         "unities": "Unidades",
-         "commentChef": "Comentario al chef:",
-         "placeHolderCommetChef": "Alergias, indicaciones.",
-         "moreProductsChef": "Más productos del chef",
-         "addToOrder": "Agregar a orden",
-     }
+        "title": "Platillo",
+        "unities": "Unidades",
+        "commentChef": "Comentario al chef:",
+        "placeHolderCommetChef": "Alergias, indicaciones.",
+        "moreProductsChef": "Más productos del chef",
+        "addToOrder": "Agregar a orden"
+    },
+    "menuChefScreen" : {
+         "title": "Menú",
+         "dayDelivery" : "Días de entrega:",
+         "all": "Todos",
+         "watchCart": "Ver carrito"
+    },
+    "deliveryDetailScreen" : {
+         "title": "Detalles de entrega",
+         "info" : "Información de entrega",
+         "address" : "Dirección",
+         "addressPlaceholder": "Selecciona tu dirección",
+         "deliveryNote" : "Nota de entrega",
+         "deliveryNotePlaceholder": "Referencias, código de accesso, etc",
+         "deliveryDate" : "Fecha de entrega",
+         "deliveryDatePlaceholder": "Selecciona una fecha",
+         "deliveryTime" : "Elige el rango de entrega",
+         "paymentMethod" : "Método de pago",
+         "delivery" : "Entrega:"
+    },
+    "endOrderScreen" : {
+        "title" : "Kasera",
+        "deliveryOn" : "Entregar en:",
+        "deliveryDate" : "Fecha de entrega:",
+        "info": "Te enviaremos una confirmación a tu correo electrónico",
+        "order" : "Pedidio",
+        "thankYou" : "¡Gracias por tu apoyo!",
+        "cookWithLove" : "Cocinaré tu platillo con mucho amor.",
+        "continueExplore": "Seguir explorando",
+    }
+
 
         
 }

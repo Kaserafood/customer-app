@@ -6,6 +6,7 @@ import {
   ViewStyle,
   StyleSheet,
   TouchableHighlight,
+  TouchableWithoutFeedback,
 } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
@@ -23,6 +24,7 @@ import { Price } from "../price/price"
 import { DishChef } from "../dish-chef/dish-chef"
 
 import { useNavigation } from "@react-navigation/native"
+import Ripple from "react-native-material-ripple"
 
 export interface HomeProps {
   /**
@@ -51,7 +53,12 @@ export const Home = observer(function Home(props: HomeProps) {
         <Separator style={utilSpacing.my4}></Separator>
         <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
         <View>
-          <TouchableHighlight style={utilSpacing.my5} onPress={toDishDetail}>
+          <Ripple
+            style={utilSpacing.my5}
+            rippleOpacity={0.2}
+            rippleDuration={200}
+            onPress={toDishDetail}
+          >
             <View style={styles.flex}>
               <View style={styles.containerTextDish}>
                 <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
@@ -78,7 +85,7 @@ export const Home = observer(function Home(props: HomeProps) {
                 <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
               </View>
             </View>
-          </TouchableHighlight>
+          </Ripple>
           <Separator style={utilSpacing.my3}></Separator>
 
           <View style={utilSpacing.my5}>

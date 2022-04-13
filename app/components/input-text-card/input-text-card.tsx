@@ -49,7 +49,7 @@ export const InputTextCard = observer(function InputTextCard(props: InputTextCar
   const [strLenght, setStrLenght] = useState(0)
 
   return (
-    <View style={[style, styles.card]}>
+    <View style={[styles.card, style]}>
       <Text preset="bold" text={actualTitle}></Text>
       <TextInput
         selectionColor={color.palette.grayDark}
@@ -58,9 +58,11 @@ export const InputTextCard = observer(function InputTextCard(props: InputTextCar
         style={styles.input}
         placeholder={actualPlaceholder}
       ></TextInput>
-      <View>
-        <Text size="sm" style={styles.counter} text={`${strLenght}/${counter}`}></Text>
-      </View>
+      {counter && (
+        <View>
+          <Text size="sm" style={styles.counter} text={`${strLenght}/${counter}`}></Text>
+        </View>
+      )}
     </View>
   )
 })

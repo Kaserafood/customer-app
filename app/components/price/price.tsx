@@ -1,8 +1,11 @@
 import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
+import { AutoImage } from "../auto-image/auto-image"
+import images from "assets/images"
+import { utilSpacing, utilFlex } from "../../theme/Util"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-start",
@@ -12,6 +15,13 @@ const CONTAINER: ViewStyle = {
   paddingVertical: spacing[0],
 }
 
+const CONTAINER_DELIVERY: ViewStyle = {
+  alignSelf: "flex-end",
+}
+const IMAGE: ImageStyle = {
+  height: 24,
+  width: 24,
+}
 const TEXT: TextStyle = {
   marginBottom: -4,
 }
@@ -31,14 +41,24 @@ export interface PriceProps {
    * Currency of price.
    */
   currency?: string
+
+  /**
+   * Preset of price.
+   */
+  preset?: "delivery" | "dish"
+
+  /**
+   * Styles for price text.
+   */
+  textStyle?: StyleProp<TextStyle>
 }
 
 /**
- * Price of dish.
+ * Price of dish or delivery.
  */
+
 export const Price = observer(function Price(props: PriceProps) {
-  const { style, amount, currency = "Q" } = props
-  const styles = Object.assign({}, CONTAINER, style)
+  const { style, amount, currency = "Q", preset = "dish", textStyle } = props
 
   let price = ""
   if (amount.toFixed(2).split(".")[1] === "00") {
@@ -47,9 +67,27 @@ export const Price = observer(function Price(props: PriceProps) {
     price = amount.toFixed(2)
   }
 
-  return (
-    <View style={styles}>
-      <Text style={TEXT} text={`${currency}${price}`}></Text>
-    </View>
-  )
+  const Delivery = () => {
+    return (
+      <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
+        <AutoImage source={images.iconShipping} style={[utilSpacing.mr2, IMAGE]}></AutoImage>
+        <Text style={[TEXT, textStyle]} text={`${currency}${price}`}></Text>
+      </View>
+    )
+  }
+
+  const Dish = () => {
+    const styles = Object.assign({}, CONTAINER, style)
+    return (
+      <View style={styles}>
+        <Text style={[TEXT, textStyle]} text={`${currency}${price}`}></Text>
+      </View>
+    )
+  }
+
+  if (preset === "delivery") {
+    return <Delivery></Delivery>
+  } else {
+    return <Dish></Dish>
+  }
 })

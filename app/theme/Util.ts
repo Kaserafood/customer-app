@@ -1,6 +1,7 @@
 import { ViewStyle, StyleSheet } from "react-native"
 import { color } from "./color"
 import { spacing } from "./spacing"
+import { typography } from "./typography"
 export const ROOT: ViewStyle = {
   backgroundColor: color.background,
   flex: 1,
@@ -29,8 +30,18 @@ export const NO_SHADOW: ViewStyle = {
 }
 
 export const utilText = StyleSheet.create({
+  bold: { fontFamily: typography.primaryBold },
+  marginNegative: {
+    marginBottom: -4,
+  },
+  semiBold: { fontFamily: typography.primarySemiBold },
+
   textCenter: {
     textAlign: "center",
+  },
+
+  textGray: {
+    color: color.palette.grayDark,
   },
 })
 
@@ -47,13 +58,13 @@ export const utilFlex = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
-  flexCenterVertical: {
-    alignItems: "center",
+  flexCenterHorizontal: {
     display: "flex",
     flexDirection: "row",
-  },
-  flexCenterHorizontal: {
     justifyContent: "center",
+  },
+  flexCenterVertical: {
+    alignItems: "center",
     display: "flex",
     flexDirection: "row",
   },

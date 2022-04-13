@@ -5,11 +5,9 @@ import { color, typography } from "../../theme"
 import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
-  justifyContent: "center",
   backgroundColor: color.palette.whiteGray,
   borderRadius: 100,
   height: 3,
-  width: "100%",
 }
 
 export interface SeparatorProps {
@@ -24,7 +22,6 @@ export interface SeparatorProps {
  */
 export const Separator = observer(function Separator(props: SeparatorProps) {
   const { style } = props
-  const styles = Object.assign({}, CONTAINER, style)
 
-  return <View style={styles}></View>
+  return <View style={[CONTAINER, style]}></View>
 })

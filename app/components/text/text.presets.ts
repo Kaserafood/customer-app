@@ -9,6 +9,7 @@ const BASE: TextStyle = {
   fontFamily: typography.primary,
   color: color.text,
   fontSize: typographySize.md,
+  marginBottom: -4,
 }
 
 export const presets = {

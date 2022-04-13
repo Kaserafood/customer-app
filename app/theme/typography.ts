@@ -41,7 +41,7 @@ export const typography = {
 }
 
 export const typographySize = {
-  sm: 13,
-  md: 15,
+  sm: 12,
+  md: 14,
   lg: 17,
 }
