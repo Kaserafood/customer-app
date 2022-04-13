@@ -3,20 +3,29 @@ import { View, ViewStyle, TextStyle } from "react-native"
 import { HeaderProps } from "./header.props"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
-import { Icon } from "../icon/icon"
-import { spacing } from "../../theme"
+
+import { color, spacing } from "../../theme"
 import { translate } from "../../i18n/"
+import SvgUri from "react-native-svg-uri"
+import { typography } from "../../theme/typography"
 
 // static styles
 const ROOT: ViewStyle = {
   flexDirection: "row",
-  paddingHorizontal: spacing[4],
+  paddingHorizontal: spacing[2],
   alignItems: "center",
-  paddingTop: spacing[5],
-  paddingBottom: spacing[5],
+  paddingTop: spacing[4],
+  paddingBottom: spacing[4],
   justifyContent: "flex-start",
+  backgroundColor: color.primary,
 }
-const TITLE: TextStyle = { textAlign: "center" }
+const TITLE: TextStyle = {
+  textAlign: "center",
+  color: color.palette.white,
+  fontFamily: typography.primaryBold,
+  marginBottom: -spacing[1],
+  fontSize: 22,
+}
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
 const RIGHT: ViewStyle = { width: 32 }
@@ -41,7 +50,9 @@ export function Header(props: HeaderProps) {
     <View style={[ROOT, style]}>
       {leftIcon ? (
         <Button preset="link" onPress={onLeftPress}>
-          <Icon icon={leftIcon} />
+          {leftIcon === "back" && (
+            <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
+          )}
         </Button>
       ) : (
         <View style={LEFT} />
@@ -51,7 +62,9 @@ export function Header(props: HeaderProps) {
       </View>
       {rightIcon ? (
         <Button preset="link" onPress={onRightPress}>
-          <Icon icon={rightIcon} />
+          {rightIcon === "back" && (
+            <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
+          )}
         </Button>
       ) : (
         <View style={RIGHT} />

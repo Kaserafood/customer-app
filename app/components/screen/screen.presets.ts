@@ -46,7 +46,7 @@ export const presets = {
       flex: 1,
       height: "100%",
     } as ViewStyle,
-    inner: { justifyContent: "flex-start", alignItems: "stretch" } as ViewStyle,
+    inner: { justifyContent: "flex-start", alignItems: "stretch", flexGrow: 1 } as ViewStyle,
   },
 }
 

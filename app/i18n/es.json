@@ -1,0 +1,229 @@
+{
+    "common" : {
+        "ok": "Aceptar",
+        "cancel": "Cancelar",
+        "continue" : "Continuar",
+        "subtotal" : "Subtotal",
+        "total" : "Total",
+         "deliveryAmount" : "Costo de envío"
+        
+    },
+    "initScreen": {
+        "homemadeFood" : "Comida Kasera",
+        "byChefIndependently" : "Por chef independientes",
+        "register" : "Regístrate",
+        "login" : "Iniciar sesión"
+    },
+    "registerFormScreen": {
+        "title": "Regístrate",
+        "name": "Nombre:",
+        "lastName": "Apellido:",
+        "email": "Correo:",
+        "password": "Contraseña:",
+        "phone" : "Teléfono:",
+        "acceptThe": "Acepto los",
+        "termsAndConditions": " términos y condiciones ",
+        "andThe" : " y las ",
+        "privacyPolicy": " políticas de privacidad",
+        "info" : "Llena los espacios con la información que se solicita.",
+        "register" : "Registrar"
+    },
+    "errorScreen": {
+        "title": "Error",
+        "friendlySubtitle": "Lo sentimos, se ha producido un error inesperado.",
+        "reset": "Reiniciar"
+    },
+    "termsConditionsScreen": {
+        "title": "Términos y condiciones",
+        "text1" : "Aiuda, S,A. (“Aiuda”, “Kasera”, “nosotros”, “nuestro”) a través de su empresa Kasera provee sus servicios (descritos abajo) a través de su sitio web ubicado en www.kaserafood.com y food.kaserafood.com (“Sitio(s) Web”) y a través de sus aplicaciones móviles y servicios relacionados (esos servicios, llamados colectivamente incluyendo cualquier nueva característica o aplicación, y el Sitio Web, como los “Servicio(s)” están sujetos a los siguientes Términos y Condiciones (modificados cada cierto tiempo, los “Términos y Condiciones”).",
+
+        "text2": "Estos Términos y Condiciones forman un contrato legalmente vinculante (“El Acuerdo”) entre tú, Kasera, su casa matriz, sus subsidiarias, representantes, afiliados, oficiales y directores gobernando tu uso del Servicio. Nos reservamos el derecho, a nuestra discreción, de cambiar o modificar porciones de estos Términos y Condiciones en cualquier momento. Si hacemos esto, publicaremos los cambios en esta página e indicaremos la última fecha en que estos Términos y Condiciones fueron revisados. Nosotros nos tomaremos la tarea de notificarte acerca de cambios materiales en los Términos y Condiciones, tanto a través de la interfaz de usuario, un correo electrónico u otros medios razonables. Cualquier posible modificación será efectiva inmediatamente aceptes los Términos y Condiciones modificados. Tu uso del Servicio después de la fecha en que algún cambio sea efectivo constituye tu inmediata y efectiva aceptación de los nuevos Términos y Condiciones. A no ser que se realicen cambios materiales a las provisiones de arbitraje contenidas, aceptas que una modificación de este acuerdo no crea un oportunidad renovada de rechazar el arbitraje (si aplica). Si no aceptas acatar estos o futuros Términos y Condiciones, no uses o accedas (o continues accediendo) al Servicio.",
+        
+        "text3": "Por favor lee estos Términos y Condiciones detenidamente, ya que contienen un acuerdo de arbitraje y otra información importante con respecto a tus derechos legales, recursos y obligaciones. El acuerdo de arbitraje requiere (con excepción limitada), que presentes cualquier reclamo que tengas contra nosotros a un arbitraje vinculante y final, y además 1) sólo podrás presentar reclamos contra Kasera de forma individual, no como demandante o miembro en cualquier clase de demanda, acción o procedimiento representativo o colectivo. 2) Solo podrás solicitar compensación (incluyendo compensación monetaria, judicial o declaratoria) de forma individual, y 3) Es posible que no puedas tener ningún reclamo contra Nosotros resuelto por una corte o tribunal de ley. Al aceptar estos Términos y Condiciones y/o usando el Sitio Web de Kasera, expresamente admites y aceptas que has leído y aceptado, sin limitante o capacidad impedida, ser suscrito y afecto por estos Términos y Condiciones y que aceptas todos los Términos y Condiciones.",
+
+        "text4": "Además, al utilizar ciertos servicios, podrías estar sujeto a otros términos adicionales a esos servicios que puedan ser publicados en el Servicio de vez en cuando, incluyendo, sin ser limitante, la Política de Privacidad, ubicada en www.kaserafood.com/privacy-policy . Todos esos términos son por lo tanto, incorporado por referencia en estos Términos y Condiciones.",
+
+        "text5" : "Acceso y uso de el Servicio",
+
+        "text6" : "Descripción del Servicio: El servicio es una plataforma tecnológica que provee un mercado virtual que permite conexiones entre chefs independientes, proveedores de catering y otros individuos que deseen listar, ofrecer, vender y entregar alimentos, productos artesanales, productos preparados (“Comida(s)”) al público general y clientes que naveguen y compren Comidas. Usuarios que compren Comidas son “Cliente(s)” y usuarios que vendan Comidas a través de el Servicio son “Vendedor(es)”. Un usuario puede ser tanto Cliente como Vendedor. Todas las compras son realizadas directamente (y todo contacto de compra y venta es entre Clientes y Vendedores. ",
+
+        "text7" : "Kasera ofrece un mercado, no es un Vendedor y no prepara, empaca o vende alimentos. El Servicio otorga la habilidad a los usuarios de conectarse entre ellos y servicios relacionados pero Nosotros no somos una parte en ninguna transacción de compra o venta. Para motivar el uso recurrente de el Servicio, Kasera puede ofrecer facilitar la resolución de disputas entre Clientes y Vendedores, pero Kasera no tiene control sobre y no garantiza a) la existencia, calidad, seguridad, autenticidad o legalidad de las Comidas ofrecidas o vendidas en el Servicio; b) la verdad o exactitud del contenido u oferta de los Vendedores en el Servicio; c) la habilidad de un Vendedor de vender Comidas a través del Servicio y entregar las Comidas dentro del las ventanas de entregas requeridas; d) la habilidad de los Clientes para pagar por Comidas compradas a través del Servicio; o e) que un Cliente o Vendedor completen realmente una transacción, que el envío y despacho sucedan sin inconvenientes, o que sea posible retornar una Comida a través del Servicio.",
+
+        "text8" : "Los Vendedores son dueños de empresas independientes y contratistas independientes y no son empleados socios, representantes, agentes, miembros de un proyecto conjunto, contratistas independientes o franquiciatarios de Kasera. Kasera no cocina, empaca o entrega comida y no emplea personas para cocinar, empacar o entregar comida.",
+
+        "text9" : "Cada Vendedor es individualmente responsable de cumplir con todas las leyes aplicables, reglas, regulaciones y estándares, incluyendo, pero no limitadas a aquellas que rigen sobre la preparación, venta, comercialización, y empaque de todas las Comidas ordenadas a través de Kasera, y actualizar detalles y precios relacionadas a las Comidas ofrecidas. Cada Vendedor es responsable legalmente por la calidad, seguridad y frescura de sus productos y Kasera no verifica las credenciales, representaciones, productos, servicios o precios ofrecidos por ninguno de los Vendedores, y no garantiza la calidad de los productos o servicios, o que los Vendedores o Comidas cumplan con las leyes aplicables. Kasera no será demandable o responsable de ninguna manera por cualquier Comida proveída por los Vendedores que sea causa de daños de tu salud, lesiones o que no cumpla tus expectativas.",
+
+        "text10" : " Dependiente la jurisdicción, Kasera podría entrar en acuerdos con contratistas independientes (cada uno una “Empresa de Entregas”) para proveer servicios de entregas bajo ciertas circunstancias y si es deseado así por Vendedores individuales o Clientes. Si un Vendedor o Cliente elige usar a una Empresa de Entregas para entregar una Comida, Kasera no está ofreciendo esos servicios de entrega y no tiene ninguna responsabilidad o responsabilidad legal por las acciones o inacciones de cualquier Empresa de Entregas. Kasera no será responsable legalmente o responsable por cualquier servicio de entrega proveído por una Empresa de Entregas o por cualquier error o mala representación hecha por ellos. Las Empresa de Entregas son requeridas a cumplir con todas las leyes aplicables, reglas y regulaciones.",
+
+        "text11": "Obligaciones de registro: Podrías estar obligado a registrarte con Kasera para poder acceder y usar ciertas características del Servicio. Si eliges registrarte para el Servicio, aceptas que proveerás y mantendrás información verdadera, acertada, vigente y completa sobre tu persona, como es incitado en los campos en el formulario de registro de el Servicio. La información de registro y otros tipos de información sobre ti, son gobernados por nuestra Política de Privacidad. El Servicio está disponible únicamente para individuos que forman contratos legalmente vinculantes bajo las leyes aplicables. Sin limitar lo anterior, el Servicio no está disponible para menores (personas menores de edad según cada legislación aplicable) o a usuarios suspendidos temporal o permanentemente suspendidos o eliminados de el Servicio (tanto Clientes como Vendedores). Si no calificas, por favor no uses el Servicio. Kasera se reserva el derecho de rechazar el acceso o el uso del Servicio, a cualquiera que infrinja los Términos y Condiciones o por razones relacionadas a la seguridad de la comunidad Kasera, incluyendo usuarios de Kasera, empleados o usuarios prospectos. Solo estás autorizado a crear o usar una sola cuenta para el Servicio y está prohibido el uso de alter egos o cualquier otro tipo de identidad disfrazada mientras se use el Servicio.",
+
+        "text12": "Cuenta de miembros, contraseña y seguridad: Tu eres responsable por mantener la confidencialidad de tu password y cuenta, si existe alguna, y eres completamente responsable por cualquiera y todas las actividades que ocurran dentro de tu acceso a tu cuenta. Aceptas a) notificar inmediatamente a Kasera sobre cualquier uso sin autorización de tu password o cuenta o cualquier otro fallo de seguridad y b) asegurar tu salida al final de cada sesión al accesar al Servicio . Kasera no será legalmente responsable por ningún daño o pérdida generada por un fallo tuyo al comprender esta Sección",
+
+        "text13" : "Modificaciones al Servicio: Kasera se reserva el derecho a modificar o discontinuar temporal o permanentemente el Servicio (o cualquier parte contenida en él) con o sin aviso previo. Aceptas que no podrás demandar a Kasera o pedir que Kasera sea legalmente responsable . Aceptas que Kasera no puede ser demandada por ti o por un tercero por cualquier modificación, suspensión, o descontinuación normal de el “Servicio”.",
+
+        "text14" : "Prácticas generales relacionadas al uso y el almacenamiento: Aceptas que Kasera pueda establecer prácticas generales y límites relativos al uso del el Servicio. Aceptas que Kasera no tiene ninguna responsabilidad o responsabilidad legal por la eliminación o fallo al guardar cualquier información o contenido mantenido, o transmitido por el Servicio. Aceptas que Kasera se reserva el derecho a eliminar cuentas que estén inactivas por un determinado periodo de tiempo. Además, aceptas que Kasera se reserva el derecho a cambiar estas prácticas y límites en cualquier momento, a discreción unilateral, con o sin aviso.",
+
+        "text15" : "Servicios móviles: El Servicio puede incluir ciertos servicios que estás disponibles a través de un dispositivo móvil, incluyendo (i) la habilidad de subir contenido (incluyendo opciones de Comidas o información de Clientes y Vendedores) al Servicio a través de un dispositivo móvil, ii) la habilidad de navegar el Servicio y el Sitio Web desde un dispositivo móvil y iii) la habilidad de acceder a ciertas funciones a través de una aplicación móvil instalada en un dispositivo móvil (colectivamente, los “Servicios Móviles”). Dependiendo el uso que le des al Servicio desde un dispositivo móvil, podrías incurrir en cargos de parte de tu proveedor de servicios de internet y telefonía. Adicionalmente, puede que tu proveedor de servicios de internet restrinja tu habilidad de descargar, instalar o usar los Servicios Móviles y puede que no todos los Servicios Móviles funcionen con todas las empresas de internet y telefonía o todos los dispositivos. Al usar los Servicios Móviles, aceptas que Kasera pueda comunicarse contigo mediante SMS, WhatsApp, llamadas u otros medios electrónicos sobre temas relacionados a Kasera y otras entidades y aceptas que cierta información sobre tu uso de Los Servicios Móviles pueda ser comunicada a Kasera. Si cambias o desactivas tu número de teléfono celular, aceptas realizar el cambio correspondiente en tu perfil de Kasera para asegurar que tus mensajes no sean enviados a la persona que adquiera tu viejo número. Aceptas y admites que tu uso de el Servicio debe ir de acuerdo a las normas establecidas por la plataforma móvil que utilizas o tu proveedor de servicios de internet y telefonía.",
+
+        "text16" : "Al registrarte a Kasera y proveer tu información de contacto estás aceptando ser contactado por Kasera o cualquiera de sus socios comerciales por medio de teléfono, mensajes de texto, (que pueden ser automáticos), WhatsApp, correo electrónico, fax, teléfono o cualquier otro medio. Si ya no deseas recibir comunicaciones de parte de Kasera o sus socios comerciales, aceptas la obligación de notificar a nuestros socios comerciales directamente. Puedes decidir dejar de recibir comunicaciones por varios métodos escribiendo al correo electrónico kaserafood@gmail.com.",
+
+        "text17" : "Condiciones de uso",
+
+        "text18" : "Conducta de usuario: Tu eres únicamente responsable por cualquier descripción, imagen, ofertas, listados, información, datos, texto, música, sonido, gráficos, video, mensajes u otros materiales (“contenido(s)”) que subas, postees, publiques o muestres (de ahora en adelante “subas”) o mandes por correo o uses de cualquier manera mediante el Servicio. Los siguientes son algunos ejemplos de contenido ilegal o prohibido por Kasera. Kasera se reserva el derecho de investigar y tomar acciones legales contra cualquier que, según el criterio de Kasera, viole esta provisión, incluyendo pero no limitado a, remover el contenido del Servicio, suspender o eliminar la cuenta de quienes violen las condiciones y reportarte a las autoridades pertinentes. Aceptas el no usar el Servicio para lo siguiente:",
+
+        "text19" : "a) Vender, postear o transmitir cualquier contenido o información relativo al ofrecimiento de Comidas o cualquier otro contenido que i) sea ilegal, dañino, peligroso, abusivo, relativo a tortura, violento, difamatorio, vulgar, obsceno, pornográfico, falso, invada la privacidad de otros, esté cargado de odio, racista, o éticamente cuestionable ; ii) no tengas derecho a vender o transmitir bajo alguna ley o contrato o relación fiduciaria; iii) que provoque un riesgo de privacidad para alguien; iv) que infrinja la propiedad intelectual de terceros; v) constituya publicidad, materiales de promoción, actividad comerciales y/o ventas, “spam”, “correo no solicitado”, concursos, sorteos, o cualquier otra forma de solicitud; vi) que contenga viruses informáticos o cualquier otro tipo de código computacional diseñado para interrumpir, destruir o limitar el funcionamiento de cualquier programa de computación o equipo o equipo de telecomunicaciones; o vii) que a juicio exclusivo de Kasera, sea cuestionable o que restrinja o inhiba a cualquier persona de usar o disfrutar el Servicio, o que pueda exponer a Kasera o sus usuarios a cualquier tipo de daño o responsabilidad de cualquier tipo; b) personificar a cualquier persona o entidad ajena a ti, o falsamente declarar o dar a entender tu afiliación con cualquier persona o entidad; c) solicitar información personal de cualquier persona menor a 18 años; d) colectar o almacenar correos electrónicos de otros usuarios del Servicio o el Sitio Web de forma electrónica o por otros medios, con el propósito de enviar correos electrónicos no solicitados u otros tipos de comunicación no solicitada; e) anunciar u ofrecer vender cualquier bien o servicio ajeno a las Comidas preparadas, vendidas y compradas a través de el Servicio; f) Usar el servicio para solicitar, hacer o aceptar alguna Comida afuera o independiente del Servicio, para saltarse o evitar cualquier comisión o pago que de otra manera aplicase para dicha transacción; g) Para interferir o interrumpir el Servicio, o los servidores, o las redes conectadas al Servicio, o desobedecer cualquier requerimiento, procedimiento, política o regulaciones de redes conectadas al servicio; h) violar cualquier ley aplicable local, estatal, departamental, nacional o internacional  o cualquier regulación que tenga el peso de la ley; i) que sea parte de cualquier actividad que viole el Decreto Número 57-2008 del Congreso de la República de Guatemala, o que viole la Ley de Acceso a la Información Pública y decretos subsecuentes, así como la “Telephone Consumer Protection Act, 47 U.S.C § 227 at seq. y sus regulaciones, 47 C.F.R. § 64.1200; la “Do-Not-Call Implementation Act, 15 U.S.C § 6101 et seq de los Estados Unidos; o cualquier ley o regulación anti-spam, de protección de datos o privacidad de cualquier jurisdicción; j) fomentar o promover cualquier actividad o empresa criminal o proveer instrucción sobre actividades ilícitas; o k) obtener o intentar acceder a cualquier material o información que sin importar el medio, no haya sido puesta en disponibilidad intencionalmente o proveída a través del Servicio.",
+        
+        "text20" : "Declaraciones, garantías y acuerdo de usuarios. Todos los usuarios declaran y garantizan qué:",
+
+        "text21" : "Tienes como mínimo la edad mínima requerida en la jurisdicción donde resides para entrar en contratos legalmente vinculantes;",
+
+        "text22" : "Tienes el derecho, autoridad y capacidad para entrar en este Acuerdo y regirte por los términos y condiciones de este Acuerdo, y que vas a regirte por este Acuerdo;",
+
+        "text23" : "Has leído, entendido y aceptado ser afecto a los Términos y Condiciones y la Política de Privacidad;"
+
+     },
+    "privacyPolicy": {
+        "title" :"Política de privacidad",
+        "text1" : "What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Why do we use it?It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like). Where does it come from?Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.purpose (injected humour and the like). Where does it come from?Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. "
+    },
+
+    "registerPagerScreen" : {
+        "page1" : {
+            "title" : "Comida casera preparada por chefs independientes",
+            "description" : "Olvídate de comer lo mismo de siempre y de la comida que daña tu salud"
+        },
+         "page2" : {
+            "title" : "Platillos preparados con ingredientes frescos",
+            "description" : "Pide con anticipación durnate el día antes, para que los chefs cocinen con los mejores ingredientes frescos"
+        },
+          "page3" : {
+            "title" : "Recibe tu comida lista para calentar",
+            "description" : "Olvidate de comer lo mismo de siempre y de la comida que daña tu salud"
+        },
+        "skip" :"Saltar",
+        "next" :"Siguiente",
+        "start" : "Iniciar"
+    }, 
+    "loginFormScreen": {
+        "title" :"Iniciar sesión",
+        "email" : "Correo electrónico",
+        "password" : "Contraseña",
+        "continue" : "Continuar",
+        "info" : "Ingresa los datos que se solicitan"
+    },
+    "mainScreen": {
+        "address" : "Ciudad de Guatemala, Guatemala, Guatemala",
+        "dayShipping" : "Día de entrega",
+        "tomorrow" : "Mañana",
+        "mondayShort" : "Lun.",
+        "tuesdayShort" : "Mar.",
+        "wednesdayShort" : "Mié.",
+        "thursdayShort" : "Jue.",
+        "fridayShort" : "Vie.",
+        "saturdayShort" : "Sáb.",
+        "sundayShort" : "Dom.",
+        "categories" : "Categorías",
+        "delivery" : "Entrega",
+        "monday": "lunes",
+        "tuesday": "martes",
+        "wednesday": "miércoles",
+        "thursday": "jueves",
+        "friday": "viernes",
+        "saturday": "sábado",
+        "sunday": "domingo",
+        "favoriteTomorrow": "Favoritos para mañana",
+        "of": "De ",
+        "toShare" : "Para compartir",
+        "why" : "¿Por qué?",
+      
+        "nikkei": "Nikkei",
+        "pizza": "Pizza",
+        "hamburguer" : "Hamburguesa",
+        "priceExample": "Q14",
+
+        "itemTitle": "Sopa de calabaza",
+        "itemDescription": "Sopa de calabaza con queso, tomate, lechuga, cebolla, aceitunas, pimientos y salsa de tomate",
+        "chef": "Karla y Mario",
+        "price": "Q15",
+      
+       
+        "home": "Inicio",
+        "chefs": "Chefs",
+        "search": "Buscar",
+        "more": "Más"
+    },
+    "placeholder": {
+        "dishTitle": "Costillas con barcaboo de pollo",
+        "chefName" : "Luis R."
+    },
+    "bottomNavigation": {
+        "home": "Inicio",
+        "chefs": "Chefs",
+        "search": "Buscar",
+        "more": "Más"
+    
+    },
+    "modalAddress" : {
+        "title": "Elige una dirección",
+        "add" : "Ingresa una nueva dirección",
+        "addressName" : "Casa abuela",
+        "desc" : "Calle, número, colonia, ciudad, estado, código postal"
+    },
+
+    "modalDeliveryDay" : {
+        "title": "Pide con anticipación",
+        "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tiene un pedido.",
+        "continue": "Continuar"
+    },
+    "categories": {
+        "title": "Categorías"
+    },
+    "chefs": {
+        "delivery": "Entrega",
+        "name": "Juana R.",
+        "description" : "Pepian de tres carnes",
+        "category": "Vegetariaono - Mexicano",
+        "price": "Q15" 
+
+    },
+    "dishDetailScreen": {
+        "title": "Platillo",
+        "unities": "Unidades",
+        "commentChef": "Comentario al chef:",
+        "placeHolderCommetChef": "Alergias, indicaciones.",
+        "moreProductsChef": "Más productos del chef",
+        "addToOrder": "Agregar a orden"
+    },
+    "menuChefScreen" : {
+         "title": "Menú",
+         "dayDelivery" : "Días de entrega:",
+         "all": "Todos",
+         "watchCart": "Ver carrito"
+    },
+    "deliveryDetailScreen" : {
+         "title": "Detalles de entrega",
+         "info" : "Información de entrega",
+         "address" : "Dirección",
+         "addressPlaceholder": "Selecciona tu dirección",
+         "deliveryNote" : "Nota de entrega",
+         "deliveryNotePlaceholder": "Referencias, código de accesso, etc",
+         "deliveryDate" : "Fecha de entrega",
+         "deliveryDatePlaceholder": "Selecciona una fecha",
+         "deliveryTime" : "Elige el rango de entrega",
+         "paymentMethod" : "Método de pago",
+         "delivery" : "Entrega:"
+    },
+    "endOrderScreen" : {
+        "title" : "Kasera",
+        "deliveryOn" : "Entregar en:",
+        "deliveryDate" : "Fecha de entrega:",
+        "info": "Te enviaremos una confirmación a tu correo electrónico",
+        "order" : "Pedidio",
+        "thankYou" : "¡Gracias por tu apoyo!",
+        "cookWithLove" : "Cocinaré tu platillo con mucho amor.",
+        "continueExplore": "Seguir explorando",
+    }
+
+
+        
+}

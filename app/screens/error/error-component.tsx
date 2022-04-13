@@ -14,7 +14,7 @@ const CONTAINER: ViewStyle = {
 const ERROR_DETAILS_CONTAINER: ViewStyle = {
   width: "100%",
   maxHeight: "60%",
-  backgroundColor: color.line,
+  backgroundColor: color.palette.white,
   marginVertical: 15,
   paddingHorizontal: 10,
   paddingBottom: 15,
@@ -78,7 +78,7 @@ export const ErrorComponent = (props: ErrorComponentProps) => {
           {/* <Text selectable style={CONTENT_BACKTRACE} text={`${props.errorInfo.componentStack}`} /> */}
         </ScrollView>
       </View>
-      <Button style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
+      <Button block rounded style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
     </View>
   )
 }

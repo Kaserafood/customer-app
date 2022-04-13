@@ -17,7 +17,17 @@ export const typography = {
   /**
    * The primary font.  Used in most places.
    */
-  primary: Platform.select({ ios: "Helvetica", android: "normal" }),
+  primary: Platform.select({ ios: "Poppins", android: "Poppins-Regular" }),
+
+  /**
+   * The primary bold font.
+   */
+  primaryBold: Platform.select({ ios: "Poppins-Bold", android: "Poppins-Bold" }),
+
+  /**
+   * The primary smi bold font.
+   */
+  primarySemiBold: Platform.select({ ios: "Poppins-SemiBold", android: "Poppins-SemiBold" }),
 
   /**
    * An alternate font used for perhaps titles and stuff.
@@ -28,4 +38,10 @@ export const typography = {
    * Lets get fancy with a monospace font!
    */
   code: Platform.select({ ios: "Courier", android: "monospace" }),
+}
+
+export const typographySize = {
+  sm: 12,
+  md: 14,
+  lg: 17,
 }

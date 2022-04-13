@@ -4,13 +4,7 @@ import { Text } from "../text/text"
 import { viewPresets, textPresets } from "./button.presets"
 import { ButtonProps } from "./button.props"
 
-/**
- * For your text displaying needs.
- *
- * This component is a HOC over the built-in React Native one.
- */
 export function Button(props: ButtonProps) {
-  // grab the props
   const {
     preset = "primary",
     tx,
@@ -18,18 +12,34 @@ export function Button(props: ButtonProps) {
     style: styleOverride,
     textStyle: textStyleOverride,
     children,
+    rounded,
+    block,
     ...rest
   } = props
 
   const viewStyle = viewPresets[preset] || viewPresets.primary
+  if (block) {
+    viewStyle.width = "100%"
+  } else viewStyle.width = 175
+
+  if (preset === "link") {
+    viewStyle.width = 35
+    viewStyle.height = 35
+  }
+
+  if (rounded) {
+    viewStyle.borderRadius = 100
+  }
+
   const viewStyles = [viewStyle, styleOverride]
   const textStyle = textPresets[preset] || textPresets.primary
   const textStyles = [textStyle, textStyleOverride]
 
   const content = children || <Text tx={tx} text={text} style={textStyles} />
 
+  console.log("Button", preset, viewStyle.width)
   return (
-    <TouchableOpacity style={viewStyles} {...rest}>
+    <TouchableOpacity style={viewStyles} {...rest} activeOpacity={0.8}>
       {content}
     </TouchableOpacity>
   )

@@ -8,7 +8,20 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen } from "../screens"
+
+import {
+  InitScreen,
+  RegisterFormScreen,
+  TermsConditionsScreen,
+  PrivacyPolicyScreen,
+  RegisterPagerScreen,
+  LoginFormScreen,
+  MainScreen,
+  DishDetailScreen,
+  MenuChefScreen,
+  DeliveryDetailScreen,
+  EndOrderScreen,
+} from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
 /**
@@ -23,31 +36,46 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/params/
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
+
+interface registerPageParams {
+  init: boolean
+}
 export type NavigatorParamList = {
-  welcome: undefined
-  demo: undefined
-  demoList: undefined
-  login: undefined
-  // 🔥 Your screens go here
+  init: undefined
+  registerForm: undefined
+  termsConditions: undefined
+  privacyPolicy: undefined
+  registerPager: registerPageParams
+  loginForm: undefined
+  main: undefined
+  dishDetail: undefined
+  menuChef: undefined
+  deliveryDetail: undefined
+  endOrder: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
-
+const Drawer = createDrawerNavigator()
 const AppStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
+      initialRouteName="deliveryDetail"
     >
-      <Stack.Screen name="welcome" component={WelcomeScreen} />
-      <Stack.Screen name="demo" component={DemoScreen} />
-      <Stack.Screen name="demoList" component={DemoListScreen} />
-      <Stack.Screen name="login" component={LoginScreen} />
-
-      {/** 🔥 Your screens go here */}
+      <Stack.Screen name="init" component={InitScreen} />
+      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+      <Stack.Screen name="loginForm" component={LoginFormScreen} />
+      <Stack.Screen name="main" component={MainScreen} />
+      <Stack.Screen name="dishDetail" component={DishDetailScreen} />
+      <Stack.Screen name="menuChef" component={MenuChefScreen} />
+      <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+      <Stack.Screen name="endOrder" component={EndOrderScreen} />
     </Stack.Navigator>
   )
 }
@@ -81,3 +109,6 @@ AppNavigator.displayName = "AppNavigator"
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
+function createDrawerNavigator() {
+  throw new Error("Function not implemented.")
+}

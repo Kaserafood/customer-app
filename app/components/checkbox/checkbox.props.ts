@@ -13,11 +13,6 @@ export interface CheckboxProps {
   outlineStyle?: StyleProp<ViewStyle>
 
   /**
-   * Additional fill style. Only visible when checked.
-   */
-  fillStyle?: StyleProp<ViewStyle>
-
-  /**
    * Is the checkbox checked?
    */
   value?: boolean
@@ -41,4 +36,14 @@ export interface CheckboxProps {
    * Fires when the user tabs to change the value.
    */
   onToggle?: (newValue: boolean) => void
+
+  /**
+   * Preset checkbox, tiny is samall an black, default is big and green
+   */
+  preset?: "tiny" | "default"
+
+  /**
+   * If the box of the checkbox is rounded
+   */
+  rounded?: boolean
 }
