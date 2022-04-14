@@ -59,7 +59,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               <ScrollView style={utilSpacing.my6}>
                 <View style={[styles.containerItemAddress, styles.flex, utilSpacing.mb5]}>
                   <View style={utilSpacing.p4}>
-                    <SvgUri height={20} width={20} source={Images.start}></SvgUri>
+                    {/* <SvgUri height={20} width={20} source={Images.start}></SvgUri> */}
                   </View>
                   <View>
                     <Text numberOfLines={1} preset="semiBold" tx="modalAddress.addressName"></Text>
@@ -73,7 +73,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
                 </View>
                 <View style={[styles.containerItemAddress, styles.flex]}>
                   <View style={utilSpacing.p4}>
-                    <SvgUri height={20} width={20} source={Images.startActive}></SvgUri>
+                    {/* <SvgUri height={20} width={20} source={Images.startActive}></SvgUri> */}
                   </View>
                   <View>
                     <Text numberOfLines={1} preset="semiBold" tx="modalAddress.addressName"></Text>

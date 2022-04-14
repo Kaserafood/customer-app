@@ -14,12 +14,23 @@ export type GetCharacterResult = { kind: "ok"; character: Character } | GeneralA
 
 export type UserLoginResponse =
   | {
-      kind: "ok"
+      kind: string
       data: {
         id: number
         username: string
         email: string
         displayName: string
       }
+    }
+  | GeneralApiProblem
+
+export interface Day {
+  dayName: string
+  date: string
+}
+export type DayResponse =
+  | {
+      kind: string
+      data: Day[]
     }
   | GeneralApiProblem

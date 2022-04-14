@@ -1,7 +1,7 @@
 import { ApiResponse } from "apisauce"
 import { Api } from "./api"
-import { GetCharactersResult, UserLoginResponse } from "./api.types"
-import { getGeneralApiProblem, GeneralApiProblem } from "./api-problem"
+import { UserLoginResponse } from "./api.types"
+import { getGeneralApiProblem } from "./api-problem"
 import { IUserLogin, IUserRegister } from "../../models/user-store/user-store"
 
 export class UserApi {

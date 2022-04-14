@@ -1,5 +1,5 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, ScrollView, StyleSheet } from "react-native"
+import React, { useState, useEffect } from "react"
+import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -8,6 +8,7 @@ import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
 import { useStores } from "../../models"
 import i18n from "i18n-js"
+import { ScrollView } from "react-native-gesture-handler"
 
 export interface DayDeliveryProps {
   /**
@@ -37,11 +38,19 @@ export interface DayDeliveryProps {
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
   const { style, hideWhyButton, titleTx, txOptions } = props
-  const { modalStore } = useStores()
+  const { modalStore, dayStore } = useStores()
+  const { days } = dayStore
 
   const i18nText = titleTx && translate(titleTx, txOptions)
 
   const actualTitle = i18nText || "mainScreen.dayShipping"
+
+  useEffect(() => {
+    async function fetchData() {
+      await dayStore.getDays("2022-04-14T13:51:00")
+    }
+    fetchData()
+  }, [])
 
   return (
     <View>
@@ -55,12 +64,10 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
           ></Chip>
         )}
       </View>
-      <ScrollView horizontal style={[styles.flex, utilSpacing.mt5, utilSpacing.pb3, style]}>
-        <Chip tx="mainScreen.tomorrow" style={styles.chip}></Chip>
-        <Chip active text="Jue. May 16" style={utilSpacing.mr3}></Chip>
-        <Chip text="Vier. May 17" style={utilSpacing.mr3}></Chip>
-        <Chip text="Sab. May 18" style={utilSpacing.mr3}></Chip>
-        <Chip text="Dom. May 19" style={utilSpacing.mr3}></Chip>
+      <ScrollView horizontal style={[utilSpacing.mt5, utilSpacing.pb3, style]}>
+        {days.map((day) => (
+          <Chip text={day.dayName} key={day.date} style={styles.chip}></Chip>
+        ))}
       </ScrollView>
     </View>
   )
@@ -75,7 +82,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     marginBottom: spacing[2],
-    marginRight: spacing[2],
+    marginRight: spacing[1],
   },
   containerImgClose: {
     alignItems: "flex-end",

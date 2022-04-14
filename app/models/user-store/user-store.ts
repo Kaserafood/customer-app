@@ -2,7 +2,6 @@ import { Instance, types } from "mobx-state-tree"
 import { withEnvironment } from "../extensions/with-environment"
 import { UserApi } from "../../services/api/user-api"
 import { handleDataResponseAPI } from "../../utils/messages"
-import { UserLoginResponse } from "../../services/api/api.types"
 import { saveString } from "../../utils/storage"
 
 const userRegister = types.model("UserRegisterStore").props({
