@@ -11,7 +11,7 @@ import { typography, typographySize } from "../../theme/typography"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
-    const toRegister = () => navigation.navigate("registerPager")
+    const toRegister = () => navigation.navigate("registerForm")
     const toLogin = () => navigation.navigate("loginForm")
 
     useEffect(() => {

@@ -5,7 +5,9 @@
         "continue" : "Continuar",
         "subtotal" : "Subtotal",
         "total" : "Total",
-         "deliveryAmount" : "Costo de envío"
+         "deliveryAmount" : "Costo de envío",
+         "someError" : "Lo sentimos, se ha ocurrido un error inesperado",
+         "operationSuccess" : "Procceso realizado con éxito"
         
     },
     "initScreen": {
@@ -16,7 +18,7 @@
     },
     "registerFormScreen": {
         "title": "Regístrate",
-        "name": "Nombre:",
+        "firstName": "Nombre:",
         "lastName": "Apellido:",
         "email": "Correo:",
         "password": "Contraseña:",
@@ -26,7 +28,14 @@
         "andThe" : " y las ",
         "privacyPolicy": " políticas de privacidad",
         "info" : "Llena los espacios con la información que se solicita.",
-        "register" : "Crear cuenta"
+        "register" : "Crear cuenta",
+        "firstNameRequired": "Debes ingresar tu nombre",
+        "lastNameRequired": "Debes ingresar tu apellido",
+        "emailRequired": "Debes ingresar tu correo electrónico",
+        "passwordRequired": "Debes ingresar tu contraseña",
+        "phoneRequired": "Debes ingresar tu número de teléfono",
+        "emailFormat" : "Debe tener el formato : correo@email.com",
+        "acceptsTerms" : "Debes aceptar los términos y condiciones"
     },
     "errorScreen": {
         "title": "Error",

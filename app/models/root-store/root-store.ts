@@ -1,6 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { CharacterStoreModel } from "../character-store/character-store"
 import { ModalStoreModel } from "../modal-store/modal-store"
+import { UserRegisterModel, IUserRegister } from "../user-store/user-store"
 
 /**
  * A RootStore model.
@@ -9,7 +10,7 @@ import { ModalStoreModel } from "../modal-store/modal-store"
 export const RootStoreModel = types.model("RootStore").props({
   characterStore: types.optional(CharacterStoreModel, {} as any),
   modalStore: types.optional(ModalStoreModel, {} as any),
-  
+  userStore: types.optional(UserRegisterModel, {} as any),
 })
 
 /**
