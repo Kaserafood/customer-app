@@ -6,6 +6,7 @@ export const ModalStoreModel = types
     isVisibleModal: types.optional(types.boolean, false),
     isVisibleModalLocaton: types.optional(types.boolean, false),
     isVisibleModalDayDelivery: types.optional(types.boolean, false),
+    isVisibleLoading: types.optional(types.boolean, false),
   })
   .actions((self) => ({
     setVisibleModal(isModalVisible: boolean) {
@@ -18,5 +19,8 @@ export const ModalStoreModel = types
     setVisibleModalDayDelivery(isModalVisible: boolean) {
       self.isVisibleModalDayDelivery = isModalVisible
       self.isVisibleModal = isModalVisible
+    },
+    setVisibleLoading(isLoading: boolean) {
+      self.isVisibleLoading = isLoading
     },
   }))

@@ -1,13 +1,14 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle, View, StyleSheet } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { Screen, Text, Header, InputText, Button } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
-import { utilSpacing, utilText } from "../../theme/Util"
+import { utilSpacing } from "../../theme/Util"
+import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
+import { useStores } from "../../models"
+import { IUserLogin } from "../../models/user-store/user-store"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -18,11 +19,25 @@ const ROOT: ViewStyle = {
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation }) => {
     // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { modalStore, userStore } = useStores()
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
-    const toMain = () => navigation.navigate("main")
+    const { ...methods } = useForm({ mode: "onChange" })
+    const [formError, setError] = useState<boolean>(false)
+
+    const onError: SubmitErrorHandler<IUserLogin> = (errors) => {
+      return console.log({ errors })
+    }
+
+    const onSubmit = (data) => {
+      modalStore.setVisibleLoading(true)
+      userStore
+        .login(data)
+        .then(() => {
+          navigation.navigate("main")
+        })
+        .finally(() => modalStore.setVisibleLoading(false))
+    }
+
     return (
       <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
         <Header headerTx="loginFormScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
@@ -32,24 +47,41 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             tx="loginFormScreen.info"
             style={[utilSpacing.mb8, utilSpacing.mt4]}
           />
-          <InputText
-            keyboardType="email-address"
-            placeholderTx="loginFormScreen.email"
-            styleContainer={styles.input}
-          ></InputText>
 
-          <InputText
-            placeholderTx="loginFormScreen.password"
-            styleContainer={[styles.input]}
-            secureTextEntry
-          ></InputText>
-          <View style={[styles.containerBtn, utilSpacing.mt9]}>
-            <Button
-              tx="loginFormScreen.continue"
-              onPress={toMain}
-              style={[styles.btn, utilSpacing.py5]}
-            ></Button>
-          </View>
+          <FormProvider {...methods}>
+            <InputText
+              name="email"
+              keyboardType="email-address"
+              placeholderTx="loginFormScreen.email"
+              styleContainer={utilSpacing.mb3}
+              setFormError={setError}
+              rules={{
+                required: "registerFormScreen.emailRequired",
+                pattern: {
+                  value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                  message: "registerFormScreen.emailFormat",
+                },
+              }}
+            ></InputText>
+            <InputText
+              name="password"
+              placeholderTx="loginFormScreen.password"
+              styleContainer={styles.input}
+              secureTextEntry
+              rules={{
+                required: "registerFormScreen.passwordRequired",
+              }}
+              setFormError={setError}
+            ></InputText>
+
+            <View style={[styles.containerBtn, utilSpacing.mt9]}>
+              <Button
+                tx="loginFormScreen.continue"
+                style={[styles.btn, utilSpacing.py5]}
+                onPress={methods.handleSubmit(onSubmit, onError)}
+              ></Button>
+            </View>
+          </FormProvider>
         </View>
       </Screen>
     )

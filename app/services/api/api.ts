@@ -40,8 +40,40 @@ export class Api {
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
+        "Accept-Language": "es",
       },
     })
+
+    // Add a request interceptor
+    this.apisauce.axiosInstance.interceptors.request.use(
+      function (config) {
+        // Do something before request is sent
+        console.log("Request: ", JSON.stringify(config, null, 2))
+        return config
+      },
+      function (error) {
+        // Do something with request error
+        console.log("Request error: ", JSON.stringify(error, null, 2))
+        return Promise.reject(error)
+      },
+    )
+
+    // Add a response interceptor
+    this.apisauce.axiosInstance.interceptors.response.use(
+      function (response) {
+        // Any status code that lie within the range of 2xx cause this function to trigger
+        // Do something with response data
+        console.log("Response : " + JSON.stringify(response, null, 2))
+        return response
+      },
+      function (error) {
+        console.log("Response error: " + JSON.stringify(error, null, 2))
+
+        // Any status codes that falls outside the range of 2xx cause this function to trigger
+        // Do something with response error
+        return Promise.reject(error)
+      },
+    )
   }
 
   /**

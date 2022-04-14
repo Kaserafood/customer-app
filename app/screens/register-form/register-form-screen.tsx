@@ -1,13 +1,17 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, StyleSheet, BackHandler } from "react-native"
+import { View, StyleSheet } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
+import { useForm, FormProvider, SubmitErrorHandler } from "react-hook-form"
+
 import { Screen, Text, Header, InputText, Button, Checkbox } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { ScrollView } from "react-native-gesture-handler"
+import { useStores } from "../../models"
+import { IUserRegister } from "../../models/user-store/user-store"
+import { showMessageInfo } from "../../utils/messages"
 
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
@@ -18,68 +22,132 @@ export const RegisterFormScreen: FC<
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
   const [terms, setTerms] = useState(false)
+
+  const { userStore, modalStore } = useStores()
+
+  const onSubmit = (data) => {
+    if (!terms) {
+      showMessageInfo("registerFormScreen.acceptsTerms")
+    } else {
+      modalStore.setVisibleLoading(true)
+      console.log(data)
+      userStore
+        .register(data)
+        .then(() => {
+          modalStore.setVisibleLoading(false)
+        })
+        .finally(() => modalStore.setVisibleLoading(false))
+    }
+  }
+
+  const { ...methods } = useForm({ mode: "onChange" })
+  const [formError, setError] = useState<boolean>(false)
+
+  const onError: SubmitErrorHandler<IUserRegister> = (errors) => {
+    return console.log({ errors })
+  }
+
   return (
-    <Screen preset="scroll" style={styles.container} bottomBar="dark-content">
+    <Screen preset="scroll" bottomBar="dark-content">
       <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
 
-      <View style={styles.containerForm}>
-        <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
-        <InputText
-          placeholderTx="registerFormScreen.name"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          placeholderTx="registerFormScreen.lastName"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          keyboardType="phone-pad"
-          placeholderTx="registerFormScreen.phone"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          keyboardType="email-address"
-          placeholderTx="registerFormScreen.email"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          placeholderTx="registerFormScreen.password"
-          styleContainer={styles.input}
-          secureTextEntry
-        ></InputText>
-        <View style={styles.containerTerms}>
-          <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
-          <View style={styles.containerTermsText}>
-            <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
-            <Text
-              size="sm"
-              onPress={goTerms}
-              style={styles.textPrimary}
-              tx="registerFormScreen.termsAndConditions"
-            ></Text>
-            <Text size="sm" tx="registerFormScreen.andThe"></Text>
-            <Text
-              size="sm"
-              onPress={goPrivacy}
-              style={styles.textPrimary}
-              tx="registerFormScreen.privacyPolicy"
-            ></Text>
-          </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.containerForm}>
+          <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
+
+          <FormProvider {...methods}>
+            <InputText
+              name="name"
+              placeholderTx="registerFormScreen.firstName"
+              styleContainer={styles.input}
+              setFormError={setError}
+              rules={{
+                required: "registerFormScreen.firstNameRequired",
+              }}
+            ></InputText>
+            <InputText
+              name="lastName"
+              placeholderTx="registerFormScreen.lastName"
+              styleContainer={styles.input}
+              setFormError={setError}
+              rules={{
+                required: "registerFormScreen.lastNameRequired",
+              }}
+            ></InputText>
+            <InputText
+              name="phone"
+              keyboardType="phone-pad"
+              placeholderTx="registerFormScreen.phone"
+              styleContainer={styles.input}
+              setFormError={setError}
+              rules={{
+                required: "registerFormScreen.phoneRequired",
+              }}
+            ></InputText>
+            <InputText
+              name="email"
+              keyboardType="email-address"
+              placeholderTx="registerFormScreen.email"
+              styleContainer={styles.input}
+              setFormError={setError}
+              rules={{
+                required: "registerFormScreen.emailRequired",
+                pattern: {
+                  value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                  message: "registerFormScreen.emailFormat",
+                },
+              }}
+            ></InputText>
+            <InputText
+              name="password"
+              placeholderTx="registerFormScreen.password"
+              styleContainer={styles.input}
+              secureTextEntry
+              rules={{
+                required: "registerFormScreen.passwordRequired",
+              }}
+              setFormError={setError}
+            ></InputText>
+            <View style={styles.containerTermsBtn}>
+              <View style={styles.containerTerms}>
+                <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
+                <View style={styles.containerTermsText}>
+                  <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
+                  <Text
+                    size="sm"
+                    onPress={goTerms}
+                    style={styles.textPrimary}
+                    tx="registerFormScreen.termsAndConditions"
+                  ></Text>
+                  <Text size="sm" tx="registerFormScreen.andThe"></Text>
+                  <Text
+                    size="sm"
+                    onPress={goPrivacy}
+                    style={styles.textPrimary}
+                    tx="registerFormScreen.privacyPolicy"
+                  ></Text>
+                </View>
+              </View>
+
+              <Button
+                tx="registerFormScreen.register"
+                onPress={methods.handleSubmit(onSubmit, onError)}
+                block
+                style={[styles.btn, utilSpacing.mt5]}
+              ></Button>
+            </View>
+          </FormProvider>
         </View>
-      </View>
-      <Button
-        tx="registerFormScreen.register"
-        onPress={goMain}
-        block
-        style={[styles.btn, utilSpacing.mt5]}
-      ></Button>
+      </ScrollView>
     </Screen>
   )
 })
 const styles = StyleSheet.create({
   btn: {
-    width: "65%",
+    alignSelf: "center",
+    display: "flex",
   },
+
   container: {
     alignItems: "center",
     backgroundColor: color.palette.white,
@@ -89,7 +157,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingTop: spacing[6],
-    width: "75%",
+    width: "80%",
   },
   containerTerms: {
     alignItems: "flex-start",
@@ -98,6 +166,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     marginBottom: spacing[3],
   },
+  containerTermsBtn: {
+    alignSelf: "center",
+    display: "flex",
+    width: "85%",
+  },
   containerTermsText: {
     display: "flex",
     flexDirection: "row",
@@ -105,7 +178,12 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   input: {
-    marginBottom: spacing[5],
+    color: color.palette.black,
+    marginBottom: spacing[2],
+  },
+  lottie: {
+    height: 100,
+    width: 100,
   },
   textPrimary: {
     color: color.primary,
