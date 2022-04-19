@@ -7,7 +7,7 @@ const dayStore = types.model("DayStore").props({
   dayName: types.maybe(types.string),
   date: types.maybe(types.string),
 })
-interface IDayStore extends SnapshotOut<typeof dayStore> {}
+export interface Day extends SnapshotOut<typeof dayStore> {}
 
 export const DayStoreModel = types
   .model("DayStoreModel")
@@ -16,15 +16,15 @@ export const DayStoreModel = types
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    setDays: async (days: IDayStore[]) => {
+    setDays: async (days: Day[]) => {
       self.days.replace(days)
     },
   }))
   .actions((self) => ({
-    getDays: async (date: string) => {
+    getDays: async (timeZone: string) => {
       const api = new DeliveryApi(self.environment.api)
 
-      const result = await api.getDays(date)
+      const result = await api.getDays(timeZone)
 
       if (result.kind === "ok") {
         self.setDays(result.data)

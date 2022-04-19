@@ -1,18 +1,19 @@
 import { ApiResponse } from "apisauce"
 import { Api } from "./api"
-import { DayResponse } from "./api.types"
+import { DayResponse, DishResponse } from "./api.types"
 import { getGeneralApiProblem } from "./api-problem"
 
-export class DeliveryApi {
+export class DishApi {
   private api: Api
 
   constructor(api: Api) {
     this.api = api
   }
 
-  async getDays(timeZone: string): Promise<DayResponse> {
+  async getAll(date: string, timeZone: string): Promise<DishResponse> {
     try {
-      const response: ApiResponse<any> = await this.api.apisauce.get("/deliveries/days", {
+      const response: ApiResponse<any> = await this.api.apisauce.get("/dishes", {
+        date,
         timeZone,
       })
 

@@ -33,6 +33,7 @@ const images = {
   heart: require("./images/iconHeart.svg"),
   caretRight: require("./images/iconCaretRight.svg"),
   card: require("./images/cardPaymentMethod.png"),
+  category: require("./images/category.png"),
 }
 
 export default images

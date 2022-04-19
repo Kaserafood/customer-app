@@ -1,19 +1,11 @@
-import React from "react"
-import {
-  ScrollView,
-  StyleProp,
-  View,
-  ViewStyle,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-} from "react-native"
+import React, { useEffect, useState } from "react"
+import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
 import { Separator } from "../separator/separator"
 import { AutoImage } from "../auto-image/auto-image"
-import { utilSpacing } from "../../theme/Util"
+import { utilSpacing, utilFlex } from "../../theme/Util"
 import Images from "assets/images"
 import { Location } from "../location/location"
 import { DayDelivery } from "../day-delivery/day-delivery"
@@ -25,6 +17,9 @@ import { DishChef } from "../dish-chef/dish-chef"
 
 import { useNavigation } from "@react-navigation/native"
 import Ripple from "react-native-material-ripple"
+import { Day } from "../../models/day-store"
+import { useStores } from "../../models"
+import * as RNLocalize from "react-native-localize"
 
 export interface HomeProps {
   /**
@@ -38,115 +33,94 @@ export interface HomeProps {
  */
 export const Home = observer(function Home(props: HomeProps) {
   const { style } = props
+  const [currentDate, setCurrentDate] = useState<Day>({ dayName: "", date: "" })
+  const [modalWhy, setModalWhy] = useState(false)
 
   const navigation = useNavigation()
 
   const toDishDetail = () => navigation.navigate("dishDetail" as never)
   const toInit = () => navigation.navigate("init" as never)
+  const { dishStore, dayStore, modalStore } = useStores()
+
+  const { days } = dayStore
+
+  useEffect(() => {
+    async function fetch() {
+      modalStore.setVisibleLoading(true)
+      await dayStore.getDays(RNLocalize.getTimeZone())
+      await dishStore.getAll(days[0].date, RNLocalize.getTimeZone())
+      setCurrentDate(days[0])
+      modalStore.setVisibleLoading(false)
+    }
+    fetch()
+  }, [])
 
   return (
     <>
       <ScrollView style={[style, styles.container]}>
         <Location></Location>
-        <DayDelivery></DayDelivery>
+        <DayDelivery
+          days={dayStore.days}
+          onWhyPress={(state) => setModalWhy(state)}
+          onPress={(day) => setCurrentDate(day)}
+        ></DayDelivery>
         <Separator style={utilSpacing.my4}></Separator>
         <Categories></Categories>
         <Separator style={utilSpacing.my4}></Separator>
-        <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
+        <View style={utilFlex.flexRow}>
+          <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
+          <Text size="lg" style={utilSpacing.ml3} preset="bold" text={currentDate.dayName}></Text>
+        </View>
+
         <View>
-          <Ripple
-            style={utilSpacing.my5}
-            rippleOpacity={0.2}
-            rippleDuration={200}
-            onPress={toDishDetail}
-          >
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
+          {dishStore.dishes.map((dish, index) => (
+            <View key={dish.id}>
+              <Ripple
+                style={utilSpacing.my5}
+                rippleOpacity={0.2}
+                rippleDuration={200}
+                onPress={toDishDetail}
+              >
                 <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
+                  <View style={styles.containerTextDish}>
+                    <Text text={dish.title} preset="semiBold"></Text>
+                    <Text
+                      text={dish.description}
+                      style={styles.descriptionDish}
+                      numberOfLines={2}
+                    ></Text>
+
+                    <Text
+                      style={[styles.chefDish, utilSpacing.mt4]}
+                      size="sm"
+                      text={dish.chef.name}
+                    ></Text>
+
+                    <View style={[styles.flex, styles.containerPrice]}>
+                      <Price amount={dish.price}></Price>
+                      <AutoImage
+                        style={styles.iconShipping}
+                        source={Images.iconShipping}
+                      ></AutoImage>
+                      <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
+                    </View>
+                  </View>
+                  <View>
+                    <AutoImage style={styles.imageDish} source={{ uri: dish.image }}></AutoImage>
+                    <AutoImage
+                      style={styles.imageChef}
+                      source={{ uri: dish.chef.image }}
+                    ></AutoImage>
+                  </View>
                 </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
+              </Ripple>
+              {index !== dishStore.dishes.length - 1 && (
+                <Separator style={utilSpacing.my3}></Separator>
+              )}
             </View>
-          </Ripple>
-          <Separator style={utilSpacing.my3}></Separator>
+          ))}
 
-          <Ripple style={utilSpacing.my5} rippleOpacity={0.2} rippleDuration={200} onPress={toInit}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </Ripple>
-          <Separator style={utilSpacing.my3}></Separator>
-          <View style={[utilSpacing.mt5, utilSpacing.mb7]}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </View>
-
+          {/* 
           <Text
             style={utilSpacing.mt4}
             size="lg"
@@ -161,71 +135,11 @@ export const Home = observer(function Home(props: HomeProps) {
             <DishChef></DishChef>
             <DishChef></DishChef>
           </ScrollView>
-          <Separator style={utilSpacing.my3}></Separator>
-
-          <View style={utilSpacing.my5}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={34}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </View>
-          <Separator style={utilSpacing.my3}></Separator>
-
-          <View style={utilSpacing.my5}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={23}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </View>
-          <Separator style={utilSpacing.my3}></Separator>
+          <Separator style={utilSpacing.my3}></Separator> */}
         </View>
       </ScrollView>
       <LocationModal></LocationModal>
-      <DayDeliveryModal></DayDeliveryModal>
+      <DayDeliveryModal onClose={() => setModalWhy(false)} isVisible={modalWhy}></DayDeliveryModal>
     </>
   )
 })
@@ -240,6 +154,10 @@ const styles = StyleSheet.create({
     paddingTop: spacing[3],
   },
 
+  containerPrice: {
+    alignItems: "flex-end",
+  },
+
   containerTextDish: {
     flex: 1,
     marginRight: spacing[3],
@@ -248,7 +166,6 @@ const styles = StyleSheet.create({
   descriptionDish: {
     color: color.palette.grayDark,
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
@@ -261,6 +178,7 @@ const styles = StyleSheet.create({
     marginLeft: spacing[4],
     width: 24,
   },
+
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: 16,
@@ -271,7 +189,6 @@ const styles = StyleSheet.create({
     right: spacing[1],
     width: 50,
   },
-
   imageDish: {
     borderRadius: 8,
     height: 105,

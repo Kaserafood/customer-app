@@ -1,10 +1,12 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
 import { Text } from "../text/text"
 import { utilSpacing } from "../../theme/Util"
 import { AutoImage } from "../auto-image/auto-image"
 import Images from "assets/images"
+import { useStores } from "../../models"
+import images from "../../assets/images"
 
 export interface CategoriesProps {
   /**
@@ -19,34 +21,31 @@ export interface CategoriesProps {
 export const Categories = observer(function Categories(props: CategoriesProps) {
   const { style } = props
 
+  const { categoryStore } = useStores()
+
+  const { categories } = categoryStore
+
+  useEffect(() => {
+    async function fectch() {
+      await categoryStore.getAll()
+    }
+    fectch()
+  }, [])
+
   return (
     <View style={style}>
       <Text size="lg" tx="categories.title" preset="bold"></Text>
       <ScrollView horizontal style={[styles.flex, utilSpacing.mt3]}>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.hamburger}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.hamburguer"></Text>
-        </View>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.nikkei}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.nikkei"></Text>
-        </View>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.pizzas}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.pizza"></Text>
-        </View>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.hamburger}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.hamburguer"></Text>
-        </View>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.nikkei}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.nikkei"></Text>
-        </View>
-        <View style={[utilSpacing.p4, styles.containerCategoryItem]}>
-          <AutoImage style={styles.imgCategory} source={Images.pizzas}></AutoImage>
-          <Text style={utilSpacing.mt3} tx="mainScreen.pizza"></Text>
-        </View>
+        {categories.map((category) => (
+          <View key={category.categoryId} style={[utilSpacing.p4, styles.containerCategoryItem]}>
+            <AutoImage
+              defaultSource={images.category}
+              style={styles.imgCategory}
+              source={{ uri: category.image }}
+            ></AutoImage>
+            <Text style={utilSpacing.mt3} text={category.name}></Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   )

@@ -1,5 +1,8 @@
 import { GeneralApiProblem } from "./api-problem"
 import { Character } from "../../models/character/character"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { Dish } from "../../models/dish-store"
 
 export interface User {
   id: number
@@ -24,13 +27,23 @@ export type UserLoginResponse =
     }
   | GeneralApiProblem
 
-export interface Day {
-  dayName: string
-  date: string
-}
 export type DayResponse =
   | {
       kind: string
       data: Day[]
+    }
+  | GeneralApiProblem
+
+export type CategoryResponse =
+  | {
+      kind: string
+      data: Category[]
+    }
+  | GeneralApiProblem
+
+export type DishResponse =
+  | {
+      kind: string
+      data: Dish[]
     }
   | GeneralApiProblem

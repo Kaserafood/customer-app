@@ -4,6 +4,13 @@ import { UserApi } from "../../services/api/user-api"
 import { handleDataResponseAPI } from "../../utils/messages"
 import { saveString } from "../../utils/storage"
 
+export const userChef = types.model("UserChef").props({
+  id: types.maybe(types.number),
+  name: types.maybe(types.string),
+  image: types.maybe(types.string),
+})
+export interface UserChef extends Instance<typeof userChef> {}
+
 const userRegister = types.model("UserRegisterStore").props({
   name: types.maybe(types.string),
   lastName: types.maybe(types.string),

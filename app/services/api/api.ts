@@ -47,7 +47,7 @@ export class Api {
     // Add a request interceptor
     this.apisauce.axiosInstance.interceptors.request.use(
       function (config) {
-        __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
+        //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         return config
       },
       function (error) {
@@ -61,7 +61,7 @@ export class Api {
       function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
 
-        __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
+        //  __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
         return response
       },
       function (error) {
