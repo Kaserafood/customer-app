@@ -1,13 +1,14 @@
 import React from "react"
-import { View, ViewStyle, TextStyle } from "react-native"
+import { View, ViewStyle, TextStyle, StyleSheet } from "react-native"
 import { HeaderProps } from "./header.props"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
 
 import { color, spacing } from "../../theme"
 import { translate } from "../../i18n/"
-import SvgUri from "react-native-svg-uri"
 import { typography } from "../../theme/typography"
+import images from "../../assets/images"
+import { AutoImage } from "../auto-image/auto-image"
 
 // static styles
 const ROOT: ViewStyle = {
@@ -50,9 +51,7 @@ export function Header(props: HeaderProps) {
     <View style={[ROOT, style]}>
       {leftIcon ? (
         <Button preset="link" rounded onPress={onLeftPress}>
-          {leftIcon === "back" && (
-            <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
-          )}
+          {leftIcon === "back" && <AutoImage style={styles.icon} source={images.back} />}
         </Button>
       ) : (
         <View style={LEFT} />
@@ -62,9 +61,7 @@ export function Header(props: HeaderProps) {
       </View>
       {rightIcon ? (
         <Button preset="link" rounded onPress={onRightPress}>
-          {rightIcon === "back" && (
-            <SvgUri width="35" height="35" source={require("./icons/back.svg")} />
-          )}
+          {rightIcon === "back" && <AutoImage style={styles.icon} source={images.back} />}
         </Button>
       ) : (
         <View style={RIGHT} />
@@ -72,3 +69,11 @@ export function Header(props: HeaderProps) {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    height: 24,
+    marginRight: 2,
+    width: 24,
+  },
+})

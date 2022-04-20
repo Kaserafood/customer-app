@@ -16,6 +16,8 @@ import images from "assets/images"
 import { SvgUri } from "react-native-svg"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
+import { useStores } from "../../models"
+import { Day } from "../../models/day-store"
 
 export interface ChefsProps {
   /**
@@ -107,16 +109,24 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
       setData(dataChange)
     }
   }
+  const [modalWhy, setModalWhy] = useState(false)
+  const { dayStore } = useStores()
+  const [currentDate, setCurrentDate] = useState<Day>({ dayName: "", date: "" })
 
   return (
     <>
       <ScrollView style={[style, styles.container]}>
         <Location></Location>
-        <DayDelivery></DayDelivery>
+        <DayDelivery
+          days={dayStore.days}
+          onWhyPress={(state) => setModalWhy(state)}
+          onPress={(day) => setCurrentDate(day)}
+        ></DayDelivery>
         <Separator style={utilSpacing.my4}></Separator>
         <Categories></Categories>
         <Separator style={utilSpacing.my4}></Separator>
         <Text tx="chefs.delivery" preset="bold" size="lg"></Text>
+        <Text text={currentDate.dayName}></Text>
         <View>
           {data.map((item, index) => (
             <View key={item.id}>
@@ -179,7 +189,7 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
         </View>
       </ScrollView>
       <LocationModal></LocationModal>
-      <DayDeliveryModal></DayDeliveryModal>
+      <DayDeliveryModal onClose={() => setModalWhy(false)} isVisible={modalWhy}></DayDeliveryModal>
     </>
   )
 })

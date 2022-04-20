@@ -21,6 +21,7 @@ import {
   MenuChefScreen,
   DeliveryDetailScreen,
   EndOrderScreen,
+  CategoryScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
@@ -52,6 +53,7 @@ export type NavigatorParamList = {
   menuChef: undefined
   deliveryDetail: undefined
   endOrder: undefined
+  category: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -76,6 +78,7 @@ const AppStack = () => {
       <Stack.Screen name="menuChef" component={MenuChefScreen} />
       <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
       <Stack.Screen name="endOrder" component={EndOrderScreen} />
+      <Stack.Screen name="category" component={CategoryScreen} />
     </Stack.Navigator>
   )
 }

@@ -23,6 +23,7 @@ export const CategoryStoreModel = types
   }))
   .actions((self) => ({
     getAll: async () => {
+      if (self.categories.length > 0) return
       const api = new CategoryApi(self.environment.api)
 
       const result = await api.getAll()

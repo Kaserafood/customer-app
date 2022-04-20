@@ -22,6 +22,7 @@ export const DayStoreModel = types
   }))
   .actions((self) => ({
     getDays: async (timeZone: string) => {
+      if (self.days.length > 0) return
       const api = new DeliveryApi(self.environment.api)
 
       const result = await api.getDays(timeZone)

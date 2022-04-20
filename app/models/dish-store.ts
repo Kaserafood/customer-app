@@ -29,10 +29,10 @@ export const DishStoreModel = types
     },
   }))
   .actions((self) => ({
-    getAll: async (date: string, timeZone: string) => {
+    getAll: async (date: string, timeZone: string, categoryId?: number) => {
       const api = new DishApi(self.environment.api)
 
-      const result = await api.getAll(date, timeZone)
+      const result = await api.getAll(date, timeZone, categoryId)
 
       if (result.kind === "ok") {
         self.setDays(result.data)

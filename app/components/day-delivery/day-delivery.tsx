@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
@@ -54,10 +54,16 @@ export interface DayDeliveryProps {
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
   const { style, hideWhyButton, titleTx, txOptions, onPress, onWhyPress, days = [] } = props
-
+  const [currentActive, setCurrentActive] = useState<Day>({ date: "", dayName: "" })
   const i18nText = titleTx && translate(titleTx, txOptions)
 
   const actualTitle = i18nText || "mainScreen.dayShipping"
+
+  useEffect(() => {
+    if (days.length > 0) {
+      setCurrentActive(days[0])
+    }
+  }, [days])
 
   return (
     <View>
@@ -67,8 +73,18 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
       </View>
       <ScrollView horizontal style={[utilSpacing.mt5, utilSpacing.pb3, style]}>
         {days.map((day) => (
-          <TouchableOpacity onPress={() => onPress(day)} key={day.date}>
-            <Chip text={day.dayName} style={styles.chip}></Chip>
+          <TouchableOpacity
+            onPress={() => {
+              onPress(day)
+              setCurrentActive(day)
+            }}
+            key={day.date}
+          >
+            <Chip
+              active={day.dayName === currentActive.dayName}
+              text={day.dayName}
+              style={styles.chip}
+            ></Chip>
           </TouchableOpacity>
         ))}
       </ScrollView>

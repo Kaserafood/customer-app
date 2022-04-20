@@ -66,7 +66,6 @@ function App() {
               onStateChange={onNavigationStateChange}
             />
             <FlashMessage position="top" />
-            <Loader visible={rootStore.modalStore.isVisibleLoading}></Loader>
           </ErrorBoundary>
         </SafeAreaProvider>
       </RootStoreProvider>

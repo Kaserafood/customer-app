@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, StyleSheet } from "react-native"
+import { View, StyleSheet, ScrollView } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { useForm, FormProvider, SubmitErrorHandler } from "react-hook-form"
@@ -8,7 +8,7 @@ import { useForm, FormProvider, SubmitErrorHandler } from "react-hook-form"
 import { Screen, Text, Header, InputText, Button, Checkbox } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import { ScrollView } from "react-native-gesture-handler"
+
 import { useStores } from "../../models"
 import { IUserRegister } from "../../models/user-store/user-store"
 import { showMessageInfo } from "../../utils/messages"
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   input: {
     color: color.palette.black,
-    marginBottom: spacing[2],
+    marginBottom: spacing[5],
   },
   lottie: {
     height: 100,

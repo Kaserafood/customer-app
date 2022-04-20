@@ -7,6 +7,7 @@ import { typographySize } from "../../theme/typography"
 import { Text } from "../text/text"
 import { useController, useFormContext, ControllerProps, UseControllerProps } from "react-hook-form"
 import { delay } from "../../utils/delay"
+import * as Animatable from "react-native-animatable"
 import AnimatedComponent, {
   FadeIn,
   FadeInDown,
@@ -26,8 +27,10 @@ const TEXT_STYLES: TextStyle = {
 const TEXT_ERROR: TextStyle = {
   color: color.error,
   fontSize: typographySize.sm,
+}
+const CONTAINER_ERROR: ViewStyle = {
   position: "absolute",
-  top: 10,
+  bottom: -18,
 }
 const CONTAINER_INPUT: ViewStyle = {
   backgroundColor: color.palette.grayLigth,
@@ -130,9 +133,11 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
         />
       </View>
 
-      <AnimatedComponent.Text entering={FadeIn} exiting={FadeIn}>
-        {hasError && <Text style={TEXT_ERROR} tx={formState.errors[name].message}></Text>}
-      </AnimatedComponent.Text>
+      {hasError && (
+        <Animatable.Text style={CONTAINER_ERROR} animation="shake">
+          <Text style={TEXT_ERROR} tx={formState.errors[name].message}></Text>
+        </Animatable.Text>
+      )}
     </View>
   )
 })

@@ -8,7 +8,7 @@ import images from "assets/images"
 import { utilSpacing, utilFlex } from "../../theme/Util"
 
 const CONTAINER: ViewStyle = {
-  alignSelf: "flex-start",
+  alignSelf: "flex-end",
   backgroundColor: color.palette.greenLigth,
   borderRadius: 100,
   paddingHorizontal: spacing[4],
@@ -19,12 +19,10 @@ const CONTAINER_DELIVERY: ViewStyle = {
   alignSelf: "flex-end",
 }
 const IMAGE: ImageStyle = {
-  height: 24,
-  width: 24,
+  height: 18,
+  width: 18,
 }
-const TEXT: TextStyle = {
-  marginBottom: -4,
-}
+
 export interface PriceProps {
   /**
    * An optional style override useful for padding & margin.
@@ -71,7 +69,7 @@ export const Price = observer(function Price(props: PriceProps) {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
         <AutoImage source={images.iconShipping} style={[utilSpacing.mr2, IMAGE]}></AutoImage>
-        <Text style={[TEXT, textStyle]} text={`${currency}${price}`}></Text>
+        <Text style={textStyle} text={`${currency}${price}`}></Text>
       </View>
     )
   }
@@ -80,7 +78,7 @@ export const Price = observer(function Price(props: PriceProps) {
     const styles = Object.assign({}, CONTAINER, style)
     return (
       <View style={styles}>
-        <Text style={[TEXT, textStyle]} text={`${currency}${price}`}></Text>
+        <Text style={textStyle} text={`${currency}${price}`}></Text>
       </View>
     )
   }

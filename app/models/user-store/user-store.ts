@@ -51,18 +51,18 @@ export const UserRegisterModel = userRegister
       }
     },
 
-    login: async (user: IUserLogin) => {
+    login: async (user: IUserLogin): Promise<boolean> => {
       const userApi = new UserApi(self.environment.api)
       const result = await userApi.login(user)
 
       if (result.kind === "ok") {
         self.saveData(result)
 
-        return result
+        return true
       } else {
         handleDataResponseAPI(result)
         __DEV__ && console.tron.log("Error : " + result)
-        return null
+        return false
       }
     },
   }))

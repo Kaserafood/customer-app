@@ -10,11 +10,12 @@ export class DishApi {
     this.api = api
   }
 
-  async getAll(date: string, timeZone: string): Promise<DishResponse> {
+  async getAll(date: string, timeZone: string, categoryId?: number): Promise<DishResponse> {
     try {
       const response: ApiResponse<any> = await this.api.apisauce.get("/dishes", {
         date,
         timeZone,
+        categoryId,
       })
 
       if (!response.ok) {
