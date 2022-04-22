@@ -31,21 +31,20 @@ export function AutoImage(props: ImageProps) {
   useLayoutEffect(() => {
     let mounted = true
 
-    if (!errorLoad) {
-      if (props.source?.uri) {
-        RNImage.getSize(props.source.uri as any, (width, height) => {
-          if (mounted) setImageSize({ width, height })
-        })
-      } else if (Platform.OS === "web") {
-        // web requires a different method to get it's size
-        RNImage.getSize(props.source as any, (width, height) => {
-          if (mounted) setImageSize({ width, height })
-        })
-      } else {
-        const { width, height } = RNImage.resolveAssetSource(props.source)
-        setImageSize({ width, height })
-      }
+    if (props.source?.uri && props.source?.uri.length > 0 && props.source?.uri !== "null") {
+      RNImage.getSize(props.source.uri as any, (width, height) => {
+        if (mounted) setImageSize({ width, height })
+      })
+    } else if (Platform.OS === "web") {
+      // web requires a different method to get it's size
+      RNImage.getSize(props.source as any, (width, height) => {
+        if (mounted) setImageSize({ width, height })
+      })
+    } else {
+      const { width, height } = RNImage.resolveAssetSource(props.source)
+      setImageSize({ width, height })
     }
+
     return () => {
       mounted = false
     }

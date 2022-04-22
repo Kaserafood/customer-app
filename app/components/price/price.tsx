@@ -6,6 +6,7 @@ import { Text } from "../text/text"
 import { AutoImage } from "../auto-image/auto-image"
 import images from "assets/images"
 import { utilSpacing, utilFlex } from "../../theme/Util"
+import { getFormat } from "../../utils/price"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-end",
@@ -23,6 +24,8 @@ const IMAGE: ImageStyle = {
   width: 18,
 }
 
+type currency = "USD" | "GTQ"
+
 export interface PriceProps {
   /**
    * An optional style override useful for padding & margin.
@@ -38,7 +41,7 @@ export interface PriceProps {
   /**
    * Currency of price.
    */
-  currency?: string
+  currency?: currency
 
   /**
    * Preset of price.
@@ -56,20 +59,14 @@ export interface PriceProps {
  */
 
 export const Price = observer(function Price(props: PriceProps) {
-  const { style, amount, currency = "Q", preset = "dish", textStyle } = props
+  const { style, amount, currency = "GTQ", preset = "dish", textStyle } = props
 
-  let price = ""
-  if (amount.toFixed(2).split(".")[1] === "00") {
-    price = amount.toFixed(0)
-  } else {
-    price = amount.toFixed(2)
-  }
-
+  const price = getFormat(amount, currency)
   const Delivery = () => {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
         <AutoImage source={images.iconShipping} style={[utilSpacing.mr2, IMAGE]}></AutoImage>
-        <Text style={textStyle} text={`${currency}${price}`}></Text>
+        <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )
   }
@@ -78,7 +75,7 @@ export const Price = observer(function Price(props: PriceProps) {
     const styles = Object.assign({}, CONTAINER, style)
     return (
       <View style={styles}>
-        <Text style={textStyle} text={`${currency}${price}`}></Text>
+        <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )
   }

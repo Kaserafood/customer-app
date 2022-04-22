@@ -3,8 +3,8 @@ import { withEnvironment } from "./extensions/with-environment"
 import { CategoryApi } from "../services/api/category-api"
 import { handleDataResponseAPI } from "../utils/messages"
 
-const categoryStore = types.model("CategoryStore").props({
-  categoryId: types.maybe(types.number),
+export const categoryStore = types.model("CategoryStore").props({
+  id: types.maybe(types.number),
   name: types.maybe(types.string),
   image: types.maybe(types.string),
 })
@@ -32,7 +32,7 @@ export const CategoryStoreModel = types
         self.setDays(result.data)
       } else {
         handleDataResponseAPI(result)
-        __DEV__ && console.tron.log("Error : " + result)
+        __DEV__ && console.tron.log(`Error : ${result}`)
       }
     },
   }))

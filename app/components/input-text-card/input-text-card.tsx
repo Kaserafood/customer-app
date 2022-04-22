@@ -1,5 +1,5 @@
 import * as React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TextInput } from "react-native"
+import { StyleProp, View, ViewStyle, StyleSheet, TextInput, TextInputProps } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color } from "../../theme"
 import { Text } from "../text/text"
@@ -8,7 +8,7 @@ import { spacing } from "../../theme/spacing"
 import { useState } from "react"
 import { translate, TxKeyPath } from "../../i18n"
 
-export interface InputTextCardProps {
+export interface InputTextCardProps extends TextInputProps {
   /**
    * The placeholder i18n key.
    */
@@ -43,7 +43,7 @@ export interface InputTextCardProps {
  * Describe your component here
  */
 export const InputTextCard = observer(function InputTextCard(props: InputTextCardProps) {
-  const { style, title, placeholder, counter, placeholderTx, titleTx } = props
+  const { style, title, placeholder, counter, placeholderTx, titleTx, ...rest } = props
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
   const actualTitle = titleTx ? translate(titleTx) : title
   const [strLenght, setStrLenght] = useState(0)
@@ -57,6 +57,7 @@ export const InputTextCard = observer(function InputTextCard(props: InputTextCar
         maxLength={counter}
         style={styles.input}
         placeholder={actualPlaceholder}
+        {...rest}
       ></TextInput>
       {counter && (
         <View>
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
   input: {
     borderBottomColor: color.palette.grayLigth,
     borderBottomWidth: 1,
+    color: color.palette.black,
     marginBottom: spacing[2],
     paddingVertical: 0,
   },

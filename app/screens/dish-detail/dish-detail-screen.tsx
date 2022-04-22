@@ -1,79 +1,117 @@
-import React, { FC, useState } from "react"
+import React, { FC, useState, useEffect, useRef } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, ScrollView, StyleSheet, View, StyleProp } from "react-native"
+import { ScrollView, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { goBack, NavigatorParamList } from "../../navigators"
 import {
   AutoImage,
-  Button,
-  Complements,
   DishChef,
   Header,
   InputTextCard,
+  Loader,
   Price,
   Screen,
   Text,
 } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 import { color } from "../../theme"
 import images from "assets/images"
 import { spacing } from "../../theme/spacing"
 import { Separator } from "../../components/separator/separator"
 import { utilSpacing, utilFlex, utilText, SHADOW } from "../../theme/Util"
-import { TouchableHighlight, TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import SvgUri from "react-native-svg-uri"
 import Ripple from "react-native-material-ripple"
-import { typographySize } from "../../theme/typography"
+import { useStores } from "../../models/root-store/root-store-context"
+import { getFormat } from "../../utils/price"
+import { Dish } from "../../models/dish-store"
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+  ({ navigation, route: { params } }) => {
+    const [quantity, setQuantity] = useState(1)
+    const [total, setTotal] = useState(0)
+    const [comment, setComment] = useState("")
+    const [currentDish, setCurrentDish] = useState<Dish>(params)
+    const scrollRef = useRef<ScrollView>()
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+    const { dishStore, modalStore, cartStore } = useStores()
 
-    const [price, setPrice] = useState("Q50.4")
-    const [counter, setCounter] = useState(1)
+    useEffect(() => {
+      setQuantity(1)
+      setTotal(params.price)
+      console.log(params)
+      async function fetch() {
+        modalStore.setVisibleLoading(true)
+        await dishStore.getByChef(params.chef.id).finally(() => {
+          modalStore.setVisibleLoading(false)
+        })
+      }
 
-    const toMenuChef = () => navigation.navigate("menuChef")
+      fetch()
+    }, [])
+
+    useEffect(() => {
+      setTotal(params.price * quantity)
+    }, [quantity])
+
+    const minusQuantity = (number: number) => {
+      if (quantity > 1) {
+        setQuantity(quantity - number)
+      }
+    }
+
+    const addToCart = () => {
+      cartStore.addItem(currentDish, quantity, comment)
+      setComment("")
+      setQuantity(1)
+      navigation.navigate("menuChef", { ...params })
+    }
+
+    const changeDish = (dish: Dish) => {
+      if (currentDish.id !== dish.id) {
+        setCurrentDish({ ...dish, chef: params.chef })
+        setComment("")
+        setQuantity(1)
+        setTotal(dish.price)
+
+        scrollRef.current?.scrollTo({
+          y: 0,
+          animated: true,
+        })
+      }
+    }
 
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView style={utilSpacing.p4}>
-          <AutoImage style={styles.image} source={images.dish3}></AutoImage>
+        <ScrollView ref={scrollRef} style={utilSpacing.p4}>
+          <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
           <View style={[utilFlex.flexRow, utilSpacing.my3, utilSpacing.mx4]}>
-            <Text style={utilSpacing.mr3} text="Enchiladas verdes" preset="bold"></Text>
-            <Price amount={40}></Price>
+            <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+            <Price amount={currentDish.price}></Price>
           </View>
-          <Text
-            style={[utilSpacing.mb2, utilSpacing.mx4]}
-            text="Cuatro enchiladas con salsa verde, queso y ceboola de arriba 1/2 kg"
-          ></Text>
+          <Text style={[utilSpacing.mb2, utilSpacing.mx4]} text={currentDish.description}></Text>
           <Separator style={utilSpacing.my3}></Separator>
-          <Complements></Complements>
-          <View style={utilFlex.flexCenter}>
+
+          <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
             <View style={styles.containerUnities}>
               <Text
-                style={[styles.textUnities, utilSpacing.p3]}
+                style={[styles.textUnities, utilSpacing.px3, utilSpacing.py4]}
                 tx="dishDetailScreen.unities"
                 preset="bold"
               ></Text>
 
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setCounter(counter - 1)}>
-                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py2]}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => minusQuantity(1)}>
+                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
                   <AutoImage style={styles.iconUnities} source={images.minus}></AutoImage>
                 </Ripple>
               </TouchableOpacity>
               <Text
                 style={[styles.textUnities, styles.textCounter, utilText.textCenter]}
-                text={`${counter}`}
+                text={`${quantity}`}
                 preset="bold"
               ></Text>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setCounter(counter + 1)}>
-                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py2]}>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => setQuantity(quantity + 1)}>
+                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
                   <AutoImage style={styles.iconUnities} source={images.add}></AutoImage>
                 </Ripple>
               </TouchableOpacity>
@@ -85,28 +123,35 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             titleTx="dishDetailScreen.commentChef"
             placeholderTx="dishDetailScreen.placeHolderCommetChef"
             counter={100}
+            value={comment}
+            onChangeText={(value) => setComment(value)}
           ></InputTextCard>
-          <Text tx="dishDetailScreen.moreProductsChef" preset="bold" style={utilSpacing.my5}></Text>
+          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilFlex.flexRow]}>
+            <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
+            <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
+          </View>
+
           <ScrollView horizontal style={utilSpacing.mb4}>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
+            {dishStore.dishesChef.map((dish) => (
+              <DishChef onPress={() => changeDish(dish)} dish={dish} key={dish.id}></DishChef>
+            ))}
           </ScrollView>
         </ScrollView>
         <TouchableOpacity
-          onPress={toMenuChef}
+          onPress={addToCart}
           activeOpacity={0.7}
           style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
         >
           <SvgUri height={35} width={35} source={images.cart}></SvgUri>
           <Text
-            preset="bold"
+            preset="semiBold"
             style={[styles.textAddToOrder, utilSpacing.mx3]}
             tx="dishDetailScreen.addToOrder"
           ></Text>
-          <Text preset="bold" style={styles.textAddToOrder} text={price}></Text>
+          <Text preset="semiBold" style={styles.textAddToOrder} text={`${getFormat(total)}`}></Text>
         </TouchableOpacity>
+
+        <Loader></Loader>
       </Screen>
     )
   },
@@ -115,7 +160,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 const styles = StyleSheet.create({
   addToOrder: {
     backgroundColor: color.primary,
-
     padding: spacing[3],
     textAlign: "center",
     ...SHADOW,

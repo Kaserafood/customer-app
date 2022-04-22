@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
+import { StyleProp, View, ViewStyle, StyleSheet, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -7,8 +7,9 @@ import { Chip } from "../chip/chip"
 import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
 import i18n from "i18n-js"
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import { Day } from "../../models/day-store"
+import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
@@ -54,16 +55,11 @@ export interface DayDeliveryProps {
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
   const { style, hideWhyButton, titleTx, txOptions, onPress, onWhyPress, days = [] } = props
-  const [currentActive, setCurrentActive] = useState<Day>({ date: "", dayName: "" })
+
   const i18nText = titleTx && translate(titleTx, txOptions)
 
   const actualTitle = i18nText || "mainScreen.dayShipping"
-
-  useEffect(() => {
-    if (days.length > 0) {
-      setCurrentActive(days[0])
-    }
-  }, [days])
+  const { dayStore } = useStores()
 
   return (
     <View>
@@ -76,12 +72,12 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
           <TouchableOpacity
             onPress={() => {
               onPress(day)
-              setCurrentActive(day)
+              dayStore.setCurrentDay(day)
             }}
             key={day.date}
           >
             <Chip
-              active={day.dayName === currentActive.dayName}
+              active={day.date === dayStore.currentDay.date}
               text={day.dayName}
               style={styles.chip}
             ></Chip>

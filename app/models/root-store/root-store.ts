@@ -5,6 +5,7 @@ import { UserRegisterModel } from "../user-store/user-store"
 import { DayStoreModel } from "../day-store"
 import { CategoryStoreModel } from "../category-store"
 import { DishStoreModel } from "../dish-store"
+import { CartStoreModel } from "../cart-store"
 
 /**
  * A RootStore model.
@@ -17,6 +18,7 @@ export const RootStoreModel = types.model("RootStore").props({
   dayStore: types.optional(DayStoreModel, {} as any),
   categoryStore: types.optional(CategoryStoreModel, {} as any),
   dishStore: types.optional(DishStoreModel, {} as any),
+  cartStore: types.optional(CartStoreModel, {} as any),
 })
 
 /**

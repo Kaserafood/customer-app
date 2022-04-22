@@ -3,11 +3,14 @@ import { withEnvironment } from "../extensions/with-environment"
 import { UserApi } from "../../services/api/user-api"
 import { handleDataResponseAPI } from "../../utils/messages"
 import { saveString } from "../../utils/storage"
+import { categoryStore } from "../category-store"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybe(types.number),
   name: types.maybe(types.string),
   image: types.maybe(types.string),
+  description: types.maybe(types.string),
+  categories: types.maybe(types.array(categoryStore)),
 })
 export interface UserChef extends Instance<typeof userChef> {}
 
@@ -46,7 +49,7 @@ export const UserRegisterModel = userRegister
         return result
       } else {
         handleDataResponseAPI(result)
-        __DEV__ && console.tron.log("Error : " + result)
+        __DEV__ && console.tron.log(`Error : ${result}`)
         return null
       }
     },
@@ -61,7 +64,7 @@ export const UserRegisterModel = userRegister
         return true
       } else {
         handleDataResponseAPI(result)
-        __DEV__ && console.tron.log("Error : " + result)
+        __DEV__ && console.tron.log(`Error : ${result}`)
         return false
       }
     },

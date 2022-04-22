@@ -24,6 +24,8 @@ import {
   CategoryScreen,
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
+import { Category } from "../models/category-store"
+import { Dish } from "../models/dish-store"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -49,11 +51,11 @@ export type NavigatorParamList = {
   registerPager: registerPageParams
   loginForm: undefined
   main: undefined
-  dishDetail: undefined
-  menuChef: undefined
+  dishDetail: Dish
+  menuChef: Dish
   deliveryDetail: undefined
   endOrder: undefined
-  category: undefined
+  category: Category
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/

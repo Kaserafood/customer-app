@@ -28,9 +28,9 @@ export const Location = observer(function Location(props: LocationProps) {
         style={styles.btnAddress}
         activeOpacity={0.7}
       >
-        <SvgUri width="24" height="24" source={Images.location} />
+        {/* <SvgUri width="24" height="24" source={Images.location} /> */}
         <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
-        <SvgUri width="24" height="24" source={Images.caretDown} />
+        {/* <SvgUri width="24" height="24" source={Images.caretDown} /> */}
       </TouchableOpacity>
     </View>
   )

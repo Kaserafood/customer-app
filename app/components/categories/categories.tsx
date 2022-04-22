@@ -40,7 +40,9 @@ export const Categories = observer(function Categories(props: CategoriesProps) {
         {categories.map((category) => (
           <Ripple
             onPress={() => onPress(category)}
-            key={category.categoryId}
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            key={category.id}
             style={[utilSpacing.p4, styles.containerCategoryItem]}
           >
             <AutoImage

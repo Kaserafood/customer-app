@@ -1,4 +1,4 @@
-import { Instance, types, SnapshotOut } from "mobx-state-tree"
+import { types, SnapshotOut } from "mobx-state-tree"
 import { withEnvironment } from "./extensions/with-environment"
 import { DeliveryApi } from "../services/api/delivery-api"
 import { handleDataResponseAPI } from "../utils/messages"
@@ -13,6 +13,7 @@ export const DayStoreModel = types
   .model("DayStoreModel")
   .props({
     days: types.optional(types.array(dayStore), []),
+    currentDay: types.optional(dayStore, { dayName: "", date: "" }),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -31,8 +32,11 @@ export const DayStoreModel = types
         self.setDays(result.data)
       } else {
         handleDataResponseAPI(result)
-        __DEV__ && console.tron.log("Error : " + result)
+        __DEV__ && console.tron.log(`Error : ${result}`)
         return null
       }
+    },
+    setCurrentDay: (day: Day) => {
+      self.currentDay = { ...day }
     },
   }))
