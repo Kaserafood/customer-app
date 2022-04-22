@@ -4,22 +4,22 @@ import { observer } from "mobx-react-lite"
 
 import LottieView from "lottie-react-native"
 
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
+import { useStores } from "../../models/root-store/root-store-context"
 
 const CONTAINER: ViewStyle = {
   flex: 1,
   position: "absolute",
   width: "100%",
   height: "100%",
-  zIndex: 100,
+  zIndex: 10000,
   justifyContent: "center",
-
-  backgroundColor: "rgba(255,255,255,0.2)",
+  backgroundColor: "rgba(255,255,255,0.4)",
 }
 
 const SPINNER: ViewStyle = {
-  height: 100,
-  width: 100,
+  height: 200,
+  width: 200,
   display: "flex",
   alignSelf: "center",
   zIndex: 10000,
@@ -37,19 +37,23 @@ export interface LoaderProps {
 }
 
 /**
- * Describe your component here
+ * Show a spinner overvlay while make http request or process async
  */
 export const Loader = observer(function Loader(props: LoaderProps) {
   const { style, visible } = props
   const styles = Object.assign({}, CONTAINER, style)
+  const { modalStore } = useStores()
 
   return (
     <>
-      {visible && (
-        <Animated.View entering={FadeIn} exiting={FadeOut} style={styles}>
-          <LottieView style={SPINNER} source={require("./spinner.json")} autoPlay loop />
-        </Animated.View>
-      )}
+      {visible ||
+        (modalStore.isVisibleLoading && (
+          <Animated.View entering={FadeIn} exiting={FadeOut} style={styles}>
+            <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+              <LottieView style={SPINNER} source={require("./spinner.json")} autoPlay loop />
+            </Animated.View>
+          </Animated.View>
+        ))}
     </>
   )
 })

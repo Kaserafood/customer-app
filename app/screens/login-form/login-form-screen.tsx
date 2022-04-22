@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle, View, StyleSheet } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { goBack, NavigatorParamList } from "../../navigators"
-import { Screen, Text, Header, InputText, Button } from "../../components"
+import { Screen, Text, Header, InputText, Button, Loader } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
@@ -18,10 +18,9 @@ const ROOT: ViewStyle = {
 
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation }) => {
-    // Pull in one of our MST stores
     const { modalStore, userStore } = useStores()
 
-    const { ...methods } = useForm({ mode: "onChange" })
+    const { ...methods } = useForm({ mode: "onBlur" })
     const [formError, setError] = useState<boolean>(false)
 
     const onError: SubmitErrorHandler<IUserLogin> = (errors) => {
@@ -32,58 +31,61 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
       modalStore.setVisibleLoading(true)
       userStore
         .login(data)
-        .then(() => {
-          navigation.navigate("main")
+        .then((userValid: boolean) => {
+          if (userValid) navigation.navigate("main")
         })
         .finally(() => modalStore.setVisibleLoading(false))
     }
 
     return (
-      <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
-        <Header headerTx="loginFormScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <View style={styles.containerForm}>
-          <Text
-            preset="semiBold"
-            tx="loginFormScreen.info"
-            style={[utilSpacing.mb8, utilSpacing.mt4]}
-          />
+      <>
+        <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
+          <Header headerTx="loginFormScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
+          <View style={styles.containerForm}>
+            <Text
+              preset="semiBold"
+              tx="loginFormScreen.info"
+              style={[utilSpacing.mb8, utilSpacing.mt4]}
+            />
 
-          <FormProvider {...methods}>
-            <InputText
-              name="email"
-              keyboardType="email-address"
-              placeholderTx="loginFormScreen.email"
-              styleContainer={utilSpacing.mb3}
-              setFormError={setError}
-              rules={{
-                required: "registerFormScreen.emailRequired",
-                pattern: {
-                  value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                  message: "registerFormScreen.emailFormat",
-                },
-              }}
-            ></InputText>
-            <InputText
-              name="password"
-              placeholderTx="loginFormScreen.password"
-              styleContainer={styles.input}
-              secureTextEntry
-              rules={{
-                required: "registerFormScreen.passwordRequired",
-              }}
-              setFormError={setError}
-            ></InputText>
+            <FormProvider {...methods}>
+              <InputText
+                name="email"
+                keyboardType="email-address"
+                placeholderTx="loginFormScreen.email"
+                styleContainer={utilSpacing.mb6}
+                setFormError={setError}
+                rules={{
+                  required: "registerFormScreen.emailRequired",
+                  pattern: {
+                    value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                    message: "registerFormScreen.emailFormat",
+                  },
+                }}
+              ></InputText>
+              <InputText
+                name="password"
+                placeholderTx="loginFormScreen.password"
+                styleContainer={styles.input}
+                secureTextEntry
+                rules={{
+                  required: "registerFormScreen.passwordRequired",
+                }}
+                setFormError={setError}
+              ></InputText>
 
-            <View style={[styles.containerBtn, utilSpacing.mt9]}>
-              <Button
-                tx="loginFormScreen.continue"
-                style={[styles.btn, utilSpacing.py5]}
-                onPress={methods.handleSubmit(onSubmit, onError)}
-              ></Button>
-            </View>
-          </FormProvider>
-        </View>
-      </Screen>
+              <View style={[styles.containerBtn, utilSpacing.mt9]}>
+                <Button
+                  tx="loginFormScreen.continue"
+                  style={[styles.btn, utilSpacing.py5]}
+                  onPress={methods.handleSubmit(onSubmit, onError)}
+                ></Button>
+              </View>
+            </FormProvider>
+          </View>
+        </Screen>
+        <Loader></Loader>
+      </>
     )
   },
 )

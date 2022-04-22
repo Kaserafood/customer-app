@@ -1,10 +1,11 @@
 import * as React from "react"
-import { TextStyle, TouchableOpacity, View, ViewStyle, Image } from "react-native"
+import { TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet } from "react-native"
 import { Text } from "../text/text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
-import SvgUri from "react-native-svg-uri"
 import images from "assets/images"
+import { AutoImage } from "../auto-image/auto-image"
+import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 
 const viewPresets: Record<string, ViewStyle> = {
   /**
@@ -18,10 +19,6 @@ const viewPresets: Record<string, ViewStyle> = {
   },
 }
 
-const iconsPreset: Record<string, any> = {
-  default: images.check,
-  tiny: images.checkTiny,
-}
 const ROOT: ViewStyle = {
   flexDirection: "row",
   paddingVertical: spacing[1],
@@ -71,9 +68,17 @@ export function Checkbox(props: CheckboxProps) {
       <View style={outlineStyle}>
         {props.value && (
           <View style={CONTAINER_CHECK}>
-            {preset === "default" && <SvgUri width="25" height="25" source={iconsPreset[preset]} />}
+            {preset === "default" && (
+              <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+                <AutoImage style={styles.icon} source={images.check} />
+              </Animated.View>
+            )}
 
-            {preset === "tiny" && <SvgUri width="15" height="15" source={iconsPreset[preset]} />}
+            {preset === "tiny" && (
+              <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+                <AutoImage style={styles.iconTiny} source={images.check} />
+              </Animated.View>
+            )}
           </View>
         )}
       </View>
@@ -81,3 +86,14 @@ export function Checkbox(props: CheckboxProps) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    height: 20,
+    width: 20,
+  },
+  iconTiny: {
+    height: 10,
+    width: 10,
+  },
+})

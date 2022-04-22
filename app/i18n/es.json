@@ -5,9 +5,13 @@
         "continue" : "Continuar",
         "subtotal" : "Subtotal",
         "total" : "Total",
-         "deliveryAmount" : "Costo de envío",
-         "someError" : "Lo sentimos, se ha ocurrido un error inesperado",
-         "operationSuccess" : "Procceso realizado con éxito"
+        "deliveryAmount" : "Costo de envío",
+        "someError" : "Lo sentimos, se ha ocurrido un error inesperado",
+        "operationSuccess" : "Procceso realizado con éxito",
+        "notFound" : {
+            "dishes": "Lo sentimos, no se encontraron platillos"
+        },
+        "dishes": "Platillos"
         
     },
     "initScreen": {

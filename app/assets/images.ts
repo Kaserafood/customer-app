@@ -28,11 +28,14 @@ const images = {
   minus: require("./images/iconMinus.png"),
   add: require("./images/iconAdd.png"),
   cart: require("./images/iconCart.svg"),
-  check: require("./images/iconCheck.svg"),
+  check: require("./images/iconCheck.png"),
   checkTiny: require("./images/iconCheckTiny.svg"),
   heart: require("./images/iconHeart.svg"),
   caretRight: require("./images/iconCaretRight.svg"),
   card: require("./images/cardPaymentMethod.png"),
+  category: require("./images/placeholder.png"),
+  back: require("./images/back.png"),
+  notFound: require("./images/notFound.json"),
 }
 
 export default images

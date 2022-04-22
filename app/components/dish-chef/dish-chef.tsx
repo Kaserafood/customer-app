@@ -4,45 +4,52 @@ import { observer } from "mobx-react-lite"
 import { Text } from "../text/text"
 import { Price } from "../price/price"
 import { AutoImage } from "../auto-image/auto-image"
-import { utilSpacing } from "../../theme/Util"
+import { utilSpacing, utilFlex } from "../../theme/Util"
 import images from "assets/images"
+import { Dish } from "../../models/dish-store"
+import { UserChef } from "../../models/user-store/user-store"
+import Ripple from "react-native-material-ripple"
 
 export interface DishChefProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Dish to render
+   */
+  dish: Dish
+
+  /**
+   * onPress callback
+   */
+  onPress?: () => void
 }
 
 /**
  * Dish for chef
  */
 export const DishChef = observer(function DishChef(props: DishChefProps) {
-  const { style } = props
+  const { style, dish, onPress } = props
 
   return (
-    <View style={[styles.containerFavoriteImageDish, utilSpacing.m4, style]}>
-      <AutoImage style={styles.image} source={images.dish2}></AutoImage>
-      <Text preset="bold" numberOfLines={1} tx="placeholder.dishTitle"></Text>
-      <View style={[styles.flex, utilSpacing.mt3]}>
-        <Text tx="mainScreen.of"></Text>
-        <Text tx="placeholder.chefName" numberOfLines={1} style={styles.flex1}></Text>
-        <Price amount={32}></Price>
-      </View>
-    </View>
+    <Ripple
+      rippleOpacity={0.2}
+      rippleDuration={400}
+      onPress={onPress}
+      style={[styles.containerFavoriteImageDish, utilSpacing.my4, utilSpacing.mr4, style]}
+    >
+      <AutoImage style={styles.image} source={{ uri: dish.image }}></AutoImage>
+      <Text preset="semiBold" numberOfLines={1} style={utilSpacing.mt3} text={dish.title}></Text>
+      <Price style={utilSpacing.mt2} amount={dish.price}></Price>
+    </Ripple>
   )
 })
 
 const styles = StyleSheet.create({
   containerFavoriteImageDish: {
     width: 150,
-  },
-  flex: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  flex1: {
-    flex: 1,
   },
   image: {
     borderRadius: 16,

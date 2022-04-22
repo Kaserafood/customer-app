@@ -1,5 +1,8 @@
 import { GeneralApiProblem } from "./api-problem"
 import { Character } from "../../models/character/character"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { Dish } from "../../models/dish-store"
 
 export interface User {
   id: number
@@ -14,12 +17,33 @@ export type GetCharacterResult = { kind: "ok"; character: Character } | GeneralA
 
 export type UserLoginResponse =
   | {
-      kind: "ok"
+      kind: string
       data: {
         id: number
         username: string
         email: string
         displayName: string
       }
+    }
+  | GeneralApiProblem
+
+export type DayResponse =
+  | {
+      kind: string
+      data: Day[]
+    }
+  | GeneralApiProblem
+
+export type CategoryResponse =
+  | {
+      kind: string
+      data: Category[]
+    }
+  | GeneralApiProblem
+
+export type DishResponse =
+  | {
+      kind: string
+      data: Dish[]
     }
   | GeneralApiProblem

@@ -1,30 +1,27 @@
-import React from "react"
-import {
-  ScrollView,
-  StyleProp,
-  View,
-  ViewStyle,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableWithoutFeedback,
-} from "react-native"
+import React, { useEffect, useState } from "react"
+import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
 import { Separator } from "../separator/separator"
-import { AutoImage } from "../auto-image/auto-image"
-import { utilSpacing } from "../../theme/Util"
-import Images from "assets/images"
+import { utilSpacing, utilFlex } from "../../theme/Util"
 import { Location } from "../location/location"
 import { DayDelivery } from "../day-delivery/day-delivery"
 import { LocationModal } from "../location/location-modal"
 import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
 import { Categories } from "../categories/categories"
-import { Price } from "../price/price"
-import { DishChef } from "../dish-chef/dish-chef"
-
 import { useNavigation } from "@react-navigation/native"
-import Ripple from "react-native-material-ripple"
+import { useStores } from "../../models"
+import * as RNLocalize from "react-native-localize"
+import { Loader } from "../loader/loader"
+import LottieView from "lottie-react-native"
+import { typographySize } from "../../theme/typography"
+import { Category } from "../../models/category-store"
+import { Dish as DishModel } from "../../models/dish-store"
+import { useDay } from "../../common/hooks/useDay"
+import { Dish } from "../dish/dish"
+import { StackNavigationProp } from "@react-navigation/stack"
+import { NavigatorParamList } from "../../navigators"
 
 export interface HomeProps {
   /**
@@ -33,120 +30,99 @@ export interface HomeProps {
   style?: StyleProp<ViewStyle>
 }
 
+type mainScreenProp = StackNavigationProp<NavigatorParamList, "main">
 /**
- * Home page component
+ * Home page component used in Main Screen
  */
 export const Home = observer(function Home(props: HomeProps) {
   const { style } = props
 
-  const navigation = useNavigation()
+  const [modalWhy, setModalWhy] = useState(false)
+  const [notFound, setNotFound] = useState(false)
 
-  const toDishDetail = () => navigation.navigate("dishDetail" as never)
-  const toInit = () => navigation.navigate("init" as never)
+  const { onChangeDay } = useDay()
+  const { dishStore, dayStore, modalStore, categoryStore } = useStores()
+  const { days, setCurrentDay, currentDay } = dayStore
+
+  const navigation = useNavigation<mainScreenProp>()
+
+  const toCategory = (category: Category) => {
+    navigation.navigate("category", {
+      ...category,
+    })
+  }
+
+  const toDetail = (dish: DishModel) => {
+    navigation.navigate("dishDetail", {
+      ...dish,
+    })
+  }
+
+  useEffect(() => {
+    async function fetch() {
+      modalStore.setVisibleLoading(true)
+      await dayStore.getDays(RNLocalize.getTimeZone())
+      await dishStore.getAll(days[0].date, RNLocalize.getTimeZone())
+      await categoryStore.getAll()
+      setCurrentDay(days[0])
+
+      validLengthDishes()
+    }
+    fetch().finally(() => modalStore.setVisibleLoading(false))
+  }, [])
+
+  const validLengthDishes = () => {
+    if (dishStore.dishes.length === 0) setNotFound(true)
+    else setNotFound(false)
+  }
 
   return (
     <>
       <ScrollView style={[style, styles.container]}>
         <Location></Location>
-        <DayDelivery></DayDelivery>
+        <DayDelivery
+          days={dayStore.days}
+          onWhyPress={(state) => setModalWhy(state)}
+          onPress={(day) => {
+            onChangeDay(day)
+            validLengthDishes()
+          }}
+        ></DayDelivery>
         <Separator style={utilSpacing.my4}></Separator>
-        <Categories></Categories>
+        <Categories
+          categories={categoryStore.categories}
+          onPress={(category) => toCategory(category)}
+        ></Categories>
         <Separator style={utilSpacing.my4}></Separator>
-        <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
-        <View>
-          <Ripple
-            style={utilSpacing.my5}
-            rippleOpacity={0.2}
-            rippleDuration={200}
-            onPress={toDishDetail}
-          >
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
+        <View style={utilFlex.flexRow}>
+          <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
+          <Text size="lg" style={utilSpacing.ml3} preset="bold" text={currentDay.dayName}></Text>
+        </View>
 
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
+        <View style={utilSpacing.mb8}>
+          {dishStore.dishes.map((dish, index) => (
+            <View key={dish.id}>
+              <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
+              {index !== dishStore.dishes.length - 1 && (
+                <Separator style={utilSpacing.my3}></Separator>
+              )}
             </View>
-          </Ripple>
-          <Separator style={utilSpacing.my3}></Separator>
-
-          <Ripple style={utilSpacing.my5} rippleOpacity={0.2} rippleDuration={200} onPress={toInit}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
+          ))}
+          <View>
+            {notFound && !modalStore.isVisibleLoading && (
               <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
+                <LottieView
+                  style={styles.notFound}
+                  source={require("./notFound.json")}
+                  autoPlay
+                  loop
+                />
+                <Text style={styles.textNotFound} tx="common.notFound.dishes"></Text>
               </View>
-            </View>
-          </Ripple>
-          <Separator style={utilSpacing.my3}></Separator>
-          <View style={[utilSpacing.mt5, utilSpacing.mb7]}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={100}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
+            )}
           </View>
 
+          {/* 
           <Text
             style={utilSpacing.mt4}
             size="lg"
@@ -161,98 +137,23 @@ export const Home = observer(function Home(props: HomeProps) {
             <DishChef></DishChef>
             <DishChef></DishChef>
           </ScrollView>
-          <Separator style={utilSpacing.my3}></Separator>
-
-          <View style={utilSpacing.my5}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={34}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </View>
-          <Separator style={utilSpacing.my3}></Separator>
-
-          <View style={utilSpacing.my5}>
-            <View style={styles.flex}>
-              <View style={styles.containerTextDish}>
-                <Text tx="mainScreen.itemTitle" preset="semiBold"></Text>
-                <Text
-                  tx="mainScreen.itemDescription"
-                  style={styles.descriptionDish}
-                  numberOfLines={2}
-                ></Text>
-
-                <Text
-                  style={[styles.chefDish, utilSpacing.mt4]}
-                  size="sm"
-                  tx="mainScreen.chef"
-                ></Text>
-
-                <View style={styles.flex}>
-                  <Price amount={23}></Price>
-                  <AutoImage style={styles.iconShipping} source={Images.iconShipping}></AutoImage>
-                  <Text style={utilSpacing.ml2} tx="mainScreen.priceExample"></Text>
-                </View>
-              </View>
-              <View>
-                <AutoImage style={styles.imageDish} source={Images.dish1}></AutoImage>
-                <AutoImage style={styles.imageChef} source={Images.chef1}></AutoImage>
-              </View>
-            </View>
-          </View>
-          <Separator style={utilSpacing.my3}></Separator>
+          <Separator style={utilSpacing.my3}></Separator> */}
         </View>
       </ScrollView>
       <LocationModal></LocationModal>
-      <DayDeliveryModal></DayDeliveryModal>
+      <DayDeliveryModal onClose={() => setModalWhy(false)} isVisible={modalWhy}></DayDeliveryModal>
+      <Loader></Loader>
     </>
   )
 })
 
 const styles = StyleSheet.create({
-  chefDish: {
-    color: color.palette.grayDark,
-  },
   container: {
     flex: 1,
     paddingHorizontal: spacing[3],
     paddingTop: spacing[3],
   },
 
-  containerTextDish: {
-    flex: 1,
-    marginRight: spacing[3],
-  },
-
-  descriptionDish: {
-    color: color.palette.grayDark,
-  },
-
-  flex: {
-    display: "flex",
-    flexDirection: "row",
-  },
   flex1: {
     flex: 1,
   },
@@ -261,20 +162,16 @@ const styles = StyleSheet.create({
     marginLeft: spacing[4],
     width: 24,
   },
-  imageChef: {
-    borderColor: color.palette.white,
-    borderRadius: 16,
-    borderWidth: 1,
-    bottom: 0,
-    height: 50,
-    position: "absolute",
-    right: spacing[1],
-    width: 50,
-  },
 
-  imageDish: {
-    borderRadius: 8,
-    height: 105,
-    width: 140,
+  notFound: {
+    alignSelf: "center",
+    display: "flex",
+    height: 150,
+    width: 150,
+  },
+  textNotFound: {
+    alignSelf: "center",
+    color: color.palette.grayDark,
+    fontSize: typographySize.lg,
   },
 })

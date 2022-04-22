@@ -1,13 +1,15 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, ScrollView, StyleSheet } from "react-native"
+import React, { useState, useEffect } from "react"
+import { StyleProp, View, ViewStyle, StyleSheet, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Chip } from "../chip/chip"
 import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
-import { useStores } from "../../models"
 import i18n from "i18n-js"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { Day } from "../../models/day-store"
+import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
@@ -30,37 +32,57 @@ export interface DayDeliveryProps {
    * as well as explicitly setting locale or translation fallbacks.
    */
   txOptions?: i18n.TranslateOptions
+
+  /**
+   * Function to set the date selected
+   */
+
+  onPress: (day: Day) => void
+
+  /**
+   * Days
+   */
+  days: Day[]
+
+  /**
+   * Function for onPress button why?
+   */
+  onWhyPress?: (state: boolean) => void
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style, hideWhyButton, titleTx, txOptions } = props
-  const { modalStore } = useStores()
+  const { style, hideWhyButton, titleTx, txOptions, onPress, onWhyPress, days = [] } = props
 
   const i18nText = titleTx && translate(titleTx, txOptions)
 
   const actualTitle = i18nText || "mainScreen.dayShipping"
+  const { dayStore } = useStores()
 
   return (
     <View>
       <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
         <Text tx={actualTitle} preset="semiBold" style={styles.dayShipping}></Text>
-        {!hideWhyButton && (
-          <Chip
-            tx="mainScreen.why"
-            onPress={() => modalStore.setVisibleModalDayDelivery(true)}
-            active={modalStore.isVisibleModalDayDelivery}
-          ></Chip>
-        )}
+        {!hideWhyButton && <Chip tx="mainScreen.why" onPress={() => onWhyPress(true)}></Chip>}
       </View>
-      <ScrollView horizontal style={[styles.flex, utilSpacing.mt5, utilSpacing.pb3, style]}>
-        <Chip tx="mainScreen.tomorrow" style={styles.chip}></Chip>
-        <Chip active text="Jue. May 16" style={utilSpacing.mr3}></Chip>
-        <Chip text="Vier. May 17" style={utilSpacing.mr3}></Chip>
-        <Chip text="Sab. May 18" style={utilSpacing.mr3}></Chip>
-        <Chip text="Dom. May 19" style={utilSpacing.mr3}></Chip>
+      <ScrollView horizontal style={[utilSpacing.mt5, utilSpacing.pb3, style]}>
+        {days.map((day) => (
+          <TouchableOpacity
+            onPress={() => {
+              onPress(day)
+              dayStore.setCurrentDay(day)
+            }}
+            key={day.date}
+          >
+            <Chip
+              active={day.date === dayStore.currentDay.date}
+              text={day.dayName}
+              style={styles.chip}
+            ></Chip>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </View>
   )
@@ -75,7 +97,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     marginBottom: spacing[2],
-    marginRight: spacing[2],
+    marginRight: spacing[1],
   },
   containerImgClose: {
     alignItems: "flex-end",

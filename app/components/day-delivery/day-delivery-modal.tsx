@@ -17,18 +17,28 @@ export interface DayDeliveryProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Is visible
+   */
+  isVisible: boolean
+
+  /**
+   * on close modal
+   */
+  onClose: (state: boolean) => void
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDeliveryModal = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style } = props
+  const { style, isVisible, onClose } = props
   const { modalStore } = useStores()
 
   return (
     <Modal
-      isVisible={modalStore.isVisibleModalDayDelivery}
+      isVisible={isVisible}
       backdropColor={color.palette.grayTransparent}
       backdropOpacity={1}
       animationIn="zoomIn"
@@ -40,10 +50,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
       <View style={styles.containerModal}>
         <View style={styles.bodyModal}>
           <View style={styles.containerImgClose}>
-            <TouchableOpacity
-              onPress={() => modalStore.setVisibleModalDayDelivery(false)}
-              activeOpacity={0.7}
-            >
+            <TouchableOpacity onPress={() => onClose(false)} activeOpacity={0.7}>
               <AutoImage style={styles.imgClose} source={Images.close}></AutoImage>
             </TouchableOpacity>
           </View>
@@ -59,7 +66,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
               block
               rounded
               style={utilSpacing.mb5}
-              onPress={() => modalStore.setVisibleModalDayDelivery(false)}
+              onPress={() => onClose(false)}
             ></Button>
           </View>
         </View>

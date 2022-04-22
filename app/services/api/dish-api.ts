@@ -1,20 +1,21 @@
 import { ApiResponse } from "apisauce"
 import { Api } from "./api"
-import { UserLoginResponse } from "./api.types"
+import { DayResponse, DishResponse } from "./api.types"
 import { getGeneralApiProblem } from "./api-problem"
-import { IUserLogin, IUserRegister } from "../../models/user-store/user-store"
 
-export class UserApi {
+export class DishApi {
   private api: Api
 
   constructor(api: Api) {
     this.api = api
   }
 
-  async register(userRegisterStore: IUserRegister): Promise<UserLoginResponse> {
+  async getAll(date: string, timeZone: string, categoryId?: number): Promise<DishResponse> {
     try {
-      const response: ApiResponse<any> = await this.api.apisauce.post("/users/register", {
-        ...userRegisterStore,
+      const response: ApiResponse<any> = await this.api.apisauce.get("/dishes", {
+        date,
+        timeZone,
+        categoryId,
       })
 
       if (!response.ok) {
@@ -22,25 +23,23 @@ export class UserApi {
         if (problem) return problem
       }
 
-      return { kind: "ok", data: { ...response.data } }
+      return { kind: "ok", data: [...response.data] }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }
     }
   }
 
-  async login(userLogin: IUserLogin): Promise<UserLoginResponse> {
+  async getByChef(chefId: number): Promise<DishResponse> {
     try {
-      const response: ApiResponse<any> = await this.api.apisauce.post("/users/login", {
-        ...userLogin,
-      })
+      const response: ApiResponse<any> = await this.api.apisauce.get("/dishes/chefs/" + chefId)
 
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
         if (problem) return problem
       }
 
-      return { kind: "ok", data: { ...response.data } }
+      return { kind: "ok", data: [...response.data] }
     } catch (e) {
       __DEV__ && console.tron.log(e.message)
       return { kind: "bad-data" }

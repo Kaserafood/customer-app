@@ -5,6 +5,7 @@ import {
   ImageURISource,
   Platform,
 } from "react-native"
+import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
@@ -25,11 +26,12 @@ type ImageProps = DefaultImageProps & {
  */
 export function AutoImage(props: ImageProps) {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
+  const [errorLoad, setErrorLoad] = useState(false)
 
   useLayoutEffect(() => {
     let mounted = true
 
-    if (props.source?.uri) {
+    if (props.source?.uri && props.source?.uri.length > 0 && props.source?.uri !== "null") {
       RNImage.getSize(props.source.uri as any, (width, height) => {
         if (mounted) setImageSize({ width, height })
       })
@@ -48,5 +50,12 @@ export function AutoImage(props: ImageProps) {
     }
   }, [props.source])
 
-  return <RNImage {...props} style={[imageSize, props.style]} />
+  return (
+    <RNImage
+      {...props}
+      source={!errorLoad ? props.source : images.category}
+      style={[imageSize, props.style]}
+      onError={() => setErrorLoad(true)}
+    />
+  )
 }
