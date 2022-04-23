@@ -1,20 +1,33 @@
-import React, { FC, useState, useEffect } from "react"
-import { observer } from "mobx-react-lite"
-import { StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
-import { DayDelivery, Dish, Header, Loader, Screen, Separator, Text } from "../../components"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect } from "react"
+import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { useStores } from "../../models"
-import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { useNavigation } from "@react-navigation/native"
-import { utilSpacing } from "../../theme/Util"
 import * as RNLocalize from "react-native-localize"
-import LottieView from "lottie-react-native"
-import { color, spacing, typographySize } from "../../theme"
+import { DayDelivery, Dish, Header, Loader, Screen, Separator, Text } from "../../components"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
+import { EmptyData } from "../../components/empty-data/empty-data"
+import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { Dish as DishModel } from "../../models/dish-store"
+import { goBack, NavigatorParamList } from "../../navigators"
+import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
 
+class ModalState {
+  isVisibleWhy = false
+
+  setVisibleWhy(state: boolean) {
+    this.isVisibleWhy = state
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
+const modalState = new ModalState()
 export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">> = observer(
   ({ route: { params }, navigation }) => {
     const {
@@ -22,8 +35,6 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       dishStore: { dishesCategory, getAll },
       modalStore,
     } = useStores()
-    const [modalWhy, setModalWhy] = useState(false)
-    const [notFound, setNotFound] = useState(false)
 
     useEffect(() => {
       console.log(params)
@@ -34,21 +45,14 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
 
       fetch().finally(() => {
         modalStore.setVisibleLoading(false)
-        validLengthDishes()
       })
     }, [])
-
-    const validLengthDishes = () => {
-      if (dishesCategory.length === 0) setNotFound(true)
-      else setNotFound(false)
-    }
 
     const onChangeDay = async (day: Day) => {
       modalStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await getAll(day.date, RNLocalize.getTimeZone(), params.id).finally(() => {
         modalStore.setVisibleLoading(false)
-        validLengthDishes()
       })
     }
 
@@ -64,7 +68,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
         <ScrollView style={styles.container}>
           <DayDelivery
             days={dayStore.days}
-            onWhyPress={(state) => setModalWhy(state)}
+            onWhyPress={(state) => modalState.setVisibleWhy(true)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
           <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>
@@ -80,24 +84,9 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             ))}
           </View>
 
-          <View>
-            {notFound && !modalStore.isVisibleLoading && (
-              <View>
-                <LottieView
-                  style={styles.notFound}
-                  source={require("./notFound.json")}
-                  autoPlay
-                  loop
-                />
-                <Text style={styles.textNotFound} tx="common.notFound.dishes"></Text>
-              </View>
-            )}
-          </View>
+          <EmptyData lengthData={dishesCategory.length}></EmptyData>
         </ScrollView>
-        <DayDeliveryModal
-          onClose={() => setModalWhy(false)}
-          isVisible={modalWhy}
-        ></DayDeliveryModal>
+        <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader></Loader>
       </Screen>
     )
@@ -110,18 +99,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing[3],
     paddingTop: spacing[3],
   },
-  notFound: {
-    alignSelf: "center",
-    display: "flex",
-    height: 150,
-    width: 150,
-  },
+
   root: {
     backgroundColor: color.background,
-  },
-  textNotFound: {
-    alignSelf: "center",
-    color: color.palette.grayDark,
-    fontSize: typographySize.lg,
   },
 })

@@ -36,6 +36,7 @@ const images = {
   category: require("./images/placeholder.png"),
   back: require("./images/back.png"),
   notFound: require("./images/notFound.json"),
+  remove: require("./images/remove.png"),
 }
 
 export default images

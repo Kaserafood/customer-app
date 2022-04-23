@@ -1,12 +1,11 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native"
+import Images from "assets/images"
 import { observer } from "mobx-react-lite"
+import React from "react"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import SvgUri from "react-native-svg-uri"
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
-import Images from "assets/images"
-import SvgUri from "react-native-svg-uri"
-
-import { useStores } from "../../models"
 
 export interface LocationProps {
   /**
@@ -28,9 +27,9 @@ export const Location = observer(function Location(props: LocationProps) {
         style={styles.btnAddress}
         activeOpacity={0.7}
       >
-        {/* <SvgUri width="24" height="24" source={Images.location} /> */}
+        <SvgUri width="24" height="24" source={Images.location} />
         <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
-        {/* <SvgUri width="24" height="24" source={Images.caretDown} /> */}
+        <SvgUri width="24" height="24" source={Images.caretDown} />
       </TouchableOpacity>
     </View>
   )

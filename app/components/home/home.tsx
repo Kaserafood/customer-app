@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
+import { spacing } from "../../theme"
 import { Text } from "../text/text"
 import { Separator } from "../separator/separator"
 import { utilSpacing, utilFlex } from "../../theme/Util"
@@ -14,15 +14,27 @@ import { useNavigation } from "@react-navigation/native"
 import { useStores } from "../../models"
 import * as RNLocalize from "react-native-localize"
 import { Loader } from "../loader/loader"
-import LottieView from "lottie-react-native"
-import { typographySize } from "../../theme/typography"
 import { Category } from "../../models/category-store"
 import { Dish as DishModel } from "../../models/dish-store"
 import { useDay } from "../../common/hooks/useDay"
 import { Dish } from "../dish/dish"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
+import { EmptyData } from "../empty-data/empty-data"
+import { makeAutoObservable } from "mobx"
 
+class ModalState {
+  isVisibleWhy = false
+
+  setVisibleWhy(state: boolean) {
+    this.isVisibleWhy = state
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+const modalState = new ModalState()
 export interface HomeProps {
   /**
    * An optional style override useful for padding & margin.
@@ -36,9 +48,6 @@ type mainScreenProp = StackNavigationProp<NavigatorParamList, "main">
  */
 export const Home = observer(function Home(props: HomeProps) {
   const { style } = props
-
-  const [modalWhy, setModalWhy] = useState(false)
-  const [notFound, setNotFound] = useState(false)
 
   const { onChangeDay } = useDay()
   const { dishStore, dayStore, modalStore, categoryStore } = useStores()
@@ -65,16 +74,9 @@ export const Home = observer(function Home(props: HomeProps) {
       await dishStore.getAll(days[0].date, RNLocalize.getTimeZone())
       await categoryStore.getAll()
       setCurrentDay(days[0])
-
-      validLengthDishes()
     }
     fetch().finally(() => modalStore.setVisibleLoading(false))
   }, [])
-
-  const validLengthDishes = () => {
-    if (dishStore.dishes.length === 0) setNotFound(true)
-    else setNotFound(false)
-  }
 
   return (
     <>
@@ -82,10 +84,9 @@ export const Home = observer(function Home(props: HomeProps) {
         <Location></Location>
         <DayDelivery
           days={dayStore.days}
-          onWhyPress={(state) => setModalWhy(state)}
+          onWhyPress={(state) => modalState.setVisibleWhy(state)}
           onPress={(day) => {
             onChangeDay(day)
-            validLengthDishes()
           }}
         ></DayDelivery>
         <Separator style={utilSpacing.my4}></Separator>
@@ -108,19 +109,7 @@ export const Home = observer(function Home(props: HomeProps) {
               )}
             </View>
           ))}
-          <View>
-            {notFound && !modalStore.isVisibleLoading && (
-              <View>
-                <LottieView
-                  style={styles.notFound}
-                  source={require("./notFound.json")}
-                  autoPlay
-                  loop
-                />
-                <Text style={styles.textNotFound} tx="common.notFound.dishes"></Text>
-              </View>
-            )}
-          </View>
+          <EmptyData lengthData={dishStore.dishes.length}></EmptyData>
 
           {/* 
           <Text
@@ -141,7 +130,7 @@ export const Home = observer(function Home(props: HomeProps) {
         </View>
       </ScrollView>
       <LocationModal></LocationModal>
-      <DayDeliveryModal onClose={() => setModalWhy(false)} isVisible={modalWhy}></DayDeliveryModal>
+      <DayDeliveryModal modal={modalState}></DayDeliveryModal>
       <Loader></Loader>
     </>
   )
@@ -161,17 +150,5 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: spacing[4],
     width: 24,
-  },
-
-  notFound: {
-    alignSelf: "center",
-    display: "flex",
-    height: 150,
-    width: 150,
-  },
-  textNotFound: {
-    alignSelf: "center",
-    color: color.palette.grayDark,
-    fontSize: typographySize.lg,
   },
 })

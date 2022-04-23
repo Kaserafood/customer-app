@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, ScrollView } from "react-native"
+import i18n from "i18n-js"
 import { observer } from "mobx-react-lite"
+import React from "react"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { translate, TxKeyPath } from "../../i18n"
+import { useStores } from "../../models"
+import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Chip } from "../chip/chip"
-import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
-import i18n from "i18n-js"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import { Day } from "../../models/day-store"
-import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
