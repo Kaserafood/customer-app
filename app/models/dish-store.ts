@@ -1,33 +1,33 @@
 import { Instance, types } from "mobx-state-tree"
 import { DishApi } from "../services/api/dish-api"
 import { handleDataResponseAPI } from "../utils/messages"
-import { addons, dish } from "./dish"
+import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
 import { userChef, UserChef } from "./user-store/user-store"
 
-export const dishStore = dish.props({
+export const dishChef = dish.props({
   chef: types.optional(types.maybe(userChef), {}),
 })
 
-export interface Dish extends Instance<typeof dishStore> {}
+export interface DishChef extends Instance<typeof dishChef> {}
 
 export const DishStoreModel = types
   .model("DishStoreModel")
   .props({
-    dishes: types.optional(types.array(dishStore), []), // All dishes
-    dishesCategory: types.optional(types.array(dishStore), []), // Dishes filtered by category
-    dishesChef: types.optional(types.array(dishStore), []),
+    dishes: types.optional(types.array(dishChef), []), // All dishes
+    dishesCategory: types.optional(types.array(dishChef), []), // Dishes filtered by category
+    dishesChef: types.optional(types.array(dishChef), []),
     dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    setDishes: async (dishes: Dish[]) => {
+    setDishes: async (dishes: DishChef[]) => {
       self.dishes.replace(dishes)
     },
-    setDishesCategory: async (dishes: Dish[]) => {
+    setDishesCategory: async (dishes: DishChef[]) => {
       self.dishesCategory.replace(dishes)
     },
-    setDishesChef: async (dishes: Dish[]) => {
+    setDishesChef: async (dishes: DishChef[]) => {
       self.dishesChef.replace(dishes)
     },
     setDishesGroupedByChef: async (userChefs: UserChef[]) => {

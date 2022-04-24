@@ -1,8 +1,8 @@
 import { SnapshotOut, types } from "mobx-state-tree"
-import { Dish, dishStore } from "./dish-store"
+import { DishChef, dishChef } from "./dish-store"
 
 const itemCartStore = types.model("ItemCartStore").props({
-  dish: types.maybe(dishStore),
+  dish: types.maybe(dishChef),
   quantity: types.maybe(types.number),
   commentChef: types.maybe(types.string),
   total: types.maybe(types.number),
@@ -23,7 +23,7 @@ export const CartStoreModel = types
     },
   }))
   .actions((self) => ({
-    addItem(dish: Dish, quantity: number, commentChef: string) {
+    addItem(dish: DishChef, quantity: number, commentChef: string) {
       const exists = self.cart.find((item) => item.dish?.id === dish.id)
       if (exists) {
         exists.quantity += quantity

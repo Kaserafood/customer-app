@@ -1,18 +1,16 @@
 import images from "assets/images"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import { AutoImage, Price, Separator, Text } from ".."
-
+import { Dish } from "../../models/dish"
+import { UserChef } from "../../models/user-store/user-store"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import Ripple from "react-native-material-ripple"
-import { UserChef } from "../../models/user-store/user-store"
-import { Dish } from "../../models/dish"
 
 export interface ChefItemModel extends UserChef {
-  dishes: Dish[]
   category: string
   currentDishName: string
   pageView: any
@@ -62,6 +60,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
         {item.currentIndexPage > 0 && (
           <TouchableOpacity
             onPress={onPrevious}
+            activeOpacity={0.5}
             style={[
               styles.buttonCarousel,
               styles.buttonLeftCarouse,
@@ -82,14 +81,21 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           style={[styles.pagerView, styles.dish]}
         >
           {item.dishes.map((dish) => (
-            <Ripple key={dish.id} onPress={() => onDishPress(dish)}>
-              <AutoImage style={styles.dish} source={{ uri: dish.image }}></AutoImage>
+            <Ripple
+              key={dish.id}
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => onDishPress(dish)}
+              style={styles.dish}
+            >
+              <Image style={[styles.dish, styles.imageDish]} source={{ uri: dish.image }}></Image>
             </Ripple>
           ))}
         </PagerView>
 
         {item.currentIndexPage < item.dishes.length - 1 && (
           <TouchableOpacity
+            activeOpacity={0.5}
             onPress={onNext}
             style={[styles.buttonCarousel, styles.btnNext, utilSpacing.ml2]}
           >
@@ -164,7 +170,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
   },
-
   imageCarousel: {
     alignItems: "center",
     display: "flex",
@@ -173,12 +178,16 @@ const styles = StyleSheet.create({
 
     width: "100%",
   },
+
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: spacing[2],
     borderWidth: 2,
     height: 90,
     width: 90,
+  },
+  imageDish: {
+    width: "100%",
   },
   pagerView: {
     alignSelf: "center",

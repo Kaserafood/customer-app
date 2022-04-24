@@ -102,10 +102,7 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
   useEffect(() => {
     const formatData: ChefItemModel[] = dishStore.dishesGroupedByChef.map((chef: UserChef) => {
       return {
-        id: chef.id,
-        name: chef.name,
-        image: chef.image,
-        dishes: chef.dishes,
+        ...chef,
         category: getCategoriesName(chef.categories),
         currentIndexPage: 0,
         pageView: null,
@@ -134,8 +131,11 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
     })
   }
 
-  const toDishDetail = (dish: Dish) => {
-    navigation.push("dishDetail", { ...dish })
+  const toDishDetail = (dish: Dish, userChef: UserChef) => {
+    const chef = {
+      ...userChef,
+    }
+    navigation.push("dishDetail", { ...dish, chef })
   }
 
   const onChangeDay = async (day: Day) => {
@@ -169,7 +169,7 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
         <View>
           {modalState.data.map((item, index) => (
             <ChefItem
-              onDishPress={(dish) => toDishDetail(dish)}
+              onDishPress={(dish) => toDishDetail(dish, item)}
               onPrevious={() => modalState.previousDish(item, index)}
               onNext={() => modalState.nextDish(item, index)}
               onChangePosition={(position) => modalState.chanageDish(item, position, index)}

@@ -25,7 +25,7 @@ import {
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { Category } from "../models/category-store"
-import { Dish } from "../models/dish"
+import { DishChef } from "../models/dish-store"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -51,8 +51,8 @@ export type NavigatorParamList = {
   registerPager: registerPageParams
   loginForm: undefined
   main: undefined
-  dishDetail: Dish
-  menuChef: Dish
+  dishDetail: DishChef
+  menuChef: DishChef
   deliveryDetail: undefined
   endOrder: undefined
   category: Category

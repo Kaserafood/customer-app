@@ -10,7 +10,7 @@ import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-mod
 import { EmptyData } from "../../components/empty-data/empty-data"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
-import { Dish as DishModel } from "../../models/dish-store"
+import { DishChef as DishModel } from "../../models/dish-store"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
