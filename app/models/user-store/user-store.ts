@@ -1,9 +1,9 @@
 import { Instance, types } from "mobx-state-tree"
-import { withEnvironment } from "../extensions/with-environment"
 import { UserApi } from "../../services/api/user-api"
 import { handleDataResponseAPI } from "../../utils/messages"
 import { saveString } from "../../utils/storage"
 import { categoryStore } from "../category-store"
+import { withEnvironment } from "../extensions/with-environment"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybe(types.number),
@@ -11,6 +11,7 @@ export const userChef = types.model("UserChef").props({
   image: types.maybe(types.string),
   description: types.maybe(types.string),
   categories: types.maybe(types.array(categoryStore)),
+  // dishes: types.optional(types.array(dish), []), // Only used when is grouped by chef
 })
 export interface UserChef extends Instance<typeof userChef> {}
 

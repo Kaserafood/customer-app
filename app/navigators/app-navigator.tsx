@@ -25,7 +25,7 @@ import {
 } from "../screens"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { Category } from "../models/category-store"
-import { Dish } from "../models/dish-store"
+import { Dish } from "../models/dish"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator

@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react"
-import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
-import { observer } from "mobx-react-lite"
-import { spacing } from "../../theme"
-import { Text } from "../text/text"
-import { Separator } from "../separator/separator"
-import { utilSpacing, utilFlex } from "../../theme/Util"
-import { Location } from "../location/location"
-import { DayDelivery } from "../day-delivery/day-delivery"
-import { LocationModal } from "../location/location-modal"
-import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
-import { Categories } from "../categories/categories"
 import { useNavigation } from "@react-navigation/native"
-import { useStores } from "../../models"
+import { StackNavigationProp } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+import React, { useEffect } from "react"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import * as RNLocalize from "react-native-localize"
-import { Loader } from "../loader/loader"
+import { useDay } from "../../common/hooks/useDay"
+import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Dish as DishModel } from "../../models/dish-store"
-import { useDay } from "../../common/hooks/useDay"
-import { Dish } from "../dish/dish"
-import { StackNavigationProp } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
+import { spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { Categories } from "../categories/categories"
+import { DayDelivery } from "../day-delivery/day-delivery"
+import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
+import { Dish } from "../dish/dish"
 import { EmptyData } from "../empty-data/empty-data"
-import { makeAutoObservable } from "mobx"
+import { Loader } from "../loader/loader"
+import { Location } from "../location/location"
+import { LocationModal } from "../location/location-modal"
+import { Separator } from "../separator/separator"
+import { Text } from "../text/text"
 
 class ModalState {
   isVisibleWhy = false
@@ -68,6 +68,7 @@ export const Home = observer(function Home(props: HomeProps) {
   }
 
   useEffect(() => {
+    console.log("Home useEffect")
     async function fetch() {
       modalStore.setVisibleLoading(true)
       await dayStore.getDays(RNLocalize.getTimeZone())
