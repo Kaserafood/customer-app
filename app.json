@@ -1,6 +1,6 @@
 {
   "name": "ClientApp",
-  "displayName": "ClientApp",
+  "displayName": "CustomerApp",
   "expo": {
     "name": "ClientApp",
     "slug": "ClientApp",

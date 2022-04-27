@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
     ...SHADOW,
   },
   card: {
-    backgroundColor: color.palette.white,
+    backgroundColor: color.background,
     borderRadius: spacing[2],
     margin: spacing[3],
     padding: spacing[3],
     ...SHADOW,
   },
   container: {
-    backgroundColor: color.palette.white,
+    backgroundColor: color.background,
   },
   containerSeparator: {
     alignItems: "center",

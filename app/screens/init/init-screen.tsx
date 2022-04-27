@@ -1,17 +1,16 @@
-import React, { FC, useEffect } from "react"
-import { observer } from "mobx-react-lite"
-import { Image, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { NavigatorParamList } from "../../navigators"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect } from "react"
+import { Image, StyleSheet, View } from "react-native"
 import { Button, Screen, Text } from "../../components"
+import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme/color"
-import { useBackHandler } from "@react-native-community/hooks"
-import { utilSpacing, utilText } from "../../theme/Util"
-import { typography, typographySize } from "../../theme/typography"
+import { typographySize } from "../../theme/typography"
+import { utilSpacing } from "../../theme/Util"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
-    const toRegister = () => navigation.navigate("registerForm")
+    const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm")
 
     useEffect(() => {

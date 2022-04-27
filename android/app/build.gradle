@@ -154,6 +154,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('kasera-customer.keystore')
+            storePassword 'Kapibara.42'
+            keyAlias 'kasera-customer'
+            keyPassword 'Kapibara.42'
+        }
     }
     buildTypes {
         debug {
@@ -167,7 +173,9 @@ android {
         release {
             // Caution! In production, you need to generate your own keystore file.
             // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            
+            signingConfig signingConfigs.release
+
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
@@ -187,6 +195,9 @@ android {
             }
 
         }
+    }
+    dexOptions {
+       javaMaxHeapSize "3g"
     }
 }
 
