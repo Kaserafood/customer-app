@@ -4,28 +4,28 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import React from "react"
 import { useColorScheme } from "react-native"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-
-import {
-  InitScreen,
-  RegisterFormScreen,
-  TermsConditionsScreen,
-  PrivacyPolicyScreen,
-  RegisterPagerScreen,
-  LoginFormScreen,
-  MainScreen,
-  DishDetailScreen,
-  MenuChefScreen,
-  DeliveryDetailScreen,
-  EndOrderScreen,
-  CategoryScreen,
-} from "../screens"
-import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
+import RNBootSplash from "react-native-bootsplash"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
+import {
+  CategoryScreen,
+  DeliveryDetailScreen,
+  DishDetailScreen,
+  EndOrderScreen,
+  InitScreen,
+  LoginFormScreen,
+  MainScreen,
+  MenuChefScreen,
+  PrivacyPolicyScreen,
+  RegisterFormScreen,
+  RegisterPagerScreen,
+  TermsConditionsScreen,
+} from "../screens"
+import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -69,7 +69,7 @@ const AppStack = () => {
       }}
       initialRouteName="init"
     >
-      <Stack.Screen name="init" component={InitScreen} />
+      <Stack.Screen options={{ animation: "none" }} name="init" component={InitScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
       <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
       <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
@@ -92,6 +92,7 @@ export const AppNavigator = (props: NavigationProps) => {
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
+      onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
@@ -116,4 +117,16 @@ const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
 function createDrawerNavigator() {
   throw new Error("Function not implemented.")
+}
+
+const config = {
+  animation: "spring",
+  config: {
+    stiffness: 1000,
+    damping: 500,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
 }

@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, View } from "react-native"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { IUserRegister } from "../../models/user-store/user-store"
-import { NavigatorParamList } from "../../navigators"
+import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { showMessageInfo } from "../../utils/messages"
@@ -14,14 +14,13 @@ import { showMessageInfo } from "../../utils/messages"
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
-  const goBack = () => navigation.navigate("init")
-  const goMain = () => navigation.navigate("main")
+  const [terms, setTerms] = useState(false)
+  const { ...methods } = useForm({ mode: "onChange" })
+  const [formError, setError] = useState<boolean>(false)
+  const { userStore, modalStore } = useStores()
+
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
-
-  const [terms, setTerms] = useState(false)
-
-  const { userStore, modalStore } = useStores()
 
   const onSubmit = (data) => {
     if (!terms) {
@@ -37,9 +36,6 @@ export const RegisterFormScreen: FC<
         .finally(() => modalStore.setVisibleLoading(false))
     }
   }
-
-  const { ...methods } = useForm({ mode: "onChange" })
-  const [formError, setError] = useState<boolean>(false)
 
   const onError: SubmitErrorHandler<IUserRegister> = (errors) => {
     return console.log({ errors })

@@ -1,8 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
-import { Image, StyleSheet, View } from "react-native"
-import { Button, Screen, Text } from "../../components"
+import React, { FC, useEffect, useLayoutEffect } from "react"
+import { BackHandler, Image, StatusBar, StyleSheet, View } from "react-native"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { Button, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
@@ -13,20 +14,14 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm")
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       console.log("in init screen")
+      changeNavigationBarColor(color.primary, false, true)
     }, [])
 
     return (
-      <Screen
-        statusBarBackgroundColor={color.primary}
-        bottomBarBackgroundColor={color.primary}
-        bottomBar="light-content"
-        backgroundColor={color.primary}
-        preset="fixed"
-        statusBar="light-content"
-        style={styles.root}
-      >
+      <View style={styles.root}>
+        <StatusBar backgroundColor={color.primary} barStyle="light-content" />
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} tx="initScreen.homemadeFood"></Text>
         <Text style={styles.textSecondary} tx="initScreen.byChefIndependently"></Text>
@@ -47,7 +42,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             onPress={toLogin}
           ></Button>
         </View>
-      </Screen>
+      </View>
     )
   },
 )
@@ -65,6 +60,8 @@ const styles = StyleSheet.create({
   },
   root: {
     alignItems: "center",
+    backgroundColor: color.primary,
+    flex: 1,
     justifyContent: "center",
   },
   textSecondary: {
