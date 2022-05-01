@@ -1,8 +1,7 @@
-import Images from "assets/images"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
-import SvgUri from "react-native-svg-uri"
+import Icon from "react-native-vector-icons/MaterialIcons"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { Text } from "../text/text"
@@ -27,9 +26,9 @@ export const Location = observer(function Location(props: LocationProps) {
         style={styles.btnAddress}
         activeOpacity={0.7}
       >
-        <SvgUri width="24" height="24" source={Images.location} />
+        <Icon name="place" size={24} color={color.palette.white} />
         <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
-        <SvgUri width="24" height="24" source={Images.caretDown} />
+        <Icon name="arrow-drop-down" size={30} color={color.palette.white} />
       </TouchableOpacity>
     </View>
   )

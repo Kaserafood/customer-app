@@ -1,17 +1,17 @@
-import * as React from "react"
-import { StyleProp, TouchableOpacity, View, ViewStyle, StyleSheet } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color } from "../../theme"
-import { Text } from "../text/text"
-import { AutoImage } from ".."
-
 import Images from "assets/images"
-
-import { spacing } from "../../theme/spacing"
-
+import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
-
+import { createIconSetFromIcoMoon } from "react-native-vector-icons"
+import { AutoImage } from ".."
 import { useStores } from "../../models"
+import { color } from "../../theme"
+import { spacing } from "../../theme/spacing"
+import { Text } from "../text/text"
+import icoMoonConfig from "./selection.json"
+
+const Icon = createIconSetFromIcoMoon(icoMoonConfig)
 
 interface ActiveIndex {
   getIndex: () => number
@@ -45,33 +45,35 @@ export const BottomNavigation = observer(function BottomNavigation(props: Bottom
 
         <TouchableOpacity style={styles.button}>
           <Ripple style={styles.ripple} rippleCentered onPress={() => activeIndex.setIndex(0)}>
-            <AutoImage
-              resizeMode="contain"
-              style={styles.icon}
-              source={activeIndex.getIndex() === 0 ? Images.homeActive : Images.home}
-            ></AutoImage>
-            <Text tx="bottomNavigation.home"></Text>
+            <Icon
+              name="home"
+              size={35}
+              color={activeIndex.getIndex() === 0 ? color.primary : color.text}
+            />
+
+            <Text tx="bottomNavigation.search"></Text>
           </Ripple>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
           <Ripple style={styles.ripple} rippleCentered onPress={() => activeIndex.setIndex(1)}>
-            <AutoImage
-              resizeMode="contain"
-              style={styles.icon}
-              source={activeIndex.getIndex() === 1 ? Images.chefActive : Images.chef}
-            ></AutoImage>
-            <Text tx="bottomNavigation.chefs"></Text>
+            <Icon
+              name="hat-chef"
+              size={35}
+              color={activeIndex.getIndex() === 1 ? color.primary : color.text}
+            />
+
+            <Text tx="bottomNavigation.search"></Text>
           </Ripple>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.button}>
           <Ripple style={styles.ripple} rippleCentered onPress={() => activeIndex.setIndex(2)}>
-            <AutoImage
-              resizeMode="contain"
-              style={styles.icon}
-              source={activeIndex.getIndex() === 2 ? Images.seachActive : Images.search}
-            ></AutoImage>
+            <Icon
+              name="search"
+              size={35}
+              color={activeIndex.getIndex() === 2 ? color.primary : color.text}
+            />
             <Text tx="bottomNavigation.search"></Text>
           </Ripple>
         </TouchableOpacity>
