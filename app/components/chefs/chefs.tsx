@@ -92,11 +92,11 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
     console.log("chefs useEffect")
     async function fetch() {
       if (dishStore.dishesGroupedByChef.length > 0) return
-      modalStore.setVisibleLoading(true)
+
       await dishStore.getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
     }
 
-    fetch().finally(() => modalStore.setVisibleLoading(false))
+    fetch()
   }, [])
 
   useEffect(() => {
@@ -139,11 +139,8 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
   }
 
   const onChangeDay = async (day: Day) => {
-    modalStore.setVisibleLoading(true)
     dayStore.setCurrentDay(day)
-    await dishStore.getGroupedByChef(day.date, RNLocalize.getTimeZone()).finally(() => {
-      modalStore.setVisibleLoading(false)
-    })
+    await dishStore.getGroupedByChef(day.date, RNLocalize.getTimeZone())
   }
 
   return (

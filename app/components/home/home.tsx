@@ -71,12 +71,16 @@ export const Home = observer(function Home(props: HomeProps) {
     console.log("Home useEffect")
     async function fetch() {
       modalStore.setVisibleLoading(true)
-      await dayStore.getDays(RNLocalize.getTimeZone())
-      await dishStore.getAll(days[0].date, RNLocalize.getTimeZone())
-      await categoryStore.getAll()
-      setCurrentDay(days[0])
+
+      Promise.all([
+        dayStore.getDays(RNLocalize.getTimeZone()),
+        dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
+        categoryStore.getAll(),
+      ])
     }
-    fetch().finally(() => modalStore.setVisibleLoading(false))
+    fetch()
+      .then(() => setCurrentDay(days[0]))
+      .finally(() => modalStore.setVisibleLoading(false))
   }, [])
 
   return (
@@ -87,6 +91,7 @@ export const Home = observer(function Home(props: HomeProps) {
           days={dayStore.days}
           onWhyPress={(state) => modalState.setVisibleWhy(state)}
           onPress={(day) => {
+            console.log("clcik dary")
             onChangeDay(day)
           }}
         ></DayDelivery>

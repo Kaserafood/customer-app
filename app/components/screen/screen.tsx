@@ -1,10 +1,10 @@
 import * as React from "react"
 import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { ScreenProps } from "./screen.props"
-import { isNonScrolling, offsets, presets } from "./screen.presets"
-import { color } from "../../theme"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { color } from "../../theme"
+import { isNonScrolling, offsets, presets } from "./screen.presets"
+import { ScreenProps } from "./screen.props"
 
 const isIos = Platform.OS === "ios"
 
@@ -13,7 +13,6 @@ function ScreenWithoutScrolling(props: ScreenProps) {
   const preset = presets.fixed
   const style = props.style || {}
   const backgroundStyle = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {}
-  const insetStyle = { paddingTop: props.unsafe ? 0 : insets.top }
 
   return (
     <KeyboardAvoidingView
@@ -25,7 +24,7 @@ function ScreenWithoutScrolling(props: ScreenProps) {
         backgroundColor={props.statusBarBackgroundColor || color.primary}
         barStyle={props.statusBar || "light-content"}
       />
-      <View style={[preset.inner, style, insetStyle]}>{props.children}</View>
+      <View style={[preset.inner, style]}>{props.children}</View>
     </KeyboardAvoidingView>
   )
 }
@@ -35,7 +34,6 @@ function ScreenWithScrolling(props: ScreenProps) {
   const preset = presets.scroll
   const style = props.style || {}
   const backgroundStyle = props.backgroundColor ? { backgroundColor: props.backgroundColor } : {}
-  const insetStyle = { paddingTop: props.unsafe ? 0 : insets.top }
 
   return (
     <KeyboardAvoidingView
@@ -47,7 +45,7 @@ function ScreenWithScrolling(props: ScreenProps) {
         backgroundColor={props.statusBarBackgroundColor || color.primary}
         barStyle={props.statusBar || "light-content"}
       />
-      <View style={[preset.outer, backgroundStyle, insetStyle]}>
+      <View style={[preset.outer, backgroundStyle]}>
         <ScrollView
           style={[preset.outer, backgroundStyle]}
           contentContainerStyle={[preset.inner, style]}
