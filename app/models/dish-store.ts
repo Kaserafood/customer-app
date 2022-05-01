@@ -1,65 +1,37 @@
-import { types, Instance, SnapshotIn } from "mobx-state-tree"
-import { withEnvironment } from "./extensions/with-environment"
-
-import { handleDataResponseAPI } from "../utils/messages"
-import { userChef } from "./user-store/user-store"
+import { Instance, types } from "mobx-state-tree"
 import { DishApi } from "../services/api/dish-api"
+import { handleDataResponseAPI } from "../utils/messages"
+import { dish } from "./dish"
+import { withEnvironment } from "./extensions/with-environment"
+import { userChef, UserChef } from "./user-store/user-store"
 
-const option = types.model("OptionAddon", {
-  label: types.maybe(types.string),
-  price: types.maybe(types.string),
-  image: types.maybe(types.string),
-  price_type: types.maybe(types.string),
+export const dishChef = dish.props({
+  chef: types.optional(types.maybe(userChef), {}),
 })
 
-const addons = types.model("Addons", {
-  name: types.maybe(types.string),
-  title_format: types.maybe(types.string),
-  description_enable: types.maybe(types.number),
-  description: types.maybe(types.string),
-  type: types.maybe(types.string),
-  display: types.maybe(types.string),
-  position: types.maybe(types.number),
-  required: types.maybe(types.number),
-  restrictions: types.maybe(types.number),
-  restrictions_type: types.maybe(types.string),
-  adjust_price: types.maybe(types.number),
-  price_type: types.maybe(types.string),
-  price: types.maybe(types.string),
-  min: types.maybe(types.number),
-  max: types.maybe(types.number),
-  options: types.maybe(types.optional(types.array(option), [])),
-})
-
-export const dishStore = types.model("DishStore").props({
-  id: types.maybe(types.number),
-  title: types.maybe(types.string),
-  description: types.maybe(types.string),
-  price: types.maybe(types.number),
-  image: types.maybe(types.string),
-  addons: types.maybe(types.optional(types.array(addons), [])),
-  chef: types.maybe(userChef),
-})
-
-export interface Dish extends Instance<typeof dishStore> {}
+export interface DishChef extends Instance<typeof dishChef> {}
 
 export const DishStoreModel = types
   .model("DishStoreModel")
   .props({
-    dishes: types.optional(types.array(dishStore), []),
-    dishesCategory: types.optional(types.array(dishStore), []),
-    dishesChef: types.optional(types.array(dishStore), []),
+    dishes: types.optional(types.array(dishChef), []), // All dishes
+    dishesCategory: types.optional(types.array(dishChef), []), // Dishes filtered by category
+    dishesChef: types.optional(types.array(dishChef), []),
+    dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    setDishes: async (dishes: Dish[]) => {
+    setDishes: async (dishes: DishChef[]) => {
       self.dishes.replace(dishes)
     },
-    setDishesCategory: async (dishes: Dish[]) => {
+    setDishesCategory: async (dishes: DishChef[]) => {
       self.dishesCategory.replace(dishes)
     },
-    setDishesChef: async (dishes: Dish[]) => {
+    setDishesChef: async (dishes: DishChef[]) => {
       self.dishesChef.replace(dishes)
+    },
+    setDishesGroupedByChef: async (userChefs: UserChef[]) => {
+      self.dishesGroupedByChef.replace(userChefs)
     },
   }))
   .actions((self) => ({
@@ -83,6 +55,18 @@ export const DishStoreModel = types
 
       if (result.kind === "ok") {
         self.setDishesChef(result.data)
+      } else {
+        handleDataResponseAPI(result)
+        __DEV__ && console.tron.log(`Error : ${result}`)
+      }
+    },
+    getGroupedByChef: async (date: string, timeZone: string) => {
+      const api = new DishApi(self.environment.api)
+
+      const result = await api.getGroupedByChef(date, timeZone)
+
+      if (result.kind === "ok") {
+        self.setDishesGroupedByChef(result.data)
       } else {
         handleDataResponseAPI(result)
         __DEV__ && console.tron.log(`Error : ${result}`)

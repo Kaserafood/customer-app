@@ -1,14 +1,15 @@
-import React, { FC, useState } from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, View, StyleSheet } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
-import { Screen, Text, Header, InputText, Button, Loader } from "../../components"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
+import { BackHandler, StyleSheet, View, ViewStyle } from "react-native"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { Button, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { IUserLogin } from "../../models/user-store/user-store"
+import { goBack, NavigatorParamList } from "../../navigators"
+import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -22,6 +23,17 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
 
     const { ...methods } = useForm({ mode: "onBlur" })
     const [formError, setError] = useState<boolean>(false)
+
+    function handleBackButton() {
+      goBack()
+      changeNavigationBarColor(color.primary, false, true)
+      return true
+    }
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBackButton)
+
+      return () => backHandler.remove()
+    }, [navigation])
 
     const onError: SubmitErrorHandler<IUserLogin> = (errors) => {
       return console.log({ errors })
@@ -40,7 +52,11 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     return (
       <>
         <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
-          <Header headerTx="loginFormScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
+          <Header
+            headerTx="loginFormScreen.title"
+            leftIcon="back"
+            onLeftPress={handleBackButton}
+          ></Header>
           <View style={styles.containerForm}>
             <Text
               preset="semiBold"

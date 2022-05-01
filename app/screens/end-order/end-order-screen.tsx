@@ -1,16 +1,15 @@
-import React, { FC } from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, StyleSheet, View, ColorPropType } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import images from "assets/images"
+import { observer } from "mobx-react-lite"
+import React, { FC } from "react"
+import { ScrollView, StyleSheet, View, ViewStyle } from "react-native"
+import { AutoImage, Button, Card, Header, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
-import { Screen, Text, Header, Card, AutoImage, Button } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
-import { utilSpacing, utilFlex } from "../../theme/Util"
-import images from "assets/images"
 import { spacing } from "../../theme/spacing"
-import { ScrollView } from "react-native-gesture-handler"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
@@ -19,7 +18,7 @@ const ROOT: ViewStyle = {
 
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   ({ navigation }) => {
-    const toMain = () => navigation.navigate("init")
+    const toMain = () => navigation.navigate("main")
     return (
       <Screen style={ROOT} preset="scroll">
         <Header headerTx="endOrderScreen.title" />

@@ -1,6 +1,6 @@
-import { ApisauceInstance, create, ApiResponse } from "apisauce"
-import { getGeneralApiProblem } from "./api-problem"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { getGeneralApiProblem } from "./api-problem"
 import * as Types from "./api.types"
 
 /**
@@ -65,7 +65,7 @@ export class Api {
         return response
       },
       function (error) {
-        __DEV__ && console.log("Response error: " + JSON.stringify(error, null, 2))
+        __DEV__ && console.log(`Response error: ${JSON.stringify(error, null, 2)}`)
 
         // Any status codes that falls outside the range of 2xx cause this function to trigger
 

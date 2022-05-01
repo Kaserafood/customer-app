@@ -7,7 +7,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import Ripple from "react-native-material-ripple"
 import { Price } from "../price/price"
 import { AutoImage } from "../auto-image/auto-image"
-import { Dish as DishModel } from "../../models/dish-store"
+import { DishChef as DishModel } from "../../models/dish-store"
 
 export interface DishProps {
   /**

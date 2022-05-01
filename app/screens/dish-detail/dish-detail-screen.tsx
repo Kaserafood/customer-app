@@ -1,8 +1,11 @@
-import React, { FC, useState, useEffect, useRef } from "react"
-import { observer } from "mobx-react-lite"
-import { ScrollView, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
+import images from "assets/images"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useRef, useState } from "react"
+import { ScrollView, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
+import SvgUri from "react-native-svg-uri"
 import {
   AutoImage,
   DishChef,
@@ -13,24 +16,21 @@ import {
   Screen,
   Text,
 } from "../../components"
-import { color } from "../../theme"
-import images from "assets/images"
-import { spacing } from "../../theme/spacing"
 import { Separator } from "../../components/separator/separator"
-import { utilSpacing, utilFlex, utilText, SHADOW } from "../../theme/Util"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import SvgUri from "react-native-svg-uri"
-import Ripple from "react-native-material-ripple"
+import { DishChef as DishChefModel } from "../../models/dish-store"
 import { useStores } from "../../models/root-store/root-store-context"
+import { goBack, NavigatorParamList } from "../../navigators"
+import { color } from "../../theme"
+import { spacing } from "../../theme/spacing"
+import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
-import { Dish } from "../../models/dish-store"
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
     const [total, setTotal] = useState(0)
     const [comment, setComment] = useState("")
-    const [currentDish, setCurrentDish] = useState<Dish>(params)
+    const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
     const scrollRef = useRef<ScrollView>()
 
     const { dishStore, modalStore, cartStore } = useStores()
@@ -66,7 +66,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       navigation.navigate("menuChef", { ...params })
     }
 
-    const changeDish = (dish: Dish) => {
+    const changeDish = (dish: DishChefModel) => {
       if (currentDish.id !== dish.id) {
         setCurrentDish({ ...dish, chef: params.chef })
         setComment("")

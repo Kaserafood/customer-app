@@ -1,12 +1,10 @@
-import * as React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-
-import PagerView from "react-native-pager-view"
-import { Home } from "../home/home"
-import { Chefs } from "../chefs/chefs"
-
+import * as React from "react"
 import { useEffect } from "react"
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import PagerView from "react-native-pager-view"
+import { Chefs } from "../chefs/chefs"
+import { Home } from "../home/home"
 import { Search } from "../search/search"
 
 interface ActiveIndex {
@@ -38,24 +36,26 @@ export const MainPager = observer((props: MainPagerProps) => {
   }, [activeIndex.getIndex()])
 
   return (
-    <PagerView
-      ref={(c) => {
-        pageView = c
-      }}
-      style={[style, styles.pagerView]}
-      initialPage={activeIndex.getIndex()}
-      scrollEnabled={false}
-    >
-      <View key={0}>
-        <Home></Home>
-      </View>
-      <View key={1}>
-        <Chefs></Chefs>
-      </View>
-      <View key={2}>
-        <Search></Search>
-      </View>
-    </PagerView>
+    <>
+      <PagerView
+        ref={(c) => {
+          pageView = c
+        }}
+        style={[style, styles.pagerView]}
+        initialPage={activeIndex.getIndex()}
+        scrollEnabled={false}
+      >
+        <View key={0}>
+          <Home></Home>
+        </View>
+        <View key={1}>
+          <Chefs></Chefs>
+        </View>
+        <View key={2}>
+          <Search></Search>
+        </View>
+      </PagerView>
+    </>
   )
 })
 

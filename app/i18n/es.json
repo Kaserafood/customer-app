@@ -234,7 +234,10 @@
         "order" : "Pedidio",
         "thankYou" : "¡Gracias por tu apoyo!",
         "cookWithLove" : "Cocinaré tu platillo con mucho amor.",
-        "continueExplore": "Seguir explorando",
+        "continueExplore": "Seguir explorando"
+    },
+    "search": {
+        "title": "Buscador"
     }
 
 

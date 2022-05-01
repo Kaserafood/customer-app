@@ -1,29 +1,26 @@
-import React, { FC, useState } from "react"
-import { observer } from "mobx-react-lite"
-import { View, StyleSheet, ScrollView } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { NavigatorParamList } from "../../navigators"
-import { useForm, FormProvider, SubmitErrorHandler } from "react-hook-form"
-
-import { Screen, Text, Header, InputText, Button, Checkbox } from "../../components"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
-
+import { observer } from "mobx-react-lite"
+import React, { FC, useState } from "react"
+import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
+import { ScrollView, StyleSheet, View } from "react-native"
+import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { IUserRegister } from "../../models/user-store/user-store"
+import { goBack, NavigatorParamList } from "../../navigators"
+import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
 import { showMessageInfo } from "../../utils/messages"
 
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
-  const goBack = () => navigation.navigate("init")
-  const goMain = () => navigation.navigate("main")
+  const [terms, setTerms] = useState(false)
+  const { ...methods } = useForm({ mode: "onChange" })
+  const [formError, setError] = useState<boolean>(false)
+  const { userStore, modalStore } = useStores()
+
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
-
-  const [terms, setTerms] = useState(false)
-
-  const { userStore, modalStore } = useStores()
 
   const onSubmit = (data) => {
     if (!terms) {
@@ -40,106 +37,106 @@ export const RegisterFormScreen: FC<
     }
   }
 
-  const { ...methods } = useForm({ mode: "onChange" })
-  const [formError, setError] = useState<boolean>(false)
-
   const onError: SubmitErrorHandler<IUserRegister> = (errors) => {
     return console.log({ errors })
   }
 
   return (
-    <Screen preset="scroll" bottomBar="dark-content">
-      <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
+    <>
+      <Screen preset="scroll" bottomBar="dark-content">
+        <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
 
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.containerForm}>
-          <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.containerForm}>
+            <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
 
-          <FormProvider {...methods}>
-            <InputText
-              name="name"
-              placeholderTx="registerFormScreen.firstName"
-              styleContainer={styles.input}
-              setFormError={setError}
-              rules={{
-                required: "registerFormScreen.firstNameRequired",
-              }}
-            ></InputText>
-            <InputText
-              name="lastName"
-              placeholderTx="registerFormScreen.lastName"
-              styleContainer={styles.input}
-              setFormError={setError}
-              rules={{
-                required: "registerFormScreen.lastNameRequired",
-              }}
-            ></InputText>
-            <InputText
-              name="phone"
-              keyboardType="phone-pad"
-              placeholderTx="registerFormScreen.phone"
-              styleContainer={styles.input}
-              setFormError={setError}
-              rules={{
-                required: "registerFormScreen.phoneRequired",
-              }}
-            ></InputText>
-            <InputText
-              name="email"
-              keyboardType="email-address"
-              placeholderTx="registerFormScreen.email"
-              styleContainer={styles.input}
-              setFormError={setError}
-              rules={{
-                required: "registerFormScreen.emailRequired",
-                pattern: {
-                  value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                  message: "registerFormScreen.emailFormat",
-                },
-              }}
-            ></InputText>
-            <InputText
-              name="password"
-              placeholderTx="registerFormScreen.password"
-              styleContainer={styles.input}
-              secureTextEntry
-              rules={{
-                required: "registerFormScreen.passwordRequired",
-              }}
-              setFormError={setError}
-            ></InputText>
-            <View style={styles.containerTermsBtn}>
-              <View style={styles.containerTerms}>
-                <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
-                <View style={styles.containerTermsText}>
-                  <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
-                  <Text
-                    size="sm"
-                    onPress={goTerms}
-                    style={styles.textPrimary}
-                    tx="registerFormScreen.termsAndConditions"
-                  ></Text>
-                  <Text size="sm" tx="registerFormScreen.andThe"></Text>
-                  <Text
-                    size="sm"
-                    onPress={goPrivacy}
-                    style={styles.textPrimary}
-                    tx="registerFormScreen.privacyPolicy"
-                  ></Text>
+            <FormProvider {...methods}>
+              <InputText
+                name="name"
+                placeholderTx="registerFormScreen.firstName"
+                styleContainer={styles.input}
+                setFormError={setError}
+                rules={{
+                  required: "registerFormScreen.firstNameRequired",
+                }}
+              ></InputText>
+              <InputText
+                name="lastName"
+                placeholderTx="registerFormScreen.lastName"
+                styleContainer={styles.input}
+                setFormError={setError}
+                rules={{
+                  required: "registerFormScreen.lastNameRequired",
+                }}
+              ></InputText>
+              <InputText
+                name="phone"
+                keyboardType="phone-pad"
+                placeholderTx="registerFormScreen.phone"
+                styleContainer={styles.input}
+                setFormError={setError}
+                rules={{
+                  required: "registerFormScreen.phoneRequired",
+                }}
+              ></InputText>
+              <InputText
+                name="email"
+                keyboardType="email-address"
+                placeholderTx="registerFormScreen.email"
+                styleContainer={styles.input}
+                setFormError={setError}
+                rules={{
+                  required: "registerFormScreen.emailRequired",
+                  pattern: {
+                    value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                    message: "registerFormScreen.emailFormat",
+                  },
+                }}
+              ></InputText>
+              <InputText
+                name="password"
+                placeholderTx="registerFormScreen.password"
+                styleContainer={styles.input}
+                secureTextEntry
+                rules={{
+                  required: "registerFormScreen.passwordRequired",
+                }}
+                setFormError={setError}
+              ></InputText>
+              <View style={styles.containerTermsBtn}>
+                <View style={styles.containerTerms}>
+                  <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
+                  <View style={styles.containerTermsText}>
+                    <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
+                    <Text
+                      size="sm"
+                      onPress={goTerms}
+                      style={styles.textPrimary}
+                      tx="registerFormScreen.termsAndConditions"
+                    ></Text>
+                    <Text size="sm" tx="registerFormScreen.andThe"></Text>
+                    <Text
+                      size="sm"
+                      onPress={goPrivacy}
+                      style={styles.textPrimary}
+                      tx="registerFormScreen.privacyPolicy"
+                    ></Text>
+                  </View>
                 </View>
-              </View>
 
-              <Button
-                tx="registerFormScreen.register"
-                onPress={methods.handleSubmit(onSubmit, onError)}
-                block
-                style={[styles.btn, utilSpacing.mt5]}
-              ></Button>
-            </View>
-          </FormProvider>
-        </View>
-      </ScrollView>
-    </Screen>
+                <Button
+                  tx="registerFormScreen.register"
+                  onPress={methods.handleSubmit(onSubmit, onError)}
+                  block
+                  style={[styles.btn, utilSpacing.mt5]}
+                ></Button>
+              </View>
+            </FormProvider>
+          </View>
+        </ScrollView>
+      </Screen>
+      <Loader></Loader>
+    </>
   )
 })
 const styles = StyleSheet.create({

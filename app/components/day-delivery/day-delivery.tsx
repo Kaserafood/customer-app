@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, ScrollView } from "react-native"
+import i18n from "i18n-js"
 import { observer } from "mobx-react-lite"
+import React from "react"
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
+import { translate, TxKeyPath } from "../../i18n"
+import { useStores } from "../../models"
+import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Chip } from "../chip/chip"
-import { translate, TxKeyPath } from "../../i18n"
 import { Text } from "../text/text"
-import i18n from "i18n-js"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import { Day } from "../../models/day-store"
-import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
@@ -65,23 +65,22 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
     <View>
       <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
         <Text tx={actualTitle} preset="semiBold" style={styles.dayShipping}></Text>
-        {!hideWhyButton && <Chip tx="mainScreen.why" onPress={() => onWhyPress(true)}></Chip>}
+        {!hideWhyButton && <Chip tx="mainScreen.why" onPressIn={() => onWhyPress(true)}></Chip>}
       </View>
       <ScrollView horizontal style={[utilSpacing.mt5, utilSpacing.pb3, style]}>
         {days.map((day) => (
-          <TouchableOpacity
-            onPress={() => {
+          <Chip
+            active={day.date === dayStore.currentDay.date}
+            text={day.dayName}
+            style={styles.chip}
+            onPressIn={() => {
               onPress(day)
               dayStore.setCurrentDay(day)
             }}
             key={day.date}
-          >
-            <Chip
-              active={day.date === dayStore.currentDay.date}
-              text={day.dayName}
-              style={styles.chip}
-            ></Chip>
-          </TouchableOpacity>
+            activeOpacity={0.5}
+            disabled={day.date === dayStore.currentDay.date}
+          ></Chip>
         ))}
       </ScrollView>
     </View>
@@ -96,8 +95,11 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   chip: {
+    borderRadius: spacing[3],
     marginBottom: spacing[2],
     marginRight: spacing[1],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
   },
   containerImgClose: {
     alignItems: "flex-end",
@@ -113,10 +115,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
+
   dayShipping: {
+    borderRadius: spacing[3],
     marginRight: spacing[2],
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
@@ -125,11 +128,11 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
   },
+
   imgModalWhy: {
     height: 150,
     width: 150,
   },
-
   why: {
     alignItems: "center",
   },

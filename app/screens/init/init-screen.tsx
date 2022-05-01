@@ -1,33 +1,27 @@
-import React, { FC, useEffect } from "react"
-import { observer } from "mobx-react-lite"
-import { Image, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useLayoutEffect } from "react"
+import { BackHandler, Image, StatusBar, StyleSheet, View } from "react-native"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { Button, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
-import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme/color"
-import { useBackHandler } from "@react-native-community/hooks"
-import { utilSpacing, utilText } from "../../theme/Util"
-import { typography, typographySize } from "../../theme/typography"
+import { typographySize } from "../../theme/typography"
+import { utilSpacing } from "../../theme/Util"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
-    const toRegister = () => navigation.navigate("registerForm")
+    const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm")
 
-    useEffect(() => {
+    useLayoutEffect(() => {
       console.log("in init screen")
+      changeNavigationBarColor(color.primary, false, true)
     }, [])
 
     return (
-      <Screen
-        statusBarBackgroundColor={color.primary}
-        bottomBarBackgroundColor={color.primary}
-        bottomBar="light-content"
-        backgroundColor={color.primary}
-        preset="fixed"
-        statusBar="light-content"
-        style={styles.root}
-      >
+      <View style={styles.root}>
+        <StatusBar backgroundColor={color.primary} barStyle="light-content" />
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} tx="initScreen.homemadeFood"></Text>
         <Text style={styles.textSecondary} tx="initScreen.byChefIndependently"></Text>
@@ -48,7 +42,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             onPress={toLogin}
           ></Button>
         </View>
-      </Screen>
+      </View>
     )
   },
 )
@@ -66,6 +60,8 @@ const styles = StyleSheet.create({
   },
   root: {
     alignItems: "center",
+    backgroundColor: color.primary,
+    flex: 1,
     justifyContent: "center",
   },
   textSecondary: {

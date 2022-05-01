@@ -1,16 +1,19 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native"
+import images from "assets/images"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
-
+import React from "react"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { Button } from "../button/button"
+import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
 import { AutoImage } from "../auto-image/auto-image"
-import Images from "assets/images"
+import { Button } from "../button/button"
 import { Text } from "../text/text"
-import { useStores } from "../../models"
+
+interface ModalState {
+  isVisibleWhy: boolean
+  setVisibleWhy: (state: boolean) => void
+}
 
 export interface DayDeliveryProps {
   /**
@@ -19,46 +22,40 @@ export interface DayDeliveryProps {
   style?: StyleProp<ViewStyle>
 
   /**
-   * Is visible
+   * Modal
    */
-  isVisible: boolean
-
-  /**
-   * on close modal
-   */
-  onClose: (state: boolean) => void
+  modal?: ModalState
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDeliveryModal = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style, isVisible, onClose } = props
-  const { modalStore } = useStores()
+  const { style, modal } = props
 
   return (
     <Modal
-      isVisible={isVisible}
+      isVisible={modal?.isVisibleWhy || false}
       backdropColor={color.palette.grayTransparent}
-      backdropOpacity={1}
       animationIn="zoomIn"
       animationOut="zoomOut"
       style={style}
       coverScreen={false}
-      onModalShow={() => changeNavigationBarColor(color.palette.whiteGray, true, true)}
+      onBackdropPress={() => modal.setVisibleWhy(false)}
+      onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
     >
       <View style={styles.containerModal}>
         <View style={styles.bodyModal}>
           <View style={styles.containerImgClose}>
-            <TouchableOpacity onPress={() => onClose(false)} activeOpacity={0.7}>
-              <AutoImage style={styles.imgClose} source={Images.close}></AutoImage>
+            <TouchableOpacity onPress={() => modal.setVisibleWhy(false)} activeOpacity={0.7}>
+              <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
             </TouchableOpacity>
           </View>
           <View style={utilSpacing.p4}>
             <Text preset="bold" tx="modalDeliveryDay.title" style={utilSpacing.mb5}></Text>
-            <Text size="sm" tx="modalDeliveryDay.description"></Text>
+            <Text tx="modalDeliveryDay.description"></Text>
             <View style={[styles.containerImgModalWhy, utilSpacing.my5]}>
-              <AutoImage style={styles.imgModalWhy} source={Images.step2}></AutoImage>
+              <AutoImage style={styles.imgModalWhy} source={images.step2}></AutoImage>
             </View>
 
             <Button
@@ -66,7 +63,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
               block
               rounded
               style={utilSpacing.mb5}
-              onPress={() => onClose(false)}
+              onPress={() => modal.setVisibleWhy(false)}
             ></Button>
           </View>
         </View>

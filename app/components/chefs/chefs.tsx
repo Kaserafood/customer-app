@@ -1,22 +1,75 @@
-import React, { useState } from "react"
-import { ScrollView, StyleProp, ViewStyle, StyleSheet, View, TouchableOpacity } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { StackNavigationProp } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-
-import { Separator } from "../separator/separator"
+import React, { useEffect } from "react"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import * as RNLocalize from "react-native-localize"
+import { useStores } from "../../models"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { Dish } from "../../models/dish"
+import { UserChef } from "../../models/user-store/user-store"
+import { NavigatorParamList } from "../../navigators"
+import { spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Categories } from "../categories/categories"
 import { DayDelivery } from "../day-delivery/day-delivery"
-import { Location } from "../location/location"
-import { utilSpacing } from "../../theme/Util"
-import { LocationModal } from "../location/location-modal"
 import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
+import { Location } from "../location/location"
+import { LocationModal } from "../location/location-modal"
+import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-import { AutoImage } from "../auto-image/auto-image"
-import images from "assets/images"
-import PagerView from "react-native-pager-view"
-import { useStores } from "../../models"
-import { Day } from "../../models/day-store"
+import { ChefItem, ChefItemModel } from "./chef-item"
 
+class ModalState {
+  isVisibleWhy = false
+  data: ChefItemModel[] = []
+
+  setVisibleWhy(state: boolean) {
+    this.isVisibleWhy = state
+  }
+
+  setData(data: ChefItemModel[]) {
+    this.data = data
+  }
+
+  nextDish(item: ChefItemModel, index: number) {
+    if (item.currentIndexPage < item.dishes.length - 1) {
+      item.pageView.setPage(item.currentIndexPage + 1)
+      console.log("INDEX PAGE STATE", item.currentIndexPage)
+      item.currentDishName = item.dishes[item.currentIndexPage + 1].title
+      item.currentIndexPage++
+      this.data[index] = item
+    }
+  }
+
+  previousDish(item: ChefItemModel, index: number) {
+    if (item.currentIndexPage > 0) {
+      item.pageView.setPage(item.currentIndexPage - 1)
+      console.log("INDEX PAGE STATE", item.currentIndexPage)
+      item.currentDishName = item.dishes[item.currentIndexPage - 1].title
+      item.currentIndexPage--
+      this.data[index] = item
+    }
+  }
+
+  chanageDish(item: ChefItemModel, position: number, index: number) {
+    if (item.currentIndexPage !== position) {
+      item.pageView.setPage(position)
+
+      console.log("INDEX PAGE STATE", item.currentIndexPage)
+      item.currentIndexPage = position
+      item.currentDishName = item.dishes[item.currentIndexPage].title
+      this.data[index] = item
+    }
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+const modalState = new ModalState()
 export interface ChefsProps {
   /**
    * An optional style override useful for padding & margin.
@@ -24,92 +77,71 @@ export interface ChefsProps {
   style?: StyleProp<ViewStyle>
 }
 
+type mainScreenProp = StackNavigationProp<NavigatorParamList, "main">
+
 /**
- * Describe your component here
+ * Chef page component used in Main Screen
  */
 export const Chefs = observer(function Chefs(props: ChefsProps) {
   const { style } = props
 
-  const dataArray: any = [
-    {
-      id: 1,
-      name: "Chef 1",
-      image: images.chef1,
-      dishes: [
-        {
-          id: 11,
-          image: images.dish1,
-          name: "Pedian de tes carnes",
-        },
-        {
-          id: 12,
-          image: images.dish2,
-          name: "Orfdsao platillo para mostarar",
-        },
-        {
-          id: 13,
-          image: images.dish3,
-          name: "Tercer paltillos param ostrar",
-        },
-      ],
-      category: "Vegetariano - Mexicano",
-      currentDish: "Pedian de tes carnes",
-      pageView: null,
-      currentIndexPage: 0,
-    },
-    {
-      id: 2,
-      name: "Chef 2",
-      image: images.chef2,
-      dishes: [
-        {
-          id: 11,
-          image: images.dish3,
-          name: "Pedian de tes carnes",
-        },
-        {
-          id: 12,
-          image: images.dish2,
-          name: "Oadfsro platillo para mostarar",
-        },
-        {
-          id: 13,
-          image: images.dish1,
-          name: "Tercer paltillos param ostrar",
-        },
-      ],
-      category: "Vegetariano - Mexicano",
-      currentDish: "Pedian de tes carnes",
-      pageView: null,
-      currentIndexPage: 0,
-    },
-  ]
+  const { categoryStore, dayStore, modalStore, dishStore } = useStores()
+  const navigation = useNavigation<mainScreenProp>()
 
-  const [data, setData] = useState(dataArray)
+  useEffect(() => {
+    console.log("chefs useEffect")
+    async function fetch() {
+      if (dishStore.dishesGroupedByChef.length > 0) return
 
-  const nextDish = (item: any, index: number) => {
-    if (item.currentIndexPage < item.dishes.length - 1) {
-      const dataChange = [...data]
-      item.pageView.setPage(item.currentIndexPage + 1)
-      console.log("INDEX PAGE", item.currentIndexPage)
-      data[index].currentDish = item.dishes[item.currentIndexPage + 1].name
-      item.currentIndexPage++
-      setData(dataChange)
+      await dishStore.getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
     }
+
+    fetch()
+  }, [])
+
+  useEffect(() => {
+    const formatData: ChefItemModel[] = dishStore.dishesGroupedByChef.map((chef: UserChef) => {
+      return {
+        ...chef,
+        category: getCategoriesName(chef.categories),
+        currentIndexPage: 0,
+        pageView: null,
+        currentDishName: chef.dishes.length > 0 ? chef.dishes[0]?.title : "",
+      }
+    })
+
+    modalState.setData(formatData)
+  }, [dishStore.dishesGroupedByChef])
+
+  const getCategoriesName = (categories: Category[]) => {
+    let categoriesStr = ""
+    if (categories && Array.isArray(categories)) {
+      categories.forEach((category) => {
+        categoriesStr += `${category.name} - `
+      })
+      return categoriesStr.substring(0, categoriesStr.length - 2)
+    }
+
+    return ""
   }
 
-  const previousDish = (item: any, index: number) => {
-    if (item.currentIndexPage > 0) {
-      const dataChange = [...data]
-      item.pageView.setPage(item.currentIndexPage - 1)
-      dataChange[index].currentDish = item.dishes[item.currentIndexPage - 1].name
-      item.currentIndexPage--
-      setData(dataChange)
-    }
+  const toCategory = (category: Category) => {
+    navigation.navigate("category", {
+      ...category,
+    })
   }
-  const [modalWhy, setModalWhy] = useState(false)
-  const { dayStore } = useStores()
-  const [currentDate, setCurrentDate] = useState<Day>({ dayName: "", date: "" })
+
+  const toDishDetail = (dish: Dish, userChef: UserChef) => {
+    const chef = {
+      ...userChef,
+    }
+    navigation.push("dishDetail", { ...dish, chef })
+  }
+
+  const onChangeDay = async (day: Day) => {
+    dayStore.setCurrentDay(day)
+    await dishStore.getGroupedByChef(day.date, RNLocalize.getTimeZone())
+  }
 
   return (
     <>
@@ -117,152 +149,43 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
         <Location></Location>
         <DayDelivery
           days={dayStore.days}
-          onWhyPress={(state) => setModalWhy(state)}
-          onPress={(day) => setCurrentDate(day)}
+          onWhyPress={(state) => modalState.setVisibleWhy(state)}
+          onPress={(day) => onChangeDay(day)}
         ></DayDelivery>
         <Separator style={utilSpacing.my4}></Separator>
-        <Categories></Categories>
+        <Categories
+          categories={categoryStore.categories}
+          onPress={(category) => toCategory(category)}
+        ></Categories>
         <Separator style={utilSpacing.my4}></Separator>
-        <Text tx="chefs.delivery" preset="bold" size="lg"></Text>
-        <Text text={currentDate.dayName}></Text>
+        <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
+          <Text tx="chefs.delivery" preset="bold" size="lg"></Text>
+          <Text text={` ${dayStore.currentDay.dayName}`} preset="bold" size="lg"></Text>
+        </View>
+
         <View>
-          {data.map((item, index) => (
-            <View key={item.id}>
-              <View style={styles.imageCarousel}>
-                {item.currentIndexPage > 0 && (
-                  <TouchableOpacity
-                    onPress={() => previousDish(item, index)}
-                    style={[styles.buttonCarousel, styles.btnPrevious, utilSpacing.mr2]}
-                  >
-                    <AutoImage style={styles.icon} source={images.previous}></AutoImage>
-                  </TouchableOpacity>
-                )}
-
-                <PagerView
-                  initialPage={0}
-                  ref={(c) => {
-                    item.pageView = c
-                  }}
-                  style={[styles.pagerView, styles.dish]}
-                >
-                  {item.dishes.map((dish) => (
-                    <AutoImage key={dish.id} style={styles.dish} source={dish.image}></AutoImage>
-                  ))}
-                </PagerView>
-
-                {item.currentIndexPage < item.dishes.length - 1 && (
-                  <TouchableOpacity
-                    onPress={() => nextDish(item, index)}
-                    style={[styles.buttonCarousel, styles.btnNext, utilSpacing.ml2]}
-                  >
-                    <AutoImage style={styles.icon} source={images.next}></AutoImage>
-                  </TouchableOpacity>
-                )}
-              </View>
-              <View style={[styles.flex, styles.footer]}>
-                <View style={styles.flex1}>
-                  <Text size="sm" text={item.name} preset="bold"></Text>
-                  <Text size="sm" text={item.currentDish} style={styles.text}></Text>
-                  <View style={[styles.flex, styles.text]}>
-                    <Text
-                      style={[styles.flex1, styles.textCategory]}
-                      size="sm"
-                      text={item.category}
-                    ></Text>
-                    <AutoImage
-                      style={[styles.iconShipping, styles.text, utilSpacing.mr3]}
-                      source={images.iconShipping}
-                    ></AutoImage>
-                    <Text size="sm" tx="chefs.price" style={utilSpacing.mr3}></Text>
-                  </View>
-                </View>
-                <View>
-                  <AutoImage style={styles.imageChef} source={item.image}></AutoImage>
-                </View>
-              </View>
-
-              <Separator style={utilSpacing.mb5}></Separator>
-            </View>
+          {modalState.data.map((item, index) => (
+            <ChefItem
+              onDishPress={(dish) => toDishDetail(dish, item)}
+              onPrevious={() => modalState.previousDish(item, index)}
+              onNext={() => modalState.nextDish(item, index)}
+              onChangePosition={(position) => modalState.chanageDish(item, position, index)}
+              item={item}
+              key={index}
+            ></ChefItem>
           ))}
         </View>
       </ScrollView>
       <LocationModal></LocationModal>
-      <DayDeliveryModal onClose={() => setModalWhy(false)} isVisible={modalWhy}></DayDeliveryModal>
+      <DayDeliveryModal modal={modalState}></DayDeliveryModal>
     </>
   )
 })
 
 const styles = StyleSheet.create({
-  btnNext: {
-    right: 0,
-  },
-  btnPrevious: {
-    left: 0,
-  },
-  buttonCarousel: {
-    backgroundColor: color.palette.blackTransparent,
-    borderRadius: 100,
-    marginHorizontal: spacing[2],
-    padding: spacing[2],
-    position: "absolute",
-    zIndex: 2,
-  },
   container: {
     flex: 1,
     paddingHorizontal: spacing[3],
     paddingTop: spacing[3],
-  },
-  dish: {
-    borderRadius: spacing[2],
-    flex: 1,
-    height: 180,
-  },
-  flex: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  flex1: {
-    flex: 1,
-  },
-  footer: {
-    alignItems: "flex-end",
-
-    top: -28,
-  },
-  icon: {
-    height: 24,
-    width: 24,
-  },
-  iconShipping: {
-    height: 24,
-    width: 24,
-  },
-  imageCarousel: {
-    alignItems: "center",
-    display: "flex",
-    flexDirection: "row",
-    height: 200,
-
-    width: "100%",
-  },
-  imageChef: {
-    borderColor: color.palette.white,
-    borderRadius: spacing[2],
-    borderWidth: 2,
-    height: 90,
-    marginRight: spacing[2],
-    width: 90,
-  },
-  pagerView: {
-    alignSelf: "center",
-    display: "flex",
-    flex: 1,
-    width: "75%",
-  },
-  text: {
-    marginTop: -4,
-  },
-  textCategory: {
-    color: color.palette.grayDark,
   },
 })

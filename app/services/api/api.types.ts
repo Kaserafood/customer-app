@@ -2,7 +2,9 @@ import { GeneralApiProblem } from "./api-problem"
 import { Character } from "../../models/character/character"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
-import { Dish } from "../../models/dish-store"
+
+import { UserChef } from "../../models/user-store/user-store"
+import { DishChef } from "../../models/dish-store"
 
 export interface User {
   id: number
@@ -44,6 +46,13 @@ export type CategoryResponse =
 export type DishResponse =
   | {
       kind: string
-      data: Dish[]
+      data: DishChef[]
+    }
+  | GeneralApiProblem
+
+export type ChefResponse =
+  | {
+      kind: string
+      data: UserChef[]
     }
   | GeneralApiProblem
