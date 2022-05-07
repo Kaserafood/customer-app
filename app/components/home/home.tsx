@@ -78,9 +78,9 @@ export const Home = observer(function Home(props: HomeProps) {
         categoryStore.getAll(),
       ])
     }
-    fetch()
-      .then(() => setCurrentDay(days[0]))
-      .finally(() => modalStore.setVisibleLoading(false))
+      fetch()
+        .then(() => setCurrentDay(days[0]))
+        .finally(() => modalStore.setVisibleLoading(false))
   }, [])
 
   return (

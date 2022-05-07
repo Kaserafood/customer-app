@@ -96,7 +96,7 @@ export const Chefs = observer(function Chefs(props: ChefsProps) {
       await dishStore.getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
     }
 
-    fetch()
+     fetch()
   }, [])
 
   useEffect(() => {
