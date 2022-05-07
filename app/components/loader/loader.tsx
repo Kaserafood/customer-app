@@ -1,9 +1,7 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
-
 import LottieView from "lottie-react-native"
-
+import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { StyleProp, View, ViewStyle } from "react-native"
 import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 import { useStores } from "../../models/root-store/root-store-context"
 
@@ -46,14 +44,15 @@ export const Loader = observer(function Loader(props: LoaderProps) {
 
   return (
     <>
-      {visible ||
-        (modalStore.isVisibleLoading && (
-          <Animated.View entering={FadeIn} exiting={FadeOut} style={styles}>
+      {(visible || modalStore.isVisibleLoading) && (
+        <View style={styles}>
+          <Animated.View entering={FadeIn} exiting={FadeOut}>
             <Animated.View entering={ZoomIn} exiting={ZoomOut}>
               <LottieView style={SPINNER} source={require("./spinner.json")} autoPlay loop />
             </Animated.View>
           </Animated.View>
-        ))}
+        </View>
+      )}
     </>
   )
 })

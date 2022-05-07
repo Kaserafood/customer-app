@@ -16,16 +16,18 @@ import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 import {
   CategoryScreen,
+  ChefsScreen,
   DeliveryDetailScreen,
   DishDetailScreen,
   EndOrderScreen,
+  HomeScreen,
   InitScreen,
   LoginFormScreen,
-  MainScreen,
   MenuChefScreen,
   PrivacyPolicyScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
+  SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
 import { color } from "../theme"
@@ -62,6 +64,9 @@ export type NavigatorParamList = {
   deliveryDetail: undefined
   endOrder: undefined
   category: Category
+  home: undefined
+  chefs: undefined
+  search: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -140,7 +145,7 @@ export function TabMainNavigation() {
           },
         }}
         name="Inicio"
-        component={MainScreen}
+        component={HomeScreen}
       />
 
       <Tab.Screen
@@ -151,7 +156,7 @@ export function TabMainNavigation() {
           },
         }}
         name="Chefs"
-        component={EndOrderScreen}
+        component={ChefsScreen}
       />
 
       <Tab.Screen
@@ -162,7 +167,7 @@ export function TabMainNavigation() {
           },
         }}
         name="Buscar "
-        component={DeliveryDetailScreen}
+        component={SearchScreen}
       />
 
       <Tab.Screen
@@ -173,7 +178,7 @@ export function TabMainNavigation() {
           },
         }}
         name="Más "
-        component={DeliveryDetailScreen}
+        component={SearchScreen}
       />
     </Tab.Navigator>
   )

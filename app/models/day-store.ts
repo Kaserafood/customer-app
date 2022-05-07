@@ -1,7 +1,7 @@
-import { types, SnapshotOut } from "mobx-state-tree"
-import { withEnvironment } from "./extensions/with-environment"
+import { SnapshotOut, types } from "mobx-state-tree"
 import { DeliveryApi } from "../services/api/delivery-api"
 import { handleDataResponseAPI } from "../utils/messages"
+import { withEnvironment } from "./extensions/with-environment"
 
 const dayStore = types.model("DayStore").props({
   dayName: types.maybe(types.string),
@@ -23,7 +23,7 @@ export const DayStoreModel = types
   }))
   .actions((self) => ({
     getDays: async (timeZone: string) => {
-      if (self.days.length > 0) return
+      // if (self.days.length > 0) return
       const api = new DeliveryApi(self.environment.api)
 
       const result = await api.getDays(timeZone)

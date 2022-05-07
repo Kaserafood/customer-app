@@ -1,10 +1,10 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
-import Icon from "react-native-vector-icons/MaterialIcons"
+import IconRN from "react-native-vector-icons/FontAwesome"
+import { Icon, Text } from ".."
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
 
 export interface LocationProps {
   /**
@@ -26,9 +26,9 @@ export const Location = observer(function Location(props: LocationProps) {
         style={styles.btnAddress}
         activeOpacity={0.7}
       >
-        <Icon name="place" size={24} color={color.palette.white} />
+        <Icon name="location-1" size={24} color={color.palette.white} />
         <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
-        <Icon name="arrow-drop-down" size={30} color={color.palette.white} />
+        <IconRN name="caret-down" size={24} color={color.palette.white} />
       </TouchableOpacity>
     </View>
   )
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
+    alignItems: "center",
   },
 
   containerAddress: {
@@ -50,10 +51,11 @@ const styles = StyleSheet.create({
   },
 
   textAddress: {
-    bottom: -4,
     color: color.palette.white,
     flex: 1,
+    marginBottom: 0,
     marginLeft: spacing[2],
+    marginRight: spacing[2],
     position: "relative",
   },
 })

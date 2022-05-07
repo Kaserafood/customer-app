@@ -1,13 +1,13 @@
-import React, { useState } from "react"
-import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import React from "react"
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
-import { Price } from "../price/price"
-import { AutoImage } from "../auto-image/auto-image"
 import { DishChef as DishModel } from "../../models/dish-store"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { AutoImage } from "../auto-image/auto-image"
+import { Price } from "../price/price"
+import { Text } from "../text/text"
 
 export interface DishProps {
   /**
@@ -44,7 +44,7 @@ export const Dish = observer(function Dish(props: DishProps) {
           <View style={utilFlex.flex1}>
             <Text
               text={dish.title}
-              style={utilSpacing.mb1}
+              style={utilSpacing.mb2}
               numberOfLines={1}
               preset="semiBold"
             ></Text>
@@ -54,7 +54,11 @@ export const Dish = observer(function Dish(props: DishProps) {
               numberOfLines={2}
             ></Text>
 
-            <Text style={[styles.chefDish, utilSpacing.mt4]} size="sm" text={dish.chef.name}></Text>
+            <Text
+              style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
+              size="sm"
+              text={dish.chef.name}
+            ></Text>
           </View>
 
           <View style={[utilFlex.flexRow, styles.containerPrice]}>
