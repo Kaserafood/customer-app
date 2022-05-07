@@ -1,14 +1,12 @@
-import React, { useEffect } from "react"
-import { ScrollView, StyleProp, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-import { Text } from "../text/text"
-import { utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
-import Images from "assets/images"
-import { useStores } from "../../models"
+import React from "react"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import Ripple from "react-native-material-ripple"
 import images from "../../assets/images"
 import { Category } from "../../models/category-store"
-import Ripple from "react-native-material-ripple"
+import { utilSpacing } from "../../theme/Util"
+import { AutoImage } from "../auto-image/auto-image"
+import { Text } from "../text/text"
 
 export interface CategoriesProps {
   /**

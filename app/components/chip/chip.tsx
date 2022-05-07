@@ -1,17 +1,17 @@
+import { observer } from "mobx-react-lite"
 import * as React from "react"
 import {
   StyleProp,
   TextStyle,
-  ViewStyle,
-  TouchableOpacityProps,
   TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
 } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
 import { TxKeyPath } from "../../i18n/i18n"
-import { SHADOW } from "../../theme/Util"
+import { color, spacing } from "../../theme"
 import { typographySize } from "../../theme/typography"
+import { SHADOW } from "../../theme/Util"
+import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
   paddingHorizontal: spacing[2],

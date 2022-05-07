@@ -9,7 +9,8 @@ const BASE: TextStyle = {
   fontFamily: typography.primary,
   color: color.text,
   fontSize: typographySize.md,
-  marginBottom: -4,
+  marginBottom: -4, // Is needed to fix the bottom margin of the text
+  lineHeight: 22,
 }
 
 export const presets = {

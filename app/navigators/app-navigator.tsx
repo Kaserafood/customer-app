@@ -4,27 +4,35 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import React from "react"
 import { useColorScheme } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
+import IconRN from "react-native-vector-icons/MaterialIcons"
+import { Icon } from "../components"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 import {
   CategoryScreen,
+  ChefsScreen,
   DeliveryDetailScreen,
   DishDetailScreen,
   EndOrderScreen,
+  HomeScreen,
   InitScreen,
   LoginFormScreen,
-  MainScreen,
   MenuChefScreen,
   PrivacyPolicyScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
+  SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
+import { color } from "../theme"
+import { typographySize } from "../theme/typography"
+import { utilSpacing } from "../theme/Util"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 
 /**
@@ -56,6 +64,9 @@ export type NavigatorParamList = {
   deliveryDetail: undefined
   endOrder: undefined
   category: Category
+  home: undefined
+  chefs: undefined
+  search: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -75,7 +86,7 @@ const AppStack = () => {
       <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
       <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="main" component={MainScreen} />
+      <Stack.Screen name="main" component={TabMainNavigation} />
       <Stack.Screen name="dishDetail" component={DishDetailScreen} />
       <Stack.Screen name="menuChef" component={MenuChefScreen} />
       <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
@@ -103,6 +114,75 @@ export const AppNavigator = (props: NavigationProps) => {
 }
 
 AppNavigator.displayName = "AppNavigator"
+
+const Tab = createBottomTabNavigator()
+
+export function TabMainNavigation() {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerTintColor: color.primary,
+        tabBarInactiveTintColor: color.palette.black,
+        tabBarActiveTintColor: color.primary,
+        tabBarIconStyle: {},
+        tabBarLabelStyle: {
+          fontSize: typographySize.sm,
+          color: color.palette.black,
+        },
+        tabBarStyle: {
+          backgroundColor: color.palette.white,
+          borderTopWidth: 0,
+          height: 55,
+        },
+      }}
+    >
+      <Tab.Screen
+        options={{
+          // eslint-disable-next-line react/display-name
+          tabBarIcon: ({ color }) => {
+            return <Icon style={utilSpacing.mt2} name="home" size={30} color={color} />
+          },
+        }}
+        name="Inicio"
+        component={HomeScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          // eslint-disable-next-line react/display-name
+          tabBarIcon: ({ color }) => {
+            return <Icon style={utilSpacing.mt2} name="hat-chef" size={30} color={color} />
+          },
+        }}
+        name="Chefs"
+        component={ChefsScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          // eslint-disable-next-line react/display-name
+          tabBarIcon: ({ color }) => {
+            return <Icon style={utilSpacing.mt2} name="search" size={35} color={color} />
+          },
+        }}
+        name="Buscar "
+        component={SearchScreen}
+      />
+
+      <Tab.Screen
+        options={{
+          // eslint-disable-next-line react/display-name
+          tabBarIcon: ({ color }) => {
+            return <IconRN style={utilSpacing.mt2} name="menu" light size={30} color={color} />
+          },
+        }}
+        name="Más "
+        component={SearchScreen}
+      />
+    </Tab.Navigator>
+  )
+}
 
 /**
  * A list of routes from which we're allowed to leave the app when

@@ -1,10 +1,10 @@
-import images from "assets/images"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
-import { AutoImage, Price, Separator, Text } from ".."
+import Icon from "react-native-vector-icons/FontAwesome"
+import { AutoImage, Price, Separator, Text } from "../../components"
 import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store/user-store"
 import { color, spacing } from "../../theme"
@@ -61,14 +61,14 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           <TouchableOpacity
             onPress={onPrevious}
             activeOpacity={0.5}
-            style={[
-              styles.buttonCarousel,
-              styles.buttonLeftCarouse,
-              styles.btnPrevious,
-              utilSpacing.mr2,
-            ]}
+            style={[styles.buttonCarousel, styles.buttonLeftCarouse, styles.btnPrevious]}
           >
-            <AutoImage style={styles.icon} source={images.previous}></AutoImage>
+            <Icon
+              name="angle-left"
+              size={30}
+              style={utilSpacing.mr2}
+              color={color.palette.white}
+            ></Icon>
           </TouchableOpacity>
         )}
 
@@ -97,9 +97,14 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={onNext}
-            style={[styles.buttonCarousel, styles.btnNext, utilSpacing.ml2]}
+            style={[styles.buttonCarousel, styles.btnNext]}
           >
-            <AutoImage style={styles.icon} source={images.next}></AutoImage>
+            <Icon
+              name="angle-right"
+              size={30}
+              style={utilSpacing.ml2}
+              color={color.palette.white}
+            ></Icon>
           </TouchableOpacity>
         )}
       </View>
@@ -134,11 +139,14 @@ const styles = StyleSheet.create({
     left: 0,
   },
   buttonCarousel: {
+    alignItems: "center",
     backgroundColor: color.palette.blackTransparent,
     borderRadius: 100,
+    height: 40,
+    justifyContent: "center",
     marginHorizontal: spacing[2],
-    padding: spacing[2],
     position: "absolute",
+    width: 40,
     zIndex: 20,
   },
   buttonLeftCarouse: {

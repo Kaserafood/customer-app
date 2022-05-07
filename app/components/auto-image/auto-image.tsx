@@ -1,10 +1,5 @@
-import React, { useLayoutEffect, useState } from "react"
-import {
-  Image as RNImage,
-  ImageProps as DefaultImageProps,
-  ImageURISource,
-  Platform,
-} from "react-native"
+import React, { useState } from "react"
+import { Image as RNImage, ImageProps as DefaultImageProps, ImageURISource } from "react-native"
 import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
@@ -25,36 +20,17 @@ type ImageProps = DefaultImageProps & {
  * component and are web-ready if not explicitly sized in the style property.
  */
 export function AutoImage(props: ImageProps) {
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 })
   const [errorLoad, setErrorLoad] = useState(false)
 
-  useLayoutEffect(() => {
-    let mounted = true
-
-    if (props.source?.uri && props.source?.uri.length > 0 && props.source?.uri !== "null") {
-      RNImage.getSize(props.source.uri as any, (width, height) => {
-        if (mounted) setImageSize({ width, height })
-      })
-    } else if (Platform.OS === "web") {
-      // web requires a different method to get it's size
-      RNImage.getSize(props.source as any, (width, height) => {
-        if (mounted) setImageSize({ width, height })
-      })
-    } else {
-      const { width, height } = RNImage.resolveAssetSource(props.source)
-      setImageSize({ width, height })
-    }
-
-    return () => {
-      mounted = false
-    }
-  }, [props.source])
+  if (props.source && !errorLoad) {
+    if (props.source?.uri && !props.source?.uri?.includes("http")) setErrorLoad(true)
+  }
 
   return (
     <RNImage
       {...props}
       source={!errorLoad ? props.source : images.category}
-      style={[imageSize, props.style]}
+      style={props.style}
       onError={() => setErrorLoad(true)}
     />
   )

@@ -1,8 +1,7 @@
 import i18n from "i18n-js"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { translate, TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
@@ -73,7 +72,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
             active={day.date === dayStore.currentDay.date}
             text={day.dayName}
             style={styles.chip}
-            onPressIn={() => {
+            onPress={() => {
               onPress(day)
               dayStore.setCurrentDay(day)
             }}

@@ -1,8 +1,9 @@
-import React, { FC } from "react"
-import { observer } from "mobx-react-lite"
-import { View, ViewStyle, StyleSheet, ScrollView, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
+import images from "assets/images"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect } from "react"
+import { ScrollView, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import SvgUri from "react-native-svg-uri"
 import {
   Card,
   Checkbox,
@@ -13,15 +14,13 @@ import {
   Separator,
   Text,
 } from "../../components"
+import { AutoImage } from "../../components/auto-image/auto-image"
+import { goBack, NavigatorParamList } from "../../navigators"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
-import { utilSpacing, utilFlex, utilText, SHADOW } from "../../theme/Util"
-import { AutoImage } from "../../components/auto-image/auto-image"
-import images from "assets/images"
 import { spacing } from "../../theme/spacing"
-import SvgUri from "react-native-svg-uri"
-import { navigate } from "../../navigators/navigation-utilities"
+import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.background,
@@ -38,6 +37,10 @@ export const DeliveryDetailScreen: FC<
   // const navigation = useNavigation()
 
   const toEndOrder = () => navigation.navigate("endOrder")
+
+  useEffect(() => {
+    console.log("delviery dtail effect")
+  }, [])
 
   return (
     <Screen style={ROOT} preset="scroll">

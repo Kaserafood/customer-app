@@ -1,12 +1,11 @@
-import * as React from "react"
-import { ImageStyle, StyleProp, TextStyle, View, ViewStyle } from "react-native"
 import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { Icon } from ".."
 import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
-import { AutoImage } from "../auto-image/auto-image"
-import images from "assets/images"
-import { utilSpacing, utilFlex } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
+import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-end",
@@ -14,17 +13,14 @@ const CONTAINER: ViewStyle = {
   borderRadius: 100,
   paddingHorizontal: spacing[4],
   paddingVertical: spacing[0],
+  paddingBottom: 2,
 }
 
 const CONTAINER_DELIVERY: ViewStyle = {
   alignSelf: "flex-end",
 }
-const IMAGE: ImageStyle = {
-  height: 18,
-  width: 18,
-}
 
-type currency = "USD" | "GTQ"
+type currency = "GTQ"
 
 export interface PriceProps {
   /**
@@ -65,7 +61,7 @@ export const Price = observer(function Price(props: PriceProps) {
   const Delivery = () => {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
-        <AutoImage source={images.iconShipping} style={[utilSpacing.mr2, IMAGE]}></AutoImage>
+        <Icon name="delivery" size={18} color={color.text} style={utilSpacing.mr2}></Icon>
         <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )
