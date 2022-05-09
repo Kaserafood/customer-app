@@ -1,10 +1,10 @@
-import React, { useState, useLayoutEffect } from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, ImageRequireSource } from "react-native"
+import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
+import React, { useLayoutEffect, useState } from "react"
+import { ImageRequireSource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { useStores } from "../../models"
 import { color, typographySize } from "../../theme"
 import { Text } from "../text/text"
-import { useStores } from "../../models"
-import LottieView from "lottie-react-native"
 
 export interface EmptyDataProps {
   /**
@@ -36,7 +36,7 @@ export const EmptyData = observer(function EmptyData(props: EmptyDataProps) {
   const { style, lengthData, message, image } = props
 
   const [notFound, setNotFound] = useState(false)
-  const { modalStore } = useStores()
+  const { commonStore } = useStores()
 
   useLayoutEffect(() => {
     if (lengthData === 0) {
@@ -46,7 +46,7 @@ export const EmptyData = observer(function EmptyData(props: EmptyDataProps) {
 
   return (
     <View style={style}>
-      {notFound && !modalStore.isVisibleLoading && (
+      {notFound && !commonStore.isVisibleLoading && (
         <View>
           <LottieView
             style={styles.notFound}

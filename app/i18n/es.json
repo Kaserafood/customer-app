@@ -176,11 +176,10 @@
         "more": "Más"
     
     },
-    "modalAddress" : {
+    "modalLocation" : {
         "title": "Elige una dirección",
-        "add" : "Ingresa una nueva dirección",
-        "addressName" : "Casa abuela",
-        "desc" : "Calle, número, colonia, ciudad, estado, código postal"
+        "addAddress" : "Ingresa un dirección",  
+        "useCurrentLocation" : "Usar ubicación actual"
     },
 
     "modalDeliveryDay" : {

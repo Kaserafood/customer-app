@@ -1,5 +1,11 @@
-import React, { useState } from "react"
-import { Image as RNImage, ImageProps as DefaultImageProps, ImageURISource } from "react-native"
+import React from "react"
+import {
+  Image as RNImage,
+  ImageErrorEventData,
+  ImageProps as DefaultImageProps,
+  ImageURISource,
+  NativeSyntheticEvent,
+} from "react-native"
 import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
@@ -20,18 +26,18 @@ type ImageProps = DefaultImageProps & {
  * component and are web-ready if not explicitly sized in the style property.
  */
 export function AutoImage(props: ImageProps) {
-  const [errorLoad, setErrorLoad] = useState(false)
-
-  if (props.source && !errorLoad) {
-    if (props.source?.uri && !props.source?.uri?.includes("http")) setErrorLoad(true)
+  if (
+    props.source?.uri &&
+    (props.source?.uri.trim() === "" || props.source?.uri.trim().endsWith("null"))
+  ) {
+    props.source = images.category
+  }
+  const onError = (error: NativeSyntheticEvent<ImageErrorEventData>) => {
+    console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)
+    props.source = { uri: "https://via.placeholder.com/150" }
   }
 
-  return (
-    <RNImage
-      {...props}
-      source={!errorLoad ? props.source : images.category}
-      style={props.style}
-      onError={() => setErrorLoad(true)}
-    />
-  )
+  // console.log(`URI REDNER6:${JSON.stringify(props.source)}`)
+
+  return <RNImage {...props} source={props.source} style={props.style} onError={onError} />
 }

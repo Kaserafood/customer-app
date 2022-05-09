@@ -79,6 +79,10 @@ export const utilFlex = StyleSheet.create({
     display: "flex",
     flexWrap: "wrap",
   },
+  selfCenter: {
+    alignSelf: "center",
+    display: "flex",
+  },
 })
 
 export const utilSpacing = StyleSheet.create({

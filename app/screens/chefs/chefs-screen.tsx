@@ -72,7 +72,7 @@ const modalState = new ModalState()
  */
 export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = observer(
   function ChefsScreen({ navigation }) {
-    const { categoryStore, dayStore, dishStore, modalStore } = useStores()
+    const { categoryStore, dayStore, dishStore, commonStore } = useStores()
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -81,13 +81,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     useEffect(() => {
       console.log("chefs useEffect")
       async function fetch() {
-        modalStore.setVisibleLoading(true)
+        commonStore.setVisibleLoading(true)
         if (dishStore.dishesGroupedByChef.length > 0) return
 
         await dishStore.getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
       }
 
-      fetch().finally(() => modalStore.setVisibleLoading(false))
+      fetch().finally(() => commonStore.setVisibleLoading(false))
     }, [])
 
     useEffect(() => {

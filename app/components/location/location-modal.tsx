@@ -1,96 +1,97 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TouchableOpacity, ScrollView } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
-import Images from "assets/images"
-import { utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import React from "react"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
-import { Button } from "../button/button"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { AutoImage, Card, Icon, Text } from ".."
+import images from "../../assets/images"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 
-import { useStores } from "../../models"
-import SvgUri from "react-native-svg-uri"
-
+interface ModalState {
+  isVisibleLocation: boolean
+  setVisibleLocation: (state: boolean) => void
+}
 export interface LocationProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Modal state to handle visibility
+   */
+  modal?: ModalState
 }
 
 /**
  * Describe your component here
  */
 export const LocationModal = observer(function Location(props: LocationProps) {
-  const { style } = props
+  const { style, modal } = props
 
-  const { modalStore } = useStores()
   return (
-    <>
-      <Modal
-        isVisible={modalStore.isVisibleModalLocaton}
-        backdropColor={color.palette.grayTransparent}
-        backdropOpacity={1}
-        animationIn="zoomIn"
-        animationOut="zoomOut"
-        style={style}
-        coverScreen={false}
-        onModalShow={() => changeNavigationBarColor(color.palette.whiteGray, true, true)}
-      >
-        <View style={styles.containerModal}>
-          <View style={styles.bodyModal}>
-            <View style={styles.containerImgClose}>
-              <TouchableOpacity
-                onPress={() => modalStore.setVisibleModalLocaton(false)}
-                activeOpacity={0.7}
-              >
-                <AutoImage style={styles.imgClose} source={Images.close}></AutoImage>
-              </TouchableOpacity>
-            </View>
-            <View style={utilSpacing.p4}>
-              <Text preset="bold" tx="modalAddress.title" style={utilSpacing.mb5}></Text>
+    <Modal
+      isVisible={modal?.isVisibleLocation || false}
+      backdropColor={color.palette.grayTransparent}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      style={style}
+      coverScreen={false}
+      onBackdropPress={() => modal.setVisibleLocation(false)}
+      onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
+    >
+      <View style={styles.containerModal}>
+        <View style={styles.bodyModal}>
+          <View style={styles.containerImgClose}>
+            <TouchableOpacity onPress={() => modal.setVisibleLocation(false)} activeOpacity={0.7}>
+              <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
+            </TouchableOpacity>
+          </View>
+          <View style={utilSpacing.p4}>
+            <Text
+              numberOfLines={1}
+              preset="bold"
+              size="lg"
+              tx="modalLocation.title"
+              style={[utilSpacing.mb5, utilFlex.selfCenter]}
+            ></Text>
 
-              <TouchableOpacity style={styles.btnAddressAdd} activeOpacity={0.8}>
-                <Text preset="semiBold" tx="modalAddress.add"></Text>
-              </TouchableOpacity>
-
-              <ScrollView style={utilSpacing.my6}>
-                <View style={[styles.containerItemAddress, styles.flex, utilSpacing.mb5]}>
-                  <View style={utilSpacing.p4}>
-                    {/* <SvgUri height={20} width={20} source={Images.start}></SvgUri> */}
+            <Ripple rippleOpacity={0.2} rippleDuration={400}>
+              <Card>
+                <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                  <View style={[styles.button, utilSpacing.mr3, utilFlex.flexCenter]}>
+                    <Icon name="location" color={color.palette.white} size={24}></Icon>
                   </View>
-                  <View>
-                    <Text numberOfLines={1} preset="semiBold" tx="modalAddress.addressName"></Text>
+                  <View style={utilFlex.flex1}>
                     <Text
-                      size="sm"
+                      preset="bold"
+                      style={utilSpacing.mb2}
+                      numberOfLines={1}
+                      tx="modalLocation.useCurrentLocation"
+                    ></Text>
+                    <Text
                       numberOfLines={2}
-                      style={styles.addressSubtitle}
-                      tx="modalAddress.desc"
+                      caption
+                      text="23 avenida, est oes una calle, unaasdfa ciudad, un país"
                     ></Text>
                   </View>
                 </View>
-                <View style={[styles.containerItemAddress, styles.flex]}>
-                  <View style={utilSpacing.p4}>
-                    {/* <SvgUri height={20} width={20} source={Images.startActive}></SvgUri> */}
-                  </View>
-                  <View>
-                    <Text numberOfLines={1} preset="semiBold" tx="modalAddress.addressName"></Text>
-                    <Text
-                      numberOfLines={2}
-                      size="sm"
-                      style={styles.addressSubtitle}
-                      tx="modalAddress.desc"
-                    ></Text>
-                  </View>
-                </View>
-              </ScrollView>
-            </View>
+              </Card>
+            </Ripple>
+
+            <Ripple rippleOpacity={0.2} rippleDuration={400} style={styles.btnAddressAdd}>
+              <Text
+                preset="semiBold"
+                style={utilFlex.selfCenter}
+                tx="modalLocation.addAddress"
+              ></Text>
+            </Ripple>
           </View>
         </View>
-      </Modal>
-    </>
+      </View>
+    </Modal>
   )
 })
 
@@ -114,13 +115,20 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[3],
   },
   btnAddressAdd: {
-    borderColor: color.palette.grayDark,
+    borderColor: color.palette.grayLigth,
     borderRadius: 8,
     borderWidth: 1,
     marginVertical: spacing[4],
     padding: spacing[3],
   },
 
+  button: {
+    backgroundColor: color.primary,
+    borderRadius: 100,
+    height: 40,
+    padding: spacing[2],
+    width: 40,
+  },
   containerImgClose: {
     alignItems: "flex-end",
     display: "flex",
@@ -128,12 +136,12 @@ const styles = StyleSheet.create({
   containerItemAddress: {
     alignItems: "center",
   },
+
   containerModal: {
     alignItems: "center",
     display: "flex",
     justifyContent: "center",
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
@@ -141,6 +149,9 @@ const styles = StyleSheet.create({
   imgClose: {
     height: 20,
     width: 20,
+  },
+  text: {
+    flexWrap: "wrap",
   },
   textAddress: {
     color: color.palette.white,

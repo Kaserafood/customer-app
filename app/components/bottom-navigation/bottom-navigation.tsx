@@ -36,7 +36,7 @@ export interface BottomNavigationProps {
 export const BottomNavigation = observer(function BottomNavigation(props: BottomNavigationProps) {
   const { style, activeIndex } = props
 
-  const { modalStore } = useStores()
+  const { commonStore: modalStore } = useStores()
 
   return (
     <>

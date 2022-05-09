@@ -29,9 +29,14 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 
 class ModalState {
   isVisibleWhy = false
+  isVisibleLocation = false
 
   setVisibleWhy(state: boolean) {
     this.isVisibleWhy = state
+  }
+
+  setVisibleLocation(state: boolean) {
+    this.isVisibleLocation = state
   }
 
   constructor() {
@@ -46,7 +51,7 @@ const modalState = new ModalState()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   function HomeScreen({ navigation }) {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, modalStore, categoryStore } = useStores()
+    const { dishStore, dayStore, commonStore, categoryStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -68,7 +73,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     useEffect(() => {
       console.log("Home  useEffect")
       async function fetch() {
-        modalStore.setVisibleLoading(true)
+        commonStore.setVisibleLoading(true)
 
         await Promise.all([
           dayStore.getDays(RNLocalize.getTimeZone()),
@@ -79,10 +84,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       fetch()
         .then(() => setCurrentDay(days[0]))
         .finally(() => {
-          modalStore.setVisibleLoading(false)
+          commonStore.setVisibleLoading(false)
           console.log("hide loaindg")
         })
-    }, [])
+    }, [categoryStore, commonStore, dayStore, days, dishStore, setCurrentDay])
 
     return (
       <Screen
@@ -92,7 +97,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBarBackgroundColor={color.palette.white}
       >
         <ScrollView style={styles.container}>
-          <Location style={utilSpacing.px4}></Location>
+          <Location
+            onPress={() => {
+              modalState.setVisibleLocation(true)
+            }}
+            style={utilSpacing.px4}
+          ></Location>
           <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalState.setVisibleWhy(state)}
@@ -132,7 +142,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             </View>
           </View>
         </ScrollView>
-        <LocationModal></LocationModal>
+        <LocationModal modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader></Loader>
       </Screen>

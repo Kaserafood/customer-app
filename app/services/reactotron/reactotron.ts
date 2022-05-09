@@ -204,7 +204,7 @@ export class Reactotron {
           console.tron.log("Hide Loading")
 
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          const { modalStore } = useStores()
+          const { commonStore: modalStore } = useStores()
           modalStore.setVisibleLoading(false)
         },
       })

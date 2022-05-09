@@ -17,7 +17,7 @@ export const RegisterFormScreen: FC<
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onChange" })
   const [formError, setError] = useState<boolean>(false)
-  const { userStore, modalStore } = useStores()
+  const { userStore, commonStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
@@ -26,14 +26,12 @@ export const RegisterFormScreen: FC<
     if (!terms) {
       showMessageInfo("registerFormScreen.acceptsTerms")
     } else {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       console.log(data)
       userStore
         .register(data)
-        .then(() => {
-          modalStore.setVisibleLoading(false)
-        })
-        .finally(() => modalStore.setVisibleLoading(false))
+
+        .finally(() => commonStore.setVisibleLoading(false))
     }
   }
 

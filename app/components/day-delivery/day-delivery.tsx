@@ -5,7 +5,7 @@ import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Chip } from "../chip/chip"
 import { Text } from "../text/text"
 
@@ -52,13 +52,19 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
 
   return (
     <View>
-      <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
+      <View style={[utilFlex.flexCenterVertical, utilSpacing.mt6, styles.why]}>
         <Text
           tx={titleTx || "mainScreen.dayShipping"}
           preset="semiBold"
           style={[styles.dayShipping, utilSpacing.ml4]}
         ></Text>
-        {!hideWhyButton && <Chip tx="mainScreen.why" onPressIn={() => onWhyPress(true)}></Chip>}
+        {!hideWhyButton && (
+          <Chip
+            tx="mainScreen.why"
+            style={utilSpacing.pb2}
+            onPressIn={() => onWhyPress(true)}
+          ></Chip>
+        )}
       </View>
       <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
         {days.map((day, index) => (

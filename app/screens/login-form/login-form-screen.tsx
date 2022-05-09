@@ -19,7 +19,7 @@ const ROOT: ViewStyle = {
 
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation }) => {
-    const { modalStore, userStore } = useStores()
+    const { commonStore, userStore } = useStores()
 
     const { ...methods } = useForm({ mode: "onBlur" })
     const [formError, setError] = useState<boolean>(false)
@@ -40,13 +40,13 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     }
 
     const onSubmit = (data) => {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       userStore
         .login(data)
         .then((userValid: boolean) => {
           if (userValid) navigation.navigate("main")
         })
-        .finally(() => modalStore.setVisibleLoading(false))
+        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     return (

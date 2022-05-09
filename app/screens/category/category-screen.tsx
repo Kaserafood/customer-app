@@ -33,7 +33,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const {
       dayStore,
       dishStore: { dishesCategory, getAll },
-      modalStore,
+      commonStore: modalStore,
     } = useStores()
 
     useEffect(() => {
