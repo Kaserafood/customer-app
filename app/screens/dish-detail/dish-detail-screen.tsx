@@ -1,15 +1,14 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import images from "assets/images"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
-import SvgUri from "react-native-svg-uri"
 import {
   AutoImage,
   DishChef,
   Header,
+  Icon,
   InputTextCard,
   Loader,
   Price,
@@ -87,9 +86,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
           <View style={[utilFlex.flexRow, utilSpacing.my3, utilSpacing.mx4]}>
             <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
-            <Price amount={currentDish.price}></Price>
           </View>
           <Text style={[utilSpacing.mb2, utilSpacing.mx4]} text={currentDish.description}></Text>
+          <Price style={styles.price} amount={currentDish.price}></Price>
           <Separator style={utilSpacing.my3}></Separator>
 
           <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
@@ -102,7 +101,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
               <TouchableOpacity activeOpacity={0.7} onPress={() => minusQuantity(1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <AutoImage style={styles.iconUnities} source={images.minus}></AutoImage>
+                  <Icon name="minus" size={12} color={color.palette.white}></Icon>
                 </Ripple>
               </TouchableOpacity>
               <Text
@@ -112,7 +111,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               ></Text>
               <TouchableOpacity activeOpacity={0.7} onPress={() => setQuantity(quantity + 1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <AutoImage style={styles.iconUnities} source={images.add}></AutoImage>
+                  <Icon name="plus" size={12} color={color.palette.white}></Icon>
                 </Ripple>
               </TouchableOpacity>
             </View>
@@ -142,7 +141,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           activeOpacity={0.7}
           style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
         >
-          <SvgUri height={35} width={35} source={images.cart}></SvgUri>
+          <Icon name="cart" size={30} color={color.palette.white}></Icon>
           <Text
             preset="semiBold"
             style={[styles.textAddToOrder, utilSpacing.mx3]}
@@ -194,6 +193,10 @@ const styles = StyleSheet.create({
     borderRadius: spacing[2],
     height: 200,
     width: "100%",
+  },
+  price: {
+    alignSelf: "flex-start",
+    marginLeft: spacing[3],
   },
   textAddToOrder: {
     color: color.palette.white,

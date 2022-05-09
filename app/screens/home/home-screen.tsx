@@ -66,7 +66,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }, [])
 
     useEffect(() => {
-      console.log("Home useEffect")
+      console.log("Home  useEffect")
       async function fetch() {
         modalStore.setVisibleLoading(true)
 
@@ -92,53 +92,44 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBarBackgroundColor={color.palette.white}
       >
         <ScrollView style={styles.container}>
-          <Location></Location>
+          <Location style={utilSpacing.px4}></Location>
           <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalState.setVisibleWhy(state)}
             onPress={(day) => {
-              console.log("clcik dary")
+              console.log("clcik day", day)
               onChangeDay(day)
             }}
           ></DayDelivery>
-          <Separator style={utilSpacing.my4}></Separator>
-          <Categories
-            categories={categoryStore.categories}
-            onPress={(category) => toCategory(category)}
-          ></Categories>
-          <Separator style={utilSpacing.my4}></Separator>
-          <View style={utilFlex.flexRow}>
-            <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
-            <Text size="lg" style={utilSpacing.ml3} preset="bold" text={currentDay.dayName}></Text>
-          </View>
+          <View style={utilSpacing.px4}>
+            <Separator style={utilSpacing.my4}></Separator>
+            <Categories
+              categories={categoryStore.categories}
+              onPress={(category) => toCategory(category)}
+            ></Categories>
+            <Separator style={utilSpacing.my4}></Separator>
+            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+              <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
+              <Text
+                size="lg"
+                style={utilSpacing.ml3}
+                preset="bold"
+                text={currentDay.dayName}
+              ></Text>
+            </View>
+            <Separator style={utilSpacing.my4}></Separator>
 
-          <View style={utilSpacing.mb8}>
-            {dishStore.dishes.map((dish, index) => (
-              <View key={dish.id}>
-                <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
-                {index !== dishStore.dishes.length - 1 && (
-                  <Separator style={utilSpacing.my3}></Separator>
-                )}
-              </View>
-            ))}
-            <EmptyData lengthData={dishStore.dishes.length}></EmptyData>
-
-            {/* 
-          <Text
-            style={utilSpacing.mt4}
-            size="lg"
-            tx="mainScreen.favoriteTomorrow"
-            preset="bold"
-          ></Text>
-
-          <Separator style={utilSpacing.my3}></Separator>
-          <ScrollView horizontal style={styles.flex}>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-          </ScrollView>
-          <Separator style={utilSpacing.my3}></Separator> */}
+            <View style={utilSpacing.mb8}>
+              {dishStore.dishes.map((dish, index) => (
+                <View key={dish.id}>
+                  <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
+                  {index !== dishStore.dishes.length - 1 && (
+                    <Separator style={utilSpacing.my3}></Separator>
+                  )}
+                </View>
+              ))}
+              <EmptyData lengthData={dishStore.dishes.length}></EmptyData>
+            </View>
           </View>
         </ScrollView>
         <LocationModal></LocationModal>
@@ -153,7 +144,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.background,
     flex: 1,
-    paddingHorizontal: spacing[3],
     paddingTop: spacing[2],
   },
 

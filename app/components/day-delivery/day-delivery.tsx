@@ -1,8 +1,7 @@
-import i18n from "i18n-js"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import { translate, TxKeyPath } from "../../i18n"
+import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
@@ -27,12 +26,6 @@ export interface DayDeliveryProps {
   titleTx?: TxKeyPath
 
   /**
-   * Optional options to pass to i18n. Useful for interpolation
-   * as well as explicitly setting locale or translation fallbacks.
-   */
-  txOptions?: i18n.TranslateOptions
-
-  /**
    * Function to set the date selected
    */
 
@@ -53,25 +46,26 @@ export interface DayDeliveryProps {
  * Component for delivery days on the home and chef components
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style, hideWhyButton, titleTx, txOptions, onPress, onWhyPress, days = [] } = props
+  const { style, hideWhyButton, titleTx, onPress, onWhyPress, days = [] } = props
 
-  const i18nText = titleTx && translate(titleTx, txOptions)
-
-  const actualTitle = i18nText || "mainScreen.dayShipping"
   const { dayStore } = useStores()
 
   return (
     <View>
       <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
-        <Text tx={actualTitle} preset="semiBold" style={styles.dayShipping}></Text>
+        <Text
+          tx={titleTx || "mainScreen.dayShipping"}
+          preset="semiBold"
+          style={[styles.dayShipping, utilSpacing.ml4]}
+        ></Text>
         {!hideWhyButton && <Chip tx="mainScreen.why" onPressIn={() => onWhyPress(true)}></Chip>}
       </View>
-      <ScrollView horizontal style={[utilSpacing.mt5, utilSpacing.pb3, style]}>
-        {days.map((day) => (
+      <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
+        {days.map((day, index) => (
           <Chip
             active={day.date === dayStore.currentDay.date}
             text={day.dayName}
-            style={styles.chip}
+            style={[styles.chip, index === 0 && utilSpacing.ml4]}
             onPress={() => {
               onPress(day)
               dayStore.setCurrentDay(day)
@@ -96,7 +90,8 @@ const styles = StyleSheet.create({
   chip: {
     borderRadius: spacing[3],
     marginBottom: spacing[2],
-    marginRight: spacing[1],
+    marginRight: spacing[2],
+    marginTop: spacing[2],
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[1],
   },

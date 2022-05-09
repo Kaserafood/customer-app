@@ -209,8 +209,8 @@
     },
     "menuChefScreen" : {
          "title": "Menú",
-         "dayDelivery" : "Días de entrega:",
-         "all": "Todos",
+         "dayDelivery" : "Días de entrega del chef:",
+         "chefMenu": "Menú del chef",
          "watchCart": "Ver carrito"
     },
     "deliveryDetailScreen" : {

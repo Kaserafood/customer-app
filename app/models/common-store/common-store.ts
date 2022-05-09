@@ -1,12 +1,14 @@
 import { types } from "mobx-state-tree"
 
-export const ModalStoreModel = types
-  .model("ModalStore")
+export const CommonStoreModel = types
+  .model("CommonStore")
   .props({
     isVisibleModal: types.optional(types.boolean, false),
     isVisibleModalLocaton: types.optional(types.boolean, false),
     isVisibleModalDayDelivery: types.optional(types.boolean, false),
     isVisibleLoading: types.optional(types.boolean, false),
+
+    currentChefId: types.optional(types.number, 0),
   })
   .actions((self) => ({
     setVisibleModal(isModalVisible: boolean) {
@@ -22,5 +24,8 @@ export const ModalStoreModel = types
     },
     setVisibleLoading(isLoading: boolean) {
       self.isVisibleLoading = isLoading
+    },
+    setCurrentChefId(chefId: number) {
+      self.currentChefId = chefId
     },
   }))

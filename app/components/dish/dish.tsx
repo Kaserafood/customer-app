@@ -21,17 +21,26 @@ export interface DishProps {
   dish: DishModel
 
   /**
-   *
    * onPress callback
    */
   onPress?: () => void
+
+  /**
+   * visible chef image
+   */
+  visibleChefImage?: boolean
+
+  /**
+   * Visible price delivery
+   */
+  visiblePriceDelivery?: boolean
 }
 
 /**
  * Describe your component here
  */
 export const Dish = observer(function Dish(props: DishProps) {
-  const { style, dish, onPress } = props
+  const { style, dish, onPress, visibleChefImage = true, visiblePriceDelivery = true } = props
   return (
     <Ripple
       style={[utilSpacing.py3, style]}
@@ -40,7 +49,7 @@ export const Dish = observer(function Dish(props: DishProps) {
       onPress={onPress}
     >
       <View style={utilFlex.flexRow}>
-        <View style={[styles.column, styles.containerTextDish]}>
+        <View style={[styles.column, styles.containerTextDish, !visibleChefImage && styles.h100]}>
           <View style={utilFlex.flex1}>
             <Text
               text={dish.title}
@@ -53,22 +62,28 @@ export const Dish = observer(function Dish(props: DishProps) {
               style={[styles.descriptionDish, utilFlex.flex1]}
               numberOfLines={2}
             ></Text>
-
-            <Text
-              style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
-              size="sm"
-              text={dish.chef.name}
-            ></Text>
+            {visibleChefImage && (
+              <Text
+                style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
+                size="sm"
+                text={dish.chef.name}
+              ></Text>
+            )}
           </View>
 
           <View style={[utilFlex.flexRow, styles.containerPrice]}>
             <Price amount={dish.price} style={utilSpacing.mr3}></Price>
-            <Price amount={dish.price} preset="delivery"></Price>
+            {visiblePriceDelivery && <Price amount={dish.price} preset="delivery"></Price>}
           </View>
         </View>
         <View style={styles.column}>
-          <AutoImage style={styles.imageDish} source={{ uri: dish.image }}></AutoImage>
-          <AutoImage style={styles.imageChef} source={{ uri: dish.chef.image }}></AutoImage>
+          <AutoImage
+            style={[styles.imageDish, !visibleChefImage && styles.h100]}
+            source={{ uri: dish.image }}
+          ></AutoImage>
+          {visibleChefImage && (
+            <AutoImage style={styles.imageChef} source={{ uri: dish.chef.image }}></AutoImage>
+          )}
         </View>
       </View>
     </Ripple>
@@ -97,6 +112,9 @@ const styles = StyleSheet.create({
     color: color.palette.grayDark,
   },
 
+  h100: {
+    height: 100,
+  },
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: 16,

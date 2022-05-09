@@ -58,9 +58,8 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
             </View>
 
             <Button
-              tx="modalDeliveryDay.continue"
+              tx="common.continue"
               block
-              rounded
               style={utilSpacing.mb5}
               onPress={() => modal.setVisibleWhy(false)}
             ></Button>

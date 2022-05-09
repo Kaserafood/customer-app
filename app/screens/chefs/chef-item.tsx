@@ -110,8 +110,17 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
       </View>
       <View style={[styles.flex, styles.footer]}>
         <View style={styles.flex1}>
-          <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
-          <Text numberOfLines={1} text={item.currentDishName}></Text>
+          <Text
+            numberOfLines={1}
+            text={`${item.name}`}
+            preset="bold"
+            style={utilSpacing.mb1}
+          ></Text>
+          <Text
+            numberOfLines={1}
+            text={item.currentDishName}
+            style={[utilSpacing.mb1, styles.nameDish]}
+          ></Text>
           <View style={styles.flex}>
             <Text
               numberOfLines={1}
@@ -187,19 +196,22 @@ const styles = StyleSheet.create({
     borderColor: color.palette.white,
     borderRadius: spacing[2],
     borderWidth: 2,
-    height: 90,
+    height: 94,
     width: 90,
   },
   imageDish: {
     width: "100%",
   },
+  nameDish: {
+    lineHeight: 25,
+  },
+
   pagerView: {
     alignSelf: "center",
     display: "flex",
     flex: 1,
     width: "75%",
   },
-
   textCategory: {
     color: color.palette.grayDark,
   },

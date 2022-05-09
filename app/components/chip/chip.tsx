@@ -61,13 +61,13 @@ export const Chip = observer(function Chip(props: ChipProps) {
     CONTAINER.backgroundColor = color.palette.grayLigth
   } else {
     CONTAINER.backgroundColor = color.palette.white
-    CONTAINER.shadowColor = color.palette.grayDark
+    CONTAINER.shadowColor = color.palette.black
   }
-  const styles = Object.assign({}, CONTAINER, style)
+  // const styles = Object.assign({}, CONTAINER, style)
   const styleText = Object.assign([], TEXT, textstyle)
   const content = <Text tx={tx} text={text} style={styleText} />
   return (
-    <TouchableOpacity activeOpacity={0.5} style={styles} {...rest}>
+    <TouchableOpacity activeOpacity={0.5} style={[CONTAINER, style]} {...rest}>
       {content}
     </TouchableOpacity>
   )
