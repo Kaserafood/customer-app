@@ -17,4 +17,5 @@ export const palette = {
   orange: "#FF9831",
   redDark: "#d5392e",
   blackTransparent: "#00000066",
+  shadow: "#2D0000",
 }

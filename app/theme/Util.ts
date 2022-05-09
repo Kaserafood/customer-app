@@ -1,4 +1,4 @@
-import { ViewStyle, StyleSheet } from "react-native"
+import { StyleSheet, ViewStyle } from "react-native"
 import { color } from "./color"
 import { spacing } from "./spacing"
 import { typography } from "./typography"
@@ -11,11 +11,12 @@ export const SHADOW: ViewStyle = {
   shadowColor: color.palette.grayDark,
   shadowOffset: {
     width: 0,
-    height: 2,
+    height: 8,
   },
-  shadowOpacity: 0.25,
-  shadowRadius: 3.84,
-  elevation: 5,
+  shadowOpacity: 0.46,
+  shadowRadius: 11.14,
+
+  elevation: 7,
 }
 
 export const NO_SHADOW: ViewStyle = {

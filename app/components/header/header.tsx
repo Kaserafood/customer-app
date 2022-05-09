@@ -1,14 +1,12 @@
 import React from "react"
-import { View, ViewStyle, TextStyle, StyleSheet } from "react-native"
-import { HeaderProps } from "./header.props"
-import { Button } from "../button/button"
-import { Text } from "../text/text"
-
-import { color, spacing } from "../../theme"
+import { TextStyle, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { Icon, Text } from ".."
 import { translate } from "../../i18n/"
+import { color, spacing } from "../../theme"
 import { typography } from "../../theme/typography"
-import images from "../../assets/images"
-import { AutoImage } from "../auto-image/auto-image"
+import { utilSpacing } from "../../theme/Util"
+import { HeaderProps } from "./header.props"
 
 // static styles
 const ROOT: ViewStyle = {
@@ -26,10 +24,20 @@ const TITLE: TextStyle = {
   fontFamily: typography.primaryBold,
   marginBottom: -spacing[1],
   fontSize: 22,
+  paddingTop: 4,
 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
 const RIGHT: ViewStyle = { width: 32 }
+
+const BUTTON: ViewStyle = {
+  backgroundColor: color.primaryDarker,
+  justifyContent: "center",
+  alignItems: "center",
+  borderRadius: 100,
+  width: 38,
+  height: 38,
+}
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.
@@ -37,8 +45,7 @@ const RIGHT: ViewStyle = { width: 32 }
 export function Header(props: HeaderProps) {
   const {
     onLeftPress,
-    onRightPress,
-    rightIcon,
+
     leftIcon,
     headerText,
     headerTx,
@@ -50,30 +57,19 @@ export function Header(props: HeaderProps) {
   return (
     <View style={[ROOT, style]}>
       {leftIcon ? (
-        <Button preset="link" rounded onPress={onLeftPress}>
-          {leftIcon === "back" && <AutoImage style={styles.icon} source={images.back} />}
-        </Button>
+        <TouchableOpacity style={BUTTON} onPress={onLeftPress} activeOpacity={0.5}>
+          {leftIcon === "back" && (
+            <Icon name="back" style={utilSpacing.mr2} size={15} color={color.palette.white}></Icon>
+          )}
+        </TouchableOpacity>
       ) : (
         <View style={LEFT} />
       )}
       <View style={TITLE_MIDDLE}>
         <Text style={[TITLE, titleStyle]} text={header} />
       </View>
-      {rightIcon ? (
-        <Button preset="link" rounded onPress={onRightPress}>
-          {rightIcon === "back" && <AutoImage style={styles.icon} source={images.back} />}
-        </Button>
-      ) : (
-        <View style={RIGHT} />
-      )}
+
+      <View style={RIGHT} />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    height: 24,
-    marginRight: 2,
-    width: 24,
-  },
-})

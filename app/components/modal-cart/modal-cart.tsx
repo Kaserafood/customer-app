@@ -9,7 +9,8 @@ import { AutoImage, Button, Price, Separator, Text } from ".."
 import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store/user-store"
 import { color, spacing } from "../../theme"
-import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { Card } from "../card/card"
 
 interface ModalState {
   isVisible: boolean
@@ -62,14 +63,14 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
           </TouchableOpacity>
         </View>
         <View style={styles.body}>
-          <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
+          <View style={[utilFlex.flexRow, utilSpacing.mb4, utilSpacing.ml4]}>
             <AutoImage source={{ uri: chef.image }} style={styles.imageChef}></AutoImage>
             <Text preset="bold" style={utilFlex.flex1} text={chef.name}></Text>
           </View>
 
           <ScrollView style={styles.containerDishes}>
             {cartStore.cart.map((item, index) => (
-              <View key={item.dish.id} style={[styles.card, utilFlex.flexRow, utilSpacing.mb4]}>
+              <Card key={item.dish.id} style={[styles.card, utilFlex.flexRow, utilSpacing.m4]}>
                 <View style={[utilFlex.flexRow, utilFlex.flex1]}>
                   <View style={utilSpacing.mr3}>
                     <Text preset="semiBold" text={`X ${item.quantity.toString()}`}></Text>
@@ -89,16 +90,20 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                   <Price style={styles.price} textStyle={utilText.bold} amount={item.total}></Price>
                 </View>
                 <Ripple
+                  rippleContainerBorderRadius={100}
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
                   style={[utilSpacing.p2, styles.containerIconRemove]}
                   onPress={() => cartStore.removeItem(index)}
                 >
                   <AutoImage style={styles.iconRemove} source={images.close}></AutoImage>
                 </Ripple>
-              </View>
+              </Card>
             ))}
           </ScrollView>
-
-          <Separator style={utilSpacing.my4}></Separator>
+          <View style={utilSpacing.mx4}>
+            <Separator style={utilSpacing.my4}></Separator>
+          </View>
           <View style={[utilFlex.flexRow, utilSpacing.mx6]}>
             <Text preset="bold" style={utilFlex.flex1} tx="common.subtotal"></Text>
             <Price style={styles.price} amount={cartStore.subtotal}></Price>
@@ -119,10 +124,9 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
 const styles = StyleSheet.create({
   body: {
     alignSelf: "center",
-
     bottom: 0,
     position: "relative",
-    width: "85%",
+    width: "90%",
   },
   button: {
     alignSelf: "center",
@@ -134,7 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
     borderRadius: spacing[2],
     padding: spacing[4],
-    ...SHADOW,
   },
   container: {
     justifyContent: "flex-end",
@@ -144,7 +147,11 @@ const styles = StyleSheet.create({
     maxHeight: 320,
   },
   containerIconRemove: {
-    borderRadius: 100,
+    paddingBottom: 16,
+    paddingLeft: 16,
+    position: "absolute",
+    right: 2,
+    top: 2,
   },
   containerImgClose: {
     alignItems: "flex-end",
@@ -160,8 +167,8 @@ const styles = StyleSheet.create({
     padding: spacing[3],
   },
   iconRemove: {
-    height: 18,
-    width: 18,
+    height: 10,
+    width: 10,
   },
   imageChef: {
     borderRadius: spacing[2],
