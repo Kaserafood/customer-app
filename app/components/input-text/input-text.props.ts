@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react"
 import { UseControllerProps } from "react-hook-form"
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native"
 import { TxKeyPath } from "../../i18n"
@@ -49,11 +48,6 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Default value in the input
    */
   defaultValue?: string
-
-  /**
-   * Error handler
-   */
-  setFormError?: Dispatch<SetStateAction<boolean>>
 
   /**
    * Preset style

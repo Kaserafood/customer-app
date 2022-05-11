@@ -6,7 +6,7 @@
         "subtotal" : "Subtotal",
         "total" : "Total",
         "deliveryAmount" : "Costo de envío",
-        "someError" : "Lo sentimos, se ha ocurrido un error inesperado",
+        "someError" : "Lo sentimos, ha ocurrido un error inesperado",
         "operationSuccess" : "Procceso realizado con éxito",
         "notFound" : {
             "dishes": "Lo sentimos, no se encontraron platillos"
@@ -245,7 +245,8 @@
         "disabledLocation": "Para poder usar esta función, debes activar la localización en tu dispositivo.",
         "whereReciveFood" : "¿Dónde deseas recibir tu comida?",
         "addressRequired" : "Debes ingresar una dirección",
-        "addressPlaceholder" : "Ingresa una dirección"
+        "addressPlaceholder" : "Ingresa una dirección",
+        "noLocation" : "Debe seleccionar una dirección"
     },
     "addressScreen": {
         "title": "Dirección",

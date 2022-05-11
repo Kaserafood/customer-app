@@ -53,6 +53,13 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 interface registerPageParams {
   init: boolean
 }
+
+interface addressScreenParams {
+  latitude: number
+  longitude: number
+  address: string
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -70,7 +77,7 @@ export type NavigatorParamList = {
   chefs: undefined
   search: undefined
   map: undefined
-  address: undefined
+  address: addressScreenParams
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/

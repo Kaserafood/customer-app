@@ -42,3 +42,18 @@ export const showMessageInfo = (message: string) => {
     icon: "auto",
   })
 }
+
+/**
+ *
+ * @param message message to show, the value should be in i18n
+ */
+
+export const showMessageError = (message: string) => {
+  showMessage({
+    message: getI18nText(message),
+    type: "danger",
+    position: "bottom",
+    floating: true,
+    icon: "auto",
+  })
+}
