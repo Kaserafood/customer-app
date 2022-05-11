@@ -11,7 +11,9 @@
         "notFound" : {
             "dishes": "Lo sentimos, no se encontraron platillos"
         },
-        "dishes": "Platillos"
+        "dishes": "Platillos",
+        "next" : "Siguiente",
+        "save": "Guardar"
         
     },
     "initScreen": {
@@ -237,6 +239,30 @@
     },
     "search": {
         "title": "Buscador"
+    },
+    "mapScreen": {
+        "title" : "Ajusta el pin",
+        "disabledLocation": "Para poder usar esta función, debes activar la localización en tu dispositivo.",
+        "whereReciveFood" : "¿Dónde deseas recibir tu comida?",
+        "addressRequired" : "Debes ingresar una dirección",
+        "addressPlaceholder" : "Ingresa una dirección"
+    },
+    "addressScreen": {
+        "title": "Dirección",
+        "addressComplete": "Dirección completa",
+        "addressPlaceholder": "Escribe la dirección",
+        "addressCompleteRequired": "Debes ingresar la dirección completa",
+        "houseApartmentNumber" : "Número de casa o apartamento",
+        "houseApartmentNumberPlaceholder": "Ingresalo aquí",
+        "houseApartmentNumberRequired": "Debes ingresar el número de casa o apartamento",
+        "instructionsDelivery" : "Instrucciones de entrega, referencias, codigo de acceso",
+        "instructionsDeliveryPlaceholder": "Escribe aquí",
+        "howSaveThisAddress" : "¿Cómo deseas guardar esta dirección?",
+        "howSaveThisAddressPlaceholder": "Ejemplo: Mi casa, la oficina",
+        "howSaveThisAddressRequired": "Debes ingresar el nombre de la dirección",
+        "phoneDelivery": "Teléfono de entrega",
+        "phoneDeliveryPlaceholder": "1234-5678",
+        "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega"
     }
 
 

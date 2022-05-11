@@ -1,7 +1,7 @@
-import { ViewStyle, TextStyle } from "react-native"
+import { TextStyle, ViewStyle } from "react-native"
 import { color, spacing } from "../../theme"
-import { NO_SHADOW } from "../../theme/Util"
 import { typography, typographySize } from "../../theme/typography"
+import { NO_SHADOW } from "../../theme/Util"
 
 const BASE_VIEW: ViewStyle = {
   paddingVertical: spacing[4],
@@ -25,6 +25,7 @@ const BASE_TEXT: TextStyle = {
   fontSize: typographySize.lg,
   fontFamily: typography.primaryBold,
   marginBottom: -4,
+  lineHeight: 26,
 }
 
 export const viewPresets: Record<string, ViewStyle> = {

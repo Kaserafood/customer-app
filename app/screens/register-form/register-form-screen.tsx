@@ -5,7 +5,7 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { IUserRegister } from "../../models/user-store/user-store"
+import { UserRegister } from "../../models/user-store/user-store"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -16,13 +16,12 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onChange" })
-  const [formError, setError] = useState<boolean>(false)
   const { userStore, commonStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: UserRegister) => {
     if (!terms) {
       showMessageInfo("registerFormScreen.acceptsTerms")
     } else {
@@ -35,7 +34,7 @@ export const RegisterFormScreen: FC<
     }
   }
 
-  const onError: SubmitErrorHandler<IUserRegister> = (errors) => {
+  const onError: SubmitErrorHandler<UserRegister> = (errors) => {
     return console.log({ errors })
   }
 
@@ -53,7 +52,6 @@ export const RegisterFormScreen: FC<
                 name="name"
                 placeholderTx="registerFormScreen.firstName"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.firstNameRequired",
                 }}
@@ -62,7 +60,6 @@ export const RegisterFormScreen: FC<
                 name="lastName"
                 placeholderTx="registerFormScreen.lastName"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.lastNameRequired",
                 }}
@@ -72,7 +69,6 @@ export const RegisterFormScreen: FC<
                 keyboardType="phone-pad"
                 placeholderTx="registerFormScreen.phone"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.phoneRequired",
                 }}
@@ -82,7 +78,6 @@ export const RegisterFormScreen: FC<
                 keyboardType="email-address"
                 placeholderTx="registerFormScreen.email"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.emailRequired",
                   pattern: {
@@ -99,7 +94,6 @@ export const RegisterFormScreen: FC<
                 rules={{
                   required: "registerFormScreen.passwordRequired",
                 }}
-                setFormError={setError}
               ></InputText>
               <View style={styles.containerTermsBtn}>
                 <View style={styles.containerTerms}>

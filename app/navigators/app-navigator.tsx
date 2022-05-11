@@ -23,12 +23,14 @@ import {
   HomeScreen,
   InitScreen,
   LoginFormScreen,
+  MapScreen,
   MenuChefScreen,
   PrivacyPolicyScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
   SearchScreen,
   TermsConditionsScreen,
+  AddressScreen,
 } from "../screens"
 import { color } from "../theme"
 import { typographySize } from "../theme/typography"
@@ -67,6 +69,8 @@ export type NavigatorParamList = {
   home: undefined
   chefs: undefined
   search: undefined
+  map: undefined
+  address: undefined
 }
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
@@ -92,6 +96,8 @@ const AppStack = () => {
       <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
       <Stack.Screen name="endOrder" component={EndOrderScreen} />
       <Stack.Screen name="category" component={CategoryScreen} />
+      <Stack.Screen name="map" component={MapScreen} />
+      <Stack.Screen name="address" component={AddressScreen} />
     </Stack.Navigator>
   )
 }

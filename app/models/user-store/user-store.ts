@@ -23,13 +23,13 @@ const userRegister = types.model("UserRegisterStore").props({
   password: types.maybe(types.string),
   phone: types.maybe(types.string),
 })
-export interface IUserRegister extends Instance<typeof userRegister> {}
+export interface UserRegister extends Instance<typeof userRegister> {}
 
 const userLogin = types.model("UserLoginStore").props({
   email: types.maybe(types.string),
   password: types.maybe(types.string),
 })
-export interface IUserLogin extends Instance<typeof userLogin> {}
+export interface UserLogin extends Instance<typeof userLogin> {}
 
 export const UserRegisterModel = userRegister
   .extend(withEnvironment)
@@ -42,7 +42,7 @@ export const UserRegisterModel = userRegister
     },
   }))
   .actions((self) => ({
-    register: async (user: IUserRegister) => {
+    register: async (user: UserRegister) => {
       const userApi = new UserApi(self.environment.api)
       const result = await userApi.register(user)
 
@@ -56,7 +56,7 @@ export const UserRegisterModel = userRegister
       }
     },
 
-    login: async (user: IUserLogin): Promise<boolean> => {
+    login: async (user: UserLogin): Promise<boolean> => {
       const userApi = new UserApi(self.environment.api)
       const result = await userApi.login(user)
 

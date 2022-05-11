@@ -1,8 +1,8 @@
 import { ApiResponse } from "apisauce"
+import { UserLogin, UserRegister } from "../../models/user-store/user-store"
 import { Api } from "./api"
-import { UserLoginResponse } from "./api.types"
 import { getGeneralApiProblem } from "./api-problem"
-import { IUserLogin, IUserRegister } from "../../models/user-store/user-store"
+import { UserLoginResponse } from "./api.types"
 
 export class UserApi {
   private api: Api
@@ -11,7 +11,7 @@ export class UserApi {
     this.api = api
   }
 
-  async register(userRegisterStore: IUserRegister): Promise<UserLoginResponse> {
+  async register(userRegisterStore: UserRegister): Promise<UserLoginResponse> {
     try {
       const response: ApiResponse<any> = await this.api.apisauce.post("/users/register", {
         ...userRegisterStore,
@@ -29,7 +29,7 @@ export class UserApi {
     }
   }
 
-  async login(userLogin: IUserLogin): Promise<UserLoginResponse> {
+  async login(userLogin: UserLogin): Promise<UserLoginResponse> {
     try {
       const response: ApiResponse<any> = await this.api.apisauce.post("/users/login", {
         ...userLogin,

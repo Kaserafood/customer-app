@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native"
+import { StackNavigationProp } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
@@ -6,6 +8,7 @@ import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { AutoImage, Card, Icon, Text } from ".."
 import images from "../../assets/images"
+import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
@@ -25,11 +28,19 @@ export interface LocationProps {
   modal?: ModalState
 }
 
+type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
+
 /**
- * Describe your component here
+ * Modal to select location and add new location
  */
 export const LocationModal = observer(function Location(props: LocationProps) {
   const { style, modal } = props
+
+  const navigation = useNavigation<homeScreenProp>()
+
+  const toMap = () => {
+    navigation.navigate("map")
+  }
 
   return (
     <Modal
@@ -58,7 +69,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               style={[utilSpacing.mb5, utilFlex.selfCenter]}
             ></Text>
 
-            <Ripple rippleOpacity={0.2} rippleDuration={400}>
+            <Ripple rippleOpacity={0.2} rippleDuration={400} onPressIn={toMap}>
               <Card>
                 <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                   <View style={[styles.button, utilSpacing.mr3, utilFlex.flexCenter]}>

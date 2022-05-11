@@ -1,0 +1,62 @@
+import { Dispatch, SetStateAction } from "react"
+import { UseControllerProps } from "react-hook-form"
+import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native"
+import { TxKeyPath } from "../../i18n"
+
+type presets = "normal" | "card"
+export interface InputTextProps extends TextInputProps, UseControllerProps {
+  /**
+   * The placeholder i18n key.
+   */
+  placeholderTx?: TxKeyPath
+
+  /**
+   * The Placeholder text if no placeholderTx is provided.
+   */
+  placeholder?: string
+
+  /**
+   * An optional style override  the InputText style .
+   */
+  style?: StyleProp<TextStyle>
+
+  /**
+   * An optional style override  the Label style .
+   */
+  styleLabel?: StyleProp<TextStyle>
+
+  /**
+   * An optional style override the View container style.
+   */
+  styleContainer?: StyleProp<ViewStyle>
+
+  /**
+   * An optional reference
+   */
+  forwardedRef?: any
+
+  /**
+   * An optional label to display when preset is "card"
+   */
+  labelTx?: string
+
+  /**
+   * Name of the input
+   */
+  name: string
+
+  /**
+   * Default value in the input
+   */
+  defaultValue?: string
+
+  /**
+   * Error handler
+   */
+  setFormError?: Dispatch<SetStateAction<boolean>>
+
+  /**
+   * Preset style
+   */
+  preset?: presets
+}
