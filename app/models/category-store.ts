@@ -1,7 +1,7 @@
-import { Instance, types, SnapshotOut } from "mobx-state-tree"
-import { withEnvironment } from "./extensions/with-environment"
+import { SnapshotOut, types } from "mobx-state-tree"
 import { CategoryApi } from "../services/api/category-api"
 import { handleDataResponseAPI } from "../utils/messages"
+import { withEnvironment } from "./extensions/with-environment"
 
 export const categoryStore = types.model("CategoryStore").props({
   id: types.maybe(types.number),
