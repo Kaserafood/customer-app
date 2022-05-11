@@ -3,7 +3,7 @@ import { Character } from "../../models/character/character"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 
-import { UserChef } from "../../models/user-store/user-store"
+import { UserChef } from "../../models/user-store"
 import { DishChef } from "../../models/dish-store"
 
 export interface User {

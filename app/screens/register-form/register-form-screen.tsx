@@ -5,7 +5,7 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { UserRegister } from "../../models/user-store/user-store"
+import { UserRegister } from "../../models/user-store"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -27,10 +27,7 @@ export const RegisterFormScreen: FC<
     } else {
       commonStore.setVisibleLoading(true)
       console.log(data)
-      userStore
-        .register(data)
-
-        .finally(() => commonStore.setVisibleLoading(false))
+      userStore.register(data).finally(() => commonStore.setVisibleLoading(false))
     }
   }
 

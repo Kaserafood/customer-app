@@ -1,5 +1,5 @@
 import { ApiResponse } from "apisauce"
-import { UserLogin, UserRegister } from "../../models/user-store/user-store"
+import { UserLogin, UserRegister } from "../../models/user-store"
 import { Api } from "./api"
 import { getGeneralApiProblem } from "./api-problem"
 import { UserLoginResponse } from "./api.types"

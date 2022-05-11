@@ -3,7 +3,7 @@ import { DishApi } from "../services/api/dish-api"
 import { handleDataResponseAPI } from "../utils/messages"
 import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
-import { userChef, UserChef } from "./user-store/user-store"
+import { userChef, UserChef } from "./user-store"
 
 export const dishChef = dish.props({
   chef: types.optional(types.maybe(userChef), {}),

@@ -7,7 +7,7 @@ import { AutoImage } from "../auto-image/auto-image"
 import { utilSpacing, utilFlex } from "../../theme/Util"
 import images from "assets/images"
 import { DishChef as DishChefModel } from "../../models/dish-store"
-import { UserChef } from "../../models/user-store/user-store"
+import { UserChef } from "../../models/user-store"
 import Ripple from "react-native-material-ripple"
 
 export interface DishChefProps {

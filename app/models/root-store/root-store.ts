@@ -5,7 +5,7 @@ import { CharacterStoreModel } from "../character-store/character-store"
 import { CommonStoreModel } from "../common-store/common-store"
 import { DayStoreModel } from "../day-store"
 import { DishStoreModel } from "../dish-store"
-import { UserRegisterModel } from "../user-store/user-store"
+import { UserRegisterModel } from "../user-store"
 
 /**
  * A RootStore model.

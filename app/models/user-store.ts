@@ -1,10 +1,10 @@
 import { Instance, types } from "mobx-state-tree"
-import { UserApi } from "../../services/api/user-api"
-import { handleDataResponseAPI } from "../../utils/messages"
-import { saveString } from "../../utils/storage"
-import { categoryStore } from "../category-store"
-import { dish } from "../dish"
-import { withEnvironment } from "../extensions/with-environment"
+import { UserApi } from "../services/api/user-api"
+import { handleDataResponseAPI } from "../utils/messages"
+import { saveString } from "../utils/storage"
+import { categoryStore } from "./category-store"
+import { dish } from "./dish"
+import { withEnvironment } from "./extensions/with-environment"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybe(types.number),
