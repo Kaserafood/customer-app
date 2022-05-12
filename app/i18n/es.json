@@ -13,7 +13,8 @@
         },
         "dishes": "Platillos",
         "next" : "Siguiente",
-        "save": "Guardar"
+        "save": "Guardar",
+        "cannotConnect": "Lo sentimos, no se puede conectar con el servidor"
         
     },
     "initScreen": {

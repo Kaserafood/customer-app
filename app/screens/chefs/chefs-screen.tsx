@@ -5,7 +5,15 @@ import React, { FC, useEffect, useLayoutEffect } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { Categories, DayDelivery, Loader, Location, Separator, Text } from "../../components"
+import {
+  Categories,
+  DayDelivery,
+  Loader,
+  Location,
+  Screen,
+  Separator,
+  Text,
+} from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { LocationModal } from "../../components/location/location-modal"
 import { useStores } from "../../models"
@@ -80,14 +88,17 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 
     useEffect(() => {
       console.log("chefs useEffect")
+      commonStore.setVisibleLoading(true)
       async function fetch() {
-        commonStore.setVisibleLoading(true)
-        if (dishStore.dishesGroupedByChef.length > 0) return
+        // if (dishStore.dishesGroupedByChef.length > 0) return
 
         await dishStore.getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
       }
 
-      fetch().finally(() => commonStore.setVisibleLoading(false))
+      fetch().finally(() => {
+        commonStore.setVisibleLoading(false)
+        console.log("hide loaindg")
+      })
     }, [])
 
     useEffect(() => {
@@ -135,7 +146,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     }
 
     return (
-      <>
+      <Screen
+        preset="fixed"
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+      >
         <ScrollView style={styles.container}>
           <Location></Location>
           <DayDelivery
@@ -169,8 +184,8 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         </ScrollView>
         <LocationModal></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
-        <Loader></Loader>
-      </>
+        <Loader visible={commonStore.isVisibleLoading}></Loader>
+      </Screen>
     )
   },
 )

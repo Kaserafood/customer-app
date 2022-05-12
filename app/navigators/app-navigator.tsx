@@ -15,6 +15,7 @@ import { Icon } from "../components"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 import {
+  AddressScreen,
   CategoryScreen,
   ChefsScreen,
   DeliveryDetailScreen,
@@ -30,7 +31,6 @@ import {
   RegisterPagerScreen,
   SearchScreen,
   TermsConditionsScreen,
-  AddressScreen,
 } from "../screens"
 import { color } from "../theme"
 import { typographySize } from "../theme/typography"

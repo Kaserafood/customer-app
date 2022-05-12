@@ -1,8 +1,6 @@
 import { Instance, types } from "mobx-state-tree"
-import { DishApi } from "../services/api/dish-api"
-import { handleDataResponseAPI } from "../utils/messages"
+import { Api } from "../services/api"
 import { dish } from "./dish"
-import { withEnvironment } from "./extensions/with-environment"
 import { userChef, UserChef } from "./user-store"
 
 export const dishChef = dish.props({
@@ -19,7 +17,6 @@ export const DishStoreModel = types
     dishesChef: types.optional(types.array(dishChef), []),
     dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
   })
-  .extend(withEnvironment)
   .actions((self) => ({
     setDishes: async (dishes: DishChef[]) => {
       self.dishes.replace(dishes)
@@ -36,40 +33,31 @@ export const DishStoreModel = types
   }))
   .actions((self) => ({
     getAll: async (date: string, timeZone: string, categoryId?: number) => {
-      const api = new DishApi(self.environment.api)
+      const api = new Api()
 
-      const result = await api.getAll(date, timeZone, categoryId)
+      const result = await api.getAllDishes(date, timeZone, categoryId)
 
-      if (result.kind === "ok") {
+      if (result && result.kind === "ok") {
         if (categoryId) self.setDishesCategory(result.data)
         else self.setDishes(result.data)
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
       }
     },
     getByChef: async (chefId: number) => {
-      const api = new DishApi(self.environment.api)
+      const api = new Api()
 
-      const result = await api.getByChef(chefId)
+      const result = await api.getDishesByChef(chefId)
 
-      if (result.kind === "ok") {
+      if (result && result.kind === "ok") {
         self.setDishesChef(result.data)
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
       }
     },
     getGroupedByChef: async (date: string, timeZone: string) => {
-      const api = new DishApi(self.environment.api)
+      const api = new Api()
 
-      const result = await api.getGroupedByChef(date, timeZone)
+      const result = await api.getDishesGroupedByChef(date, timeZone)
 
       if (result.kind === "ok") {
         self.setDishesGroupedByChef(result.data)
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
       }
     },
   }))

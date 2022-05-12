@@ -1,8 +1,19 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
+import { Address } from "../../models"
+import { UserLogin } from "../../models/user-store"
+import { handleMessageProblem, showMessageError } from "../../utils/messages"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
-import * as Types from "./api.types"
+import {
+  CategoryResponse,
+  ChefResponse,
+  DayResponse,
+  DishResponse,
+  GeneralApiResponse,
+  UserLoginResponse,
+} from "./api.types"
 
+type requestType = "GET" | "POST" | "PUT" | "DELETE"
 /**
  * Manages all requests to the API.
  */
@@ -24,6 +35,7 @@ export class Api {
    */
   constructor(config: ApiConfig = DEFAULT_API_CONFIG) {
     this.config = config
+    if (!this.apisauce) this.setup()
   }
 
   /**
@@ -74,59 +86,106 @@ export class Api {
     )
   }
 
-  /**
-   * Gets a list of users.
-   */
-  async getUsers(): Promise<Types.GetUsersResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
-
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    const convertUser = (raw) => {
-      return {
-        id: raw.id,
-        name: raw.name,
-      }
-    }
-
-    // transform the data into the format we are expecting
+  async request(body: any, url: string, requestType: requestType): Promise<GeneralApiResponse> {
     try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
-    } catch {
-      return { kind: "bad-data" }
+      const response: ApiResponse<any> = await this.apisauce[requestType.toLowerCase()](url, {
+        ...body,
+      })
+
+      if (!response.ok) {
+        const problem = getGeneralApiProblem(response)
+        handleMessageProblem(problem)
+        return null
+      }
+
+      let data: any
+      if (Array.isArray(response.data)) {
+        data = [...response.data]
+      } else {
+        data = { ...response.data }
+      }
+
+      return { kind: "ok", data }
+    } catch (e) {
+      __DEV__ && console.log(`Error : ${e.message}`)
+      showMessageError()
+      return { kind: "bad-data", data: [] }
     }
   }
 
   /**
-   * Gets a single user by ID
+   *
+   * @description Get all dishes
    */
+  async getAllDishes(date: string, timeZone: string, categoryId?: number): Promise<DishResponse> {
+    return await this.request(
+      {
+        date,
+        timeZone,
+        categoryId,
+      },
+      "/dishes",
+      "GET",
+    )
+  }
 
-  async getUser(id: string): Promise<Types.GetUserResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
+  /**
+   *
+   * @description Get dishes from specific chef
+   */
+  async getDishesByChef(chefId: number): Promise<DishResponse> {
+    return await this.request({}, `/dishes/chefs/${chefId}`, "GET")
+  }
 
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
+  /**
+   *
+   * @description Get dishes grouped by chef
+   */
+  async getDishesGroupedByChef(
+    date: string,
+    timeZone: string,
+    categoryId?: number,
+  ): Promise<ChefResponse> {
+    return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+  }
 
-    // transform the data into the format we are expecting
-    try {
-      const resultUser: Types.User = {
-        id: response.data.id,
-        name: response.data.name,
-      }
-      return { kind: "ok", user: resultUser }
-    } catch {
-      return { kind: "bad-data" }
-    }
+  /**
+   *
+   * @description Login user authentication
+   */
+  async login(userLogin: UserLogin): Promise<UserLoginResponse> {
+    return await this.request(userLogin, "/users/login", "POST")
+  }
+
+  /**
+   *
+   * @description Register new user
+   */
+  async register(userLogin: UserLogin): Promise<UserLoginResponse> {
+    return await this.request(userLogin, "/users/register", "POST")
+  }
+
+  /**
+   *
+   * @description Get all categories of food
+   */
+  async getAllCategories(): Promise<CategoryResponse> {
+    return await this.request({}, "/categories", "GET")
+  }
+
+  /**
+   *
+   * @description Get days to delivery
+   */
+  async getDaysDelivery(timeZone: string): Promise<DayResponse> {
+    return await this.request({ timeZone }, "/deliveries/days", "GET")
+  }
+
+  /**
+   *
+   * @description Create an address
+   */
+  async addAddress(address: Address): Promise<DayResponse> {
+    return await this.request({ address }, "/addresses", "POST")
   }
 }

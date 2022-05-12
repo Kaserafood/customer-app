@@ -1,6 +1,5 @@
 import { Instance, types } from "mobx-state-tree"
-import { UserApi } from "../services/api/user-api"
-import { handleDataResponseAPI } from "../utils/messages"
+import { Api } from "../services/api/api"
 import { saveString } from "../utils/storage"
 import { categoryStore } from "./category-store"
 import { dish } from "./dish"
@@ -43,31 +42,24 @@ export const UserRegisterModel = userRegister
   }))
   .actions((self) => ({
     register: async (user: UserRegister) => {
-      const userApi = new UserApi(self.environment.api)
+      const userApi = new Api()
       const result = await userApi.register(user)
 
       if (result.kind === "ok") {
         self.saveData(result)
         return result
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
-        return null
       }
+      return null
     },
 
     login: async (user: UserLogin): Promise<boolean> => {
-      const userApi = new UserApi(self.environment.api)
+      const userApi = new Api()
       const result = await userApi.login(user)
 
       if (result.kind === "ok") {
         self.saveData(result)
-
         return true
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
-        return false
       }
+      return false
     },
   }))

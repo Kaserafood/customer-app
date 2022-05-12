@@ -1,31 +1,32 @@
-import { showMessage } from "react-native-flash-message"
-import { getI18nText } from "./translate"
+import { MessageOptions, showMessage } from "react-native-flash-message"
+import { GeneralApiProblem } from "../services/api/api-problem"
 import { color } from "../theme"
+import { getI18nText } from "./translate"
 
+const options: MessageOptions = {
+  message: "",
+  position: "bottom",
+  floating: true,
+  icon: "auto",
+}
 /**
  *
  * @param response response from the server
  *
  */
-export const handleDataResponseAPI = (response: any) => {
-  if (response?.kind === "ok") {
-    showMessage({
-      message: response?.data?.message ?? getI18nText("common.operationSuccess"),
-      type: "success",
-      position: "bottom",
-      floating: true,
-      icon: "auto",
-    })
-  } else {
-    showMessage({
-      style: { backgroundColor: color.palette.redDark },
-      message: response?.data?.message ?? getI18nText("common.someError"),
-      type: "danger",
-      position: "bottom",
-      floating: true,
-      icon: "auto",
-    })
-  }
+export const handleMessageProblem = (response: GeneralApiProblem) => {
+  if (response.kind === "rejected") {
+    if (response.data) {
+      showMessage({
+        style: { backgroundColor: color.primaryDarker },
+        message: response?.data?.message ?? getI18nText("common.someError"),
+        type: "danger",
+        ...options,
+      })
+    } else showMessageError()
+  } else if (response.kind === "cannot-connect") {
+    showMessageError("common.cannotConnect")
+  } else showMessageError()
 }
 
 /**
@@ -37,9 +38,7 @@ export const showMessageInfo = (message: string) => {
   showMessage({
     message: getI18nText(message),
     type: "info",
-    position: "bottom",
-    floating: true,
-    icon: "auto",
+    ...options,
   })
 }
 
@@ -48,12 +47,12 @@ export const showMessageInfo = (message: string) => {
  * @param message message to show, the value should be in i18n
  */
 
-export const showMessageError = (message: string) => {
+export const showMessageError = (message?: string) => {
+  const msg = message ?? "common.someError"
   showMessage({
-    message: getI18nText(message),
+    style: { backgroundColor: color.primaryDarker },
+    message: getI18nText("common.someError"),
     type: "danger",
-    position: "bottom",
-    floating: true,
-    icon: "auto",
+    ...options,
   })
 }

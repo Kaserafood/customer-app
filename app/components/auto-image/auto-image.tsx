@@ -5,11 +5,14 @@ import {
   ImageProps as DefaultImageProps,
   ImageURISource,
   NativeSyntheticEvent,
+  StyleProp,
 } from "react-native"
+import FastImage, { ImageStyle } from "react-native-fast-image"
 import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
+  style: StyleProp<ImageStyle>
 }
 
 /**
@@ -26,18 +29,46 @@ type ImageProps = DefaultImageProps & {
  * component and are web-ready if not explicitly sized in the style property.
  */
 export function AutoImage(props: ImageProps) {
-  if (
-    props.source?.uri &&
-    (props.source?.uri.trim() === "" || props.source?.uri.trim().endsWith("null"))
-  ) {
-    props.source = images.category
-  }
   const onError = (error: NativeSyntheticEvent<ImageErrorEventData>) => {
-    console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)
+    if (error)
+      console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)
     props.source = { uri: "https://via.placeholder.com/150" }
   }
 
-  // console.log(`URI REDNER6:${JSON.stringify(props.source)}`)
+  const getResource = (source: ImageURISource) => {
+    if (
+      source?.uri &&
+      (source?.uri.trim() === "" ||
+        props.source?.uri.trim().endsWith("null") ||
+        !source?.uri.trim().includes("http"))
+    ) {
+      return images.category
+    } else {
+      return source
+    }
+  }
 
-  return <RNImage {...props} source={props.source} style={props.style} onError={onError} />
+  if (props.source?.uri?.length > 0) {
+    return (
+      <FastImage
+        source={{
+          uri: props.source.uri,
+          priority: FastImage.priority.normal,
+        }}
+        style={props.style}
+        onError={() => onError(null)}
+      />
+    )
+  }
+  if (!props.source?.uri)
+    return (
+      <RNImage
+        {...props}
+        source={getResource(props.source)}
+        style={props.style}
+        onError={onError}
+      />
+    )
+
+  return null
 }
