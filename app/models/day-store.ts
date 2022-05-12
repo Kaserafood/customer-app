@@ -1,4 +1,4 @@
-import { SnapshotOut, types } from "mobx-state-tree"
+import { flow, SnapshotOut, types } from "mobx-state-tree"
 import { Api } from "../services/api"
 
 const dayStore = types.model("DayStore").props({
@@ -19,16 +19,16 @@ export const DayStoreModel = types
     },
   }))
   .actions((self) => ({
-    getDays: async (timeZone: string) => {
+    getDays: flow(function* getDays(timeZone: string) {
       if (self.days.length > 0) return
       const api = new Api()
 
-      const result = await api.getDaysDelivery(timeZone)
+      const result = yield api.getDaysDelivery(timeZone)
 
       if (result && result.kind === "ok") {
         self.setDays(result.data)
       }
-    },
+    }),
     setCurrentDay: (day: Day) => {
       self.currentDay = { ...day }
     },

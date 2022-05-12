@@ -179,7 +179,7 @@ export function TabMainNavigation() {
             return <Icon style={utilSpacing.mt2} name="search" size={35} color={color} />
           },
         }}
-        name="Buscar "
+        name="Buscar"
         component={SearchScreen}
       />
 
@@ -190,7 +190,7 @@ export function TabMainNavigation() {
             return <IconRN style={utilSpacing.mt2} name="menu" light size={30} color={color} />
           },
         }}
-        name="Más "
+        name="Más"
         component={SearchScreen}
       />
     </Tab.Navigator>

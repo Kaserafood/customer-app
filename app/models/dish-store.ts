@@ -1,5 +1,6 @@
-import { Instance, types } from "mobx-state-tree"
+import { flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../services/api"
+import { Category } from "./category-store"
 import { dish } from "./dish"
 import { userChef, UserChef } from "./user-store"
 
@@ -9,55 +10,69 @@ export const dishChef = dish.props({
 
 export interface DishChef extends Instance<typeof dishChef> {}
 
+const getCategoriesName = (categories: Category[]) => {
+  let categoriesStr = ""
+  if (categories && Array.isArray(categories)) {
+    categories.forEach((category) => {
+      categoriesStr += `${category.name} - `
+    })
+    return categoriesStr.substring(0, categoriesStr.length - 2)
+  }
+
+  return ""
+}
+
 export const DishStoreModel = types
   .model("DishStoreModel")
   .props({
     dishes: types.optional(types.array(dishChef), []), // All dishes
     dishesCategory: types.optional(types.array(dishChef), []), // Dishes filtered by category
-    dishesChef: types.optional(types.array(dishChef), []),
+    dishesChef: types.optional(types.array(dishChef), []), // Dishes filtered by chef
     dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
   })
-  .actions((self) => ({
-    setDishes: async (dishes: DishChef[]) => {
-      self.dishes.replace(dishes)
+  .views((self) => ({
+    get totalDishes() {
+      return self.dishes.length
     },
-    setDishesCategory: async (dishes: DishChef[]) => {
-      self.dishesCategory.replace(dishes)
-    },
-    setDishesChef: async (dishes: DishChef[]) => {
-      self.dishesChef.replace(dishes)
-    },
-    setDishesGroupedByChef: async (userChefs: UserChef[]) => {
-      self.dishesGroupedByChef.replace(userChefs)
+    get formatDishesGropuedByChef() {
+      return self.dishesGroupedByChef.map((chef: UserChef) => {
+        return {
+          ...chef,
+          category: getCategoriesName(chef.categories),
+          currentIndexPage: 0,
+          pageView: null,
+          currentDishName: chef.dishes.length > 0 ? chef.dishes[0]?.title : "",
+        }
+      })
     },
   }))
   .actions((self) => ({
-    getAll: async (date: string, timeZone: string, categoryId?: number) => {
+    getAll: flow(function* getByChef(date: string, timeZone: string, categoryId?: number) {
+      if (categoryId) self.dishesCategory.clear()
+      else self.dishes.clear()
       const api = new Api()
-
-      const result = await api.getAllDishes(date, timeZone, categoryId)
+      const result = yield api.getAllDishes(date, timeZone, categoryId)
 
       if (result && result.kind === "ok") {
-        if (categoryId) self.setDishesCategory(result.data)
-        else self.setDishes(result.data)
+        if (categoryId) self.dishesCategory.replace(result.data)
+        else self.dishes.replace(result.data)
       }
-    },
-    getByChef: async (chefId: number) => {
+    }),
+    getByChef: flow(function* getByChef(chefId: number) {
+      self.dishesChef.clear()
       const api = new Api()
-
-      const result = await api.getDishesByChef(chefId)
-
+      const result = yield api.getDishesByChef(chefId)
       if (result && result.kind === "ok") {
-        self.setDishesChef(result.data)
+        self.dishesChef.replace(result.data)
       }
-    },
-    getGroupedByChef: async (date: string, timeZone: string) => {
+    }),
+
+    getGroupedByChef: flow(function* getGroupedByChef(date: string, timeZone: string) {
+      self.dishesGroupedByChef.clear()
       const api = new Api()
-
-      const result = await api.getDishesGroupedByChef(date, timeZone)
-
+      const result = yield api.getDishesGroupedByChef(date, timeZone)
       if (result.kind === "ok") {
-        self.setDishesGroupedByChef(result.data)
+        self.dishesGroupedByChef.replace(result.data)
       }
-    },
+    }),
   }))

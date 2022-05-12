@@ -46,7 +46,7 @@ class ModalState {
 const modalState = new ModalState()
 
 /**
- * Home screen used in Main Screen
+ * Home Screen to show main dishes
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   function HomeScreen({ navigation }) {
@@ -74,19 +74,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       console.log("Home  useEffect")
       async function fetch() {
         commonStore.setVisibleLoading(true)
-
+        await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
-          dayStore.getDays(RNLocalize.getTimeZone()),
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
           categoryStore.getAll(),
         ])
+          .then(() => setCurrentDay(days[0]))
+          .finally(() => {
+            commonStore.setVisibleLoading(false)
+            console.log("hide loaindg")
+          })
       }
       fetch()
-        .then(() => setCurrentDay(days[0]))
-        .finally(() => {
-          commonStore.setVisibleLoading(false)
-          console.log("hide loaindg")
-        })
     }, [categoryStore, commonStore, dayStore, days, dishStore, setCurrentDay])
 
     return (
@@ -128,17 +127,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               ></Text>
             </View>
             <Separator style={utilSpacing.my4}></Separator>
-
+            <ListDishes toDetail={(dish) => toDetail(dish)}></ListDishes>
             <View style={utilSpacing.mb8}>
-              {dishStore.dishes.map((dish, index) => (
-                <View key={dish.id}>
-                  <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
-                  {index !== dishStore.dishes.length - 1 && (
-                    <Separator style={utilSpacing.my3}></Separator>
-                  )}
-                </View>
-              ))}
-              <EmptyData lengthData={dishStore.dishes.length}></EmptyData>
+              <EmptyData lengthData={dishStore.totalDishes}></EmptyData>
             </View>
           </View>
         </ScrollView>
@@ -149,6 +140,20 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     )
   },
 )
+const ListDishes = observer(function ListDishes(props: { toDetail: (dish: DishModel) => void }) {
+  const { dishStore } = useStores()
+
+  return (
+    <View>
+      {dishStore.dishes.map((dish, index) => (
+        <View key={dish.id}>
+          <Dish dish={dish} onPress={() => props.toDetail(dish)}></Dish>
+          {index !== dishStore.totalDishes - 1 && <Separator style={utilSpacing.my3}></Separator>}
+        </View>
+      ))}
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {
