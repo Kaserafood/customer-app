@@ -134,8 +134,6 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           <AutoImage style={styles.imageChef} source={{ uri: item.image }}></AutoImage>
         </View>
       </View>
-
-      <Separator style={utilSpacing.mb5}></Separator>
     </View>
   )
 })

@@ -8,7 +8,6 @@ import {
   StyleProp,
 } from "react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
-import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
@@ -35,19 +34,6 @@ export function AutoImage(props: ImageProps) {
     props.source = { uri: "https://via.placeholder.com/150" }
   }
 
-  const getResource = (source: ImageURISource) => {
-    if (
-      source?.uri &&
-      (source?.uri.trim() === "" ||
-        props.source?.uri.trim().endsWith("null") ||
-        !source?.uri.trim().includes("http"))
-    ) {
-      return images.category
-    } else {
-      return source
-    }
-  }
-
   if (props.source?.uri?.length > 0) {
     return (
       <FastImage
@@ -61,14 +47,7 @@ export function AutoImage(props: ImageProps) {
     )
   }
   if (!props.source?.uri)
-    return (
-      <RNImage
-        {...props}
-        source={getResource(props.source)}
-        style={props.style}
-        onError={onError}
-      />
-    )
+    return <RNImage {...props} source={props.source} style={props.style} onError={onError} />
 
   return null
 }

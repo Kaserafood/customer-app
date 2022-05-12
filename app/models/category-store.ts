@@ -1,4 +1,4 @@
-import { SnapshotOut, types } from "mobx-state-tree"
+import { flow, SnapshotOut, types } from "mobx-state-tree"
 import { Api } from "../services/api"
 import { withEnvironment } from "./extensions/with-environment"
 
@@ -21,13 +21,13 @@ export const CategoryStoreModel = types
     },
   }))
   .actions((self) => ({
-    getAll: async () => {
+    getAll: flow(function* getAll() {
       if (self.categories.length > 0) return
       const api = new Api()
-      const result = await api.getAllCategories()
+      const result = yield api.getAllCategories()
 
       if (result && result.kind === "ok") {
         self.setCategories(result.data)
-      } else console.log("NO SUCESS CATEOGYRESULT", result)
-    },
+      }
+    }),
   }))
