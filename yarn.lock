@@ -12759,6 +12759,11 @@ react-native-swipe-gestures@^1.0.4:
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
 
+react-native-text-input-mask@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/react-native-text-input-mask/-/react-native-text-input-mask-3.1.4.tgz#9b09d97a910ce8c24024d6187256b07c73e173ac"
+  integrity sha512-XhTPL1/Pv0kyuH8TMJGaxfnq5su9e+4G2PLngiismZ4xbP8+W/1ZEH4KQJQV+QkE2I5Oi+lPJXB2E47s60/OBA==
+
 react-native-vector-icons@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-9.1.0.tgz#52eaa205f5954d567b7048eb93d58ac854a2c59e"

@@ -8,6 +8,7 @@
         "deliveryAmount" : "Costo de envío",
         "someError" : "Lo sentimos, ha ocurrido un error inesperado",
         "operationSuccess" : "Procceso realizado con éxito",
+        "operationExecuted" : "Procceso ejectuado",
         "notFound" : {
             "dishes": "Lo sentimos, no se encontraron platillos"
         },

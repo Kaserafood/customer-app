@@ -1,4 +1,6 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { flow, SnapshotOut, types } from "mobx-state-tree"
+import { Api } from "../../services/api"
+import { CommonResponse } from "../../services/api/api.types"
 
 const addressModel = types.model("Address").props({
   id: types.maybe(types.number),
@@ -22,5 +24,15 @@ export const AddressModelStore = types
   .props({
     addresses: types.optional(types.array(addressModel), []),
   })
+  .actions((self) => ({
+    add: flow(function* add(address: Address) {
+      const api = new Api()
+      const result: CommonResponse = yield api.addAddress(address)
 
-  .actions((self) => ({}))
+      if (result && result.kind === "ok") {
+        self.addresses.push(address)
+        return result.data
+      }
+      return null
+    }),
+  }))

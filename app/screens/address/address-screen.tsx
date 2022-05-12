@@ -4,22 +4,39 @@ import React, { FC } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { Button, Header, InputText, Screen } from "../../components"
+import { Button, Header, InputText, Loader, Screen } from "../../components"
+import { useStores } from "../../models"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { showMessageSucess } from "../../utils/messages"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
+    const { addressStore, commonStore } = useStores()
 
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
     }
 
     const onSubmit = (data) => {
-      navigation.navigate("main")
-      console.log(data)
+      console.log(data, params)
+      const address = {
+        ...data,
+        ...params,
+      }
+      console.log(`MODEL REQUESTE: ${address}`)
+      commonStore.setVisibleLoading(true)
+      addressStore
+        .add(address)
+        .then((res) => {
+          if (res) {
+            showMessageSucess(res.message)
+            navigation.navigate("main")
+          }
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     return (
@@ -30,7 +47,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             <FormProvider {...methods}>
               <InputText
                 preset="card"
-                name="addressComplete"
+                name="address"
                 placeholderTx="addressScreen.addressPlaceholder"
                 rules={{
                   required: "addressScreen.addressCompleteRequired",
@@ -41,7 +58,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="houseApartmentNumber"
+                name="numHouseApartmentNumber"
                 placeholderTx="addressScreen.houseApartmentNumberPlaceholder"
                 rules={{
                   required: "addressScreen.houseApartmentNumberRequired",
@@ -60,7 +77,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="howSaveThisAddress"
+                name="name"
                 placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
                 rules={{
                   required: "addressScreen.howSaveThisAddressRequired",
@@ -71,7 +88,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="phoneDelivery"
+                name="phone"
                 placeholderTx="addressScreen.phoneDeliveryPlaceholder"
                 rules={{
                   required: "addressScreen.phoneDeliveryRequired",
@@ -92,6 +109,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             ></Button>
           </View>
         </ScrollView>
+        <Loader></Loader>
       </Screen>
     )
   },

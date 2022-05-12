@@ -7,6 +7,7 @@ import { getGeneralApiProblem } from "./api-problem"
 import {
   CategoryResponse,
   ChefResponse,
+  CommonResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -185,7 +186,7 @@ export class Api {
    *
    * @description Create an address
    */
-  async addAddress(address: Address): Promise<DayResponse> {
-    return await this.request({ address }, "/addresses", "POST")
+  async addAddress(address: Address): Promise<CommonResponse> {
+    return await this.request(address, "/addresses", "POST")
   }
 }

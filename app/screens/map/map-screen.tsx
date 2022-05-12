@@ -115,7 +115,9 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         navigation.navigate("address", {
           latitude: location.latitude,
           longitude: location.longitude,
-          address: address,
+          addressMap: address,
+          latitudeDelta: location.latitudeDelta,
+          longitudeDelta: location.longitudeDelta,
         })
       } else {
         showMessageError("mapScreen.noLocation")
@@ -129,7 +131,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           console.log(`Change region2: ${JSON.stringify(region)}`)
 
           setLocation({ ...region })
-          //  fetchAddressText(region.latitude, region.longitude)
+          fetchAddressText(region.latitude, region.longitude)
         }
       }, 1500)
     }
