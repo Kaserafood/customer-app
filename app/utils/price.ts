@@ -1,13 +1,16 @@
-export function getFormat(amount: number, currency = "GTQ"): string {
-  const formatter = new Intl.NumberFormat("es-GT", {
-    style: "currency",
-    currency: currency,
-  })
-  const format = formatter.format(amount)
-
-  if (format.split(".")[1] === "00") {
-    return format.split(".")[0]
+import * as RNLocalize from "react-native-localize"
+export function getFormat(amount: number): string {
+  const timeZone = RNLocalize.getTimeZone()
+  let currency = "Q"
+  if (timeZone !== "America/Guatemala") {
+    currency = "$"
   }
 
-  return format
+  let format = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+
+  if (format.split(".")[1] === "00") {
+    format = format.split(".")[0]
+  }
+
+  return `${currency} ${format}`
 }

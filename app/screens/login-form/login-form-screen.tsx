@@ -70,6 +70,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                     message: "registerFormScreen.emailFormat",
                   },
                 }}
+                maxLength={200}
               ></InputText>
               <InputText
                 name="password"
@@ -78,7 +79,12 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                 secureTextEntry
                 rules={{
                   required: "registerFormScreen.passwordRequired",
+                  minLength: {
+                    value: 4,
+                    message: "registerFormScreen.passwordMinLength",
+                  },
                 }}
+                maxLength={100}
               ></InputText>
 
               <View style={[styles.containerBtn, utilSpacing.mt9]}>

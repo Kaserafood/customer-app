@@ -43,7 +43,9 @@
         "passwordRequired": "Debes ingresar tu contraseña",
         "phoneRequired": "Debes ingresar tu número de teléfono",
         "emailFormat" : "Debe tener el formato : correo@email.com",
-        "acceptsTerms" : "Debes aceptar los términos y condiciones"
+        "acceptsTerms" : "Debes aceptar los términos y condiciones",
+        "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
+        "passwordMinLength": "La contraseña debe tener al menos 4 caracteres"
     },
     "errorScreen": {
         "title": "Error",
@@ -265,7 +267,8 @@
         "howSaveThisAddressRequired": "Debes ingresar el nombre de la dirección",
         "phoneDelivery": "Teléfono de entrega",
         "phoneDeliveryPlaceholder": "1234-5678",
-        "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega"
+        "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
+        "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
     }
 
 

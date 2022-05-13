@@ -9,6 +9,7 @@ import { UserRegister } from "../../models/user-store"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageInfo } from "../../utils/messages"
 
 export const RegisterFormScreen: FC<
@@ -52,6 +53,7 @@ export const RegisterFormScreen: FC<
                 rules={{
                   required: "registerFormScreen.firstNameRequired",
                 }}
+                maxLength={100}
               ></InputText>
               <InputText
                 name="lastName"
@@ -60,6 +62,7 @@ export const RegisterFormScreen: FC<
                 rules={{
                   required: "registerFormScreen.lastNameRequired",
                 }}
+                maxLength={100}
               ></InputText>
               <InputText
                 name="phone"
@@ -68,7 +71,12 @@ export const RegisterFormScreen: FC<
                 styleContainer={styles.input}
                 rules={{
                   required: "registerFormScreen.phoneRequired",
+                  minLength: {
+                    value: getMaskLength(getFormatMaskPhone()),
+                    message: "registerFormScreen.phoneFormatIncorrect",
+                  },
                 }}
+                mask={getFormatMaskPhone()}
               ></InputText>
               <InputText
                 name="email"
@@ -82,6 +90,7 @@ export const RegisterFormScreen: FC<
                     message: "registerFormScreen.emailFormat",
                   },
                 }}
+                maxLength={200}
               ></InputText>
               <InputText
                 name="password"
@@ -90,7 +99,12 @@ export const RegisterFormScreen: FC<
                 secureTextEntry
                 rules={{
                   required: "registerFormScreen.passwordRequired",
+                  minLength: {
+                    value: 4,
+                    message: "registerFormScreen.passwordMinLength",
+                  },
                 }}
+                maxLength={100}
               ></InputText>
               <View style={styles.containerTermsBtn}>
                 <View style={styles.containerTerms}>

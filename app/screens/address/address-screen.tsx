@@ -9,6 +9,7 @@ import { useStores } from "../../models"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageSucess } from "../../utils/messages"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
@@ -54,17 +55,16 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 }}
                 labelTx="addressScreen.addressComplete"
                 styleContainer={[utilSpacing.mb6, utilSpacing.mt6]}
+                maxLength={400}
               ></InputText>
 
               <InputText
                 preset="card"
                 name="numHouseApartmentNumber"
                 placeholderTx="addressScreen.houseApartmentNumberPlaceholder"
-                rules={{
-                  required: "addressScreen.houseApartmentNumberRequired",
-                }}
                 labelTx="addressScreen.houseApartmentNumber"
                 styleContainer={utilSpacing.mb6}
+                maxLength={50}
               ></InputText>
 
               <InputText
@@ -73,17 +73,16 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
                 labelTx="addressScreen.instructionsDelivery"
                 styleContainer={utilSpacing.mb6}
+                maxLength={200}
               ></InputText>
 
               <InputText
                 preset="card"
                 name="name"
                 placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
-                rules={{
-                  required: "addressScreen.howSaveThisAddressRequired",
-                }}
                 labelTx="addressScreen.howSaveThisAddress"
                 styleContainer={utilSpacing.mb6}
+                maxLength={50}
               ></InputText>
 
               <InputText
@@ -91,11 +90,15 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 name="phone"
                 placeholderTx="addressScreen.phoneDeliveryPlaceholder"
                 rules={{
-                  required: "addressScreen.phoneDeliveryRequired",
+                  minLength: {
+                    value: getMaskLength(getFormatMaskPhone()),
+                    message: "addressScreen.phoneFormatIncorrect",
+                  },
                 }}
                 labelTx="addressScreen.phoneDelivery"
                 styleContainer={utilSpacing.mb6}
                 keyboardType="phone-pad"
+                mask={getFormatMaskPhone()}
               ></InputText>
             </FormProvider>
           </View>

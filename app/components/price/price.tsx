@@ -55,9 +55,9 @@ export interface PriceProps {
  */
 
 export const Price = observer(function Price(props: PriceProps) {
-  const { style, amount, currency = "GTQ", preset = "dish", textStyle } = props
+  const { style, amount, preset = "dish", textStyle } = props
 
-  const price = getFormat(amount, currency)
+  const price = getFormat(amount)
   const Delivery = () => {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
