@@ -53,4 +53,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Preset style
    */
   preset?: presets
+
+  /**
+   * Mask for the input
+   */
+  mask?: string
 }

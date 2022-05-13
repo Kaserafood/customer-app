@@ -26,6 +26,7 @@ import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { loadString } from "../../utils/storage"
 
 class ModalState {
   isVisibleWhy = false
@@ -72,7 +73,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       console.log("Home  useEffect")
+
       async function fetch() {
+        const email = await loadString("email")
+        console.log(email)
         commonStore.setVisibleLoading(true)
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([

@@ -27,7 +27,7 @@ export const handleMessageProblem = (response: GeneralApiProblem) => {
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
 export const showMessageInfo = (message: string) => {
   const msg = message ?? getI18nText("common.operationExecuted")
@@ -40,7 +40,7 @@ export const showMessageInfo = (message: string) => {
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
 export const showMessageError = (message?: string) => {
   const msg = message ?? getI18nText("common.someError")
@@ -54,7 +54,7 @@ export const showMessageError = (message?: string) => {
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
 export const showMessageSucess = (message?: string) => {
   const msg = message ?? getI18nText("common.operationSuccess")

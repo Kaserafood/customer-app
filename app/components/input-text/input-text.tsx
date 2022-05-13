@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { TextInput, TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
+import TextInputMask from "react-native-text-input-mask"
 import { translate } from "../../i18n"
 import { color, spacing, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
@@ -69,6 +70,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     defaultValue,
     styleLabel,
     preset = "normal",
+    mask,
     ...rest
   } = props
 
@@ -82,7 +84,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     return (
       <View style={container}>
         <View style={CONTAINER_INPUT}>
-          <TextInput
+          <TextInputMask
             selectionColor={color.palette.grayDark}
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
@@ -92,6 +94,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             value={field.value}
+            mask={mask}
             {...rest}
           />
         </View>
@@ -109,7 +112,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
           {labelTx && (
             <Text tx={labelTx} style={[utilSpacing.mt3, styleLabel]} preset="semiBold"></Text>
           )}
-          <TextInput
+          <TextInputMask
             selectionColor={color.palette.grayDark}
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
@@ -119,6 +122,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             onChangeText={field.onChange}
             onBlur={field.onBlur}
             value={field.value}
+            mask={mask}
             {...rest}
           />
         </View>
