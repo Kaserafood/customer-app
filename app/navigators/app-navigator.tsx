@@ -14,6 +14,7 @@ import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Icon } from "../components"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
+import { useStores } from "../models/root-store/root-store-context"
 import {
   AddressScreen,
   CategoryScreen,
@@ -85,28 +86,36 @@ export type NavigatorParamList = {
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
-const AppStack = () => {
+const AppStack = (props: { isSigendId: boolean }) => {
+  // const { commonStore } = useStores()
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="init"
     >
-      <Stack.Screen options={{ animation: "none" }} name="init" component={InitScreen} />
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-      <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="main" component={TabMainNavigation} />
-      <Stack.Screen name="dishDetail" component={DishDetailScreen} />
-      <Stack.Screen name="menuChef" component={MenuChefScreen} />
-      <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
-      <Stack.Screen name="endOrder" component={EndOrderScreen} />
-      <Stack.Screen name="category" component={CategoryScreen} />
-      <Stack.Screen name="map" component={MapScreen} />
-      <Stack.Screen name="address" component={AddressScreen} />
+      {!props.isSigendId ? (
+        <>
+          <Stack.Screen options={{ animation: "none" }} name="init" component={InitScreen} />
+          <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+          <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+          <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+          <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+          <Stack.Screen name="loginForm" component={LoginFormScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="main" component={TabMainNavigation} />
+          <Stack.Screen name="dishDetail" component={DishDetailScreen} />
+          <Stack.Screen name="menuChef" component={MenuChefScreen} />
+          <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+          <Stack.Screen name="endOrder" component={EndOrderScreen} />
+          <Stack.Screen name="category" component={CategoryScreen} />
+          <Stack.Screen name="map" component={MapScreen} />
+          <Stack.Screen name="address" component={AddressScreen} />
+        </>
+      )}
     </Stack.Navigator>
   )
 }
@@ -115,6 +124,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  const { commonStore } = useStores()
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -123,7 +133,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack />
+      <AppStack isSigendId={commonStore.isSignedIn} />
     </NavigationContainer>
   )
 }

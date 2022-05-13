@@ -36,13 +36,9 @@ export interface BottomNavigationProps {
 export const BottomNavigation = observer(function BottomNavigation(props: BottomNavigationProps) {
   const { style, activeIndex } = props
 
-  const { commonStore: modalStore } = useStores()
-
   return (
     <>
       <View style={[style, styles.flex, styles.containerBottomNavigation]}>
-        {modalStore.isVisibleModal && <View style={styles.disabled}></View>}
-
         <TouchableOpacity style={styles.button}>
           <Ripple style={styles.ripple} rippleCentered onPress={() => activeIndex.setIndex(0)}>
             <Icon

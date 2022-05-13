@@ -31,7 +31,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
       userStore
         .login(data)
         .then((userValid: boolean) => {
-          if (userValid) navigation.navigate("main")
+          if (userValid) commonStore.setIsSignedIn(true)
         })
         .finally(() => commonStore.setVisibleLoading(false))
     }
