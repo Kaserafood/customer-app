@@ -17,42 +17,51 @@ const options: MessageOptions = {
 export const handleMessageProblem = (response: GeneralApiProblem) => {
   if (response.kind === "rejected") {
     if (response.data) {
-      showMessage({
-        style: { backgroundColor: color.primaryDarker },
-        message: response?.data?.message ?? getI18nText("common.someError"),
-        type: "danger",
-        ...options,
-      })
+      const msg = response?.data?.message ?? getI18nText("common.someError")
+      showMessageError(msg)
     } else showMessageError()
   } else if (response.kind === "cannot-connect") {
-    showMessageError("common.cannotConnect")
+    showMessageError(getI18nText("common.cannotConnect"))
   } else showMessageError()
 }
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
-
 export const showMessageInfo = (message: string) => {
+  const msg = message ?? getI18nText("common.operationExecuted")
   showMessage({
-    message: getI18nText(message),
-    type: "info",
     ...options,
+    message: msg,
+    type: "info",
   })
 }
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
-
 export const showMessageError = (message?: string) => {
-  const msg = message ?? "common.someError"
+  const msg = message ?? getI18nText("common.someError")
   showMessage({
-    style: { backgroundColor: color.primaryDarker },
-    message: getI18nText("common.someError"),
-    type: "danger",
     ...options,
+    style: { backgroundColor: color.primaryDarker },
+    message: msg,
+    type: "danger",
+  })
+}
+
+/**
+ *
+ * @param message message to show
+ */
+export const showMessageSucess = (message?: string) => {
+  const msg = message ?? getI18nText("common.operationSuccess")
+  showMessage({
+    ...options,
+    style: { backgroundColor: color.palette.green },
+    message: msg,
+    type: "success",
   })
 }

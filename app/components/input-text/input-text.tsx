@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { TextInput, TextStyle, View, ViewStyle } from "react-native"
+import { TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
+import TextInputMask from "react-native-text-input-mask"
 import { translate } from "../../i18n"
 import { color, spacing, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
@@ -69,6 +70,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     defaultValue,
     styleLabel,
     preset = "normal",
+    mask,
     ...rest
   } = props
 
@@ -78,28 +80,23 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
   const container = Object.assign({}, CONTAINER, styleContainer)
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
 
-  const Textinput = () => {
-    return (
-      <TextInput
-        selectionColor={color.palette.grayDark}
-        placeholder={actualPlaceholder}
-        placeholderTextColor={color.palette.grayDark}
-        underlineColorAndroid={preset === "card" ? color.palette.grayLigth : color.transparent}
-        style={stylesInput}
-        ref={forwardedRef}
-        onChangeText={field.onChange}
-        onBlur={field.onBlur}
-        value={field.value}
-        {...rest}
-      />
-    )
-  }
-
   if (preset === "normal") {
     return (
       <View style={container}>
         <View style={CONTAINER_INPUT}>
-          <Textinput></Textinput>
+          <TextInputMask
+            selectionColor={color.palette.grayDark}
+            placeholder={actualPlaceholder}
+            placeholderTextColor={color.palette.grayDark}
+            underlineColorAndroid={color.transparent}
+            style={stylesInput}
+            ref={forwardedRef}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            value={field.value}
+            mask={mask}
+            {...rest}
+          />
         </View>
         <ErrorMessage name={name}></ErrorMessage>
       </View>
@@ -115,7 +112,19 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
           {labelTx && (
             <Text tx={labelTx} style={[utilSpacing.mt3, styleLabel]} preset="semiBold"></Text>
           )}
-          <Textinput></Textinput>
+          <TextInputMask
+            selectionColor={color.palette.grayDark}
+            placeholder={actualPlaceholder}
+            placeholderTextColor={color.palette.grayDark}
+            underlineColorAndroid={color.palette.grayLigth}
+            style={stylesInput}
+            ref={forwardedRef}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            value={field.value}
+            mask={mask}
+            {...rest}
+          />
         </View>
         <ErrorMessage name={name}></ErrorMessage>
       </View>

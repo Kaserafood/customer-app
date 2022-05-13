@@ -50,3 +50,9 @@ export type DishResponse = {
 export type ChefResponse = {
   data: UserChef[]
 } & kind
+
+export type CommonResponse = {
+  data: {
+    message: string
+  }
+} & kind

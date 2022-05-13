@@ -57,7 +57,9 @@ interface registerPageParams {
 interface addressScreenParams {
   latitude: number
   longitude: number
-  address: string
+  addressMap: string
+  latitudeDelta: number
+  longitudeDelta: number
 }
 
 export type NavigatorParamList = {
