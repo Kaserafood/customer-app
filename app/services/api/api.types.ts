@@ -1,3 +1,4 @@
+import { Address } from "../../models"
 import { Category } from "../../models/category-store"
 import { Character } from "../../models/character/character"
 import { Day } from "../../models/day-store"
@@ -49,6 +50,10 @@ export type DishResponse = {
 
 export type ChefResponse = {
   data: UserChef[]
+} & kind
+
+export type AddressResponse = {
+  data: Address[]
 } & kind
 
 export type CommonResponse = {

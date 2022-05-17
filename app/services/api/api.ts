@@ -5,6 +5,7 @@ import { handleMessageProblem, showMessageError } from "../../utils/messages"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
 import {
+  AddressResponse,
   CategoryResponse,
   ChefResponse,
   CommonResponse,
@@ -188,5 +189,13 @@ export class Api {
    */
   async addAddress(address: Address): Promise<CommonResponse> {
     return await this.request(address, "/addresses", "POST")
+  }
+
+  /**
+   *
+   * @description Get address from users
+   */
+  async getAddresses(userId: number): Promise<AddressResponse> {
+    return await this.request({}, `/addresses/user/${userId}`, "GET")
   }
 }

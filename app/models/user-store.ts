@@ -31,13 +31,31 @@ const userLogin = types.model("UserLoginStore").props({
 export interface UserLogin extends Instance<typeof userLogin> {}
 
 export const UserRegisterModel = userRegister
+  .props({
+    userId: types.maybe(types.integer),
+    displayName: types.maybe(types.string),
+  })
   .extend(withEnvironment)
-  .actions(() => ({
+  .actions((self) => ({
+    setUserId: (userId: number) => {
+      self.userId = userId
+    },
+    setDisplayName: (displayName: string) => {
+      self.displayName = displayName
+    },
+    setEmail: (email: string) => {
+      self.email = email
+    },
+  }))
+  .actions((self) => ({
     saveData: async (result) => {
       const { data } = result
       await saveString("userId", data.id.toString())
       await saveString("email", data.email)
       await saveString("displayName", data.displayName)
+      self.setUserId(data.id)
+      self.setDisplayName(data.displayName)
+      self.setEmail(data.email)
     },
   }))
   .actions((self) => ({
@@ -45,7 +63,7 @@ export const UserRegisterModel = userRegister
       const userApi = new Api()
       const result = await userApi.register(user)
 
-      if (result.kind === "ok") {
+      if (result && result.kind === "ok") {
         self.saveData(result)
         return result
       }
@@ -56,7 +74,7 @@ export const UserRegisterModel = userRegister
       const userApi = new Api()
       const result = await userApi.login(user)
 
-      if (result.kind === "ok") {
+      if (result && result.kind === "ok") {
         self.saveData(result)
         return true
       }

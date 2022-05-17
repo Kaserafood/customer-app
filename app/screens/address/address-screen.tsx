@@ -15,7 +15,7 @@ import { showMessageSucess } from "../../utils/messages"
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
-    const { addressStore, commonStore } = useStores()
+    const { addressStore, commonStore, userStore } = useStores()
 
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
@@ -26,8 +26,10 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
       const address = {
         ...data,
         ...params,
+        userId: userStore.userId,
       }
-      console.log(`MODEL REQUESTE: ${address}`)
+      console.log(`USERID: ${userStore.userId}`)
+      console.log(`MODEL REQUESTE: ${JSON.stringify(address)}`)
       commonStore.setVisibleLoading(true)
       addressStore
         .add(address)
@@ -60,7 +62,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="numHouseApartmentNumber"
+                name="numHouseApartment"
                 placeholderTx="addressScreen.houseApartmentNumberPlaceholder"
                 labelTx="addressScreen.houseApartmentNumber"
                 styleContainer={utilSpacing.mb6}

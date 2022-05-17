@@ -1,13 +1,15 @@
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect } from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { AutoImage, Card, Icon, Text } from ".."
 import images from "../../assets/images"
+import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -36,12 +38,20 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
 export const LocationModal = observer(function Location(props: LocationProps) {
   const { style, modal } = props
 
+  const { addressStore, userStore } = useStores()
   const navigation = useNavigation<homeScreenProp>()
 
   const toMap = () => {
     navigation.navigate("map")
   }
 
+  useEffect(() => {
+    async function fetch() {
+      if (addressStore.addresses.length === 0) await addressStore.getAll(userStore.userId)
+    }
+
+    fetch()
+  })
   return (
     <Modal
       isVisible={modal?.isVisibleLocation || false}
@@ -99,6 +109,25 @@ export const LocationModal = observer(function Location(props: LocationProps) {
                 tx="modalLocation.addAddress"
               ></Text>
             </Ripple>
+
+            <ScrollView style={utilSpacing.my6}>
+              {addressStore.addresses.map((address) => (
+                <View
+                  key={address.id}
+                  style={[styles.containerItemAddress, styles.flex, utilSpacing.mb5]}
+                >
+                  <View>
+                    <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
+                    <Text
+                      size="sm"
+                      numberOfLines={2}
+                      style={styles.addressSubtitle}
+                      text={address.address}
+                    ></Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
           </View>
         </View>
       </View>

@@ -52,7 +52,7 @@ const modalState = new ModalState()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   function HomeScreen({ navigation }) {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, commonStore, categoryStore } = useStores()
+    const { dishStore, dayStore, commonStore, categoryStore, userStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -78,6 +78,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         const email = await loadString("email")
         console.log(email)
         commonStore.setVisibleLoading(true)
+        console.log("Home  after email")
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
@@ -91,6 +92,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
       fetch()
     }, [categoryStore, commonStore, dayStore, days, dishStore, setCurrentDay])
+
+    useEffect(() => {
+      async function setUserData() {
+        if (!userStore.userId) {
+          const id = await loadString("userId")
+          const displayName = await loadString("displayName")
+          userStore.setUserId(Number(id))
+          userStore.setDisplayName(displayName)
+        }
+      }
+      setUserData()
+    }, [])
 
     return (
       <Screen

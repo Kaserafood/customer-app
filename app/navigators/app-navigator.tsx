@@ -5,13 +5,21 @@
  * and a "main" flow which the user will use once logged in.
  */
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { createDrawerNavigator, DrawerContentScrollView } from "@react-navigation/drawer"
+import {
+  DarkTheme,
+  DefaultTheme,
+  DrawerActions,
+  NavigationContainer,
+} from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
+import { TouchableHighlight } from "react-native-gesture-handler"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { Icon } from "../components"
+import { Card, Icon, Text } from "../components"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 import { useStores } from "../models/root-store/root-store-context"
@@ -86,18 +94,36 @@ export type NavigatorParamList = {
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
-const AppStack = (props: { isSigendId: boolean }) => {
-  // const { commonStore } = useStores()
+const horizontalAnimation = {
+  cardStyleInterpolator: ({ current, layouts }) => {
+    return {
+      cardStyle: {
+        transform: [
+          {
+            translateX: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [layouts.screen.width, 0],
+            }),
+          },
+        ],
+      },
+    }
+  },
+}
+
+const AppStack = observer(() => {
+  const { commonStore } = useStores()
 
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
     >
-      {!props.isSigendId ? (
+      {!commonStore.isSignedIn ? (
         <>
-          <Stack.Screen options={{ animation: "none" }} name="init" component={InitScreen} />
+          <Stack.Screen name="init" component={InitScreen} />
           <Stack.Screen name="registerForm" component={RegisterFormScreen} />
           <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
           <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
@@ -106,7 +132,7 @@ const AppStack = (props: { isSigendId: boolean }) => {
         </>
       ) : (
         <>
-          <Stack.Screen name="main" component={TabMainNavigation} />
+          <Stack.Screen name="main" component={DrawerNavigation} />
           <Stack.Screen name="dishDetail" component={DishDetailScreen} />
           <Stack.Screen name="menuChef" component={MenuChefScreen} />
           <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
@@ -118,13 +144,12 @@ const AppStack = (props: { isSigendId: boolean }) => {
       )}
     </Stack.Navigator>
   )
-}
+})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
-  const { commonStore } = useStores()
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
@@ -133,7 +158,7 @@ export const AppNavigator = (props: NavigationProps) => {
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack isSigendId={commonStore.isSignedIn} />
+      <AppStack />
     </NavigationContainer>
   )
 }
@@ -143,6 +168,10 @@ AppNavigator.displayName = "AppNavigator"
 const Tab = createBottomTabNavigator()
 
 export function TabMainNavigation() {
+  const openDrawer = () => {
+    navigationRef.current.dispatch(DrawerActions.openDrawer())
+    console.log("opeing")
+  }
   return (
     <Tab.Navigator
       screenOptions={{
@@ -204,8 +233,51 @@ export function TabMainNavigation() {
         }}
         name="Más"
         component={SearchScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault()
+            openDrawer()
+          },
+        })}
       />
     </Tab.Navigator>
+  )
+}
+
+const Drawer = createDrawerNavigator()
+
+function DrawerNavigation() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        drawerPosition: "right",
+        headerShown: false,
+        drawerStyle: {
+          backgroundColor: color.palette.white,
+        },
+        overlayColor: color.modalTransparent,
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen name="Home1" component={TabMainNavigation} />
+    </Drawer.Navigator>
+  )
+}
+
+function CustomDrawerContent(props) {
+  const { commonStore } = useStores()
+  const closeSession = () => {
+    commonStore.setIsSignedIn(false)
+  }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <TouchableHighlight onPressIn={closeSession}>
+        <Card style={utilSpacing.p4}>
+          <Text text="Cerrar sesion"></Text>
+        </Card>
+      </TouchableHighlight>
+    </DrawerContentScrollView>
   )
 }
 
@@ -220,9 +292,6 @@ export function TabMainNavigation() {
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
-function createDrawerNavigator() {
-  throw new Error("Function not implemented.")
-}
 
 const config = {
   animation: "spring",
