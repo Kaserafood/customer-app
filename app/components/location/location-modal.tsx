@@ -28,7 +28,7 @@ export interface LocationProps {
   /**
    * Modal state to handle visibility
    */
-  modal?: ModalState
+  modal: ModalState
 }
 
 type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
@@ -48,14 +48,21 @@ export const LocationModal = observer(function Location(props: LocationProps) {
 
   useEffect(() => {
     async function fetch() {
-      if (addressStore.addresses.length === 0) await addressStore.getAll(userStore.userId)
+      if (userStore.userId)
+        if (addressStore.addresses.length === 0) await addressStore.getAll(userStore.userId)
     }
 
     fetch()
-  })
+  }, [userStore.userId])
+
+  useEffect(() => {
+    if (modal.isVisibleLocation) {
+    }
+  }, [modal.isVisibleLocation])
+
   return (
     <Modal
-      isVisible={modal?.isVisibleLocation || false}
+      isVisible={modal.isVisibleLocation}
       backdropColor={color.palette.grayTransparent}
       animationIn="zoomIn"
       animationOut="zoomOut"
@@ -200,6 +207,7 @@ const styles = StyleSheet.create({
   containerImgClose: {
     alignItems: "flex-end",
     display: "flex",
+    marginEnd: spacing[3],
   },
 
   containerModal: {

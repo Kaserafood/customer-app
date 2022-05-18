@@ -28,8 +28,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         ...params,
         userId: userStore.userId,
       }
-      console.log(`USERID: ${userStore.userId}`)
-      console.log(`MODEL REQUESTE: ${JSON.stringify(address)}`)
       commonStore.setVisibleLoading(true)
       addressStore
         .add(address)

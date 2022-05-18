@@ -60,7 +60,6 @@ function App() {
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
   if (!rootStore || !isNavigationStateRestored) {
-    console.log("App.js: !rootStore || !isNavigationStateRestored")
     return null
   }
 

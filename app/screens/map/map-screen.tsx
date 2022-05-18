@@ -13,6 +13,7 @@ import { goBack, NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError, showMessageInfo } from "../../utils/messages"
+import { getI18nText } from "../../utils/translate"
 
 const {
   PRIORITIES: { HIGH_ACCURACY },
@@ -58,32 +59,38 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     useEffect(() => {
       console.log("MapScreen: useEffect")
 
+      //Request permision to access loction in device
       RNLocation.requestPermission({
         ios: "whenInUse",
         android: {
-          detail: "coarse",
+          detail: "fine",
         },
-      }).then((granted) => {
-        if (granted) {
-          console.log("MapScreen: granted")
-
-          // Define configuration
-          const config = {
-            priority: HIGH_ACCURACY, // default BALANCED_POWER_ACCURACY
-            alwaysShow: true, // default false
-            needBle: false, // default false
-          }
-
-          // Check if location is enabled or not
-          checkSettings(config)
-
-          // If location is disabled, prompt the user to turn on device location
-          requestResolutionSettings(config)
-
-          // Adds a listener to be invoked when location settings checked using
-          addListenerLocation()
-        }
       })
+        .then((granted) => {
+          if (granted) {
+            console.log("MapScreen: granted")
+
+            const config = {
+              priority: HIGH_ACCURACY,
+              alwaysShow: true,
+              needBle: false,
+            }
+
+            // Check if location is enabled or not
+            checkSettings(config)
+
+            // If location is disabled, prompt the user to turn on device location
+            requestResolutionSettings(config)
+
+            // Adds a listener to be invoked when location settings checked using
+            addListenerLocation()
+          } else {
+            console.log("MapScreen: denied, " + granted)
+          }
+        })
+        .catch((error) => {
+          console.log("Error RNLoction: " + JSON.stringify(error))
+        })
     }, [])
 
     const addListenerLocation = () => {
@@ -105,7 +112,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             listener.remove()
           })
         } else {
-          showMessageInfo("mapScreen.disabledLocation")
+          showMessageInfo(getI18nText("mapScreen.disabledLocation"))
         }
       })
     }
@@ -120,7 +127,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           longitudeDelta: location.longitudeDelta,
         })
       } else {
-        showMessageError("mapScreen.noLocation")
+        showMessageError(getI18nText("mapScreen.noLocation"))
       }
     }
 
@@ -155,7 +162,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         })
         .catch((error) => {
           console.log("error", error)
-          showMessageError("common.someError")
+          showMessageError()
         })
         .finally(() => loadingState.setLoading(false))
     }
@@ -181,7 +188,12 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           </View>
         </View>
         {loadingState.loading ? (
-          <ProgressBar height={7} indeterminate backgroundColor={color.primary} />
+          <ProgressBar
+            height={7}
+            indeterminate
+            backgroundColor={color.primary}
+            trackColor={color.palette.grayLigth}
+          />
         ) : (
           <View style={styles.heightProgress}></View>
         )}

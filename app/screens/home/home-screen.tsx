@@ -78,7 +78,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         const email = await loadString("email")
         console.log(email)
         commonStore.setVisibleLoading(true)
-        console.log("Home  after email")
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
