@@ -7,9 +7,10 @@ import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import IconRN from "react-native-vector-icons/MaterialIcons"
 import { AutoImage, Card, Icon, Text } from ".."
 import images from "../../assets/images"
-import { useStores } from "../../models"
+import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -70,7 +71,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
             </TouchableOpacity>
           </View>
-          <View style={utilSpacing.p4}>
+          <View>
             <Text
               numberOfLines={1}
               preset="bold"
@@ -79,7 +80,12 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               style={[utilSpacing.mb5, utilFlex.selfCenter]}
             ></Text>
 
-            <Ripple rippleOpacity={0.2} rippleDuration={400} onPressIn={toMap}>
+            <Ripple
+              style={utilSpacing.px5}
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPressIn={toMap}
+            >
               <Card>
                 <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                   <View style={[styles.button, utilSpacing.mr3, utilFlex.flexCenter]}>
@@ -102,7 +108,11 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               </Card>
             </Ripple>
 
-            <Ripple rippleOpacity={0.2} rippleDuration={400} style={styles.btnAddressAdd}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              style={[styles.btnAddressAdd, utilSpacing.mx5]}
+            >
               <Text
                 preset="semiBold"
                 style={utilFlex.selfCenter}
@@ -110,24 +120,8 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               ></Text>
             </Ripple>
 
-            <ScrollView style={utilSpacing.my6}>
-              {addressStore.addresses.map((address) => (
-                <View
-                  key={address.id}
-                  style={[styles.containerItemAddress, styles.flex, utilSpacing.mb5]}
-                >
-                  <View>
-                    <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
-                    <Text
-                      size="sm"
-                      numberOfLines={2}
-                      style={styles.addressSubtitle}
-                      text={address.address}
-                    ></Text>
-                  </View>
-                </View>
-              ))}
-            </ScrollView>
+            <AddressList></AddressList>
+            <ScrollView style={utilSpacing.my6}></ScrollView>
           </View>
         </View>
       </View>
@@ -135,6 +129,40 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   )
 })
 
+const AddressList = () => {
+  const { addressStore } = useStores()
+  return (
+    <View>
+      {addressStore.addresses.map((address) => (
+        <AddressItem key={address.id} address={address}></AddressItem>
+      ))}
+    </View>
+  )
+}
+const AddressItem = (props: { address: Address }) => {
+  const address = props.address
+  return (
+    <Ripple
+      rippleOpacity={0.2}
+      rippleDuration={400}
+      style={[utilSpacing.px5, utilFlex.flexCenterVertical]}
+    >
+      <View style={[utilFlex.flexRow, utilSpacing.py3]}>
+        <View style={utilFlex.flex1}>
+          <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
+          <Text
+            size="sm"
+            numberOfLines={2}
+            style={styles.addressSubtitle}
+            text={address.address}
+          ></Text>
+        </View>
+
+        <IconRN name="check-circle" size={30} color={color.primary} />
+      </View>
+    </Ripple>
+  )
+}
 const styles = StyleSheet.create({
   addressSubtitle: {
     color: color.palette.grayDark,
@@ -142,7 +170,7 @@ const styles = StyleSheet.create({
   bodyModal: {
     backgroundColor: color.palette.white,
     borderRadius: 20,
-    padding: spacing[3],
+    paddingVertical: spacing[3],
     width: "90%",
   },
   btnAddress: {
@@ -173,18 +201,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     display: "flex",
   },
-  containerItemAddress: {
-    alignItems: "center",
-  },
 
   containerModal: {
     alignItems: "center",
     display: "flex",
     justifyContent: "center",
-  },
-  flex: {
-    display: "flex",
-    flexDirection: "row",
   },
   imgClose: {
     height: 20,
