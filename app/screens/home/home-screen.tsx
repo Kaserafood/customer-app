@@ -89,19 +89,21 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             console.log("hide loaindg")
           })
       }
-      fetch()
-    }, [categoryStore, commonStore, dayStore, days, dishStore, setCurrentDay])
-
-    useEffect(() => {
       async function setUserData() {
-        if (!userStore.userId) {
+        if (userStore.userId) {
+          console.log("Getting string user data")
           const id = await loadString("userId")
           const displayName = await loadString("displayName")
+          const addressId = await loadString("addressId")
+
           userStore.setUserId(Number(id))
           userStore.setDisplayName(displayName)
+          userStore.setAddressId(Number(addressId))
         }
       }
       setUserData()
+
+      fetch()
     }, [])
 
     return (

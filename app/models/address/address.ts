@@ -23,6 +23,7 @@ export const AddressModelStore = types
   .model("Address")
   .props({
     addresses: types.optional(types.array(addressModel), []),
+    current: types.optional(addressModel, {}),
   })
   .actions((self) => ({
     add: flow(function* add(address: Address) {
@@ -30,6 +31,7 @@ export const AddressModelStore = types
       const result: CommonResponse = yield api.addAddress(address)
 
       if (result && result.kind === "ok") {
+        address.id = Number(result.data.data)
         self.addresses.push(address)
         return result.data
       }
@@ -38,11 +40,12 @@ export const AddressModelStore = types
     getAll: flow(function* getAll(userId: number) {
       const api = new Api()
       const result: AddressResponse = yield api.getAddresses(userId)
-
+      console.log("After request address:", result)
       if (result && result.kind === "ok") {
         self.addresses.replace(result.data)
-        return result.data
-      }
-      return null
+      } else self.addresses.replace([])
     }),
+    setCurrent(address: Address) {
+      self.current = address
+    },
   }))

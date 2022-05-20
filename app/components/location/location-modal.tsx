@@ -1,20 +1,34 @@
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { AutoImage, Card, Icon, Text } from ".."
 import images from "../../assets/images"
+import { useLocation } from "../../common/hooks/useLocation"
 import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
+class ModalPersistent {
+  isPersistent = false
+
+  setPersistent(persistent: boolean) {
+    this.isPersistent = persistent
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
 interface ModalState {
   isVisibleLocation: boolean
   setVisibleLocation: (state: boolean) => void
@@ -36,11 +50,14 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
 /**
  * Modal to select location and add new location
  */
+const modalPersistent = new ModalPersistent()
 export const LocationModal = observer(function Location(props: LocationProps) {
   const { style, modal } = props
 
   const { addressStore, userStore } = useStores()
+  const [addressText, setAddressText] = useState("")
   const navigation = useNavigation<homeScreenProp>()
+  const { permission, fetchAddressText } = useLocation()
 
   const toMap = () => {
     navigation.navigate("map")
@@ -48,33 +65,59 @@ export const LocationModal = observer(function Location(props: LocationProps) {
 
   useEffect(() => {
     async function fetch() {
-      if (userStore.userId)
-        if (addressStore.addresses.length === 0) await addressStore.getAll(userStore.userId)
+      if (userStore.userId && userStore.userId > 0)
+        if (addressStore.addresses.length === 0) {
+          console.log("GETTING ADDRESS LISET USER")
+          await addressStore.getAll(userStore.userId)
+          const address = addressStore.addresses.find(
+            (address) => address.id === userStore.addressId,
+          )
+
+          if (!address) {
+            modalPersistent.setPersistent(true)
+          } else addressStore.setCurrent(address)
+        }
     }
 
     fetch()
   }, [userStore.userId])
 
   useEffect(() => {
-    if (modal.isVisibleLocation) {
+    if (modal.isVisibleLocation && addressText.length === 0) {
+      permission().then((location) => {
+        if (location.latitude > 0 && location.longitude > 0) {
+          fetchAddressText(location.latitude, location.longitude).then((address) => {
+            if (address) {
+              setAddressText(address)
+            }
+          })
+        }
+      })
     }
   }, [modal.isVisibleLocation])
 
   return (
     <Modal
-      isVisible={modal.isVisibleLocation}
+      isVisible={modal.isVisibleLocation || modalPersistent.isPersistent}
       backdropColor={color.palette.grayTransparent}
       animationIn="zoomIn"
       animationOut="zoomOut"
       style={style}
       coverScreen={false}
-      onBackdropPress={() => modal.setVisibleLocation(false)}
+      onBackdropPress={() => {
+        if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+      }}
       onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
     >
       <View style={styles.containerModal}>
         <View style={styles.bodyModal}>
           <View style={styles.containerImgClose}>
-            <TouchableOpacity onPress={() => modal.setVisibleLocation(false)} activeOpacity={0.7}>
+            <TouchableOpacity
+              onPress={() => {
+                if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+              }}
+              activeOpacity={0.7}
+            >
               <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
             </TouchableOpacity>
           </View>
@@ -101,15 +144,17 @@ export const LocationModal = observer(function Location(props: LocationProps) {
                   <View style={utilFlex.flex1}>
                     <Text
                       preset="bold"
-                      style={utilSpacing.mb2}
                       numberOfLines={1}
                       tx="modalLocation.useCurrentLocation"
                     ></Text>
-                    <Text
-                      numberOfLines={2}
-                      caption
-                      text="23 avenida, est oes una calle, unaasdfa ciudad, un país"
-                    ></Text>
+                    {addressText.length > 0 && (
+                      <Text
+                        numberOfLines={2}
+                        style={utilSpacing.mt2}
+                        caption
+                        text={addressText}
+                      ></Text>
+                    )}
                   </View>
                 </View>
               </Card>
@@ -119,6 +164,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               rippleOpacity={0.2}
               rippleDuration={400}
               style={[styles.btnAddressAdd, utilSpacing.mx5]}
+              onPressIn={toMap}
             >
               <Text
                 preset="semiBold"
@@ -128,7 +174,6 @@ export const LocationModal = observer(function Location(props: LocationProps) {
             </Ripple>
 
             <AddressList></AddressList>
-            <ScrollView style={utilSpacing.my6}></ScrollView>
           </View>
         </View>
       </View>
@@ -136,23 +181,33 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   )
 })
 
-const AddressList = () => {
+const AddressList = observer(() => {
   const { addressStore } = useStores()
   return (
-    <View>
+    <ScrollView style={styles.containerList}>
       {addressStore.addresses.map((address) => (
         <AddressItem key={address.id} address={address}></AddressItem>
       ))}
-    </View>
+    </ScrollView>
   )
-}
-const AddressItem = (props: { address: Address }) => {
+})
+
+const AddressItem = observer((props: { address: Address }) => {
   const address = props.address
+
+  const { userStore, addressStore } = useStores()
+  const updateAddressId = (addressId: number) => {
+    userStore.updateAddresId(userStore.userId, addressId)
+    addressStore.setCurrent({ ...address })
+    modalPersistent.setPersistent(false)
+  }
+
   return (
     <Ripple
       rippleOpacity={0.2}
       rippleDuration={400}
       style={[utilSpacing.px5, utilFlex.flexCenterVertical]}
+      onPress={() => updateAddressId(address.id)}
     >
       <View style={[utilFlex.flexRow, utilSpacing.py3]}>
         <View style={utilFlex.flex1}>
@@ -164,12 +219,15 @@ const AddressItem = (props: { address: Address }) => {
             text={address.address}
           ></Text>
         </View>
-
-        <IconRN name="check-circle" size={30} color={color.primary} />
+        {addressStore.current.id === address.id && (
+          <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+            <IconRN name="check-circle" size={30} color={color.primary} />
+          </Animated.View>
+        )}
       </View>
     </Ripple>
   )
-}
+})
 const styles = StyleSheet.create({
   addressSubtitle: {
     color: color.palette.grayDark,
@@ -179,15 +237,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: spacing[3],
     width: "90%",
-  },
-  btnAddress: {
-    backgroundColor: color.primary,
-    borderRadius: 8,
-    display: "flex",
-    flexDirection: "row",
-    flex: 1,
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
   },
   btnAddressAdd: {
     borderColor: color.palette.grayLigth,
@@ -210,6 +259,9 @@ const styles = StyleSheet.create({
     marginEnd: spacing[3],
   },
 
+  containerList: {
+    maxHeight: 300,
+  },
   containerModal: {
     alignItems: "center",
     display: "flex",
@@ -218,13 +270,5 @@ const styles = StyleSheet.create({
   imgClose: {
     height: 20,
     width: 20,
-  },
-  text: {
-    flexWrap: "wrap",
-  },
-  textAddress: {
-    color: color.palette.white,
-    flex: 1,
-    marginLeft: spacing[2],
   },
 })

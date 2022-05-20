@@ -5,29 +5,14 @@ import React, { FC, useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
-import RNLocation from "react-native-location"
-import LocationEnabler from "react-native-location-enabler"
 import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps"
+import { useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, InputText, Screen, Text } from "../../components"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError, showMessageInfo } from "../../utils/messages"
+import { showMessageError } from "../../utils/messages"
 import { getI18nText } from "../../utils/translate"
-
-const {
-  PRIORITIES: { HIGH_ACCURACY },
-  addListener,
-  checkSettings,
-  requestResolutionSettings,
-} = LocationEnabler
-
-interface Location {
-  latitude: number
-  longitude: number
-  longitudeDelta: number
-  latitudeDelta: number
-}
 
 class LoadingState {
   loading = false
@@ -45,77 +30,16 @@ const loadingState = new LoadingState()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation }) => {
-    const [location, setLocation] = useState<Location>({
-      latitude: 0,
-      longitude: 0,
-      longitudeDelta: 0,
-      latitudeDelta: 0,
-    })
+    const { fetchAddressText, location, permission, setLocation } = useLocation()
     const [address, setAddress] = useState("")
 
     const { ...methods } = useForm({ mode: "onBlur" })
     let timeOut: NodeJS.Timeout
 
     useEffect(() => {
-      console.log("MapScreen: useEffect")
-
-      //Request permision to access loction in device
-      RNLocation.requestPermission({
-        ios: "whenInUse",
-        android: {
-          detail: "fine",
-        },
-      })
-        .then((granted) => {
-          if (granted) {
-            console.log("MapScreen: granted")
-
-            const config = {
-              priority: HIGH_ACCURACY,
-              alwaysShow: true,
-              needBle: false,
-            }
-
-            // Check if location is enabled or not
-            checkSettings(config)
-
-            // If location is disabled, prompt the user to turn on device location
-            requestResolutionSettings(config)
-
-            // Adds a listener to be invoked when location settings checked using
-            addListenerLocation()
-          } else {
-            console.log("MapScreen: denied, " + granted)
-          }
-        })
-        .catch((error) => {
-          console.log("Error RNLoction: " + JSON.stringify(error))
-        })
+      // Request permision to access the location and then enable the location from the device
+      permission()
     }, [])
-
-    const addListenerLocation = () => {
-      const listener = addListener(({ locationEnabled }) => {
-        console.log(`Location are ${locationEnabled ? "enabled" : "disabled"}`)
-
-        if (locationEnabled) {
-          RNLocation.getLatestLocation({ timeout: 60000 }).then((latestLocation) => {
-            setLocation({
-              latitude: latestLocation.latitude,
-              longitude: latestLocation.longitude,
-              // latitude: 14.6026246,
-              // longitude: -90.5447617,
-              latitudeDelta: 0.020000524857270108,
-              longitudeDelta: 0.004366971552371979,
-            })
-
-            console.log("MapScreen: latestLocation", latestLocation)
-            listener.remove()
-          })
-        } else {
-          showMessageInfo(getI18nText("mapScreen.disabledLocation"))
-        }
-      })
-    }
 
     const toAddress = () => {
       if (location.latitude !== 0 || location.longitude !== 0) {
@@ -138,33 +62,16 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           console.log(`Change region2: ${JSON.stringify(region)}`)
 
           setLocation({ ...region })
+          loadingState.setLoading(true)
           fetchAddressText(region.latitude, region.longitude)
+            .then((address) => {
+              if (address) {
+                setAddress(address)
+              }
+            })
+            .finally(() => loadingState.setLoading(false))
         }
       }, 1500)
-    }
-
-    const fetchAddressText = (latitude: number, longitude: number) => {
-      const requestOptions: RequestInit = {
-        method: "GET",
-        redirect: "follow",
-      }
-      loadingState.setLoading(true)
-      fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyABdfOq8xWg87ngj4rbG_bHTa5wwEjjUOg`,
-        requestOptions,
-      )
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.results[0]?.formatted_address) {
-            setAddress(result.results[0].formatted_address)
-          }
-          console.log(result.results[0].formatted_address)
-        })
-        .catch((error) => {
-          console.log("error", error)
-          showMessageError()
-        })
-        .finally(() => loadingState.setLoading(false))
     }
 
     return (

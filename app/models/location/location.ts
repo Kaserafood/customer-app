@@ -1,7 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 
 /**
- * Model description here for TypeScript hints.
+ * Location form the user
  */
 export const LocationModel = types
   .model("Location")

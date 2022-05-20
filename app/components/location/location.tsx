@@ -3,6 +3,7 @@ import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import IconRN from "react-native-vector-icons/FontAwesome"
 import { Icon, Text } from ".."
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 
 export interface LocationProps {
@@ -22,12 +23,17 @@ export interface LocationProps {
  */
 export const Location = observer(function Location(props: LocationProps) {
   const { style, onPress } = props
+  const { addressStore } = useStores()
 
   return (
     <View style={[styles.containerAddress, style]}>
       <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
         <Icon name="location-1" size={24} color={color.palette.white} />
-        <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
+        <Text
+          numberOfLines={1}
+          style={styles.textAddress}
+          text={addressStore.current.address}
+        ></Text>
         <IconRN name="caret-down" size={24} color={color.palette.white} />
       </TouchableOpacity>
     </View>

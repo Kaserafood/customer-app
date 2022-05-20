@@ -5,7 +5,7 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { Button, Header, InputText, Loader, Screen } from "../../components"
-import { useStores } from "../../models"
+import { Address, useStores } from "../../models"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -33,6 +33,8 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         .add(address)
         .then((res) => {
           if (res) {
+            address.id = res.data
+            addressStore.setCurrent(address as Address)
             showMessageSucess(res.message)
             navigation.navigate("main")
           }

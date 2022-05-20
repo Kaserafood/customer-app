@@ -33,6 +33,7 @@ export type UserLoginResponse = {
     username: string
     email: string
     displayName: string
+    addressId: number
   }
 }
 
@@ -59,5 +60,6 @@ export type AddressResponse = {
 export type CommonResponse = {
   data: {
     message: string
+    data: number | string // Usually contains the id inserted on the table
   }
 } & kind

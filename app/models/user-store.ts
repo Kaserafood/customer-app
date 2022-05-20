@@ -1,4 +1,4 @@
-import { Instance, types } from "mobx-state-tree"
+import { flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../services/api/api"
 import { saveString } from "../utils/storage"
 import { categoryStore } from "./category-store"
@@ -34,6 +34,7 @@ export const UserRegisterModel = userRegister
   .props({
     userId: types.maybe(types.integer),
     displayName: types.maybe(types.string),
+    addressId: types.maybe(types.number),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -46,6 +47,9 @@ export const UserRegisterModel = userRegister
     setEmail: (email: string) => {
       self.email = email
     },
+    setAddressId: (addressId: number) => {
+      self.addressId = addressId
+    },
   }))
   .actions((self) => ({
     saveData: async (result) => {
@@ -53,6 +57,7 @@ export const UserRegisterModel = userRegister
       await saveString("userId", data.id.toString())
       await saveString("email", data.email)
       await saveString("displayName", data.displayName)
+      await saveString("addressId", `${data.addressId}`)
       self.setUserId(data.id)
       self.setDisplayName(data.displayName)
       self.setEmail(data.email)
@@ -80,4 +85,11 @@ export const UserRegisterModel = userRegister
       }
       return false
     },
+
+    updateAddresId: flow(function* updateAddresId(userId: number, addressId: number) {
+      const api = new Api()
+
+      const result = yield api.updateAddressId(userId, addressId)
+      console.log(result)
+    }),
   }))

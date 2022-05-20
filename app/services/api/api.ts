@@ -198,4 +198,12 @@ export class Api {
   async getAddresses(userId: number): Promise<AddressResponse> {
     return await this.request({}, `/addresses/user/${userId}`, "GET")
   }
+
+  /**
+   *
+   * @description Update the address default from the user
+   */
+  async updateAddressId(userId: number, addressId: number): Promise<UserLoginResponse> {
+    return await this.request({ addressId: addressId }, `/users/${userId}/addressId`, "PUT")
+  }
 }

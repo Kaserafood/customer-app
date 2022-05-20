@@ -20,7 +20,7 @@ export const DayStoreModel = types
   }))
   .actions((self) => ({
     getDays: flow(function* getDays(timeZone: string) {
-      //if (self.days.length > 0) return
+      // if (self.days.length > 0) return
       const api = new Api()
 
       const result = yield api.getDaysDelivery(timeZone)

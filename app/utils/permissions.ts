@@ -1,7 +1,7 @@
-import { check, PERMISSIONS, RESULTS } from "react-native-permissions"
+import { check, Permission, request, RESULTS } from "react-native-permissions"
 
-export async function checkLocation(): Promise<Boolean> {
-  return await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+export async function checkPermission(permision: Permission): Promise<Boolean> {
+  return await check(permision)
     .then((result) => {
       switch (result) {
         case RESULTS.UNAVAILABLE:
@@ -23,7 +23,13 @@ export async function checkLocation(): Promise<Boolean> {
       return false
     })
     .catch((error) => {
-      console.log("Error request permision location:" + JSON.stringify(error))
+      console.log("Error request permision :" + JSON.stringify(error))
       return false
     })
+}
+
+export async function requestPermission(permission: Permission) {
+  return await request(permission).then((result) => {
+    return result
+  })
 }
