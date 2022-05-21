@@ -250,7 +250,8 @@
         "whereReciveFood" : "¿Dónde deseas recibir tu comida?",
         "addressRequired" : "Debes ingresar una dirección",
         "addressPlaceholder" : "Ingresa una dirección",
-        "noLocation" : "Debe seleccionar una dirección"
+        "noLocation" : "Debe seleccionar una dirección",
+        "errorToGetLocation": "Lo sentimos, no se ha logrado obtener la ubicación"
     },
     "addressScreen": {
         "title": "Dirección",
@@ -268,7 +269,7 @@
         "phoneDelivery": "Teléfono de entrega",
         "phoneDeliveryPlaceholder": "1234-5678",
         "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
-        "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
+        "phoneFormatIncorrect": "El formato del teléfono es incorrecto"
     }
 
 

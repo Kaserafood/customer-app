@@ -75,7 +75,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
 
           if (!address) {
             modalPersistent.setPersistent(true)
-          } else addressStore.setCurrent(address)
+          } else addressStore.setCurrent({ ...address })
         }
     }
 

@@ -34,26 +34,26 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const {
       dayStore,
       dishStore: { dishesCategory, getAll },
-      commonStore: modalStore,
+      commonStore,
     } = useStores()
 
     useEffect(() => {
       console.log(params)
       async function fetch() {
-        modalStore.setVisibleLoading(true)
+        commonStore.setVisibleLoading(true)
         await getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), params.id)
       }
 
       fetch().finally(() => {
-        modalStore.setVisibleLoading(false)
+        commonStore.setVisibleLoading(false)
       })
     }, [])
 
     const onChangeDay = async (day: Day) => {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await getAll(day.date, RNLocalize.getTimeZone(), params.id).finally(() => {
-        modalStore.setVisibleLoading(false)
+        commonStore.setVisibleLoading(false)
       })
     }
 

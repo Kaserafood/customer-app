@@ -20,7 +20,7 @@ export interface LocationProps {
 }
 
 /**
- * Componet for location on the home and chef  components
+ * Component for location on the home and chef screen
  */
 export const Location = observer(function Location(props: LocationProps) {
   const { style, onPress } = props

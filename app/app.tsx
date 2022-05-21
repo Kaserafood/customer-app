@@ -46,13 +46,8 @@ function App() {
     ;(async () => {
       setupRootStore()
         .then(setRootStore)
-        .then(async () => {
-          const userId = await loadString("userId")
-          if (userId && userId.length > 0) {
-            if (rootStore.commonStore) rootStore.commonStore.setIsSignedIn(true)
-            if (rootStore.dishStore) rootStore.dishStore.clearDishes()
-            else console.log("COMMON IS UNDEFINED")
-          }
+        .catch((error) => {
+          console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
     })()
   }, [])
@@ -65,6 +60,18 @@ function App() {
   // You can replace with your own loading component if you wish.
   if (!rootStore || !isNavigationStateRestored) {
     return null
+  } else {
+    if (rootStore) {
+      async function verifyUser() {
+        const userId = await loadString("userId")
+        if (userId && userId.length > 0 && !rootStore.commonStore.isSignedIn) {
+          console.log("USER LOGIN")
+          rootStore.commonStore.setIsSignedIn(true)
+          rootStore.dishStore.clearDishes()
+        }
+      }
+      verifyUser()
+    }
   }
 
   // otherwise, we're ready to render the app

@@ -83,10 +83,21 @@ export const useLocation = () => {
               resolve(location)
             })
             .catch(() => {
-              reject(new Error("Error to get location"))
+              resolve({
+                latitude: 0,
+                longitude: 0,
+                latitudeDelta: 0,
+                longitudeDelta: 0,
+              })
+              showMessageInfo(getI18nText("mapScreen.errorToGetLocation"))
             })
         } else {
-          reject(new Error("Location are not enabled"))
+          resolve({
+            latitude: 0,
+            longitude: 0,
+            latitudeDelta: 0,
+            longitudeDelta: 0,
+          })
           showMessageInfo(getI18nText("mapScreen.disabledLocation"))
         }
       })

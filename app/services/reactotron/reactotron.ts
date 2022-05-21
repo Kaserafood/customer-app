@@ -4,7 +4,6 @@ import { Platform } from "react-native"
 import { ArgType } from "reactotron-core-client"
 import { mst } from "reactotron-mst"
 import { RootStore } from "../../models/root-store/root-store"
-import { useStores } from "../../models/root-store/root-store-context"
 import { goBack, navigate, resetRoot } from "../../navigators/navigation-utilities"
 import { clear } from "../../utils/storage"
 import { DEFAULT_REACTOTRON_CONFIG, ReactotronConfig } from "./reactotron-config"
@@ -193,19 +192,6 @@ export class Reactotron {
         handler: () => {
           console.tron.log("Going back")
           goBack()
-        },
-      })
-
-      Tron.onCustomCommand({
-        title: "Hide Loading",
-        description: "Hide the loading indicator",
-        command: "hideLoading",
-        handler: () => {
-          console.tron.log("Hide Loading")
-
-          // eslint-disable-next-line react-hooks/rules-of-hooks
-          const { commonStore: modalStore } = useStores()
-          modalStore.setVisibleLoading(false)
         },
       })
 

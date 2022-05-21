@@ -8,12 +8,12 @@ const addressModel = types.model("Address").props({
   longitude: types.maybe(types.number),
   longitudeDelta: types.maybe(types.number),
   latitudeDelta: types.maybe(types.number),
-  addressMap: types.maybe(types.optional(types.string, "")),
+  addressMap: types.optional(types.maybeNull(types.string), null),
   address: types.maybe(types.string),
-  numHouseApartment: types.maybe(types.optional(types.string, "")),
-  instructionsDelivery: types.maybe(types.optional(types.string, "")),
-  name: types.maybe(types.optional(types.string, "")),
-  phone: types.maybe(types.optional(types.string, "")),
+  numHouseApartment: types.optional(types.maybeNull(types.string), null),
+  instructionsDelivery: types.optional(types.maybeNull(types.string), null),
+  name: types.optional(types.maybeNull(types.string), null),
+  phone: types.optional(types.maybeNull(types.string), null),
 })
 export interface Address extends SnapshotOut<typeof addressModel> {}
 /**
