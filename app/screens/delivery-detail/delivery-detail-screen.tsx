@@ -15,7 +15,8 @@ import {
   Text,
 } from "../../components"
 import { AutoImage } from "../../components/auto-image/auto-image"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"

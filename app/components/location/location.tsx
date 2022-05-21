@@ -2,9 +2,10 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import IconRN from "react-native-vector-icons/FontAwesome"
-import { Icon, Text } from ".."
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
+import { Icon } from "../icon/icon"
+import { Text } from "../text/text"
 
 export interface LocationProps {
   /**
