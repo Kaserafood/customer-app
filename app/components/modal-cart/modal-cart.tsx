@@ -1,4 +1,3 @@
-
 import images from "../../assets/images"
 
 import { observer } from "mobx-react-lite"
@@ -7,7 +6,6 @@ import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } 
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import images from "../../assets/images"
 import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"

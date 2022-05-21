@@ -1,11 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 
 import images from "../../assets/images"
-
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { ScrollView, StyleSheet, View, ViewStyle } from "react-native"
-import images from "../../assets/images"
 import { AutoImage, Button, Card, Header, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 // import { useNavigation } from "@react-navigation/native"
