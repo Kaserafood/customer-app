@@ -3,7 +3,7 @@ import { TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet } from "react-
 import { Text } from "../text/text"
 import { color, spacing } from "../../theme"
 import { CheckboxProps } from "./checkbox.props"
-import images from "assets/images"
+import images from "../../assets/images"
 import { AutoImage } from "../auto-image/auto-image"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 
