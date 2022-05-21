@@ -1,5 +1,5 @@
 export * from "./auto-image/auto-image"
-export * from "./bottom-navigation/bottom-navigation"
+
 export * from "./bullet-item/bullet-item"
 export * from "./button/button"
 export * from "./card/card"

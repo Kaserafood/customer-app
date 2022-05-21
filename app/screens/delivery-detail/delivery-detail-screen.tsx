@@ -1,4 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
+
+import images from "../../assets/images"
+
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
