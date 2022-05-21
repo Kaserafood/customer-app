@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[0],
   },
   column: {
-    height: 113,
+    height: 135,
   },
   containerPrice: {
     alignItems: "flex-end",
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
   },
   imageDish: {
     borderRadius: 8,
-    height: 95,
-    width: 145,
+    height: 114,
+    width: 160,
   },
 })

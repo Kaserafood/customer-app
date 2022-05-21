@@ -29,6 +29,11 @@ import { ChefItem, ChefItemModel } from "./chef-item"
 class ModalState {
   isVisibleWhy = false
   data: ChefItemModel[] = []
+  isVisibleLocation = false
+
+  setVisibleLocation(state: boolean) {
+    this.isVisibleLocation = state
+  }
 
   setVisibleWhy(state: boolean) {
     this.isVisibleWhy = state
@@ -136,7 +141,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         statusBarBackgroundColor={color.palette.white}
       >
         <ScrollView style={styles.container}>
-          <Location style={utilSpacing.px4}></Location>
+          <Location
+            onPress={() => {
+              modalState.setVisibleLocation(true)
+            }}
+            style={utilSpacing.px4}
+          ></Location>
           <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalState.setVisibleWhy(state)}
@@ -162,7 +172,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             <ListChef toDishDetail={(dish, item) => toDishDetail(dish, item)}></ListChef>
           </View>
         </ScrollView>
-        <LocationModal></LocationModal>
+        <LocationModal modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader visible={commonStore.isVisibleLoading}></Loader>
       </Screen>
