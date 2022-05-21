@@ -1,6 +1,5 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
+
 import { Text } from "../text/text"
 import { Price } from "../price/price"
 import { AutoImage } from "../auto-image/auto-image"
@@ -9,6 +8,11 @@ import images from "../../assets/images"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { UserChef } from "../../models/user-store"
 import Ripple from "react-native-material-ripple"
+import { DishChef as DishChefModel } from "../../models/dish-store"
+import { utilSpacing } from "../../theme/Util"
+import { AutoImage } from "../auto-image/auto-image"
+import { Price } from "../price/price"
+import { Text } from "../text/text"
 
 export interface DishChefProps {
   /**

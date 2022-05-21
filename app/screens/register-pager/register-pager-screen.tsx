@@ -1,10 +1,13 @@
 import { StackScreenProps } from "@react-navigation/stack"
+
 import images from "../../assets/images"
+
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { BackHandler, ImageURISource, StyleSheet, View, ViewStyle } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import PagerView from "react-native-pager-view"
+import images from "../../assets/images"
 import { AutoImage, Button, Dot, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"

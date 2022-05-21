@@ -1,4 +1,5 @@
 export * from "./auto-image/auto-image"
+
 export * from "./bullet-item/bullet-item"
 export * from "./button/button"
 export * from "./card/card"
@@ -13,7 +14,6 @@ export * from "./divider/divider"
 export * from "./dot/dot"
 export * from "./empty-data/empty-data"
 export * from "./form-row/form-row"
-export * from "./gradient-background/gradient-background"
 export * from "./header/header"
 export * from "./icon/icon"
 export * from "./input-text-card/input-text-card"
