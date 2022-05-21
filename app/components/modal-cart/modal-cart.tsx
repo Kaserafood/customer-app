@@ -1,4 +1,4 @@
-import images from "assets/images"
+import images from "../../assets/images"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"

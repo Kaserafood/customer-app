@@ -1,9 +1,9 @@
-import Images from "assets/images"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { createIconSetFromIcoMoon } from "react-native-vector-icons"
+import images from "../../assets/images"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { AutoImage } from "../auto-image/auto-image"
@@ -75,7 +75,7 @@ export const BottomNavigation = observer(function BottomNavigation(props: Bottom
 
         <TouchableOpacity style={styles.button}>
           <Ripple style={styles.ripple} rippleCentered onPress={() => activeIndex.setIndex(3)}>
-            <AutoImage resizeMode="contain" style={styles.icon} source={Images.more}></AutoImage>
+            <AutoImage resizeMode="contain" style={styles.icon} source={images.more}></AutoImage>
             <Text tx="bottomNavigation.more"></Text>
           </Ripple>
         </TouchableOpacity>
