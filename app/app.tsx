@@ -48,7 +48,11 @@ function App() {
         .then(setRootStore)
         .then(async () => {
           const userId = await loadString("userId")
-          if (userId && userId.length > 0) rootStore.commonStore.setIsSignedIn(true)
+          if (userId && userId.length > 0) {
+            if (rootStore.commonStore) rootStore.commonStore.setIsSignedIn(true)
+            if (rootStore.dishStore) rootStore.dishStore.clearDishes()
+            else console.log("COMMON IS UNDEFINED")
+          }
         })
     })()
   }, [])

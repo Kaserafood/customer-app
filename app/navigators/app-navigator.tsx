@@ -25,7 +25,6 @@ import { DishChef } from "../models/dish-store"
 import { useStores } from "../models/root-store/root-store-context"
 import {
   AddressScreen,
-  CategoryScreen,
   ChefsScreen,
   DeliveryDetailScreen,
   DishDetailScreen,
@@ -41,10 +40,12 @@ import {
   SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
+import { CategoryScreen } from "../screens/category/category-screen"
 import { color } from "../theme"
 import { typographySize } from "../theme/typography"
 import { utilSpacing } from "../theme/Util"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
+import { NavigatorParamList } from "./navigator-param-list"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -58,38 +59,6 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/params/
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
-
-interface registerPageParams {
-  init: boolean
-}
-
-interface addressScreenParams {
-  latitude: number
-  longitude: number
-  addressMap: string
-  latitudeDelta: number
-  longitudeDelta: number
-}
-
-export type NavigatorParamList = {
-  init: undefined
-  registerForm: undefined
-  termsConditions: undefined
-  privacyPolicy: undefined
-  registerPager: registerPageParams
-  loginForm: undefined
-  main: undefined
-  dishDetail: DishChef
-  menuChef: DishChef
-  deliveryDetail: undefined
-  endOrder: undefined
-  category: Category
-  home: undefined
-  chefs: undefined
-  search: undefined
-  map: undefined
-  address: addressScreenParams
-}
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()

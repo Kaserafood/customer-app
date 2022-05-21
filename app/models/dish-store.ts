@@ -75,4 +75,7 @@ export const DishStoreModel = types
         self.dishesGroupedByChef.replace(result.data)
       }
     }),
+    clearDishes() {
+      self.dishes.clear()
+    },
   }))
