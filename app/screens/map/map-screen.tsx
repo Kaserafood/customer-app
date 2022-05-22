@@ -2,21 +2,20 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps"
 import { useLocation } from "../../common/hooks/useLocation"
-import { Button, Header, Icon, InputText, Screen, Text } from "../../components"
+import { Button, Header, Icon, Screen, Text } from "../../components"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
-import { color } from "../../theme"
+import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError } from "../../utils/messages"
 import { getI18nText } from "../../utils/translate"
 
 class LoadingState {
-  loading = false
+  loading = true
 
   setLoading(state: boolean) {
     this.loading = state
@@ -32,9 +31,7 @@ const loadingState = new LoadingState()
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation }) => {
     const { fetchAddressText, location, permission, setLocation } = useLocation()
-    const [address, setAddress] = useState("")
-
-    const { ...methods } = useForm({ mode: "onBlur" })
+    const [address, setAddress] = useState(getI18nText("mapScreen.addressPlaceholder"))
     let timeOut: NodeJS.Timeout
 
     useEffect(() => {
@@ -115,18 +112,9 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               style={utilSpacing.my4}
             ></Text>
 
-            <FormProvider {...methods}>
-              <InputText
-                name="address"
-                placeholderTx="mapScreen.addressPlaceholder"
-                styleContainer={utilSpacing.mb6}
-                style={styles.textAddrres}
-                value={address}
-                numberOfLines={3}
-                multiline
-                editable={false}
-              ></InputText>
-            </FormProvider>
+            <View style={styles.containerAddress}>
+              <Text text={address} style={styles.textAddrres}></Text>
+            </View>
           </View>
 
           <Button
@@ -148,6 +136,12 @@ const styles = StyleSheet.create({
     height: "60%",
     justifyContent: "center",
     width: "100%",
+  },
+  containerAddress: {
+    backgroundColor: color.palette.grayLigth,
+    borderRadius: spacing[2],
+    padding: spacing[4],
+    paddingVertical: spacing[5],
   },
   containerBottom: {
     alignSelf: "center",

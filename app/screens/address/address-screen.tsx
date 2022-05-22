@@ -5,7 +5,7 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { Button, Header, InputText, Loader, Screen } from "../../components"
-import { Address, useStores } from "../../models"
+import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
@@ -72,11 +72,18 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="instructionsDelivery"
-                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
-                labelTx="addressScreen.instructionsDelivery"
+                name="phone"
+                placeholderTx="addressScreen.phoneDeliveryPlaceholder"
+                rules={{
+                  minLength: {
+                    value: getMaskLength(getFormatMaskPhone()),
+                    message: "addressScreen.phoneFormatIncorrect",
+                  },
+                }}
+                labelTx="addressScreen.phoneDelivery"
                 styleContainer={utilSpacing.mb6}
-                maxLength={200}
+                keyboardType="phone-pad"
+                mask={getFormatMaskPhone()}
               ></InputText>
 
               <InputText
@@ -90,18 +97,11 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
               <InputText
                 preset="card"
-                name="phone"
-                placeholderTx="addressScreen.phoneDeliveryPlaceholder"
-                rules={{
-                  minLength: {
-                    value: getMaskLength(getFormatMaskPhone()),
-                    message: "addressScreen.phoneFormatIncorrect",
-                  },
-                }}
-                labelTx="addressScreen.phoneDelivery"
+                name="instructionsDelivery"
+                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
+                labelTx="addressScreen.instructionsDelivery"
                 styleContainer={utilSpacing.mb6}
-                keyboardType="phone-pad"
-                mask={getFormatMaskPhone()}
+                maxLength={200}
               ></InputText>
             </FormProvider>
           </View>
