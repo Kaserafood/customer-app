@@ -32,9 +32,10 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
       userStore
         .login(data)
         .then((userValid: boolean) => {
+          commonStore.setVisibleLoading(false)
           if (userValid) commonStore.setIsSignedIn(true)
         })
-        .finally(() => commonStore.setVisibleLoading(false))
+        .catch(() => commonStore.setVisibleLoading(false))
     }
 
     const handleBack = () => {

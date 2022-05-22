@@ -1,6 +1,6 @@
 import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
-import React, { useLayoutEffect, useState } from "react"
+import React from "react"
 import { ImageRequireSource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { useStores } from "../../models"
 import { color, typographySize } from "../../theme"
@@ -33,20 +33,12 @@ export interface EmptyDataProps {
  * Component when there is no data
  */
 export const EmptyData = observer(function EmptyData(props: EmptyDataProps) {
-  const { style, lengthData, message, image } = props
-
-  const [notFound, setNotFound] = useState(false)
+  const { style, lengthData = -1, message, image } = props
   const { commonStore } = useStores()
-
-  useLayoutEffect(() => {
-    if (lengthData === 0) {
-      setNotFound(true)
-    }
-  }, [lengthData])
 
   return (
     <View style={style}>
-      {notFound && !commonStore.isVisibleLoading && (
+      {lengthData === 0 && !commonStore.isVisibleLoading && (
         <View>
           <LottieView
             style={styles.notFound}

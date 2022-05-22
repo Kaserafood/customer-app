@@ -63,7 +63,7 @@ export const useLocation = () => {
     })
   }
   const addListenerLocation = async (): Promise<Location> => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const listener = addListener(({ locationEnabled }) => {
         console.log(`Location are ${locationEnabled ? "enabled" : "disabled"}`)
 

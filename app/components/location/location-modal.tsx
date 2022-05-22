@@ -85,7 +85,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   useEffect(() => {
     if (modal.isVisibleLocation && addressText.length === 0) {
       permission().then((location) => {
-        if (location.latitude > 0 && location.longitude > 0) {
+        if (location.latitude !== 0 && location.longitude !== 0) {
           fetchAddressText(location.latitude, location.longitude).then((address) => {
             if (address) {
               setAddressText(address)
@@ -96,6 +96,10 @@ export const LocationModal = observer(function Location(props: LocationProps) {
     }
   }, [modal.isVisibleLocation])
 
+  const hideModal = () => {
+    if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+  }
+
   return (
     <Modal
       isVisible={modal.isVisibleLocation || modalPersistent.isPersistent}
@@ -105,7 +109,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
       style={style}
       coverScreen={false}
       onBackdropPress={() => {
-        if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+        hideModal()
       }}
       onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
     >
@@ -114,7 +118,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
           <View style={styles.containerImgClose}>
             <TouchableOpacity
               onPress={() => {
-                if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+                hideModal()
               }}
               activeOpacity={0.7}
             >

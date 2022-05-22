@@ -73,11 +73,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       console.log("Home  useEffect")
-
+      commonStore.setVisibleLoading(true)
       async function fetch() {
-        const email = await loadString("email")
-        console.log(email)
-        commonStore.setVisibleLoading(true)
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
@@ -89,8 +86,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             console.log("hide loaindg")
           })
       }
-      async function setUserData() {
-        if (userStore.userId) {
+      async function setUserStoreData() {
+        if (!userStore.userId) {
           console.log("Getting string user data")
           const id = await loadString("userId")
           const displayName = await loadString("displayName")
@@ -101,7 +98,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           userStore.setAddressId(Number(addressId))
         }
       }
-      setUserData()
+      setUserStoreData()
 
       fetch()
     }, [])

@@ -57,10 +57,11 @@ export const UserRegisterModel = userRegister
       await saveString("userId", data.id.toString())
       await saveString("email", data.email)
       await saveString("displayName", data.displayName)
-      await saveString("addressId", `${data.addressId}`)
+      await saveString("addressId", data.addressId.toString())
       self.setUserId(data.id)
       self.setDisplayName(data.displayName)
       self.setEmail(data.email)
+      self.setAddressId(data.addressId)
     },
   }))
   .actions((self) => ({
@@ -80,7 +81,7 @@ export const UserRegisterModel = userRegister
       const result = await userApi.login(user)
 
       if (result && result.kind === "ok") {
-        self.saveData(result)
+        await self.saveData(result)
         return true
       }
       return false

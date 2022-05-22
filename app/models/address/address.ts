@@ -1,4 +1,4 @@
-import { flow, SnapshotOut, types } from "mobx-state-tree"
+import { flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../../services/api"
 import { AddressResponse, CommonResponse } from "../../services/api/api.types"
 
@@ -8,14 +8,14 @@ const addressModel = types.model("Address").props({
   longitude: types.maybe(types.number),
   longitudeDelta: types.maybe(types.number),
   latitudeDelta: types.maybe(types.number),
-  addressMap: types.optional(types.maybeNull(types.string), null),
+  addressMap: types.union(types.maybe(types.string), types.null),
   address: types.maybe(types.string),
-  numHouseApartment: types.optional(types.maybeNull(types.string), null),
-  instructionsDelivery: types.optional(types.maybeNull(types.string), null),
-  name: types.optional(types.maybeNull(types.string), null),
-  phone: types.optional(types.maybeNull(types.string), null),
+  numHouseApartment: types.union(types.maybe(types.string), types.null),
+  instructionsDelivery: types.union(types.maybe(types.string), types.null),
+  name: types.maybe(types.string),
+  phone: types.union(types.maybe(types.string), types.null),
 })
-export interface Address extends SnapshotOut<typeof addressModel> {}
+export interface Address extends Instance<typeof addressModel> {}
 /**
  * Address model.
  */
@@ -40,7 +40,6 @@ export const AddressModelStore = types
     getAll: flow(function* getAll(userId: number) {
       const api = new Api()
       const result: AddressResponse = yield api.getAddresses(userId)
-      console.log("After request address:", result)
       if (result && result.kind === "ok") {
         self.addresses.replace(result.data)
       } else self.addresses.replace([])
