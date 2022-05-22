@@ -1,20 +1,16 @@
-import React, { Dispatch, SetStateAction } from "react"
-import { StyleProp, TextStyle, View, ViewStyle, TextInputProps, TextInput } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing, typography } from "../../theme"
-import { translate, TxKeyPath } from "../../i18n"
-import { typographySize } from "../../theme/typography"
-import { Text } from "../text/text"
-import { useController, useFormContext, ControllerProps, UseControllerProps } from "react-hook-form"
-import { delay } from "../../utils/delay"
+import React from "react"
+import { useController, useFormContext } from "react-hook-form"
+import { TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
-import AnimatedComponent, {
-  FadeIn,
-  FadeInDown,
-  FadeInUp,
-  Layout,
-  Transition,
-} from "react-native-reanimated"
+import TextInputMask from "react-native-text-input-mask"
+import { translate } from "../../i18n"
+import { color, spacing, typography } from "../../theme"
+import { typographySize } from "../../theme/typography"
+import { utilSpacing } from "../../theme/Util"
+import { Card } from "../card/card"
+import { Text } from "../text/text"
+import { InputTextProps } from "./input-text.props"
 
 const TEXT_STYLES: TextStyle = {
   paddingHorizontal: spacing[3],
@@ -36,60 +32,29 @@ const CONTAINER_INPUT: ViewStyle = {
   backgroundColor: color.palette.grayLigth,
   borderRadius: spacing[2],
 }
+
+const CONTAINER_INPUT_CARD: ViewStyle = {
+  borderRadius: spacing[2],
+}
 const CONTAINER: ViewStyle = {
   width: "100%",
 }
 
-interface InputTextProps extends TextInputProps, UseControllerProps {
-  /**
-   * The placeholder i18n key.
-   */
-  placeholderTx?: TxKeyPath
+export const InputText = (props: InputTextProps) => {
+  const { name } = props
 
-  /**
-   * The Placeholder text if no placeholderTx is provided.
-   */
-  placeholder?: string
+  const formContext = useFormContext()
 
-  /**
-   * An optional style override  the InputText style .
-   */
-  style?: StyleProp<TextStyle>
+  // Placeholder until input name is initialized
+  if (!formContext || !name) {
+    const msg = !formContext
+      ? "TextInput must be wrapped by the FormProvider"
+      : "Name must be defined"
+    console.error(msg)
+    return null
+  }
 
-  /**
-   * An optional style override  the Label style .
-   */
-  styleLabel?: StyleProp<TextStyle>
-
-  /**
-   * An optional style override the View container style.
-   */
-  styleContainer?: StyleProp<ViewStyle>
-
-  /**
-   * An optional reference
-   */
-  forwardedRef?: any
-
-  /**
-   * An optional label to display when preset is "card" //TODO: ADD THIS PRESET
-   */
-  label?: string
-
-  /**
-   * Name of the input
-   */
-  name: string
-
-  /**
-   * Default value in the input
-   */
-  defaultValue?: string
-
-  /**
-   * Error handler
-   */
-  setFormError: Dispatch<SetStateAction<boolean>>
+  return <ControlledInput {...props} />
 }
 
 const ControlledInput = observer(function InputText(props: InputTextProps) {
@@ -100,62 +65,87 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     forwardedRef,
     placeholderTx,
     name,
-    label,
+    labelTx,
     rules,
     defaultValue,
     styleLabel,
+    preset = "normal",
+    mask,
     ...rest
   } = props
-  const formContext = useFormContext()
-  const { formState } = formContext
+
   const { field } = useController({ name, rules, defaultValue })
-  const hasError = Boolean(formState?.errors[name])
 
   const stylesInput = Object.assign({}, TEXT_STYLES, style)
   const container = Object.assign({}, CONTAINER, styleContainer)
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
-  return (
-    <View style={container}>
-      <View style={CONTAINER_INPUT}>
-        {label && <Text style={styleLabel}>{label}</Text>}
 
-        <TextInput
-          selectionColor={color.palette.grayDark}
-          placeholder={actualPlaceholder}
-          placeholderTextColor={color.palette.grayDark}
-          underlineColorAndroid={color.transparent}
-          style={stylesInput}
-          ref={forwardedRef}
-          onChangeText={field.onChange}
-          onBlur={field.onBlur}
-          value={field.value}
-          {...rest}
-        />
+  if (preset === "normal") {
+    return (
+      <View style={container}>
+        <View style={CONTAINER_INPUT}>
+          <TextInputMask
+            selectionColor={color.palette.grayDark}
+            placeholder={actualPlaceholder}
+            placeholderTextColor={color.palette.grayDark}
+            underlineColorAndroid={color.transparent}
+            style={stylesInput}
+            ref={forwardedRef}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            value={field.value}
+            mask={mask}
+            {...rest}
+          />
+        </View>
+        <ErrorMessage name={name}></ErrorMessage>
       </View>
+    )
+  }
 
-      {hasError && (
-        <Animatable.Text style={CONTAINER_ERROR} animation="shake">
-          <Text style={TEXT_ERROR} tx={formState.errors[name].message}></Text>
-        </Animatable.Text>
-      )}
-    </View>
+  return (
+    <Card
+      style={[utilSpacing.pb6, utilSpacing.px5, utilSpacing.mx4, utilSpacing.mb4, styleContainer]}
+    >
+      <View>
+        <View style={CONTAINER_INPUT_CARD}>
+          {labelTx && (
+            <Text tx={labelTx} style={[utilSpacing.mt3, styleLabel]} preset="semiBold"></Text>
+          )}
+          <TextInputMask
+            selectionColor={color.palette.grayDark}
+            placeholder={actualPlaceholder}
+            placeholderTextColor={color.palette.grayDark}
+            underlineColorAndroid={color.palette.grayLigth}
+            style={stylesInput}
+            ref={forwardedRef}
+            onChangeText={field.onChange}
+            onBlur={field.onBlur}
+            value={field.value}
+            mask={mask}
+            {...rest}
+          />
+        </View>
+        <ErrorMessage name={name}></ErrorMessage>
+      </View>
+    </Card>
   )
 })
 
-export const InputText = (props: InputTextProps) => {
-  const { name, setFormError } = props
-
+const ErrorMessage = (props: { name: string }) => {
+  const { name } = props
   const formContext = useFormContext()
 
-  // Placeholder until input name is initialized
-  if (!formContext || !name) {
-    const msg = !formContext
-      ? "TextInput must be wrapped by the FormProvider"
-      : "Name must be defined"
-    console.error(msg)
-    setFormError(true)
-    return null
+  const { formState } = formContext
+  const hasError = Boolean(formState?.errors[name])
+
+  if (hasError && formState.errors[name].message) {
+    return (
+      <Animatable.Text style={CONTAINER_ERROR} animation="shake">
+        <Text style={TEXT_ERROR} tx={formState.errors[name].message}></Text>
+      </Animatable.Text>
+    )
   }
 
-  return <ControlledInput {...props} />
+  return null
 }

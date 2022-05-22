@@ -21,7 +21,8 @@ import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { Dish as DishModel } from "../../models/dish"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -41,17 +42,17 @@ class ModalState {
 const modalState = new ModalState()
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const { dayStore, modalStore, dishStore, cartStore } = useStores()
+    const { dayStore, commonStore, dishStore, cartStore } = useStores()
 
     useEffect(() => {
       console.log(params)
     })
 
     const onChangeDay = async (day: Day) => {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await dishStore.getByChef(params.chef.id).finally(() => {
-        modalStore.setVisibleLoading(false)
+        commonStore.setVisibleLoading(false)
       })
     }
 

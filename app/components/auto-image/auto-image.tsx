@@ -1,9 +1,17 @@
-import React, { useState } from "react"
-import { Image as RNImage, ImageProps as DefaultImageProps, ImageURISource } from "react-native"
-import images from "../../assets/images"
+import React from "react"
+import {
+  Image as RNImage,
+  ImageErrorEventData,
+  ImageProps as DefaultImageProps,
+  ImageURISource,
+  NativeSyntheticEvent,
+  StyleProp,
+} from "react-native"
+import FastImage, { ImageStyle } from "react-native-fast-image"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
+  style: StyleProp<ImageStyle>
 }
 
 /**
@@ -20,18 +28,26 @@ type ImageProps = DefaultImageProps & {
  * component and are web-ready if not explicitly sized in the style property.
  */
 export function AutoImage(props: ImageProps) {
-  const [errorLoad, setErrorLoad] = useState(false)
-
-  if (props.source && !errorLoad) {
-    if (props.source?.uri && !props.source?.uri?.includes("http")) setErrorLoad(true)
+  const onError = (error: NativeSyntheticEvent<ImageErrorEventData>) => {
+    if (error)
+      console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)
+    props.source = { uri: "https://via.placeholder.com/150" }
   }
 
-  return (
-    <RNImage
-      {...props}
-      source={!errorLoad ? props.source : images.category}
-      style={props.style}
-      onError={() => setErrorLoad(true)}
-    />
-  )
+  if (props.source?.uri?.length > 0) {
+    return (
+      <FastImage
+        source={{
+          uri: props.source.uri,
+          priority: FastImage.priority.normal,
+        }}
+        style={props.style}
+        onError={() => onError(null)}
+      />
+    )
+  }
+  if (!props.source?.uri)
+    return <RNImage {...props} source={props.source} style={props.style} onError={onError} />
+
+  return null
 }

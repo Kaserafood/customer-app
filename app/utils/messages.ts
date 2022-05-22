@@ -1,44 +1,67 @@
-import { showMessage } from "react-native-flash-message"
-import { getI18nText } from "./translate"
+import { MessageOptions, showMessage } from "react-native-flash-message"
+import { GeneralApiProblem } from "../services/api/api-problem"
 import { color } from "../theme"
+import { getI18nText } from "./translate"
 
+const options: MessageOptions = {
+  message: "",
+  position: "bottom",
+  floating: true,
+  icon: "auto",
+}
 /**
  *
  * @param response response from the server
  *
  */
-export const handleDataResponseAPI = (response: any) => {
-  if (response?.kind === "ok") {
-    showMessage({
-      message: response?.data?.message ?? getI18nText("common.operationSuccess"),
-      type: "success",
-      position: "bottom",
-      floating: true,
-      icon: "auto",
-    })
-  } else {
-    showMessage({
-      style: { backgroundColor: color.palette.redDark },
-      message: response?.data?.message ?? getI18nText("common.someError"),
-      type: "danger",
-      position: "bottom",
-      floating: true,
-      icon: "auto",
-    })
-  }
+export const handleMessageProblem = (response: GeneralApiProblem) => {
+  if (response.kind === "rejected") {
+    if (response.data) {
+      const msg = response?.data?.message ?? getI18nText("common.someError")
+      showMessageError(msg)
+    } else showMessageError()
+  } else if (response.kind === "cannot-connect") {
+    showMessageError(getI18nText("common.cannotConnect"))
+  } else showMessageError()
 }
 
 /**
  *
- * @param message message to show, the value should be in i18n
+ * @param message message to show
  */
-
 export const showMessageInfo = (message: string) => {
+  const msg = message ?? getI18nText("common.operationExecuted")
   showMessage({
-    message: getI18nText(message),
+    ...options,
+    message: msg,
     type: "info",
-    position: "bottom",
-    floating: true,
-    icon: "auto",
+  })
+}
+
+/**
+ *
+ * @param message message to show
+ */
+export const showMessageError = (message?: string) => {
+  const msg = message ?? getI18nText("common.someError")
+  showMessage({
+    ...options,
+    style: { backgroundColor: color.primaryDarker },
+    message: msg,
+    type: "danger",
+  })
+}
+
+/**
+ *
+ * @param message message to show
+ */
+export const showMessageSucess = (message?: string) => {
+  const msg = message ?? getI18nText("common.operationSuccess")
+  showMessage({
+    ...options,
+    style: { backgroundColor: color.palette.green },
+    message: msg,
+    type: "success",
   })
 }

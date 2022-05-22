@@ -24,7 +24,10 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
         <StatusBar backgroundColor={color.primary} barStyle="light-content" />
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} tx="initScreen.homemadeFood"></Text>
-        <Text style={styles.textSecondary} tx="initScreen.byChefIndependently"></Text>
+        <Text
+          style={[styles.textSecondary, utilSpacing.mt5]}
+          tx="initScreen.byChefIndependently"
+        ></Text>
         <View style={styles.containerButtons}>
           <Button
             preset="white"
@@ -50,6 +53,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
 const styles = StyleSheet.create({
   button: {
     fontSize: typographySize.xl,
+    lineHeight: 35,
   },
   containerButtons: {
     width: "60%",
@@ -72,5 +76,6 @@ const styles = StyleSheet.create({
   textTitle: {
     color: color.palette.white,
     fontSize: 35,
+    lineHeight: 45,
   },
 })

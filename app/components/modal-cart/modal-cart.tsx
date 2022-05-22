@@ -1,16 +1,21 @@
-import images from "assets/images"
+import images from "../../assets/images"
+
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { AutoImage, Button, Price, Separator, Text } from ".."
 import { useStores } from "../../models"
-import { UserChef } from "../../models/user-store/user-store"
+import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { AutoImage } from "../auto-image/auto-image"
+import { Button } from "../button/button"
 import { Card } from "../card/card"
+import { Price } from "../price/price"
+import { Separator } from "../separator/separator"
+import { Text } from "../text/text"
 
 interface ModalState {
   isVisible: boolean

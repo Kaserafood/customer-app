@@ -26,12 +26,18 @@ import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { loadString } from "../../utils/storage"
 
 class ModalState {
   isVisibleWhy = false
+  isVisibleLocation = false
 
   setVisibleWhy(state: boolean) {
     this.isVisibleWhy = state
+  }
+
+  setVisibleLocation(state: boolean) {
+    this.isVisibleLocation = state
   }
 
   constructor() {
@@ -41,12 +47,12 @@ class ModalState {
 const modalState = new ModalState()
 
 /**
- * Home screen used in Main Screen
+ * Home Screen to show main dishes
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   function HomeScreen({ navigation }) {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, modalStore, categoryStore } = useStores()
+    const { dishStore, dayStore, commonStore, categoryStore, userStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -67,21 +73,34 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       console.log("Home  useEffect")
+      commonStore.setVisibleLoading(true)
       async function fetch() {
-        modalStore.setVisibleLoading(true)
-
+        await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
-          dayStore.getDays(RNLocalize.getTimeZone()),
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
           categoryStore.getAll(),
         ])
+          .then(() => setCurrentDay(days[0]))
+          .finally(() => {
+            commonStore.setVisibleLoading(false)
+            console.log("hide loaindg")
+          })
       }
+      async function setUserStoreData() {
+        if (!userStore.userId) {
+          console.log("Getting string user data")
+          const id = await loadString("userId")
+          const displayName = await loadString("displayName")
+          const addressId = await loadString("addressId")
+
+          userStore.setUserId(Number(id))
+          userStore.setDisplayName(displayName)
+          userStore.setAddressId(Number(addressId))
+        }
+      }
+      setUserStoreData()
+
       fetch()
-        .then(() => setCurrentDay(days[0]))
-        .finally(() => {
-          modalStore.setVisibleLoading(false)
-          console.log("hide loaindg")
-        })
     }, [])
 
     return (
@@ -92,7 +111,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBarBackgroundColor={color.palette.white}
       >
         <ScrollView style={styles.container}>
-          <Location style={utilSpacing.px4}></Location>
+          <Location
+            onPress={() => {
+              modalState.setVisibleLocation(true)
+            }}
+            style={utilSpacing.px4}
+          ></Location>
           <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalState.setVisibleWhy(state)}
@@ -118,27 +142,33 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               ></Text>
             </View>
             <Separator style={utilSpacing.my4}></Separator>
-
+            <ListDishes toDetail={(dish) => toDetail(dish)}></ListDishes>
             <View style={utilSpacing.mb8}>
-              {dishStore.dishes.map((dish, index) => (
-                <View key={dish.id}>
-                  <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
-                  {index !== dishStore.dishes.length - 1 && (
-                    <Separator style={utilSpacing.my3}></Separator>
-                  )}
-                </View>
-              ))}
-              <EmptyData lengthData={dishStore.dishes.length}></EmptyData>
+              <EmptyData lengthData={dishStore.totalDishes}></EmptyData>
             </View>
           </View>
         </ScrollView>
-        <LocationModal></LocationModal>
+        <LocationModal modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader></Loader>
       </Screen>
     )
   },
 )
+const ListDishes = observer(function ListDishes(props: { toDetail: (dish: DishModel) => void }) {
+  const { dishStore } = useStores()
+
+  return (
+    <View>
+      {dishStore.dishes.map((dish, index) => (
+        <View key={dish.id}>
+          <Dish dish={dish} onPress={() => props.toDetail(dish)}></Dish>
+          {index !== dishStore.totalDishes - 1 && <Separator style={utilSpacing.my3}></Separator>}
+        </View>
+      ))}
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
   container: {

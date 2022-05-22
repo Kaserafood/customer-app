@@ -5,10 +5,12 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { IUserRegister } from "../../models/user-store/user-store"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { UserRegister } from "../../models/user-store"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageInfo } from "../../utils/messages"
 
 export const RegisterFormScreen: FC<
@@ -16,28 +18,22 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onChange" })
-  const [formError, setError] = useState<boolean>(false)
-  const { userStore, modalStore } = useStores()
+  const { userStore, commonStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: UserRegister) => {
     if (!terms) {
       showMessageInfo("registerFormScreen.acceptsTerms")
     } else {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       console.log(data)
-      userStore
-        .register(data)
-        .then(() => {
-          modalStore.setVisibleLoading(false)
-        })
-        .finally(() => modalStore.setVisibleLoading(false))
+      userStore.register(data).finally(() => commonStore.setVisibleLoading(false))
     }
   }
 
-  const onError: SubmitErrorHandler<IUserRegister> = (errors) => {
+  const onError: SubmitErrorHandler<UserRegister> = (errors) => {
     return console.log({ errors })
   }
 
@@ -55,36 +51,39 @@ export const RegisterFormScreen: FC<
                 name="name"
                 placeholderTx="registerFormScreen.firstName"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.firstNameRequired",
                 }}
+                maxLength={100}
               ></InputText>
               <InputText
                 name="lastName"
                 placeholderTx="registerFormScreen.lastName"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.lastNameRequired",
                 }}
+                maxLength={100}
               ></InputText>
               <InputText
                 name="phone"
                 keyboardType="phone-pad"
                 placeholderTx="registerFormScreen.phone"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.phoneRequired",
+                  minLength: {
+                    value: getMaskLength(getFormatMaskPhone()),
+                    message: "registerFormScreen.phoneFormatIncorrect",
+                  },
                 }}
+                mask={getFormatMaskPhone()}
               ></InputText>
               <InputText
                 name="email"
                 keyboardType="email-address"
                 placeholderTx="registerFormScreen.email"
                 styleContainer={styles.input}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.emailRequired",
                   pattern: {
@@ -92,6 +91,7 @@ export const RegisterFormScreen: FC<
                     message: "registerFormScreen.emailFormat",
                   },
                 }}
+                maxLength={200}
               ></InputText>
               <InputText
                 name="password"
@@ -100,8 +100,12 @@ export const RegisterFormScreen: FC<
                 secureTextEntry
                 rules={{
                   required: "registerFormScreen.passwordRequired",
+                  minLength: {
+                    value: 4,
+                    message: "registerFormScreen.passwordMinLength",
+                  },
                 }}
-                setFormError={setError}
+                maxLength={100}
               ></InputText>
               <View style={styles.containerTermsBtn}>
                 <View style={styles.containerTerms}>

@@ -2,32 +2,39 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import IconRN from "react-native-vector-icons/FontAwesome"
-import { Icon, Text } from ".."
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
+import { Icon } from "../icon/icon"
+import { Text } from "../text/text"
 
 export interface LocationProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Callback on click location
+   */
+  onPress?: () => void
 }
 
 /**
- * Componet for location on the home and chef  components
+ * Component for location on the home and chef screen
  */
 export const Location = observer(function Location(props: LocationProps) {
-  const { style } = props
-  const { modalStore } = useStores()
+  const { style, onPress } = props
+  const { addressStore } = useStores()
+
   return (
     <View style={[styles.containerAddress, style]}>
-      <TouchableOpacity
-        onPress={() => modalStore.setVisibleModalLocaton(true)}
-        style={styles.btnAddress}
-        activeOpacity={0.7}
-      >
+      <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
         <Icon name="location-1" size={24} color={color.palette.white} />
-        <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
+        <Text
+          numberOfLines={1}
+          style={styles.textAddress}
+          text={addressStore.current.address}
+        ></Text>
         <IconRN name="caret-down" size={24} color={color.palette.white} />
       </TouchableOpacity>
     </View>

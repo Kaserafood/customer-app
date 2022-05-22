@@ -4,9 +4,9 @@ import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
-import { AutoImage, Price, Separator, Text } from "../../components"
+import { AutoImage, Price, Text } from "../../components"
 import { Dish } from "../../models/dish"
-import { UserChef } from "../../models/user-store/user-store"
+import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 
@@ -134,8 +134,6 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           <AutoImage style={styles.imageChef} source={{ uri: item.image }}></AutoImage>
         </View>
       </View>
-
-      <Separator style={utilSpacing.mb5}></Separator>
     </View>
   )
 })

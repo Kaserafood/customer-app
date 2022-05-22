@@ -11,7 +11,8 @@ import { EmptyData } from "../../components/empty-data/empty-data"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { DishChef as DishModel } from "../../models/dish-store"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 
@@ -33,26 +34,26 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const {
       dayStore,
       dishStore: { dishesCategory, getAll },
-      modalStore,
+      commonStore,
     } = useStores()
 
     useEffect(() => {
       console.log(params)
       async function fetch() {
-        modalStore.setVisibleLoading(true)
+        commonStore.setVisibleLoading(true)
         await getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), params.id)
       }
 
       fetch().finally(() => {
-        modalStore.setVisibleLoading(false)
+        commonStore.setVisibleLoading(false)
       })
     }, [])
 
     const onChangeDay = async (day: Day) => {
-      modalStore.setVisibleLoading(true)
+      commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await getAll(day.date, RNLocalize.getTimeZone(), params.id).finally(() => {
-        modalStore.setVisibleLoading(false)
+        commonStore.setVisibleLoading(false)
       })
     }
 

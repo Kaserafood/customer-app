@@ -1,11 +1,12 @@
 import React from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { Icon, Text } from ".."
 import { translate } from "../../i18n/"
 import { color, spacing } from "../../theme"
 import { typography } from "../../theme/typography"
 import { utilSpacing } from "../../theme/Util"
+import { Icon } from "../icon/icon"
+import { Text } from "../text/text"
 import { HeaderProps } from "./header.props"
 
 // static styles

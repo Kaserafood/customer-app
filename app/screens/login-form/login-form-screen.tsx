@@ -1,61 +1,56 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { BackHandler, StyleSheet, View, ViewStyle } from "react-native"
+import { BackHandler, StyleSheet, View } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { Button, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { IUserLogin } from "../../models/user-store/user-store"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { UserLogin } from "../../models/user-store"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 
-const ROOT: ViewStyle = {
-  backgroundColor: color.palette.white,
-  flex: 1,
-  alignItems: "center",
-}
-
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation }) => {
-    const { modalStore, userStore } = useStores()
-
+    const { commonStore, userStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
-    const [formError, setError] = useState<boolean>(false)
 
-    function handleBackButton() {
-      goBack()
-      changeNavigationBarColor(color.primary, false, true)
-      return true
-    }
     useEffect(() => {
-      const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBackButton)
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBack)
 
       return () => backHandler.remove()
     }, [navigation])
 
-    const onError: SubmitErrorHandler<IUserLogin> = (errors) => {
+    const onError: SubmitErrorHandler<UserLogin> = (errors) => {
       return console.log({ errors })
     }
 
-    const onSubmit = (data) => {
-      modalStore.setVisibleLoading(true)
+    const onSubmit = (data: UserLogin) => {
+      commonStore.setVisibleLoading(true)
       userStore
         .login(data)
         .then((userValid: boolean) => {
-          if (userValid) navigation.navigate("main")
+          commonStore.setVisibleLoading(false)
+          if (userValid) commonStore.setIsSignedIn(true)
         })
-        .finally(() => modalStore.setVisibleLoading(false))
+        .catch(() => commonStore.setVisibleLoading(false))
+    }
+
+    const handleBack = () => {
+      goBack()
+      changeNavigationBarColor(color.primary, false, true)
+      return true
     }
 
     return (
       <>
-        <Screen style={ROOT} preset="scroll" bottomBar="dark-content">
+        <Screen style={styles.container} preset="scroll" bottomBar="dark-content">
           <Header
             headerTx="loginFormScreen.title"
             leftIcon="back"
-            onLeftPress={handleBackButton}
+            onLeftPress={handleBack}
           ></Header>
           <View style={styles.containerForm}>
             <Text
@@ -70,7 +65,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                 keyboardType="email-address"
                 placeholderTx="loginFormScreen.email"
                 styleContainer={utilSpacing.mb6}
-                setFormError={setError}
                 rules={{
                   required: "registerFormScreen.emailRequired",
                   pattern: {
@@ -78,6 +72,8 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                     message: "registerFormScreen.emailFormat",
                   },
                 }}
+                maxLength={200}
+                defaultValue={"cunquero.carlos@gmail.com"}
               ></InputText>
               <InputText
                 name="password"
@@ -86,8 +82,13 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                 secureTextEntry
                 rules={{
                   required: "registerFormScreen.passwordRequired",
+                  minLength: {
+                    value: 4,
+                    message: "registerFormScreen.passwordMinLength",
+                  },
                 }}
-                setFormError={setError}
+                defaultValue={"Kapibara.42"}
+                maxLength={100}
               ></InputText>
 
               <View style={[styles.containerBtn, utilSpacing.mt9]}>
@@ -109,6 +110,11 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
 const styles = StyleSheet.create({
   btn: {
     width: "90%",
+  },
+  container: {
+    alignItems: "center",
+    backgroundColor: color.background,
+    flex: 1,
   },
   containerBtn: {
     alignItems: "center",

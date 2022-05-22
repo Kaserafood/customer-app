@@ -18,7 +18,8 @@ import {
 import { Separator } from "../../components/separator/separator"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { useStores } from "../../models/root-store/root-store-context"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -32,16 +33,16 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
     const scrollRef = useRef<ScrollView>()
 
-    const { dishStore, modalStore, cartStore } = useStores()
+    const { dishStore, commonStore, cartStore } = useStores()
 
     useEffect(() => {
       setQuantity(1)
       setTotal(params.price)
       console.log(params)
       async function fetch() {
-        modalStore.setVisibleLoading(true)
+        commonStore.setVisibleLoading(true)
         await dishStore.getByChef(params.chef.id).finally(() => {
-          modalStore.setVisibleLoading(false)
+          commonStore.setVisibleLoading(false)
         })
       }
 

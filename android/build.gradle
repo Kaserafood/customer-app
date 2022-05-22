@@ -20,6 +20,10 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+project.ext {
+    excludeAppGlideModule = true
+}
+
 
 allprojects {
     repositories {
@@ -42,5 +46,7 @@ allprojects {
 
         google()
         maven { url 'https://www.jitpack.io' }
+        jcenter()
     }
+    
 }

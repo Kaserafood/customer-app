@@ -40,11 +40,11 @@ export interface LoaderProps {
 export const Loader = observer(function Loader(props: LoaderProps) {
   const { style, visible } = props
   const styles = Object.assign({}, CONTAINER, style)
-  const { modalStore } = useStores()
+  const { commonStore } = useStores()
 
   return (
     <>
-      {(visible || modalStore.isVisibleLoading) && (
+      {(visible || commonStore.isVisibleLoading) && (
         <View style={styles}>
           <Animated.View entering={FadeIn} exiting={FadeOut}>
             <Animated.View entering={ZoomIn} exiting={ZoomOut}>

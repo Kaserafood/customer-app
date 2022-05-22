@@ -1,7 +1,6 @@
-import { Instance, types, SnapshotOut } from "mobx-state-tree"
+import { flow, SnapshotOut, types } from "mobx-state-tree"
+import { Api } from "../services/api"
 import { withEnvironment } from "./extensions/with-environment"
-import { CategoryApi } from "../services/api/category-api"
-import { handleDataResponseAPI } from "../utils/messages"
 
 export const categoryStore = types.model("CategoryStore").props({
   id: types.maybe(types.number),
@@ -17,22 +16,18 @@ export const CategoryStoreModel = types
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    setDays: async (days: Category[]) => {
-      self.categories.replace(days)
+    setCategories: async (categories: Category[]) => {
+      self.categories.replace(categories)
     },
   }))
   .actions((self) => ({
-    getAll: async () => {
+    getAll: flow(function* getAll() {
       if (self.categories.length > 0) return
-      const api = new CategoryApi(self.environment.api)
+      const api = new Api()
+      const result = yield api.getAllCategories()
 
-      const result = await api.getAll()
-
-      if (result.kind === "ok") {
-        self.setDays(result.data)
-      } else {
-        handleDataResponseAPI(result)
-        __DEV__ && console.tron.log(`Error : ${result}`)
+      if (result && result.kind === "ok") {
+        self.setCategories(result.data)
       }
-    },
+    }),
   }))

@@ -5,17 +5,26 @@
  * and a "main" flow which the user will use once logged in.
  */
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { createDrawerNavigator, DrawerContentScrollView } from "@react-navigation/drawer"
+import {
+  DarkTheme,
+  DefaultTheme,
+  DrawerActions,
+  NavigationContainer,
+} from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
+import { TouchableHighlight } from "react-native-gesture-handler"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { Icon } from "../components"
+import { Card, Icon, Text } from "../components"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
+import { useStores } from "../models/root-store/root-store-context"
 import {
-  CategoryScreen,
+  AddressScreen,
   ChefsScreen,
   DeliveryDetailScreen,
   DishDetailScreen,
@@ -23,6 +32,7 @@ import {
   HomeScreen,
   InitScreen,
   LoginFormScreen,
+  MapScreen,
   MenuChefScreen,
   PrivacyPolicyScreen,
   RegisterFormScreen,
@@ -30,10 +40,12 @@ import {
   SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
+import { CategoryScreen } from "../screens/category/category-screen"
 import { color } from "../theme"
 import { typographySize } from "../theme/typography"
 import { utilSpacing } from "../theme/Util"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
+import { NavigatorParamList } from "./navigator-param-list"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -48,53 +60,60 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 
-interface registerPageParams {
-  init: boolean
-}
-export type NavigatorParamList = {
-  init: undefined
-  registerForm: undefined
-  termsConditions: undefined
-  privacyPolicy: undefined
-  registerPager: registerPageParams
-  loginForm: undefined
-  main: undefined
-  dishDetail: DishChef
-  menuChef: DishChef
-  deliveryDetail: undefined
-  endOrder: undefined
-  category: Category
-  home: undefined
-  chefs: undefined
-  search: undefined
-}
-
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
-const AppStack = () => {
+const horizontalAnimation = {
+  cardStyleInterpolator: ({ current, layouts }) => {
+    return {
+      cardStyle: {
+        transform: [
+          {
+            translateX: current.progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [layouts.screen.width, 0],
+            }),
+          },
+        ],
+      },
+    }
+  },
+}
+
+const AppStack = observer(() => {
+  const { commonStore } = useStores()
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
-      initialRouteName="init"
     >
-      <Stack.Screen options={{ animation: "none" }} name="init" component={InitScreen} />
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-      <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="main" component={TabMainNavigation} />
-      <Stack.Screen name="dishDetail" component={DishDetailScreen} />
-      <Stack.Screen name="menuChef" component={MenuChefScreen} />
-      <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
-      <Stack.Screen name="endOrder" component={EndOrderScreen} />
-      <Stack.Screen name="category" component={CategoryScreen} />
+      {!commonStore.isSignedIn ? (
+        <>
+          <Stack.Screen name="init" component={InitScreen} />
+          <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+          <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+          <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+          <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+          <Stack.Screen name="loginForm" component={LoginFormScreen} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="main" component={DrawerNavigation} />
+          <Stack.Screen name="dishDetail" component={DishDetailScreen} />
+          <Stack.Screen name="menuChef" component={MenuChefScreen} />
+          <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+          <Stack.Screen name="endOrder" component={EndOrderScreen} />
+          <Stack.Screen name="category" component={CategoryScreen} />
+          <Stack.Screen name="map" component={MapScreen} />
+          <Stack.Screen name="address" component={AddressScreen} />
+        </>
+      )}
     </Stack.Navigator>
   )
-}
+})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
@@ -118,6 +137,10 @@ AppNavigator.displayName = "AppNavigator"
 const Tab = createBottomTabNavigator()
 
 export function TabMainNavigation() {
+  const openDrawer = () => {
+    navigationRef.current.dispatch(DrawerActions.openDrawer())
+    console.log("opeing")
+  }
   return (
     <Tab.Navigator
       screenOptions={{
@@ -166,7 +189,7 @@ export function TabMainNavigation() {
             return <Icon style={utilSpacing.mt2} name="search" size={35} color={color} />
           },
         }}
-        name="Buscar "
+        name="Buscar"
         component={SearchScreen}
       />
 
@@ -177,10 +200,53 @@ export function TabMainNavigation() {
             return <IconRN style={utilSpacing.mt2} name="menu" light size={30} color={color} />
           },
         }}
-        name="Más "
+        name="Más"
         component={SearchScreen}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault()
+            openDrawer()
+          },
+        })}
       />
     </Tab.Navigator>
+  )
+}
+
+const Drawer = createDrawerNavigator()
+
+function DrawerNavigation() {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        drawerPosition: "right",
+        headerShown: false,
+        drawerStyle: {
+          backgroundColor: color.palette.white,
+        },
+        overlayColor: color.modalTransparent,
+      }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    >
+      <Drawer.Screen name="Home1" component={TabMainNavigation} />
+    </Drawer.Navigator>
+  )
+}
+
+function CustomDrawerContent(props) {
+  const { commonStore } = useStores()
+  const closeSession = () => {
+    commonStore.setIsSignedIn(false)
+  }
+
+  return (
+    <DrawerContentScrollView {...props}>
+      <TouchableHighlight onPressIn={closeSession}>
+        <Card style={utilSpacing.p4}>
+          <Text text="Cerrar sesion"></Text>
+        </Card>
+      </TouchableHighlight>
+    </DrawerContentScrollView>
   )
 }
 
@@ -195,9 +261,6 @@ export function TabMainNavigation() {
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
-function createDrawerNavigator() {
-  throw new Error("Function not implemented.")
-}
 
 const config = {
   animation: "spring",

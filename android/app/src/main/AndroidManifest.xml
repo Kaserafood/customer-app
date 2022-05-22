@@ -2,6 +2,8 @@
   package="com.kasera.client">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-feature android:name="android.permission.ACCESS_FINE_LOCATION" android:required="true"/>
 
     <application
       android:name=".MainApplication"
@@ -9,7 +11,8 @@
       android:icon="@mipmap/ic_launcher"
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
-      android:theme="@style/BootTheme">
+      android:theme="@style/BootTheme"
+      >
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -22,5 +25,9 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
       </activity>
+
+      <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyABdfOq8xWg87ngj4rbG_bHTa5wwEjjUOg"/>
     </application>
 </manifest>
