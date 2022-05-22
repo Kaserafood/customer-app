@@ -58,4 +58,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Mask for the input
    */
   mask?: string
+
+  /***
+   * Counter charactes of the input text, only works with preset "card"
+   */
+  counter?: number
 }

@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { TextStyle, View, ViewStyle } from "react-native"
+import { StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import TextInputMask from "react-native-text-input-mask"
 import { translate } from "../../i18n"
@@ -71,6 +71,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     styleLabel,
     preset = "normal",
     mask,
+    counter,
     ...rest
   } = props
 
@@ -79,6 +80,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
   const stylesInput = Object.assign({}, TEXT_STYLES, style)
   const container = Object.assign({}, CONTAINER, styleContainer)
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
+  const [strLenght, setStrLenght] = useState(0)
 
   if (preset === "normal") {
     return (
@@ -102,6 +104,10 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
       </View>
     )
   }
+  const onChange = (event) => {
+    field.onChange(event)
+    setStrLenght(event.length)
+  }
 
   return (
     <Card
@@ -119,15 +125,21 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             underlineColorAndroid={color.palette.grayLigth}
             style={stylesInput}
             ref={forwardedRef}
-            onChangeText={field.onChange}
+            onChangeText={(event) => onChange(event)}
             onBlur={field.onBlur}
             value={field.value}
             mask={mask}
             {...rest}
           />
         </View>
+
         <ErrorMessage name={name}></ErrorMessage>
       </View>
+      {counter && (
+        <View style={styles.containerCounter}>
+          <Text size="sm" style={styles.counter} text={`${strLenght}/${counter}`}></Text>
+        </View>
+      )}
     </Card>
   )
 })
@@ -149,3 +161,17 @@ const ErrorMessage = (props: { name: string }) => {
 
   return null
 }
+
+const styles = StyleSheet.create({
+  containerCounter: {
+    bottom: 10,
+    position: "absolute",
+    right: 16,
+  },
+  counter: {
+    color: color.palette.grayDark,
+    position: "relative",
+    textAlign: "right",
+    width: "100%",
+  },
+})
