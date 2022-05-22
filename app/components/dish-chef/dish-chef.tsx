@@ -39,8 +39,13 @@ export const DishChef = observer(function DishChef(props: DishChefProps) {
       style={[styles.containerFavoriteImageDish, utilSpacing.my4, utilSpacing.mr4, style]}
     >
       <AutoImage style={styles.image} source={{ uri: dish.image }}></AutoImage>
-      <Text preset="semiBold" numberOfLines={1} style={utilSpacing.mt3} text={dish.title}></Text>
-      <Price style={utilSpacing.mt2} amount={dish.price}></Price>
+      <Text
+        preset="semiBold"
+        numberOfLines={1}
+        style={[utilSpacing.mt3, styles.title]}
+        text={dish.title}
+      ></Text>
+      <Price style={utilSpacing.mt3} amount={dish.price}></Price>
     </Ripple>
   )
 })
@@ -53,5 +58,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     height: 110,
     width: 150,
+  },
+  title: {
+    lineHeight: 20,
   },
 })

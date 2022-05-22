@@ -36,14 +36,18 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const { dishStore, commonStore, cartStore } = useStores()
 
     useEffect(() => {
+      console.log("DishDetailScreen: useEffect")
       setQuantity(1)
       setTotal(params.price)
       console.log(params)
       async function fetch() {
-        commonStore.setVisibleLoading(true)
-        await dishStore.getByChef(params.chef.id).finally(() => {
-          commonStore.setVisibleLoading(false)
-        })
+        if (commonStore.currentChefId !== params.chef.id) {
+          commonStore.setCurrentChefId(params.chef.id)
+          commonStore.setVisibleLoading(true)
+          await dishStore.getByChef(params.chef.id).finally(() => {
+            commonStore.setVisibleLoading(false)
+          })
+        }
       }
 
       fetch()
@@ -131,11 +135,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
 
-          <ScrollView horizontal style={utilSpacing.mb4}>
-            {dishStore.dishesChef.map((dish) => (
-              <DishChef onPress={() => changeDish(dish)} dish={dish} key={dish.id}></DishChef>
-            ))}
-          </ScrollView>
+          <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
         </ScrollView>
         <TouchableOpacity
           onPress={addToCart}
@@ -153,6 +153,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
         <Loader></Loader>
       </Screen>
+    )
+  },
+)
+
+const ListDish = observer(
+  (props: { onChangeDish: (dish: DishChefModel) => void; dishId: number }) => {
+    const { dishStore } = useStores()
+    return (
+      <ScrollView horizontal style={utilSpacing.mb4}>
+        {dishStore.dishesChef.map(
+          (dish) =>
+            props.dishId !== dish.id && (
+              <DishChef
+                onPress={() => props.onChangeDish(dish)}
+                dish={dish}
+                key={dish.id}
+              ></DishChef>
+            ),
+        )}
+      </ScrollView>
     )
   },
 )
