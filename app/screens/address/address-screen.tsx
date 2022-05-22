@@ -36,6 +36,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
           if (res) {
             address.id = res.data
             addressStore.setCurrent({ ...address })
+            userStore.setAddressId(address.id)
             showMessageSucess(res.message)
             navigation.navigate("main")
           }
