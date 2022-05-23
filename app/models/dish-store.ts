@@ -78,4 +78,7 @@ export const DishStoreModel = types
     clearDishes() {
       self.dishes.clear()
     },
+    clearDishesChef() {
+      self.dishesChef.clear()
+    },
   }))

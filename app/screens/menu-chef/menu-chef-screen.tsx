@@ -14,7 +14,7 @@ import {
   Price,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
 import { DayDelivery } from "../../components/day-delivery/day-delivery"
 import { useStores } from "../../models"
@@ -45,8 +45,9 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const { dayStore, commonStore, dishStore, cartStore } = useStores()
 
     useEffect(() => {
+      console.log("MenuChefScreen: useEffect")
       console.log(params)
-    })
+    },[])
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)

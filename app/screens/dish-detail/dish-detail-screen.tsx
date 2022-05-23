@@ -1,6 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
@@ -9,7 +10,7 @@ import {
   DishChef,
   Header,
   Icon,
-  InputTextCard,
+  InputText,
   Loader,
   Price,
   Screen,
@@ -29,21 +30,25 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
     const [total, setTotal] = useState(0)
-    const [comment, setComment] = useState("")
     const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
     const scrollRef = useRef<ScrollView>()
+    const { ...methods } = useForm({ mode: "onBlur" })
 
     const { dishStore, commonStore, cartStore } = useStores()
 
     useEffect(() => {
+      console.log("DishDetailScreen: useEffect")
       setQuantity(1)
       setTotal(params.price)
       console.log(params)
       async function fetch() {
-        commonStore.setVisibleLoading(true)
-        await dishStore.getByChef(params.chef.id).finally(() => {
-          commonStore.setVisibleLoading(false)
-        })
+        if (commonStore.currentChefId !== params.chef.id) {
+          commonStore.setCurrentChefId(params.chef.id)
+          commonStore.setVisibleLoading(true)
+          await dishStore.getByChef(params.chef.id).finally(() => {
+            commonStore.setVisibleLoading(false)
+          })
+        }
       }
 
       fetch()
@@ -59,9 +64,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       }
     }
 
-    const addToCart = () => {
-      cartStore.addItem(currentDish, quantity, comment)
-      setComment("")
+    const onSubmit = (data) => {
+      cartStore.addItem(currentDish, quantity, data.comment)
+      methods.setValue("comment", "")
       setQuantity(1)
       navigation.navigate("menuChef", { ...params })
     }
@@ -69,10 +74,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const changeDish = (dish: DishChefModel) => {
       if (currentDish.id !== dish.id) {
         setCurrentDish({ ...dish, chef: params.chef })
-        setComment("")
         setQuantity(1)
         setTotal(dish.price)
-
+        methods.setValue("comment", "")
         scrollRef.current?.scrollTo({
           y: 0,
           animated: true,
@@ -118,27 +122,27 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             </View>
           </View>
 
-          <InputTextCard
-            style={utilSpacing.m4}
-            titleTx="dishDetailScreen.commentChef"
-            placeholderTx="dishDetailScreen.placeHolderCommetChef"
-            counter={100}
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-          ></InputTextCard>
+          <View style={utilSpacing.mt4}>
+            <FormProvider {...methods}>
+              <InputText
+                name="comment"
+                preset="card"
+                labelTx="dishDetailScreen.commentChef"
+                placeholderTx="dishDetailScreen.placeHolderCommetChef"
+                counter={100}
+              ></InputText>
+            </FormProvider>
+          </View>
+
           <View style={[utilSpacing.mt5, utilSpacing.mb3, utilFlex.flexRow]}>
             <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
 
-          <ScrollView horizontal style={utilSpacing.mb4}>
-            {dishStore.dishesChef.map((dish) => (
-              <DishChef onPress={() => changeDish(dish)} dish={dish} key={dish.id}></DishChef>
-            ))}
-          </ScrollView>
+          <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
         </ScrollView>
         <TouchableOpacity
-          onPress={addToCart}
+          onPress={methods.handleSubmit(onSubmit)}
           activeOpacity={0.7}
           style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
         >
@@ -153,6 +157,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
         <Loader></Loader>
       </Screen>
+    )
+  },
+)
+
+const ListDish = observer(
+  (props: { onChangeDish: (dish: DishChefModel) => void; dishId: number }) => {
+    const { dishStore } = useStores()
+    return (
+      <ScrollView horizontal style={utilSpacing.mb4}>
+        {dishStore.dishesChef.map(
+          (dish) =>
+            props.dishId !== dish.id && (
+              <DishChef
+                onPress={() => props.onChangeDish(dish)}
+                dish={dish}
+                key={dish.id}
+              ></DishChef>
+            ),
+        )}
+      </ScrollView>
     )
   },
 )

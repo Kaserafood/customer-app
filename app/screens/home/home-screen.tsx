@@ -62,6 +62,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }
 
     const toDetail = (dish: DishModel) => {
+      /**
+       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
       navigation.navigate("dishDetail", {
         ...dish,
       })

@@ -20,7 +20,6 @@ import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { Dish } from "../../models/dish"
-import { UserChef } from "../../models/user-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -121,11 +120,20 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       })
     }
 
-    const toDishDetail = (dish: Dish, userChef: UserChef) => {
+    const toDishDetail = (dish: Dish, userChef: ChefItemModel) => {
+      /**
+       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
       const chef = {
         ...userChef,
       }
-      navigation.push("dishDetail", { ...dish, chef })
+      delete chef.category
+      delete chef.currentDishName
+      delete chef.pageView
+      delete chef.currentIndexPage
+      navigation.push("dishDetail", { ...dish, chef: { ...chef } })
     }
 
     const onChangeDay = async (day: Day) => {
@@ -169,7 +177,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               ></Text>
             </View>
             <Separator style={utilSpacing.my4}></Separator>
-            <ListChef toDishDetail={(dish, item) => toDishDetail(dish, item)}></ListChef>
+            <ListChef toDishDetail={(dish, chef) => toDishDetail(dish, chef)}></ListChef>
           </View>
         </ScrollView>
         <LocationModal modal={modalState}></LocationModal>
@@ -181,18 +189,18 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 )
 
 const ListChef = observer(function ListChef(props: {
-  toDishDetail: (dish: Dish, userChef: UserChef) => void
+  toDishDetail: (dish: Dish, userChef: ChefItemModel) => void
 }) {
   return (
     <View>
-      {modalState.data.map((item, index) => (
-        <View key={item.id}>
+      {modalState.data.map((chef, index) => (
+        <View key={chef.id}>
           <ChefItem
-            onDishPress={(dish) => props.toDishDetail(dish, item)}
-            onPrevious={() => modalState.previousDish(item, index)}
-            onNext={() => modalState.nextDish(item, index)}
-            onChangePosition={(position) => modalState.chanageDish(item, position, index)}
-            item={item}
+            onDishPress={(dish) => props.toDishDetail(dish, chef)}
+            onPrevious={() => modalState.previousDish(chef, index)}
+            onNext={() => modalState.nextDish(chef, index)}
+            onChangePosition={(position) => modalState.chanageDish(chef, position, index)}
+            item={chef}
           ></ChefItem>
           {index !== modalState.data.length - 1 && <Separator style={utilSpacing.mb5}></Separator>}
         </View>
