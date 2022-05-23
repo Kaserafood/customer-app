@@ -63,4 +63,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Counter charactes of the input text, only works with preset "card"
    */
   counter?: number
+
+  /**
+   * An option reference to container input text
+   */
+  containerRef?: any
 }

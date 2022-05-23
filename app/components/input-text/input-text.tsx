@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
@@ -82,6 +82,12 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
   const [strLenght, setStrLenght] = useState(0)
 
+  useEffect(() => {
+    if (counter) {
+      setStrLenght(field.value.length)
+    }
+  }, [field.value])
+
   if (preset === "normal") {
     return (
       <View style={container}>
@@ -104,10 +110,6 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
       </View>
     )
   }
-  const onChange = (event) => {
-    field.onChange(event)
-    setStrLenght(event.length)
-  }
 
   return (
     <Card
@@ -125,7 +127,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             underlineColorAndroid={color.palette.grayLigth}
             style={stylesInput}
             ref={forwardedRef}
-            onChangeText={(event) => onChange(event)}
+            onChangeText={field.onChange}
             onBlur={field.onBlur}
             value={field.value}
             mask={mask}
