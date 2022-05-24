@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
 
   h100: {
-    height: 100,
+    height: 114,
   },
   imageChef: {
     borderColor: color.palette.white,

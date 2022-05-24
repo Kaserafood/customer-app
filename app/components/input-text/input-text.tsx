@@ -84,7 +84,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
 
   useEffect(() => {
     if (counter) {
-      setStrLenght(field.value.length)
+      setStrLenght(field?.value?.length || 0)
     }
   }, [field.value])
 
