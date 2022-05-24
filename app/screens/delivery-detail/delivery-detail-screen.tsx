@@ -4,10 +4,19 @@ import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
-import { TouchableHighlight } from "react-native-gesture-handler"
-import SvgUri from "react-native-svg-uri"
+import IconRN from "react-native-vector-icons/MaterialIcons"
 import images from "../../assets/images"
-import { Card, Checkbox, Header, InputText, Price, Screen, Separator, Text } from "../../components"
+import {
+  Card,
+  Checkbox,
+  Header,
+  InputText,
+  ModalDeliveryDate,
+  Price,
+  Screen,
+  Separator,
+  Text,
+} from "../../components"
 import { AutoImage } from "../../components/auto-image/auto-image"
 import { LocationModal } from "../../components/location/location-modal"
 import { useStores } from "../../models"
@@ -28,7 +37,21 @@ class ModalState {
     makeAutoObservable(this)
   }
 }
+
+class ModalDelivery {
+  isVisible = false
+
+  setVisible(state: boolean) {
+    this.isVisible = state
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
+}
+
 const modalState = new ModalState()
+const modalDelivery = new ModalDelivery()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
@@ -41,19 +64,14 @@ export const DeliveryDetailScreen: FC<
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
-      <ScrollView style={utilSpacing.m2}>
+      <ScrollView style={styles.containerForm}>
         <Text
           preset="bold"
           tx="deliveryDetailScreen.info"
           style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
         ></Text>
         <FormProvider {...methods}>
-          <TouchableHighlight
-            onPressIn={() => {
-              console.log("press addrss")
-              modalState.setVisibleLocation(true)
-            }}
-          >
+          <TouchableOpacity activeOpacity={1} onPress={() => modalState.setVisibleLocation(true)}>
             <InputText
               name="address"
               preset="card"
@@ -62,7 +80,7 @@ export const DeliveryDetailScreen: FC<
               editable={false}
               value={`${addressStore.current.name} - ${addressStore.current.address}`}
             ></InputText>
-          </TouchableHighlight>
+          </TouchableOpacity>
 
           <InputText
             name="deliveryNote"
@@ -71,12 +89,16 @@ export const DeliveryDetailScreen: FC<
             placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
           ></InputText>
           <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
-          <InputText
-            name="diveryDate"
-            preset="card"
-            labelTx="deliveryDetailScreen.deliveryDate"
-            placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
-          ></InputText>
+
+          <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
+            <InputText
+              name="diveryDate"
+              preset="card"
+              labelTx="deliveryDetailScreen.deliveryDate"
+              placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
+              editable={false}
+            ></InputText>
+          </TouchableOpacity>
         </FormProvider>
 
         <Text
@@ -84,14 +106,20 @@ export const DeliveryDetailScreen: FC<
           style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
           tx="deliveryDetailScreen.deliveryTime"
         ></Text>
-        <Card style={[utilSpacing.mb3, utilSpacing.mx4]}>
-          <Checkbox rounded value={true} preset="tiny" text="12pm a 3pm"></Checkbox>
+        <Card style={[utilSpacing.mb4, utilSpacing.mx4]}>
+          <Checkbox
+            rounded
+            style={utilSpacing.px3}
+            value={true}
+            preset="tiny"
+            text="12pm a 3pm"
+          ></Checkbox>
         </Card>
-        <Card style={[utilSpacing.mb3, utilSpacing.mx4]}>
+        <Card style={[utilSpacing.mb4, utilSpacing.mx4]}>
           <Checkbox style={utilSpacing.px3} rounded preset="tiny" text="4pm a 6pm"></Checkbox>
         </Card>
-        <Card style={[utilSpacing.mb3, utilSpacing.mx4]}>
-          <Checkbox rounded preset="tiny" text="12pm a 3pm"></Checkbox>
+        <Card style={[utilSpacing.mb4, utilSpacing.mx4]}>
+          <Checkbox rounded style={utilSpacing.px3} preset="tiny" text="12pm a 3pm"></Checkbox>
         </Card>
         <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
         <Text
@@ -103,7 +131,12 @@ export const DeliveryDetailScreen: FC<
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <AutoImage style={utilSpacing.mr4} source={images.card}></AutoImage>
             <Text style={utilFlex.flex1} text="*****234324" preset="bold"></Text>
-            <SvgUri height={16} width={16} source={images.caretRight}></SvgUri>
+            <IconRN
+              style={utilSpacing.mt2}
+              name="arrow-right"
+              size={35}
+              color={color.palette.grayDark}
+            />
           </View>
         </Card>
         <View style={utilSpacing.mx4}>
@@ -177,6 +210,7 @@ export const DeliveryDetailScreen: FC<
         <Text preset="bold" style={styles.textAddToOrder} text={`${40}`}></Text>
       </TouchableOpacity>
       <LocationModal modal={modalState}></LocationModal>
+      <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
     </Screen>
   )
 })
@@ -192,6 +226,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.palette.white,
   },
+  containerForm: {
+    alignSelf: "center",
+    flex: 1,
+    minWidth: 300,
+    width: "90%",
+  },
   price: {
     backgroundColor: color.background,
   },
@@ -199,6 +239,7 @@ const styles = StyleSheet.create({
     height: 1,
     marginVertical: spacing[3],
   },
+
   textAddToOrder: {
     color: color.palette.white,
     fontSize: 20,

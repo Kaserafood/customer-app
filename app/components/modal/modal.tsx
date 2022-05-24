@@ -40,10 +40,10 @@ export interface ModalProps {
   children: React.ReactNode
 
   /**
-   * Icon close to be displayed on the right top side of the modal
+   * An optional icon close to be displayed on the right top side of the modal
    */
 
-  iconClose: ImageURISource
+  iconClose?: ImageURISource
 }
 
 /**
