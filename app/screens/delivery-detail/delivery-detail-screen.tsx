@@ -1,51 +1,45 @@
 import { StackScreenProps } from "@react-navigation/stack"
-
-import images from "../../assets/images"
+import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
-import { ScrollView, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import React, { FC } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { TouchableHighlight } from "react-native-gesture-handler"
 import SvgUri from "react-native-svg-uri"
-import {
-  Card,
-  Checkbox,
-  Header,
-  InputTextCard,
-  Price,
-  Screen,
-  Separator,
-  Text,
-} from "../../components"
+import images from "../../assets/images"
+import { Card, Checkbox, Header, InputText, Price, Screen, Separator, Text } from "../../components"
 import { AutoImage } from "../../components/auto-image/auto-image"
+import { LocationModal } from "../../components/location/location-modal"
+import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
-const ROOT: ViewStyle = {
-  backgroundColor: color.background,
-  flex: 1,
+class ModalState {
+  isVisibleLocation = false
+
+  setVisibleLocation(state: boolean) {
+    this.isVisibleLocation = state
+  }
+
+  constructor() {
+    makeAutoObservable(this)
+  }
 }
+const modalState = new ModalState()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
 > = observer(({ navigation }) => {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
-
   const toEndOrder = () => navigation.navigate("endOrder")
 
-  useEffect(() => {
-    console.log("delviery dtail effect")
-  }, [])
+  const { ...methods } = useForm({ mode: "onBlur" })
+  const { addressStore } = useStores()
 
   return (
-    <Screen style={ROOT} preset="scroll">
+    <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
       <ScrollView style={utilSpacing.m2}>
         <Text
@@ -53,25 +47,41 @@ export const DeliveryDetailScreen: FC<
           tx="deliveryDetailScreen.info"
           style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
         ></Text>
-        <InputTextCard
-          titleTx="deliveryDetailScreen.address"
-          placeholderTx="deliveryDetailScreen.addressPlaceholder"
-          style={[utilSpacing.mb6, utilSpacing.mx4]}
-        ></InputTextCard>
-        <InputTextCard
-          titleTx="deliveryDetailScreen.deliveryNote"
-          style={utilSpacing.mx4}
-          placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
-        ></InputTextCard>
-        <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
-        <InputTextCard
-          titleTx="deliveryDetailScreen.deliveryDate"
-          placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
-          style={[utilSpacing.mb6, utilSpacing.mx4]}
-        ></InputTextCard>
+        <FormProvider {...methods}>
+          <TouchableHighlight
+            onPressIn={() => {
+              console.log("press addrss")
+              modalState.setVisibleLocation(true)
+            }}
+          >
+            <InputText
+              name="address"
+              preset="card"
+              labelTx="deliveryDetailScreen.address"
+              placeholderTx="deliveryDetailScreen.addressPlaceholder"
+              editable={false}
+              value={`${addressStore.current.name} - ${addressStore.current.address}`}
+            ></InputText>
+          </TouchableHighlight>
+
+          <InputText
+            name="deliveryNote"
+            preset="card"
+            labelTx="deliveryDetailScreen.deliveryNote"
+            placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
+          ></InputText>
+          <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
+          <InputText
+            name="diveryDate"
+            preset="card"
+            labelTx="deliveryDetailScreen.deliveryDate"
+            placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
+          ></InputText>
+        </FormProvider>
+
         <Text
           preset="bold"
-          style={[utilSpacing.mx4, utilSpacing.mb4]}
+          style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
           tx="deliveryDetailScreen.deliveryTime"
         ></Text>
         <Card style={[utilSpacing.mb3, utilSpacing.mx4]}>
@@ -166,6 +176,7 @@ export const DeliveryDetailScreen: FC<
         ></Text>
         <Text preset="bold" style={styles.textAddToOrder} text={`${40}`}></Text>
       </TouchableOpacity>
+      <LocationModal modal={modalState}></LocationModal>
     </Screen>
   )
 })
@@ -177,6 +188,9 @@ const styles = StyleSheet.create({
     padding: spacing[3],
     textAlign: "center",
     ...SHADOW,
+  },
+  container: {
+    backgroundColor: color.palette.white,
   },
   price: {
     backgroundColor: color.background,
