@@ -14,7 +14,7 @@ import {
   Price,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DayDelivery } from "../../components/day-delivery/day-delivery"
 import { useStores } from "../../models"
@@ -47,7 +47,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     useEffect(() => {
       console.log("MenuChefScreen: useEffect")
       console.log(params)
-    },[])
+    }, [])
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
@@ -106,7 +106,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             </View>
             <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>
               <Text
-                numberOfLines={1}
+                numberOfLines={3}
                 preset="semiBold"
                 style={[utilText.textGray, utilFlex.flex1]}
                 text={getCategoriesName(params.chef.categories)}
