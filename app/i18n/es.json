@@ -15,7 +15,8 @@
         "dishes": "Platillos",
         "next" : "Siguiente",
         "save": "Guardar",
-        "cannotConnect": "Lo sentimos, no se puede conectar con el servidor"
+        "cannotConnect": "Lo sentimos, no se puede conectar con el servidor",
+        "add" : "Agregar"
         
     },
     "initScreen": {
@@ -210,7 +211,8 @@
         "commentChef": "Comentario al chef:",
         "placeHolderCommetChef": "Alergias, indicaciones.",
         "moreProductsChef": "Más productos del chef",
-        "addToOrder": "Agregar a orden"
+        "addToOrder": "Agregar a orden",
+        "pay": "Pagar"
     },
     "menuChefScreen" : {
          "title": "Menú",
@@ -270,6 +272,29 @@
         "phoneDeliveryPlaceholder": "1234-5678",
         "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
         "phoneFormatIncorrect": "El formato del teléfono es incorrecto"
+    },
+    "modalDeliveryDate": {
+        "deliveryDate" : "Fecha de entrega",
+        "why":"¿Por qué?"
+    },
+    "paymentCard": {
+        "name": "Nombre",
+        "namePlaceholder": "Ingresa el nombre de la tarjeta",
+        "nameRequired": "Debes ingresar el nombre de la tarjeta",
+        "number": "Número de tarjeta",
+        "numberPlaceholder": "Escribe los números",
+        "numberRequired": "Debes ingresar el número de la tarjeta",
+        "expirationDate": "Fecha de vto.",
+        "expirationDatePlaceholder": "MM/AA",
+        "expirationDateRequired": "Debes ingresar la fecha de vto.",
+        "cvv": "CVV",
+        "cvvPlaceholder3": "3 dígitos",
+        "cvvPlaceholder4": "4 dígitos",
+        "cvvRequired": "Debes ingresar el código de seguridad",
+        "alias" : "Alias",
+        "aliasPlaceholder": "Ejemplo: tarjeta empresa",
+        "aliasRequired": "Debes ingresar el alias",
+        "numberMinLength": "El número de tarjeta no es válido"
     }
 
 

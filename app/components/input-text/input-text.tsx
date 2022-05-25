@@ -13,7 +13,6 @@ import { Text } from "../text/text"
 import { InputTextProps } from "./input-text.props"
 
 const TEXT_STYLES: TextStyle = {
-  paddingHorizontal: spacing[3],
   paddingVertical: spacing[3],
   fontFamily: typography.primary,
   marginBottom: -3,
@@ -97,7 +96,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
             underlineColorAndroid={color.transparent}
-            style={stylesInput}
+            style={[stylesInput, utilSpacing.px3]}
             ref={forwardedRef}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
