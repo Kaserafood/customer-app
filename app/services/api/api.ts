@@ -185,6 +185,14 @@ export class Api {
 
   /**
    *
+   * @description Get days to delivery available for a specific chef
+   */
+  async getDaysByChefDelivery(timeZone: string, chefId: number): Promise<DayResponse> {
+    return await this.request({ timeZone }, `/deliveries/days/${chefId}`, "GET")
+  }
+
+  /**
+   *
    * @description Create an address
    */
   async addAddress(address: Address): Promise<CommonResponse> {

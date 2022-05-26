@@ -1,11 +1,10 @@
-import images from "../../assets/images"
-
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import images from "../../assets/images"
 import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
@@ -55,7 +54,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   return (
     <Modal
       onBackdropPress={() => modal.setVisible(false)}
-      style={[style, styles.container]}
+      style={[styles.container, style]}
       isVisible={modal.isVisible}
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}

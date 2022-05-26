@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import {
@@ -60,6 +60,15 @@ export const DeliveryDetailScreen: FC<
   const { ...methods } = useForm({ mode: "onBlur" })
   const { addressStore, dayStore, cartStore } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
+  const [labelDeliveryDate, setLabelDeliveryDate] = useState("")
+
+  const onError: SubmitErrorHandler<any> = (errors) => {
+    return console.log({ errors })
+  }
+
+  const onSubmit = (data) => {
+    console.log(data)
+  }
 
   useEffect(() => {
     console.log("DeliveryDetailScreen : useEffect")
@@ -101,23 +110,27 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.deliveryDate"
               placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
               editable={false}
+              value={dayStore.currentDay.dayName}
             ></InputText>
           </TouchableOpacity>
+
+          <Text
+            preset="bold"
+            style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
+            tx="deliveryDetailScreen.deliveryTime"
+          ></Text>
+          <DeliveryTimeList
+            onSelectItem={(value) => setLabelDeliveryTime(value)}
+          ></DeliveryTimeList>
+          <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
+          <Text
+            preset="bold"
+            tx="deliveryDetailScreen.paymentMethod"
+            style={[utilSpacing.mb4, utilSpacing.mx4]}
+          ></Text>
+          <PaymentCard methods={methods}></PaymentCard>
         </FormProvider>
 
-        <Text
-          preset="bold"
-          style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
-          tx="deliveryDetailScreen.deliveryTime"
-        ></Text>
-        <DeliveryTimeList onSelectItem={(value) => setLabelDeliveryTime(value)}></DeliveryTimeList>
-        <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
-        <Text
-          preset="bold"
-          tx="deliveryDetailScreen.paymentMethod"
-          style={[utilSpacing.mb4, utilSpacing.mx4]}
-        ></Text>
-        <PaymentCard></PaymentCard>
         <View style={utilSpacing.mx4}>
           <Separator style={utilSpacing.my6}></Separator>
           <Text preset="semiBold" tx="deliveryDetailScreen.delivery"></Text>
@@ -136,7 +149,7 @@ export const DeliveryDetailScreen: FC<
         </View>
       </ScrollView>
       <TouchableOpacity
-        onPress={toEndOrder}
+        onPress={methods.handleSubmit(onSubmit, onError)}
         activeOpacity={0.7}
         style={[styles.addToOrder, utilFlex.flexCenter]}
       >
