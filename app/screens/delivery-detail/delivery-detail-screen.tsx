@@ -178,7 +178,7 @@ const DeliveryTimeList = (props: { onSelectItem: (item: string) => void }) => {
     setData([
       {
         label: "12pm a 3pm",
-        value: false,
+        value: true,
       },
       {
         label: "4am a 6pm",
