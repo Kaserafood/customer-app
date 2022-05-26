@@ -1,45 +1,15 @@
 import * as React from "react"
-import { TextStyle, TouchableOpacity, View, ViewStyle, StyleSheet } from "react-native"
-import { Text } from "../text/text"
-import { color, spacing } from "../../theme"
-import { CheckboxProps } from "./checkbox.props"
-import images from "../../assets/images"
-import { AutoImage } from "../auto-image/auto-image"
+import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
-
-const viewPresets: Record<string, ViewStyle> = {
-  /**
-   * Checkbox small and color black
-   */
-  tiny: {
-    height: 20,
-    width: 20,
-    borderColor: color.palette.black,
-    borderWidth: 1,
-  },
-}
+import IconRN from "react-native-vector-icons/MaterialIcons"
+import { color, spacing } from "../../theme"
+import { Text } from "../text/text"
+import { CheckboxProps } from "./checkbox.props"
 
 const ROOT: ViewStyle = {
   flexDirection: "row",
   paddingVertical: spacing[1],
   alignSelf: "flex-start",
-}
-
-const DIMENSIONS = { width: 30, height: 30 }
-
-const OUTLINE: ViewStyle = {
-  ...DIMENSIONS,
-
-  justifyContent: "center",
-  alignItems: "center",
-  borderWidth: 2,
-  borderColor: color.palette.green,
-  borderRadius: spacing[0],
-  padding: spacing[1],
-}
-
-const CONTAINER_CHECK: ViewStyle = {
-  margin: spacing[1],
 }
 
 const LABEL: TextStyle = { paddingLeft: spacing[2] }
@@ -54,7 +24,6 @@ export function Checkbox(props: CheckboxProps) {
     roundedStyle.width = 19
   }
   const rootStyle = [ROOT, style]
-  const outlineStyle = [OUTLINE, viewPresets[preset], roundedStyle, props.outlineStyle]
 
   const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
 
@@ -65,19 +34,28 @@ export function Checkbox(props: CheckboxProps) {
       onPress={onPress}
       style={rootStyle}
     >
-      <View style={outlineStyle}>
-        {props.value && (
-          <View style={CONTAINER_CHECK}>
+      <View>
+        {props.value ? (
+          <View>
             {preset === "default" && (
               <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                <AutoImage style={styles.icon} source={images.check} />
+                <IconRN name="check-box" size={30} color={color.palette.green} />
               </Animated.View>
             )}
 
             {preset === "tiny" && (
               <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                <AutoImage style={styles.iconTiny} source={images.check} />
+                <IconRN name="check-circle-outline" size={20} color={color.palette.black} />
               </Animated.View>
+            )}
+          </View>
+        ) : (
+          <View>
+            {preset === "default" && (
+              <IconRN name="check-box-outline-blank" size={30} color={color.palette.green} />
+            )}
+            {preset === "tiny" && (
+              <IconRN name="radio-button-unchecked" size={20} color={color.palette.black} />
             )}
           </View>
         )}
@@ -86,14 +64,3 @@ export function Checkbox(props: CheckboxProps) {
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    height: 20,
-    width: 20,
-  },
-  iconTiny: {
-    height: 10,
-    width: 10,
-  },
-})
