@@ -5,6 +5,7 @@ export const CommonStoreModel = types
   .props({
     isVisibleLoading: types.optional(types.boolean, false),
     currentChefId: types.optional(types.number, 0),
+    currentChefImage: types.optional(types.string, ""),
     isSignedIn: types.optional(types.boolean, false),
   })
   .actions((self) => ({
@@ -16,5 +17,8 @@ export const CommonStoreModel = types
     },
     setIsSignedIn(isSignedIn: boolean) {
       self.isSignedIn = isSignedIn
+    },
+    setCurrentChefImage(image: string) {
+      self.currentChefImage = image
     },
   }))

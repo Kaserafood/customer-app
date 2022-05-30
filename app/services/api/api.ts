@@ -1,5 +1,6 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import { Address } from "../../models"
+import { Order } from "../../models/order/order"
 import { UserLogin } from "../../models/user-store"
 import { handleMessageProblem, showMessageError } from "../../utils/messages"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
@@ -213,5 +214,13 @@ export class Api {
    */
   async updateAddressId(userId: number, addressId: number): Promise<UserLoginResponse> {
     return await this.request({ addressId: addressId }, `/users/${userId}/addressId`, "PUT")
+  }
+
+  /**
+   *
+   * @description Create an order
+   */
+  async addOrder(order: Order): Promise<CommonResponse> {
+    return await this.request(order, "/orders", "POST")
   }
 }

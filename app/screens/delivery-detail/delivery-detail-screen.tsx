@@ -10,6 +10,7 @@ import {
   Checkbox,
   Header,
   InputText,
+  Loader,
   ModalDeliveryDate,
   PaymentCard,
   Price,
@@ -18,12 +19,15 @@ import {
   Text,
 } from "../../components"
 import { LocationModal } from "../../components/location/location-modal"
-import { useStores } from "../../models"
+import { MetaData, Order, Products, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getCountryCode } from "../../utils/location"
+import { showMessageError } from "../../utils/messages"
+import { getI18nText } from "../../utils/translate"
 
 class ModalState {
   isVisibleLocation = false
@@ -55,19 +59,91 @@ const modalDelivery = new ModalDelivery()
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
 > = observer(({ navigation }) => {
-  const toEndOrder = () => navigation.navigate("endOrder")
-
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { addressStore, dayStore, cartStore } = useStores()
+  const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
-  const [labelDeliveryDate, setLabelDeliveryDate] = useState("")
 
   const onError: SubmitErrorHandler<any> = (errors) => {
     return console.log({ errors })
   }
 
-  const onSubmit = (data) => {
-    console.log(data)
+  const onSubmit = async (data) => {
+    if (!dayStore.currentDay) {
+      showMessageError(getI18nText("deliveryDetailScreen.errorDayDelivery"))
+      return
+    }
+
+    if (labelDeliveryTime.length === 0) {
+      showMessageError(getI18nText("deliveryDetailScreen.errorTimeDelivery"))
+      return
+    }
+
+    const countryCode = await getCountryCode()
+
+    const order: Order = {
+      id: 0,
+      customerId: userStore.userId,
+      address: addressStore.current.address,
+      country: countryCode,
+      products: getProducts(),
+      priceDelivery: 20,
+      metaData: getMetaData(),
+      customerNote: data.deliveryNote,
+    }
+    commonStore.setVisibleLoading(true)
+    orderStore
+      .add(order)
+      .then((res) => {
+        commonStore.setVisibleLoading(false)
+        if (Number(res.data) > 0) {
+          console.log("order added", res.data)
+          navigation.navigate("endOrder", {
+            orderId: Number(res.data),
+            deliveryDate: dayStore.currentDay.dayName,
+            deliveryTime: labelDeliveryTime,
+            deliveryAddress: addressStore.current.address,
+            imageChef: commonStore.currentChefImage,
+          })
+        } else {
+          showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
+        }
+      })
+      .finally(() => commonStore.setVisibleLoading(false))
+
+    console.log(order)
+  }
+
+  const getProducts = (): Products[] => {
+    return cartStore.cart.map((item) => {
+      return {
+        productId: item.dish.id,
+        quantity: item.quantity,
+      }
+    })
+  }
+
+  const getMetaData = (): MetaData[] => {
+    const data: MetaData[] = []
+
+    // Add chef id
+    data.push({
+      key: "_dokan_vendor_id",
+      value: `${commonStore.currentChefId}`,
+    })
+
+    // Add delivery time
+    data.push({
+      key: "dokan_delivery_time_slot",
+      value: `${labelDeliveryTime}`,
+    })
+
+    // Add delivery date
+    data.push({
+      key: "dokan_delivery_time_date",
+      value: dayStore.currentDay.date,
+    })
+
+    return data
   }
 
   useEffect(() => {
@@ -168,6 +244,7 @@ export const DeliveryDetailScreen: FC<
       </TouchableOpacity>
       <LocationModal modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
+      <Loader></Loader>
     </Screen>
   )
 })
@@ -178,7 +255,7 @@ const DeliveryTimeList = (props: { onSelectItem: (item: string) => void }) => {
     setData([
       {
         label: "12pm a 3pm",
-        value: true,
+        value: false,
       },
       {
         label: "4am a 6pm",

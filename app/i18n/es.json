@@ -231,15 +231,18 @@
          "deliveryDatePlaceholder": "Selecciona una fecha",
          "deliveryTime" : "Elige el rango de entrega",
          "paymentMethod" : "Método de pago",
-         "delivery" : "Entrega:"
+         "delivery" : "Entrega:",
+         "errorDayDelivery" : "Selecciona un día de entrega",
+         "errorTimeDelivery" : "Selecciona un rango de entrega",
+         "errorOrder" : "Lo sentimos, no se la logrado realizar tu pedido."
     },
     "endOrderScreen" : {
-        "title" : "Kasera",
+        "title" : "Pedido realizado",
         "deliveryOn" : "Entregar en:",
         "deliveryDate" : "Fecha de entrega:",
         "info": "Te enviaremos una confirmación a tu correo electrónico",
         "order" : "Pedidio",
-        "thankYou" : "¡Gracias por tu apoyo!",
+        "thankYou" : "Gracias por tu apoyo",
         "cookWithLove" : "Cocinaré tu platillo con mucho amor.",
         "continueExplore": "Seguir explorando"
     },
