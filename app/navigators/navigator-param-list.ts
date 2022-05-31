@@ -13,6 +13,14 @@ interface addressScreenParams {
   longitudeDelta: number
 }
 
+interface endOrderParams {
+  orderId: number
+  deliveryDate: string
+  deliveryTime: string
+  deliveryAddress: string
+  imageChef: string
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -24,7 +32,7 @@ export type NavigatorParamList = {
   dishDetail: DishChef
   menuChef: DishChef
   deliveryDetail: undefined
-  endOrder: undefined
+  endOrder: endOrderParams
   category: Category
   home: undefined
   chefs: undefined

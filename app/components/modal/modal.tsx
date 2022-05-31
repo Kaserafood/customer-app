@@ -54,7 +54,7 @@ export const Modal = observer(function Modal(props: ModalProps) {
   return (
     <ModalRN
       onBackdropPress={() => modal.setVisible(false)}
-      style={[style, styles.container, style]}
+      style={[styles.container, style]}
       isVisible={modal.isVisible}
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}

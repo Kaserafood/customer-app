@@ -1,7 +1,12 @@
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import * as React from "react"
+import React, { useEffect } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
+import * as RNLocalize from "react-native-localize"
+import Ripple from "react-native-material-ripple"
+import { useStores } from "../../models"
+import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
@@ -10,7 +15,6 @@ import { Chip } from "../chip/chip"
 import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
-
 interface ModalState {
   isVisible: boolean
   setVisible: (state: boolean) => void
@@ -48,6 +52,17 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
   props: ModalDeliveryDateProps,
 ) {
   const { style, modal } = props
+  const { dayStore, commonStore } = useStores()
+
+  useEffect(() => {
+    console.log("ModalDeliveryDate: useEffect")
+
+    async function fetchData() {
+      await dayStore.getDaysByChef(RNLocalize.getTimeZone(), commonStore.currentChefId)
+      console.log(dayStore.daysByChef)
+    }
+    fetchData()
+  }, [])
 
   return (
     <>
@@ -61,24 +76,9 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
               onPressIn={() => modalState.setVisibleWhy(true)}
             ></Chip>
           </View>
-          <View style={utilSpacing.mt5}>
-            <Card style={utilSpacing.mb4}>
-              <Checkbox rounded value={true} preset="tiny" text="Mañana  12 de abril"></Checkbox>
-            </Card>
-
-            <Card style={utilSpacing.mb4}>
-              <Checkbox rounded value={true} preset="tiny" text="Miercols  12 de abril"></Checkbox>
-            </Card>
-            <Card style={utilSpacing.mb4}>
-              <Checkbox rounded value={true} preset="tiny" text="Jueves  12 de abril"></Checkbox>
-            </Card>
-            <Card style={utilSpacing.mb4}>
-              <Checkbox rounded value={true} preset="tiny" text="Viernes  12 de abril"></Checkbox>
-            </Card>
-            <Card style={utilSpacing.mb4}>
-              <Checkbox rounded value={true} preset="tiny" text="Sabado  12 de abril"></Checkbox>
-            </Card>
-          </View>
+          <ScrollView style={[utilSpacing.mt5, styles.body]}>
+            <ListDay></ListDay>
+          </ScrollView>
           <View style={[styles.containerButton, utilFlex.selfCenter]}>
             <Button style={utilSpacing.mt5} block preset="primary" tx="common.continue"></Button>
           </View>
@@ -88,8 +88,31 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
     </>
   )
 })
+const ListDay = observer(() => {
+  const { dayStore } = useStores()
+
+  const onPress = (day: Day) => {
+    dayStore.setActiveDay(day)
+
+    dayStore.setCurrentDay(day)
+  }
+  return (
+    <View>
+      {dayStore.daysByChef.map((day) => (
+        <Card style={[utilSpacing.mt4, utilSpacing.mx3, utilSpacing.p0]} key={day.date}>
+          <Ripple style={[utilSpacing.px3, utilSpacing.py2]} onPress={() => onPress(day)}>
+            <Checkbox rounded value={day.active} preset="tiny" text={day.dayName}></Checkbox>
+          </Ripple>
+        </Card>
+      ))}
+    </View>
+  )
+})
 
 const styles = StyleSheet.create({
+  body: {
+    maxHeight: 350,
+  },
   containerButton: {
     width: "85%",
   },

@@ -1,6 +1,5 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
-import { FormProvider, useForm } from "react-hook-form"
 import { StyleProp, View, ViewStyle } from "react-native"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"
@@ -11,17 +10,21 @@ export interface PaymentCardProps {
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Methods from FormProvider
+   */
+  methods: any
 }
 
 /**
  * Describe your component here
  */
 export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps) {
-  const { style } = props
+  const { style, methods } = props
   const [maskCard, setMaskCard] = useState("")
   const [maskCVV, setMaskCVV] = useState("")
   const [placeholderCVV, setPlaceholderCVV] = useState("paymentCard.cvvPlaceholder3")
-  const { ...methods } = useForm({ mode: "onBlur" })
 
   const watchCardNumber = methods.watch("number")
 
@@ -39,77 +42,80 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
 
   return (
     <View style={style}>
-      <FormProvider {...methods}>
-        <InputText
-          name="name"
-          preset="card"
-          placeholderTx="paymentCard.namePlaceholder"
-          rules={{
-            required: "paymentCard.nameRequired",
-          }}
-          labelTx="paymentCard.name"
-          styleContainer={[utilSpacing.my3]}
-          maxLength={50}
-        ></InputText>
+      <InputText
+        name="name"
+        preset="card"
+        placeholderTx="paymentCard.namePlaceholder"
+        rules={{
+          required: "paymentCard.nameRequired",
+        }}
+        labelTx="paymentCard.name"
+        styleContainer={[utilSpacing.my3]}
+        maxLength={50}
+        value="Name card"
+      ></InputText>
 
+      <InputText
+        name="number"
+        preset="card"
+        placeholderTx="paymentCard.numberPlaceholder"
+        rules={{
+          required: "paymentCard.numberRequired",
+          minLength: {
+            value: getMaskLength(maskCard),
+            message: "paymentCard.numberMinLength",
+          },
+        }}
+        labelTx="paymentCard.number"
+        styleContainer={[utilSpacing.my3]}
+        maxLength={100}
+        keyboardType="numeric"
+        mask={maskCard}
+        value="4000 1234 5678 9010"
+      ></InputText>
+
+      <View style={utilFlex.flexRow}>
         <InputText
-          name="number"
+          name="expirationDate"
           preset="card"
-          placeholderTx="paymentCard.numberPlaceholder"
+          placeholderTx="paymentCard.expirationDatePlaceholder"
           rules={{
-            required: "paymentCard.numberRequired",
-            minLength: {
-              value: getMaskLength(maskCard),
-              message: "paymentCard.numberMinLength",
-            },
+            required: "paymentCard.expirationDateRequired",
           }}
-          labelTx="paymentCard.number"
-          styleContainer={[utilSpacing.my3]}
-          maxLength={100}
+          labelTx="paymentCard.expirationDate"
+          styleContainer={[utilSpacing.my3, utilSpacing.mr2, utilFlex.flex1]}
+          mask="[00]/[00]"
           keyboardType="numeric"
-          mask={maskCard}
+          value="12/22"
         ></InputText>
-
-        <View style={utilFlex.flexRow}>
-          <InputText
-            name="expirationDate"
-            preset="card"
-            placeholderTx="paymentCard.expirationDatePlaceholder"
-            rules={{
-              required: "paymentCard.expirationDateRequired",
-            }}
-            labelTx="paymentCard.expirationDate"
-            styleContainer={[utilSpacing.my3, utilSpacing.mr2, utilFlex.flex1]}
-            mask="[00]/[00]"
-            keyboardType="numeric"
-          ></InputText>
-
-          <InputText
-            name="cvv"
-            preset="card"
-            placeholderTx={placeholderCVV}
-            rules={{
-              required: "paymentCard.cvvRequired",
-            }}
-            labelTx="paymentCard.cvv"
-            styleContainer={[utilSpacing.my3, utilSpacing.ml2, utilFlex.flex1]}
-            mask={maskCVV}
-            keyboardType="numeric"
-          ></InputText>
-        </View>
 
         <InputText
-          name="alias"
+          name="cvv"
           preset="card"
-          placeholderTx="paymentCard.aliasPlaceholder"
+          placeholderTx={placeholderCVV}
           rules={{
-            required: "paymentCard.aliasRequired",
+            required: "paymentCard.cvvRequired",
           }}
-          labelTx="paymentCard.alias"
-          styleContainer={[utilSpacing.my3]}
-          maxLength={100}
+          labelTx="paymentCard.cvv"
+          styleContainer={[utilSpacing.my3, utilSpacing.ml2, utilFlex.flex1]}
+          mask={maskCVV}
+          keyboardType="numeric"
+          value="123"
         ></InputText>
-      </FormProvider>
+      </View>
+
+      <InputText
+        name="alias"
+        preset="card"
+        placeholderTx="paymentCard.aliasPlaceholder"
+        rules={{
+          required: "paymentCard.aliasRequired",
+        }}
+        labelTx="paymentCard.alias"
+        styleContainer={[utilSpacing.my3]}
+        maxLength={100}
+        value="Test card"
+      ></InputText>
     </View>
   )
 })

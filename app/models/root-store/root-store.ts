@@ -6,6 +6,7 @@ import { CharacterStoreModel } from "../character-store/character-store"
 import { CommonStoreModel } from "../common-store"
 import { DayStoreModel } from "../day-store"
 import { DishStoreModel } from "../dish-store"
+import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
 
 /**
@@ -21,6 +22,7 @@ export const RootStoreModel = types.model("RootStore").props({
   dishStore: types.optional(DishStoreModel, {} as any),
   cartStore: types.optional(CartStoreModel, {} as any),
   addressStore: types.optional(AddressModelStore, {} as any),
+  orderStore: types.optional(OrderModel, {} as any),
 })
 
 /**

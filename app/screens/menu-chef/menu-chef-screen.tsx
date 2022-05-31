@@ -14,7 +14,7 @@ import {
   Price,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
 import { DayDelivery } from "../../components/day-delivery/day-delivery"
 import { useStores } from "../../models"
@@ -95,7 +95,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 <AutoImage style={styles.imageChef} source={{ uri: params.chef.image }}></AutoImage>
                 <Text
                   size="lg"
-                  style={utilSpacing.mt2}
+                  style={utilSpacing.mt4}
                   preset="bold"
                   text={params.chef.name}
                 ></Text>

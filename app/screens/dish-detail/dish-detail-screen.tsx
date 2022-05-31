@@ -44,6 +44,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       async function fetch() {
         if (commonStore.currentChefId !== params.chef.id) {
           commonStore.setCurrentChefId(params.chef.id)
+          commonStore.setCurrentChefImage(params.chef.image)
           commonStore.setVisibleLoading(true)
           await dishStore.getByChef(params.chef.id).finally(() => {
             commonStore.setVisibleLoading(false)
