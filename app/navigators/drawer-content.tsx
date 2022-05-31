@@ -1,4 +1,5 @@
 import { DrawerContentScrollView } from "@react-navigation/drawer"
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
@@ -11,6 +12,7 @@ import { remove } from "../utils/storage"
 
 export default function DrawerContent(props) {
   const { commonStore, userStore } = useStores()
+  const navigation = useNavigation()
   const closeSession = async () => {
     await remove("userId")
     await remove("displayName")
@@ -19,7 +21,7 @@ export default function DrawerContent(props) {
   }
 
   const order = () => {
-    console.log("orders")
+    navigation.navigate("orders" as never)
   }
 
   return (
@@ -55,7 +57,7 @@ export default function DrawerContent(props) {
               size={30}
               color={color.palette.grayDark}
             />
-            <Text tx="drawerContent.closeSession" size="lg"></Text>
+            <Text tx="drawerContent.closeSession" preset="semiBold" size="lg"></Text>
           </View>
         </Card>
       </Ripple>

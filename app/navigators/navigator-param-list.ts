@@ -39,4 +39,5 @@ export type NavigatorParamList = {
   search: undefined
   map: undefined
   address: addressScreenParams
+  orders: undefined
 }

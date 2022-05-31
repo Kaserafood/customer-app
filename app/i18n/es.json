@@ -308,6 +308,11 @@
         "chefs" : "Chefs",
         "search" : "Buscar",
         "more" : "Más"
+    },
+    "ordersScreen" : {
+        "title": "Mis pedidios",
+        "inProgress" : "En curso",
+        "previous" : "Anteriores"
     }
 
 
