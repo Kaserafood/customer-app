@@ -298,6 +298,16 @@
         "aliasPlaceholder": "Ejemplo: tarjeta empresa",
         "aliasRequired": "Debes ingresar el alias",
         "numberMinLength": "El número de tarjeta no es válido"
+    },
+    "drawerContent" : {
+        "closeSession" : "Cerrar sesión",
+        "myOrdres" : "Mis Pedidos"
+    },
+    "tabMainNavigation" : {
+        "home" : "Inicio",
+        "chefs" : "Chefs",
+        "search" : "Buscar",
+        "more" : "Más"
     }
 
 
