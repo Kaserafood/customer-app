@@ -88,7 +88,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
         if (location.latitude !== 0 && location.longitude !== 0) {
           fetchAddressText(location.latitude, location.longitude).then((address) => {
             if (address) {
-              setAddressText(address)
+              setAddressText(address.formatted)
             }
           })
         }

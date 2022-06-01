@@ -26,12 +26,24 @@ class LoadingState {
   }
 }
 
+interface Address {
+  city: string
+  region: string
+  formatted: string
+  country: string
+}
+
 const loadingState = new LoadingState()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation }) => {
     const { fetchAddressText, location, permission, setLocation } = useLocation()
-    const [address, setAddress] = useState(getI18nText("mapScreen.addressPlaceholder"))
+    const [address, setAddress] = useState<Address>({
+      city: "",
+      country: "",
+      formatted: getI18nText("mapScreen.addressPlaceholder"),
+      region: "",
+    })
     let timeOut: NodeJS.Timeout
 
     useEffect(() => {
@@ -40,13 +52,16 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     }, [])
 
     const toAddress = () => {
-      if (location.latitude !== 0 || location.longitude !== 0) {
+      if ((location.latitude !== 0 || location.longitude !== 0) && address.formatted !== "") {
         navigation.navigate("address", {
           latitude: location.latitude,
           longitude: location.longitude,
-          addressMap: address,
+          addressMap: address.formatted,
           latitudeDelta: location.latitudeDelta,
           longitudeDelta: location.longitudeDelta,
+          country: address.country,
+          city: address.city,
+          region: address.region,
         })
       } else {
         showMessageError(getI18nText("mapScreen.noLocation"))
@@ -71,7 +86,6 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         }
       }, 1500)
     }
-
     return (
       <Screen preset="scroll">
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
@@ -113,7 +127,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             ></Text>
 
             <View style={styles.containerAddress}>
-              <Text text={address} style={styles.textAddrres}></Text>
+              <Text text={address.formatted} style={styles.textAddrres}></Text>
             </View>
           </View>
 

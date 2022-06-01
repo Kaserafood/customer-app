@@ -11,6 +11,9 @@ interface addressScreenParams {
   addressMap: string
   latitudeDelta: number
   longitudeDelta: number
+  country: string
+  city: string
+  region: string
 }
 
 interface endOrderParams {
