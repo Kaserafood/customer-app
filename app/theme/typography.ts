@@ -17,7 +17,7 @@ export const typography = {
   /**
    * The primary font.  Used in most places.
    */
-  primary: Platform.select({ ios: "Poppins", android: "Poppins-Regular" }),
+  primary: Platform.select({ ios: "Poppins-Regular", android: "Poppins-Regular" }),
 
   /**
    * The primary bold font.

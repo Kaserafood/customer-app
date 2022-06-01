@@ -14,6 +14,9 @@ const addressModel = types.model("Address").props({
   instructionsDelivery: types.union(types.maybe(types.string), types.null),
   name: types.maybe(types.string),
   phone: types.union(types.maybe(types.string), types.null),
+  country: types.union(types.maybe(types.string), types.null),
+  city: types.union(types.maybe(types.string), types.null),
+  region: types.union(types.maybe(types.string), types.null),
 })
 export interface Address extends Instance<typeof addressModel> {}
 /**
@@ -38,6 +41,7 @@ export const AddressModelStore = types
       return null
     }),
     getAll: flow(function* getAll(userId: number) {
+      self.addresses.clear()
       const api = new Api()
       const result: AddressResponse = yield api.getAddresses(userId)
       if (result && result.kind === "ok") {

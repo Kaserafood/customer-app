@@ -11,6 +11,9 @@ interface addressScreenParams {
   addressMap: string
   latitudeDelta: number
   longitudeDelta: number
+  country: string
+  city: string
+  region: string
 }
 
 interface endOrderParams {
@@ -39,4 +42,5 @@ export type NavigatorParamList = {
   search: undefined
   map: undefined
   address: addressScreenParams
+  orders: undefined
 }
