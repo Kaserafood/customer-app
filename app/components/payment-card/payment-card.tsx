@@ -103,19 +103,6 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
           value="123"
         ></InputText>
       </View>
-
-      <InputText
-        name="alias"
-        preset="card"
-        placeholderTx="paymentCard.aliasPlaceholder"
-        rules={{
-          required: "paymentCard.aliasRequired",
-        }}
-        labelTx="paymentCard.alias"
-        styleContainer={[utilSpacing.my3]}
-        maxLength={100}
-        value="Test card"
-      ></InputText>
     </View>
   )
 })
