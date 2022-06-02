@@ -4,6 +4,7 @@ import { AddressResponse, CommonResponse } from "../../services/api/api.types"
 
 const addressModel = types.model("Address").props({
   id: types.maybe(types.number),
+  userId: types.maybe(types.number),
   latitude: types.maybe(types.number),
   longitude: types.maybe(types.number),
   longitudeDelta: types.maybe(types.number),
@@ -29,17 +30,6 @@ export const AddressModelStore = types
     current: types.optional(addressModel, {}),
   })
   .actions((self) => ({
-    add: flow(function* add(address: Address) {
-      const api = new Api()
-      const result: CommonResponse = yield api.addAddress(address)
-
-      if (result && result.kind === "ok") {
-        address.id = Number(result.data.data)
-        self.addresses.push(address)
-        return result.data
-      }
-      return null
-    }),
     getAll: flow(function* getAll(userId: number) {
       self.addresses.clear()
       const api = new Api()
@@ -47,6 +37,20 @@ export const AddressModelStore = types
       if (result && result.kind === "ok") {
         self.addresses.replace(result.data)
       } else self.addresses.replace([])
+    }),
+  }))
+  .actions((self) => ({
+    add: flow(function* add(address: Address) {
+      const api = new Api()
+      const result: CommonResponse = yield api.addAddress(address)
+
+      if (result && result.kind === "ok") {
+        address.id = Number(result.data.data)
+        self.addresses.push(address)
+        self.getAll(address.userId)
+        return result.data
+      }
+      return null
     }),
     setCurrent(address: Address) {
       self.current = address

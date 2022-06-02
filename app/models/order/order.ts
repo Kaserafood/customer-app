@@ -8,6 +8,16 @@ const metaData = types.model("metaData").props({
 const product = types.model("Product").props({
   productId: types.maybe(types.number),
   quantity: types.maybe(types.number),
+  name: types.maybe(types.string),
+  price: types.maybe(types.number),
+})
+
+const card = types.model("Card").props({
+  cardNumber: types.maybe(types.string),
+  dateExpiry: types.maybe(types.string),
+  cvv: types.maybe(types.string),
+  name: types.maybe(types.string),
+  type: types.maybe(types.string),
 })
 
 const orderModel = types.model("Order").props({
@@ -15,10 +25,16 @@ const orderModel = types.model("Order").props({
   customerId: types.maybe(types.number),
   address: types.maybe(types.string),
   country: types.maybe(types.string),
+  city: types.union(types.maybe(types.string), types.null),
+  region: types.union(types.maybe(types.string), types.null),
   products: types.optional(types.array(product), []),
   priceDelivery: types.maybe(types.number),
   metaData: types.optional(types.array(metaData), []),
   customerNote: types.maybe(types.string),
+  currencyCode: types.union(types.maybe(types.string), types.null),
+  taxId: types.union(types.maybe(types.string), types.null),
+  uuid: types.union(types.maybe(types.string), types.null),
+  card: types.union(types.maybe(card), types.null),
 })
 
 export interface Order extends SnapshotOut<typeof orderModel> {}

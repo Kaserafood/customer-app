@@ -231,10 +231,14 @@
          "deliveryDatePlaceholder": "Selecciona una fecha",
          "deliveryTime" : "Elige el rango de entrega",
          "paymentMethod" : "Método de pago",
+         "paymentCard": "Tarjeta de crédito/débito",
          "delivery" : "Entrega:",
          "errorDayDelivery" : "Selecciona un día de entrega",
          "errorTimeDelivery" : "Selecciona un rango de entrega",
-         "errorOrder" : "Lo sentimos, no se la logrado realizar tu pedido."
+         "errorOrder" : "Lo sentimos, no se la logrado realizar tu pedido",
+          "errorOrderPayment" : "Lo sentimos, no se ha logrado procesar el pago",
+         "nitPlaceholder": "Ingresa tu NIT o DPI para la factura",
+         "nit": "Ingresa tu NIT (Opcional)"
     },
     "endOrderScreen" : {
         "title" : "Pedido realizado",

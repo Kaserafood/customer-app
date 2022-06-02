@@ -1,13 +1,14 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
-import Ripple from "react-native-material-ripple"
+import { getUniqueId } from "react-native-device-info"
+import images from "../../assets/images"
 import {
+  AutoImage,
   Card,
-  Checkbox,
   Header,
   InputText,
   Loader,
@@ -25,9 +26,14 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { getCountryCode } from "../../utils/location"
+import { getCardType } from "../../utils/card"
+import { getCountryCode, getCurrencyCode } from "../../utils/location"
 import { showMessageError } from "../../utils/messages"
+import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
+import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
+import { DishesList } from "./dishes-list"
+import { Totals } from "./totals"
 
 class ModalState {
   isVisibleLocation = false
@@ -58,10 +64,28 @@ const modalDelivery = new ModalDelivery()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
-> = observer(({ navigation }) => {
+> = observer(() => {
   const { ...methods } = useForm({ mode: "onBlur" })
   const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
+  const refDeliveryTimeList = useRef(null)
+
+  useEffect(() => {
+    const loadSavedStrings = async () => {
+      const taxId = await loadString("taxId")
+      const deliveryTime = await loadString("deliveryTime")
+      const customerNote = await loadString("customerNote")
+      methods.setValue("taxId", taxId ?? "")
+      methods.setValue("deliveryNote", customerNote ?? "")
+      setLabelDeliveryTime(deliveryTime ?? "")
+
+      const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
+
+      if (slotTime)
+        refDeliveryTimeList.current.changeValue(true, deliverySlotTime.indexOf(slotTime))
+    }
+    loadSavedStrings()
+  }, [])
 
   const onError: SubmitErrorHandler<any> = (errors) => {
     return console.log({ errors })
@@ -79,34 +103,54 @@ export const DeliveryDetailScreen: FC<
     }
 
     const countryCode = await getCountryCode()
+    const currencyCode = getCurrencyCode(countryCode)
+
+    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
 
     const order: Order = {
       id: 0,
       customerId: userStore.userId,
       address: addressStore.current.address,
-      country: countryCode,
+      country: addressStore.current.country,
+      city: addressStore.current.city,
+      region: addressStore.current.address,
       products: getProducts(),
       priceDelivery: 20,
       metaData: getMetaData(),
-      customerNote: data.deliveryNote,
+      customerNote: data.customerNote,
+      currencyCode: currencyCode,
+      taxId: taxId,
+      uuid: getUniqueId(),
+      card: {
+        cardNumber: data.number.split(" ").join(""),
+        dateExpiry: data.expirationDate,
+        cvv: data.cvv,
+        name: data.name,
+        type: getCardType(data.number).toLocaleLowerCase(),
+      },
     }
     commonStore.setVisibleLoading(true)
     orderStore
       .add(order)
-      .then((res) => {
+      .then(async (res) => {
         commonStore.setVisibleLoading(false)
+        console.log("Code order reponse", res)
         if (Number(res.data) > 0) {
+          await saveString("taxId", data.taxId)
+          await saveString("customerNote", data.deliveryNote)
+          await saveString("deliveryTime", labelDeliveryTime)
+
           console.log("order added", res.data)
-          navigation.navigate("endOrder", {
-            orderId: Number(res.data),
-            deliveryDate: dayStore.currentDay.dayName,
-            deliveryTime: labelDeliveryTime,
-            deliveryAddress: addressStore.current.address,
-            imageChef: commonStore.currentChefImage,
-          })
-        } else {
-          showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
-        }
+          // navigation.navigate("endOrder", {
+          //   orderId: Number(res.data),
+          //   deliveryDate: dayStore.currentDay.dayName,
+          //   deliveryTime: labelDeliveryTime,
+          //   deliveryAddress: addressStore.current.address,
+          //   imageChef: commonStore.currentChefImage,
+          // })
+        } else if (Number(res.data) === -1)
+          showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
+        else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
       })
       .finally(() => commonStore.setVisibleLoading(false))
 
@@ -118,6 +162,8 @@ export const DeliveryDetailScreen: FC<
       return {
         productId: item.dish.id,
         quantity: item.quantity,
+        price: item.dish.price,
+        name: item.dish.title,
       }
     })
   }
@@ -146,10 +192,6 @@ export const DeliveryDetailScreen: FC<
     return data
   }
 
-  useEffect(() => {
-    console.log("DeliveryDetailScreen : useEffect")
-  }, [])
-
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -172,7 +214,7 @@ export const DeliveryDetailScreen: FC<
           </TouchableOpacity>
 
           <InputText
-            name="deliveryNote"
+            name="customerNote"
             preset="card"
             labelTx="deliveryDetailScreen.deliveryNote"
             placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
@@ -196,15 +238,39 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.deliveryTime"
           ></Text>
           <DeliveryTimeList
+            ref={refDeliveryTimeList}
             onSelectItem={(value) => setLabelDeliveryTime(value)}
           ></DeliveryTimeList>
           <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
           <Text
             preset="bold"
+            size="lg"
             tx="deliveryDetailScreen.paymentMethod"
-            style={[utilSpacing.mb4, utilSpacing.mx4]}
+            style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
+          <View style={utilFlex.flexRow}>
+            <Text
+              preset="bold"
+              caption
+              tx="deliveryDetailScreen.paymentCard"
+              style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
+            ></Text>
+            <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
+              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardVisa}></AutoImage>
+            </View>
+          </View>
+
           <PaymentCard methods={methods}></PaymentCard>
+          <InputText
+            name="taxId"
+            preset="card"
+            placeholderTx="deliveryDetailScreen.nitPlaceholder"
+            labelTx="deliveryDetailScreen.nit"
+            styleContainer={[utilSpacing.my3]}
+            maxLength={100}
+          ></InputText>
         </FormProvider>
 
         <View style={utilSpacing.mx4}>
@@ -249,114 +315,6 @@ export const DeliveryDetailScreen: FC<
   )
 })
 
-const DeliveryTimeList = (props: { onSelectItem: (item: string) => void }) => {
-  const [data, setData] = useState([])
-  useEffect(() => {
-    setData([
-      {
-        label: "12pm a 3pm",
-        value: false,
-      },
-      {
-        label: "4am a 6pm",
-        value: false,
-      },
-      {
-        label: "6pm a 8pm",
-        value: false,
-      },
-    ])
-  }, [])
-
-  const changeValue = (value, index) => {
-    let newData = [...data]
-    newData = newData.map((item) => {
-      item.value = false
-      return item
-    })
-    newData[index].value = value
-    setData(newData)
-    props.onSelectItem(newData[index].label)
-    console.log(value)
-  }
-  return (
-    <View>
-      {data.map((item, index) => (
-        <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]} key={index}>
-          <Ripple
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            onPress={() => changeValue(!item.value, index)}
-            style={utilSpacing.p2}
-          >
-            <Checkbox
-              rounded
-              style={utilSpacing.px3}
-              value={item.value}
-              preset="tiny"
-              text={item.label}
-            ></Checkbox>
-          </Ripple>
-        </Card>
-      ))}
-    </View>
-  )
-}
-
-const DishesList = () => {
-  const { cartStore } = useStores()
-  return (
-    <View>
-      {cartStore.cart.map((item) => (
-        <View style={[utilFlex.flexRow, utilSpacing.mb5]} key={item.dish.id}>
-          <View style={utilSpacing.mr3}>
-            <Text text={`X ${item.quantity}`} numberOfLines={1} preset="semiBold"></Text>
-          </View>
-          <View style={utilFlex.flex1}>
-            <Text preset="bold" numberOfLines={1} text={item.dish.title}></Text>
-            <Text
-              size="sm"
-              numberOfLines={1}
-              text={item.dish.description}
-              caption
-              style={utilText.textGray}
-            ></Text>
-          </View>
-          <View style={utilSpacing.ml3}>
-            <Price style={styles.price} amount={item.total}></Price>
-          </View>
-        </View>
-      ))}
-    </View>
-  )
-}
-
-const Totals = () => {
-  const { cartStore } = useStores()
-  return (
-    <View>
-      <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
-        <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.subtotal"></Text>
-        <Price style={styles.price} amount={cartStore.subtotal}></Price>
-      </View>
-
-      <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
-        <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
-        <Price style={styles.price} amount={20}></Price>
-      </View>
-
-      <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
-        <Text style={utilFlex.flex1} preset="bold" tx="common.total"></Text>
-        <Price
-          style={styles.price}
-          textStyle={utilText.bold}
-          amount={cartStore.subtotal + 20}
-        ></Price>
-      </View>
-    </View>
-  )
-}
-
 const styles = StyleSheet.create({
   addToOrder: {
     backgroundColor: color.primary,
@@ -374,10 +332,18 @@ const styles = StyleSheet.create({
     minWidth: 300,
     width: "90%",
   },
+  imageCard: {
+    borderColor: color.palette.grayLigth,
+    borderRadius: spacing[1],
+    borderWidth: 1,
+    height: 24,
+    marginLeft: spacing[1],
+    width: 35,
+  },
+
   price: {
     backgroundColor: color.transparent,
   },
-
   separator: {
     height: 1,
     marginVertical: spacing[3],

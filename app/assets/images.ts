@@ -34,6 +34,9 @@ const images = {
   back: require("./images/back.png"),
   notFound: require("./images/notFound.json"),
   remove: require("./images/remove.png"),
+  cardAmex: require("./images/card-amex.png"),
+  cardMastercard: require("./images/card-mastercard.png"),
+  cardVisa: require("./images/card-visa.png"),
 }
 
 export default images
