@@ -54,14 +54,10 @@ export const Dish = observer(function Dish(props: DishProps) {
             <Text
               text={dish.title}
               style={utilSpacing.mb2}
-              numberOfLines={1}
+              numberOfLines={2}
               preset="semiBold"
             ></Text>
-            <Text
-              text={dish.description}
-              style={[styles.descriptionDish, utilFlex.flex1]}
-              numberOfLines={2}
-            ></Text>
+            <Text text={dish.description} size="sm" style={utilFlex.flex1} caption numberOfLines={2}></Text>
             {visibleChefImage && (
               <Text
                 style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
@@ -97,7 +93,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[0],
   },
   column: {
-    height: 135,
+    height: 155,
   },
   containerPrice: {
     alignItems: "flex-end",
@@ -108,18 +104,14 @@ const styles = StyleSheet.create({
     marginRight: spacing[3],
   },
 
-  descriptionDish: {
-    color: color.palette.grayDark,
-  },
-
   h100: {
-    height: 114,
+    height: 150,
   },
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: 16,
     borderWidth: 1,
-    bottom: 0,
+    bottom: 15,
     height: 45,
     position: "absolute",
     right: spacing[1],
