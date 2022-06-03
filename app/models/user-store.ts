@@ -35,6 +35,9 @@ export const UserRegisterModel = userRegister
     userId: types.maybe(types.integer),
     displayName: types.maybe(types.string),
     addressId: types.maybe(types.number),
+    taxId: types.maybe(types.string),
+    customerNote: types.maybe(types.string),
+    deliverySlotTime: types.maybe(types.string),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -57,7 +60,10 @@ export const UserRegisterModel = userRegister
       await saveString("userId", data.id.toString())
       await saveString("email", data.email)
       await saveString("displayName", data.displayName)
-      await saveString("addressId", data.addressId.toString())
+      await saveString("addressId", data.addressId.toString()) // Address id of latest address selected
+      await saveString("taxId", data.taxId) // Tax id of latest order created
+      await saveString("customerNote", data.customerNote) // Customer note of latest order created
+      await saveString("deliveryTimeSlot", data.deliveryTimeSlot) // Delivery time slot of latest order created
       self.setUserId(data.id)
       self.setDisplayName(data.displayName)
       self.setEmail(data.email)

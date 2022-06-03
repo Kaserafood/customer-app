@@ -12,3 +12,12 @@ export async function getCountryCode(): Promise<string> {
       return ""
     })
 }
+
+export function getCurrencyCode(countryCode: string): string {
+  // Guatemala
+  if (countryCode === "GT") {
+    return "GTQ"
+  }
+  // Mexico
+  return "MXN"
+}
