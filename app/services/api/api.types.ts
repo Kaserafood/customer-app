@@ -1,4 +1,4 @@
-import { Address } from "../../models"
+import { Address, OrderOverview } from "../../models"
 import { Category } from "../../models/category-store"
 import { Character } from "../../models/character/character"
 import { Day } from "../../models/day-store"
@@ -62,4 +62,8 @@ export type CommonResponse = {
     message: string
     data: number | string // Usually contains the id inserted on the table
   }
+} & kind
+
+export type OrderOverviewResponse = {
+  data: OrderOverview[]
 } & kind

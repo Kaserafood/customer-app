@@ -43,6 +43,11 @@ export interface LocationProps {
    * Modal state to handle visibility
    */
   modal: ModalState
+
+  /**
+   * Screen to navigate to when user select location
+   */
+  screenToReturn: "main" | "deliveryDetail"
 }
 
 type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
@@ -52,7 +57,7 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
  */
 const modalPersistent = new ModalPersistent()
 export const LocationModal = observer(function Location(props: LocationProps) {
-  const { style, modal } = props
+  const { style, modal, screenToReturn } = props
 
   const { addressStore, userStore } = useStores()
   const [addressText, setAddressText] = useState("")
@@ -60,7 +65,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   const { permission, fetchAddressText } = useLocation()
 
   const toMap = () => {
-    navigation.navigate("map")
+    navigation.navigate("map", { screenToReturn: screenToReturn })
   }
 
   useEffect(() => {

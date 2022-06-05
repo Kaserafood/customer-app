@@ -6,15 +6,15 @@ import { utilSpacing } from "../../theme/Util"
 
 export const deliverySlotTime = [
   {
-    label: "12am a 3pm",
+    label: "12pm a 3pm",
     value: false,
   },
   {
-    label: "4pm a 6pm",
+    label: "3pm a 6pm",
     value: false,
   },
   {
-    label: "6pm a 8pm",
+    label: "6pm a 9pm",
     value: false,
   },
 ]

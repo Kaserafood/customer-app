@@ -66,7 +66,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }
 
     const onSubmit = (data) => {
-      cartStore.addItem(currentDish, quantity, data.comment)
+      cartStore.addItem(currentDish, quantity, data.note)
       methods.setValue("comment", "")
       setQuantity(1)
       navigation.navigate("menuChef", { ...params })
@@ -126,7 +126,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           <View style={utilSpacing.mt4}>
             <FormProvider {...methods}>
               <InputText
-                name="comment"
+                name="note"
                 preset="card"
                 labelTx="dishDetailScreen.commentChef"
                 placeholderTx="dishDetailScreen.placeHolderCommetChef"

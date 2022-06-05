@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { Api, CommonResponse } from "../../services/api"
+import { Api, CommonResponse, OrderOverviewResponse } from "../../services/api"
 
 const metaData = types.model("metaData").props({
   key: types.maybe(types.string),
@@ -37,7 +37,20 @@ const orderModel = types.model("Order").props({
   card: types.union(types.maybe(card), types.null),
 })
 
+const orderOverviewModel = types.model("OrderOverview").props({
+  id: types.maybe(types.number),
+  chefName: types.maybe(types.string),
+  status: types.maybe(types.string),
+  woocommerceStatus: types.maybe(types.string),
+  deliveryDate: types.maybe(types.string),
+  deliverySlotTime: types.maybe(types.string),
+  productCount: types.maybe(types.number),
+  total: types.maybe(types.number),
+  chefImage: types.maybe(types.string),
+})
+
 export interface Order extends SnapshotOut<typeof orderModel> {}
+export interface OrderOverview extends SnapshotOut<typeof orderOverviewModel> {}
 export interface MetaData extends Instance<typeof metaData> {}
 export interface Products extends Instance<typeof product> {}
 
@@ -47,10 +60,25 @@ export interface Products extends Instance<typeof product> {}
 export const OrderModel = types
   .model("Order")
   .props({
-    orders: types.optional(types.array(orderModel), []),
+    ordersOverview: types.optional(types.array(orderOverviewModel), []),
   })
-
-  .actions(() => ({
+  .views((self) => ({
+    // Retorna la ordenes que estan en estado "En espera" o "Procesnado"
+    get ordersOverviewInProgress() {
+      return self.ordersOverview.filter(
+        (order) =>
+          order.woocommerceStatus === "wc-on-hold" || order.woocommerceStatus === "wc-processing",
+      )
+    },
+    // Retorna la ordenes que estan en estado "Facturado" o "Completado"
+    get ordersOverviewCompleted() {
+      return self.ordersOverview.filter(
+        (order) =>
+          order.woocommerceStatus === "wc-billing" || order.woocommerceStatus === "wc-completed",
+      )
+    },
+  }))
+  .actions((self) => ({
     add: flow(function* add(order: Order) {
       const api = new Api()
       const result: CommonResponse = yield api.addOrder(order)
@@ -59,5 +87,13 @@ export const OrderModel = types
         return result.data
       }
       return null
+    }),
+    getAll: flow(function* getAll(userId: number) {
+      self.ordersOverview.clear()
+      const api = new Api()
+      const result: OrderOverviewResponse = yield api.getOrdersOverview(userId)
+      if (result && result.kind === "ok") {
+        self.ordersOverview.replace(result.data)
+      } else self.ordersOverview.replace([])
     }),
   }))

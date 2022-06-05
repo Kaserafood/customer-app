@@ -4,7 +4,7 @@ import { DishChef, dishChef } from "./dish-store"
 const itemCartStore = types.model("ItemCartStore").props({
   dish: types.maybe(dishChef),
   quantity: types.maybe(types.number),
-  commentChef: types.maybe(types.string),
+  noteChef: types.maybe(types.string),
   total: types.maybe(types.number),
 })
 export interface ItemCart extends SnapshotOut<typeof itemCartStore> {}
@@ -23,11 +23,11 @@ export const CartStoreModel = types
     },
   }))
   .actions((self) => ({
-    addItem(dish: DishChef, quantity: number, commentChef: string) {
+    addItem(dish: DishChef, quantity: number, noteChef: string) {
       const exists = self.cart.find((item) => item.dish?.id === dish.id)
       if (exists) {
         exists.quantity += quantity
-        exists.commentChef = commentChef
+        exists.noteChef = noteChef
         exists.total += dish.price * quantity
 
         self.cart[self.cart.indexOf(exists)] = exists
@@ -35,7 +35,7 @@ export const CartStoreModel = types
         self.cart.push({
           dish: JSON.parse(JSON.stringify(dish)),
           quantity,
-          commentChef,
+          noteChef: noteChef,
           total: dish.price * quantity,
         })
       }
