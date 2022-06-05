@@ -36,7 +36,7 @@ interface Address {
 const loadingState = new LoadingState()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { fetchAddressText, location, permission, setLocation } = useLocation()
     const [address, setAddress] = useState<Address>({
       city: "",
@@ -49,6 +49,12 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     useEffect(() => {
       // Request permision to access the location and then enable the location from the device
       permission()
+        .then((location) => {
+          fetchAddressText(location.latitude, location.longitude).then((address) => {
+            address && setAddress(address)
+          })
+        })
+        .finally(() => loadingState.setLoading(false))
     }, [])
 
     const toAddress = () => {
@@ -62,6 +68,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           country: address.country,
           city: address.city,
           region: address.region,
+          screenToReturn: params.screenToReturn,
         })
       } else {
         showMessageError(getI18nText("mapScreen.noLocation"))

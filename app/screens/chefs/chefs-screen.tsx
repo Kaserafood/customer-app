@@ -180,7 +180,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             <ListChef toDishDetail={(dish, chef) => toDishDetail(dish, chef)}></ListChef>
           </View>
         </ScrollView>
-        <LocationModal modal={modalState}></LocationModal>
+        <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader visible={commonStore.isVisibleLoading}></Loader>
       </Screen>

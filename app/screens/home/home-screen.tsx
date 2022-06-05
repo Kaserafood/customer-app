@@ -153,7 +153,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             </View>
           </View>
         </ScrollView>
-        <LocationModal modal={modalState}></LocationModal>
+        <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader></Loader>
       </Screen>

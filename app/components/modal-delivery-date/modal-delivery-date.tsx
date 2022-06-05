@@ -80,7 +80,13 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
             <ListDay></ListDay>
           </ScrollView>
           <View style={[styles.containerButton, utilFlex.selfCenter]}>
-            <Button style={utilSpacing.mt5} block preset="primary" tx="common.continue"></Button>
+            <Button
+              onPress={() => modal.setVisible(false)}
+              style={utilSpacing.mt5}
+              block
+              preset="primary"
+              tx="common.continue"
+            ></Button>
           </View>
         </View>
       </Modal>

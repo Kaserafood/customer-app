@@ -316,7 +316,8 @@
     "ordersScreen" : {
         "title": "Mis pedidios",
         "inProgress" : "En curso",
-        "previous" : "Anteriores"
+        "previous" : "Anteriores",
+        "articles": "Artículos"
     }
 
 

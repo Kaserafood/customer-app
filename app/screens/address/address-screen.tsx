@@ -38,7 +38,8 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             addressStore.setCurrent({ ...address })
             userStore.setAddressId(address.id)
             showMessageSucess(res.message)
-            navigation.navigate("main")
+            // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
+            navigation.navigate(params.screenToReturn)
           }
         })
         .finally(() => commonStore.setVisibleLoading(false))

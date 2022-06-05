@@ -116,7 +116,7 @@ export const DeliveryDetailScreen: FC<
       region: addressStore.current.address,
       products: getProducts(),
       priceDelivery: 20,
-      metaData: getMetaData(),
+      metaData: getMetaData(taxId),
       customerNote: data.customerNote,
       currencyCode: currencyCode,
       taxId: taxId,
@@ -137,17 +137,17 @@ export const DeliveryDetailScreen: FC<
         console.log("Code order reponse", res)
         if (Number(res.data) > 0) {
           await saveString("taxId", data.taxId)
-          await saveString("customerNote", data.deliveryNote)
+          await saveString("customerNote", data.customerNote)
           await saveString("deliveryTime", labelDeliveryTime)
 
           console.log("order added", res.data)
-          navigation.navigate("endOrder", {
-            orderId: Number(res.data),
-            deliveryDate: dayStore.currentDay.dayName,
-            deliveryTime: labelDeliveryTime,
-            deliveryAddress: addressStore.current.address,
-            imageChef: commonStore.currentChefImage,
-          })
+          // navigation.navigate("endOrder", {
+          //   orderId: Number(res.data),
+          //   deliveryDate: dayStore.currentDay.dayName,
+          //   deliveryTime: labelDeliveryTime,
+          //   deliveryAddress: addressStore.current.address,
+          //   imageChef: commonStore.currentChefImage,
+          // })
         } else if (Number(res.data) === -1)
           showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
         else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
@@ -164,11 +164,12 @@ export const DeliveryDetailScreen: FC<
         quantity: item.quantity,
         price: item.dish.price,
         name: item.dish.title,
+        noteChef: item.noteChef, // Nota que desea agregar al cliente para el chef
       }
     })
   }
 
-  const getMetaData = (): MetaData[] => {
+  const getMetaData = (taxId: string): MetaData[] => {
     const data: MetaData[] = []
 
     // Add chef id
@@ -187,6 +188,18 @@ export const DeliveryDetailScreen: FC<
     data.push({
       key: "dokan_delivery_time_date",
       value: dayStore.currentDay.date,
+    })
+
+    // Add tax of the customer
+
+    data.push({
+      key: "_billing_taxid",
+      value: taxId,
+    })
+
+    data.push({
+      key: "billing_taxid",
+      value: taxId,
     })
 
     return data
@@ -308,7 +321,7 @@ export const DeliveryDetailScreen: FC<
           ></Price>
         </View>
       </TouchableOpacity>
-      <LocationModal modal={modalState}></LocationModal>
+      <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
       <Loader></Loader>
     </Screen>

@@ -5,7 +5,7 @@ interface registerPageParams {
   init: boolean
 }
 
-interface addressScreenParams {
+interface addressScreenParams extends mapScreenParams {
   latitude: number
   longitude: number
   addressMap: string
@@ -24,6 +24,10 @@ interface endOrderParams {
   imageChef: string
 }
 
+interface mapScreenParams {
+  screenToReturn: "main" | "deliveryDetail"
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -40,7 +44,7 @@ export type NavigatorParamList = {
   home: undefined
   chefs: undefined
   search: undefined
-  map: undefined
+  map: mapScreenParams
   address: addressScreenParams
   orders: undefined
 }
