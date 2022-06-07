@@ -47,4 +47,7 @@ export type NavigatorParamList = {
   map: mapScreenParams
   address: addressScreenParams
   orders: undefined
+  recoverPassword: undefined
+  recoverPasswordToken: undefined
+  newPassword: undefined
 }

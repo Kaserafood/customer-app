@@ -75,7 +75,6 @@ export const Modal = observer(function Modal(props: ModalProps) {
 const styles = StyleSheet.create({
   body: {
     alignSelf: "center",
-    bottom: 0,
     position: "relative",
     width: "90%",
   },
