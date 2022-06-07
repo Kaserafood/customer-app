@@ -326,5 +326,19 @@
     "emailSended": "Te hemos enviado un correo, con las instrucciones para cambiar tu contraseña",
     "sendAgain": "Volver a enviar correo",
     "ready": "¡Listo!"
+  },
+  "recoverPasswordTokenScreen": {
+    "title": "Token",
+    "info": "Ingresa el token que te hemos enviado por correo electrónico"
+  },
+  "newPasswordScreen": {
+    "title": "Nueva contareña",
+    "info": "Ingresa tu nueva contraseña, debe tener al menos 4 caracteres",
+    "passwordPlaceholder": "Ingresa tu contraseña",
+    "passwordRequired": "Debes ingresar tu contraseña",
+    "passwordConfirmRequired": "Debes confirmar tu contraseña",
+    "passwordMinLength": "Debes ingresar al menos 4 caracteres",
+    "passwordConfirmPlaceholder": "Confirma tu contraseña",
+    "save": "Guardar"
   }
 }

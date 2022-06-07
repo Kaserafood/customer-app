@@ -1,4 +1,4 @@
-import { StackScreenProps } from "@react-navigation/stack"
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
@@ -14,7 +14,7 @@ const modalState = new ModalStateHandler()
 
 export const RecoverPasswordScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPassword">
-> = observer(function RecoverPasswordScreen() {
+> = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export const RecoverPasswordScreen: FC<
   const onSubmit = (data: { email: string }) => {
     // commonStore.setVisibleLoading(true)
     modalState.setVisible(true)
+
     // userStore
     //   .login(data)
     //   .then((userValid: boolean) => {
@@ -78,14 +79,21 @@ export const RecoverPasswordScreen: FC<
           </FormProvider>
         </View>
       </Screen>
-      <ModalSendedEmail modalState={modalState}></ModalSendedEmail>
+      <ModalSendedEmail navigation={navigation}></ModalSendedEmail>
     </>
   )
 })
 
-const ModalSendedEmail = (props: { modalState: ModalState }) => {
+const ModalSendedEmail = (props: {
+  navigation: StackNavigationProp<NavigatorParamList, "recoverPassword">
+}) => {
+  const toTokenScreen = () => {
+    props.navigation.navigate("recoverPasswordToken")
+    modalState.setVisible(false)
+  }
+
   return (
-    <Modal modal={props.modalState}>
+    <Modal modal={modalState}>
       <View>
         <Text
           tx="recoverPasswordScreen.ready"
@@ -113,7 +121,7 @@ const ModalSendedEmail = (props: { modalState: ModalState }) => {
         <Button
           tx="common.continue"
           style={[styles.btn, utilSpacing.py5, utilSpacing.mt4, utilFlex.selfCenter]}
-          onPress={() => props.modalState.setVisible(false)}
+          onPress={() => toTokenScreen()}
         ></Button>
       </View>
     </Modal>
