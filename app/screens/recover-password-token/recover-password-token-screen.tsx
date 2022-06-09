@@ -2,17 +2,19 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { StyleSheet, View } from "react-native"
+import { Keyboard, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { Header, InputText, Screen, Text } from "../../components"
+import { Header, InputText, Loader, Screen, Text } from "../../components"
+import { useStores } from "../../models"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
 export const RecoverPasswordTokenScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPasswordToken">
-> = observer(({ navigation }) => {
+> = observer(({ navigation, route: { params } }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
+  const { userStore, commonStore } = useStores()
 
   // Refs inputs for focus
   const first = useRef(null)
@@ -54,27 +56,38 @@ export const RecoverPasswordTokenScreen: FC<
       }
     }
 
-    if (validLengthInputs()) toNewPassword()
+    if (validLengthInputs()) validToken()
   }
 
-  const validLengthInputs = () => {
-    const inputsValues = [
+  const getInputValues = () => {
+    return [
       methods.getValues("first") ?? "",
       methods.getValues("second") ?? "",
       methods.getValues("third") ?? "",
       methods.getValues("fourth") ?? "",
     ]
-    const isValid = inputsValues.every((value) => value.length === 1)
+  }
 
+  const validLengthInputs = () => {
+    const values = getInputValues()
+    const isValid = values.every((value) => value.length === 1)
     return isValid
   }
 
-  const toNewPassword = () => {
-    navigation.navigate("newPassword")
+  const validToken = () => {
+    Keyboard.dismiss()
+    commonStore.setVisibleLoading(true)
+
+    userStore
+      .validTokenRecoverPassword(getInputValues().join(""), params.email)
+      .then((isValid: boolean) => {
+        isValid && navigation.navigate("newPassword", { email: params.email })
+      })
+      .finally(() => commonStore.setVisibleLoading(false))
   }
 
   return (
-    <Screen style={styles.root} preset="scroll">
+    <Screen style={styles.root} preset="fixed">
       <Header
         leftIcon="back"
         headerTx="recoverPasswordTokenScreen.title"
@@ -84,7 +97,7 @@ export const RecoverPasswordTokenScreen: FC<
         <Text
           preset="semiBold"
           tx="recoverPasswordTokenScreen.info"
-          style={[utilSpacing.mb8, utilSpacing.mt4]}
+          style={[utilSpacing.mb8, utilSpacing.mt8]}
         />
         <FormProvider {...methods}>
           <View style={[utilFlex.flexRow, styles.containerInputs]}>
@@ -139,6 +152,8 @@ export const RecoverPasswordTokenScreen: FC<
           </View>
         </FormProvider>
       </ScrollView>
+
+      <Loader></Loader>
     </Screen>
   )
 })

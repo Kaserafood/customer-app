@@ -322,8 +322,8 @@
     "emailFormatIncorrect": "El formato del correo electrónico es incorrecto",
     "send": "Enviar correo",
     "errorSend": "Lo sentimos, no se ha logrado enviar el correo electrónico",
-    "info": "Ingresa tu correo para recibir instrucciones para cambiar tu contraseña.",
-    "emailSended": "Te hemos enviado un correo, con las instrucciones para cambiar tu contraseña",
+    "info": "Ingresa tu correo para poder recuperar tu contraseña",
+    "emailSended": "Te hemos enviado un correo, con un token cambiar tu contraseña",
     "sendAgain": "Volver a enviar correo",
     "ready": "¡Listo!"
   },
@@ -332,13 +332,16 @@
     "info": "Ingresa el token que te hemos enviado por correo electrónico"
   },
   "newPasswordScreen": {
-    "title": "Nueva contareña",
+    "title": "Nueva contraseña",
     "info": "Ingresa tu nueva contraseña, debe tener al menos 4 caracteres",
     "passwordPlaceholder": "Ingresa tu contraseña",
     "passwordRequired": "Debes ingresar tu contraseña",
     "passwordConfirmRequired": "Debes confirmar tu contraseña",
     "passwordMinLength": "Debes ingresar al menos 4 caracteres",
     "passwordConfirmPlaceholder": "Confirma tu contraseña",
-    "save": "Guardar"
+    "save": "Guardar",
+    "infoChanged": "Tu contraseña se ha cambiado, ahora puedes iniciar sesión con tu nueva contraseña",
+    "login": "Iniciar sesión",
+    "passwordNotMatch": "Las contraseñas no coinciden"
   }
 }

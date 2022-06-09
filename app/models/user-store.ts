@@ -99,4 +99,37 @@ export const UserRegisterModel = userRegister
       const result = yield api.updateAddressId(userId, addressId)
       console.log(result)
     }),
+
+    sendEmailRecoverPassword: flow(function* sendEmailRecoverPassword(email: string) {
+      const api = new Api()
+
+      const result = yield api.sendEmailRecoverPassword(email)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
+
+    validTokenRecoverPassword: flow(function* validTokenRecoverPassword(
+      token: string,
+      email: string,
+    ) {
+      const api = new Api()
+
+      const result = yield api.validTokenRecoverPassword(token, email)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
+
+    changePassword: flow(function* changePassword(email: string, password: string) {
+      const api = new Api()
+
+      const result = yield api.changePassword(email, password)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
   }))

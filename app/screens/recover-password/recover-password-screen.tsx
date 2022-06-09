@@ -4,11 +4,12 @@ import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
-import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
+import { Button, Header, InputText, Loader, Modal, Screen, Text } from "../../components"
+import { useStores } from "../../models"
 import { goBack, NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { ModalState, ModalStateHandler } from "../../utils/modalState"
+import { ModalStateHandler } from "../../utils/modalState"
 
 const modalState = new ModalStateHandler()
 
@@ -16,6 +17,7 @@ export const RecoverPasswordScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPassword">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
+  const { userStore, commonStore } = useStores()
 
   useEffect(() => {
     console.log("recoverPasswordScreen : useEffect")
@@ -26,16 +28,14 @@ export const RecoverPasswordScreen: FC<
   }
 
   const onSubmit = (data: { email: string }) => {
-    // commonStore.setVisibleLoading(true)
-    modalState.setVisible(true)
+    commonStore.setVisibleLoading(true)
 
-    // userStore
-    //   .login(data)
-    //   .then((userValid: boolean) => {
-    //     commonStore.setVisibleLoading(false)
-    //     if (userValid) commonStore.setIsSignedIn(true)
-    //   })
-    //   .catch(() => commonStore.setVisibleLoading(false))
+    userStore
+      .sendEmailRecoverPassword(data.email)
+      .then((sended: boolean) => {
+        sended && modalState.setVisible(true)
+      })
+      .finally(() => commonStore.setVisibleLoading(false))
   }
 
   return (
@@ -78,35 +78,43 @@ export const RecoverPasswordScreen: FC<
             </View>
           </FormProvider>
         </View>
+        <ModalSendedEmail
+          sendAgain={() => onSubmit({ email: methods.getValues("email") })}
+          navigation={navigation}
+          email={methods.getValues("email")}
+        ></ModalSendedEmail>
       </Screen>
-      <ModalSendedEmail navigation={navigation}></ModalSendedEmail>
+      <Loader></Loader>
     </>
   )
 })
 
 const ModalSendedEmail = (props: {
   navigation: StackNavigationProp<NavigatorParamList, "recoverPassword">
+  email: string
+  sendAgain: () => void
 }) => {
   const toTokenScreen = () => {
-    props.navigation.navigate("recoverPasswordToken")
+    props.navigation.navigate("recoverPasswordToken", { email: props.email })
     modalState.setVisible(false)
   }
 
   return (
-    <Modal modal={modalState}>
+    <Modal modal={modalState} style={styles.w100}>
       <View>
         <Text
           tx="recoverPasswordScreen.ready"
           preset="bold"
           size="lg"
-          style={[utilSpacing.mb4, utilFlex.selfCenter]}
+          style={[utilSpacing.py5, utilFlex.selfCenter]}
         ></Text>
         <Text
           tx="recoverPasswordScreen.emailSended"
           preset="semiBold"
-          style={utilSpacing.mb4}
+          style={utilSpacing.my4}
         ></Text>
         <Ripple
+          onPressIn={props.sendAgain}
           rippleOpacity={0.2}
           rippleDuration={400}
           style={[styles.btnAddressAdd, utilSpacing.mx5, utilSpacing.mb5]}
@@ -120,7 +128,7 @@ const ModalSendedEmail = (props: {
 
         <Button
           tx="common.continue"
-          style={[styles.btn, utilSpacing.py5, utilSpacing.mt4, utilFlex.selfCenter]}
+          style={[styles.btn, utilSpacing.py5, utilSpacing.my4, utilFlex.selfCenter]}
           onPress={() => toTokenScreen()}
         ></Button>
       </View>
@@ -153,5 +161,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingTop: spacing[6],
     width: "75%",
+  },
+  w100: {
+    width: "100%",
   },
 })

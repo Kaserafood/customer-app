@@ -3,6 +3,7 @@ import { onSnapshot } from "mobx-state-tree"
 import { Platform } from "react-native"
 import { ArgType } from "reactotron-core-client"
 import { mst } from "reactotron-mst"
+import { stores } from "../../models"
 import { RootStore } from "../../models/root-store/root-store"
 import { goBack, navigate, resetRoot } from "../../navigators/navigation-utilities"
 import { clear } from "../../utils/storage"
@@ -192,6 +193,17 @@ export class Reactotron {
         handler: () => {
           console.tron.log("Going back")
           goBack()
+        },
+      })
+
+      Tron.onCustomCommand({
+        title: "Hide Loading",
+        description: "Goes back",
+        command: "hideLoading",
+        handler: () => {
+          console.tron.log("Hide loading")
+          const { commonStore } = stores()
+          commonStore.setVisibleLoading(false)
         },
       })
 

@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { BackHandler, StyleSheet, View } from "react-native"
+import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { Button, Header, InputText, Loader, Screen, Text } from "../../components"
@@ -29,6 +29,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     }
 
     const onSubmit = (data: UserLogin) => {
+      Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
       userStore
         .login(data)
