@@ -27,7 +27,7 @@ export interface DayDeliveryProps {
 }
 
 /**
- * Component for delivery days on the home and chef components
+ * Modal to explain why the user need to select a delivery date
  */
 export const DayDeliveryModal = observer(function DayDelivery(props: DayDeliveryProps) {
   const { style, modal } = props
@@ -72,7 +72,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
 
 const styles = StyleSheet.create({
   bodyModal: {
-    backgroundColor: color.palette.white,
+    backgroundColor: color.background,
     borderRadius: 20,
     padding: spacing[3],
     width: "90%",

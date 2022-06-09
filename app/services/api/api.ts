@@ -232,4 +232,28 @@ export class Api {
   async getOrdersOverview(userId: number): Promise<OrderOverviewResponse> {
     return await this.request({}, `/orders/user/${userId}`, "GET")
   }
+
+  /**
+   *
+   * @description Send a email whith the token to user to recover password
+   */
+  async sendEmailRecoverPassword(email: string): Promise<CommonResponse> {
+    return await this.request({ email }, `/users/email-recover-password`, "POST")
+  }
+
+  /**
+   *
+   * @description Send the token to valid if is valid to change the password
+   */
+  async validTokenRecoverPassword(token: string, email: string): Promise<CommonResponse> {
+    return await this.request({ token, email }, `/users/token`, "POST")
+  }
+
+  /**
+   *
+   * @description Change the password form the user
+   */
+  async changePassword(email: string, password: string): Promise<CommonResponse> {
+    return await this.request({ email, password }, `/users/change-password`, "POST")
+  }
 }

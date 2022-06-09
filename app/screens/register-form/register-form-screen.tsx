@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
@@ -27,6 +27,7 @@ export const RegisterFormScreen: FC<
     if (!terms) {
       showMessageInfo("registerFormScreen.acceptsTerms")
     } else {
+      Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
       console.log(data)
       userStore.register(data).finally(() => commonStore.setVisibleLoading(false))

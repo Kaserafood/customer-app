@@ -28,6 +28,12 @@ interface mapScreenParams {
   screenToReturn: "main" | "deliveryDetail"
 }
 
+interface tokenScreenParams {
+  email: string
+}
+
+interface newPasswordScreenParams extends tokenScreenParams {}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -47,4 +53,7 @@ export type NavigatorParamList = {
   map: mapScreenParams
   address: addressScreenParams
   orders: undefined
+  recoverPassword: undefined
+  recoverPasswordToken: tokenScreenParams
+  newPassword: newPasswordScreenParams
 }
