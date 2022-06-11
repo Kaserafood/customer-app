@@ -26,7 +26,7 @@ export default function DrawerContent(props) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={[styles.containerAvatar, utilFlex.flexCenter, utilFlex.selfCenter]}>
+      <View style={[styles.containerAvatar, utilSpacing.mt5, utilFlex.flexCenter, utilFlex.selfCenter]}>
         <IconRN name="person" size={50} color={color.palette.white} />
       </View>
       <Text

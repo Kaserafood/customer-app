@@ -189,10 +189,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: spacing[2],
   },
-
-  flex1: {
-    flex: 1,
-  },
   iconShipping: {
     height: 24,
     marginLeft: spacing[4],
