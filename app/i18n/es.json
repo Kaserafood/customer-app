@@ -245,8 +245,9 @@
     "cookWithLove": "Cocinaré tu platillo con mucho amor.",
     "continueExplore": "Seguir explorando"
   },
-  "search": {
-    "title": "Buscador"
+  "searchScreen": {
+    "title": "Buscador",
+    "somethingDiferent": "Quiero algo diferente"
   },
   "mapScreen": {
     "title": "Ajusta el pin",
@@ -343,5 +344,68 @@
     "infoChanged": "Tu contraseña se ha cambiado, ahora puedes iniciar sesión con tu nueva contraseña",
     "login": "Iniciar sesión",
     "passwordNotMatch": "Las contraseñas no coinciden"
+  },
+  "calendar": {
+    "today": "Hoy",
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "days": {
+      "monday": "Lunes",
+      "tuesday": "Martes",
+      "wednesday": "Miércoles",
+      "thursday": "Jueves",
+      "friday": "Viernes",
+      "saturday": "Sábado",
+      "sunday": "Domingo"
+    },
+    "monthsShort": {
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
+    },
+    "daysShort": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mie",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sab",
+      "sun": "Dom"
+    }
+  },
+  "modalRequestDish": {
+    "tellUsWhatYouNeed": "Cuéntanos que necesitas",
+    "weSarchBetter": "Buscaremos lo mejor para ti",
+    "dishName": "¿Que platillo deseas?",
+    "dishNamePlaceholder": "Ejemplo: Pollo a la plancha",
+    "dishNameRequired": "Debes ingresar el nombre del platillo",
+    "peopleCount": "¿Para cuántas personas? (opcional)",
+    "whenYouNeed": "¿Para cuándo lo necesitas?",
+    "dateNotSpecific": "Sin fecha específica",
+    "selectDate": "Elegir fecha",
+    "request": "Solicitar",
+    "changeDate": "Cambiar fecha",
+    "writeHere": "Escribe aquí"
   }
 }
