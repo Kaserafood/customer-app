@@ -1,7 +1,8 @@
+import { useIsFocused } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useLayoutEffect } from "react"
-import { StyleSheet, View } from "react-native"
+import { StatusBar, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -18,7 +19,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 
 const modalState = new ModalStateHandler()
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
-  function SearchScreen({ navigation }) {
+  ({ navigation }) => {
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
     }, [])
@@ -41,6 +42,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
           statusBar="dark-content"
           statusBarBackgroundColor={color.palette.white}
         >
+          <FocusAwareStatusBar barStyle="light-content" backgroundColor={color.primary} />
           <Header
             headerTx="searchScreen.title"
             titleStyle={[utilSpacing.pt4, utilSpacing.mb2]}
@@ -128,6 +130,12 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     )
   },
 )
+
+function FocusAwareStatusBar(props) {
+  const isFocused = useIsFocused()
+
+  return isFocused ? <StatusBar {...props} /> : null
+}
 
 const styles = StyleSheet.create({
   body: {

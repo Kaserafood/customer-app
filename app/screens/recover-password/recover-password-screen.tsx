@@ -100,7 +100,7 @@ const ModalSendedEmail = (props: {
   }
 
   return (
-    <Modal modal={modalState} style={styles.w100}>
+    <Modal modal={modalState} styleBody={styles.w80}>
       <View>
         <Text
           tx="recoverPasswordScreen.ready"
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing[6],
     width: "75%",
   },
-  w100: {
-    width: "100%",
+  w80: {
+    width: "80%",
   },
 })

@@ -196,6 +196,9 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
 const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate: string }) => {
   let { initialDate } = props
   const { dayStore } = useStores()
+
+  if (dayStore.days.length === 0) return null
+
   if (initialDate.length === 0) {
     initialDate = dayStore.days[1].date
     console.log(initialDate)
@@ -204,7 +207,7 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
     <Modal modal={modalStateCalendar}>
       <Calendar
         initialDate={initialDate}
-        minDate={dayStore.days[1].date}
+        minDate={dayStore.days[1]?.date}
         onDayPress={(day) => {
           props.onDayPress(day.dateString)
         }}
