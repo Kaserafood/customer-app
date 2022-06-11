@@ -1,5 +1,4 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
@@ -11,10 +10,11 @@ import {
   Header,
   Icon,
   ModalCart,
+  ModalRequestDish,
   Price,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DayDelivery } from "../../components/day-delivery/day-delivery"
 import { useStores } from "../../models"
@@ -26,20 +26,12 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 
-class ModalState {
-  isVisible = false
+const modalStateCart = new ModalStateHandler()
+const modalStateRequestDish = new ModalStateHandler()
 
-  setVisible(state: boolean) {
-    this.isVisible = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-const modalState = new ModalState()
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
     const { dayStore, commonStore, dishStore, cartStore } = useStores()
@@ -137,12 +129,15 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 )}
               </View>
             ))}
-            <EmptyData lengthData={dishStore.dishesChef.length}></EmptyData>
+            <EmptyData
+              lengthData={dishStore.dishesChef.length}
+              onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+            ></EmptyData>
           </View>
         </ScrollView>
         {cartStore.hasItems && (
           <TouchableOpacity
-            onPress={() => modalState.setVisible(true)}
+            onPress={() => modalStateCart.setVisible(true)}
             activeOpacity={0.7}
             style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
           >
@@ -160,7 +155,12 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           </TouchableOpacity>
         )}
 
-        <ModalCart chef={params.chef} onContinue={toDeliveryDetail} modal={modalState}></ModalCart>
+        <ModalCart
+          chef={params.chef}
+          onContinue={toDeliveryDetail}
+          modal={modalStateCart}
+        ></ModalCart>
+        <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
       </Screen>
     )
   },

@@ -14,6 +14,7 @@ import {
   EmptyData,
   Loader,
   Location,
+  ModalRequestDish,
   Screen,
   Separator,
   Text,
@@ -26,6 +27,7 @@ import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 
 class ModalState {
@@ -45,12 +47,13 @@ class ModalState {
   }
 }
 const modalState = new ModalState()
+const modalStateRequestDish = new ModalStateHandler()
 
 /**
  * Home Screen to show main dishes
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
-  function HomeScreen({ navigation }) {
+  ({ navigation }) => {
     const { onChangeDay } = useDay()
     const { dishStore, dayStore, commonStore, categoryStore, userStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
@@ -78,8 +81,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       console.log("Home  useEffect")
-      commonStore.setVisibleLoading(true)
+
       async function fetch() {
+        commonStore.setVisibleLoading(true)
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
@@ -148,13 +152,17 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             </View>
             <Separator style={utilSpacing.my4}></Separator>
             <ListDishes toDetail={(dish) => toDetail(dish)}></ListDishes>
-            <View style={utilSpacing.mb8}>
-              <EmptyData lengthData={dishStore.totalDishes}></EmptyData>
-            </View>
+          </View>
+          <View style={utilSpacing.mb8}>
+            <EmptyData
+              lengthData={dishStore.totalDishes}
+              onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+            ></EmptyData>
           </View>
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
+        <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
         <Loader></Loader>
       </Screen>
     )

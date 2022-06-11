@@ -38,6 +38,7 @@ const images = {
   cardMastercard: require("./images/card-mastercard.png"),
   cardVisa: require("./images/card-visa.png"),
   resetPassword: require("./json/reset-password.json"),
+  soup: require("./images/soup.png"),
 }
 
 export default images

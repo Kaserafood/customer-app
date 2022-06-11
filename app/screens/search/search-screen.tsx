@@ -137,6 +137,7 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: "center",
+    borderRadius: spacing[3],
     display: "flex",
     flex: 1,
     marginHorizontal: spacing[2],

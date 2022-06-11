@@ -1,9 +1,11 @@
-import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { ImageRequireSource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import images from "../../assets/images"
 import { useStores } from "../../models"
-import { color, typographySize } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { AutoImage } from "../auto-image/auto-image"
+import { Button } from "../button/button"
 import { Text } from "../text/text"
 
 export interface EmptyDataProps {
@@ -27,46 +29,75 @@ export interface EmptyDataProps {
    * Image to display
    */
   image?: ImageRequireSource
+
+  /**
+   * Callback when user click on button Request dish
+   */
+  onPressRequestDish?: () => void
 }
 
 /**
  * Component when there is no data
  */
 export const EmptyData = observer(function EmptyData(props: EmptyDataProps) {
-  const { style, lengthData = -1, message, image } = props
-  const { commonStore } = useStores()
+  const { style, lengthData = -1, message, onPressRequestDish } = props
+  const { commonStore, userStore } = useStores()
 
   return (
-    <View style={style}>
-      {lengthData === 0 && !commonStore.isVisibleLoading && (
-        <View>
-          <LottieView
-            style={styles.notFound}
-            source={image || require("./notFound.json")}
-            autoPlay
-            loop
-          />
-          {message ? (
-            <Text style={styles.textNotFound} text={message}></Text>
-          ) : (
-            <Text style={styles.textNotFound} tx="common.notFound.dishes"></Text>
-          )}
-        </View>
-      )}
-    </View>
+    <>
+      <View style={style}>
+        {lengthData === 0 && !commonStore.isVisibleLoading && userStore.userId > 0 && (
+          <View>
+            <AutoImage
+              resizeMode="contain"
+              style={styles.imgNotFound}
+              source={images.soup}
+            ></AutoImage>
+            {message ? (
+              <Text style={styles.textNotFound} text={message}></Text>
+            ) : (
+              <View style={styles.contianerText}>
+                <Text
+                  caption
+                  style={[styles.textNotFound, utilSpacing.pb3, utilSpacing.mt7]}
+                  tx="common.notFound.dishes"
+                ></Text>
+                <Text
+                  preset="semiBold"
+                  size="lg"
+                  tx="common.notFound.tellUsWhatNeed"
+                  style={[utilSpacing.py4, styles.textNotFound]}
+                ></Text>
+                <View style={utilFlex.flex1}>
+                  <Button
+                    onPress={onPressRequestDish}
+                    block
+                    style={utilSpacing.my6}
+                    tx="modalRequestDish.requestDish"
+                  ></Button>
+                </View>
+              </View>
+            )}
+          </View>
+        )}
+      </View>
+    </>
   )
 })
 
 const styles = StyleSheet.create({
-  notFound: {
+  contianerText: {
     alignSelf: "center",
-    display: "flex",
-    height: 150,
-    width: 150,
+    minWidth: 300,
+    width: "80%",
+  },
+  imgNotFound: {
+    alignSelf: "center",
+    height: 200,
+    width: "100%",
   },
   textNotFound: {
     alignSelf: "center",
-    color: color.palette.grayDark,
-    fontSize: typographySize.lg,
+    lineHeight: 30,
   },
 })

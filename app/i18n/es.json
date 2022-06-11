@@ -10,7 +10,8 @@
     "operationSuccess": "Procceso realizado con éxito",
     "operationExecuted": "Procceso ejectuado",
     "notFound": {
-      "dishes": "Lo sentimos, no se encontraron platillos"
+      "dishes": "No se han encontrado resultados",
+      "tellUsWhatNeed": "Cuéntanos lo que necesitas y encontraremos la mejor opción."
     },
     "dishes": "Platillos",
     "next": "Siguiente",
@@ -406,6 +407,7 @@
     "selectDate": "Elegir fecha",
     "request": "Solicitar",
     "changeDate": "Cambiar fecha",
-    "writeHere": "Escribe aquí"
+    "writeHere": "Escribe aquí",
+    "requestDish": "Solicitar platillo"
   }
 }
