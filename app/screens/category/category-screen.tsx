@@ -5,7 +5,16 @@ import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { DayDelivery, Dish, Header, Loader, Screen, Separator, Text } from "../../components"
+import {
+  DayDelivery,
+  Dish,
+  Header,
+  Loader,
+  ModalRequestDish,
+  Screen,
+  Separator,
+  Text,
+} from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { EmptyData } from "../../components/empty-data/empty-data"
 import { useStores } from "../../models"
@@ -15,6 +24,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 
 class ModalState {
   isVisibleWhy = false
@@ -29,6 +39,7 @@ class ModalState {
 }
 
 const modalState = new ModalState()
+const modalStateRequestDish = new ModalStateHandler()
 export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">> = observer(
   ({ route: { params }, navigation }) => {
     const {
@@ -69,7 +80,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
         <ScrollView style={styles.container}>
           <DayDelivery
             days={dayStore.days}
-            onWhyPress={(state) => modalState.setVisibleWhy(true)}
+            onWhyPress={() => modalState.setVisibleWhy(true)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
           <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>
@@ -85,10 +96,14 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             ))}
           </View>
 
-          <EmptyData lengthData={dishesCategory.length}></EmptyData>
+          <EmptyData
+            lengthData={dishesCategory.length}
+            onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+          ></EmptyData>
         </ScrollView>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader></Loader>
+        <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
       </Screen>
     )
   },

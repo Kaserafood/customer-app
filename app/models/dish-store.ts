@@ -81,4 +81,19 @@ export const DishStoreModel = types
     clearDishesChef() {
       self.dishesChef.clear()
     },
+
+    request: flow(function* request(
+      nameDish: string,
+      peopleDish: number,
+      date: string,
+      userEmail: string,
+      userId: number,
+    ) {
+      const api = new Api()
+      const result = yield api.requestDish(nameDish, peopleDish, date, userEmail, userId)
+      if (result.kind === "ok") {
+        return result.data
+      }
+      return {}
+    }),
   }))

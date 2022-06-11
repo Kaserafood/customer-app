@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ImageURISource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import ModalRN, { ModalProps } from "react-native-modal"
+import ModalRN from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
@@ -48,7 +48,7 @@ interface ModalProperties {
   /**
    * Position of the modal in the screen
    */
-  position?: "center" | "top" | "bottom"
+  position?: "center" | "bottom"
 
   /**
    * Indicates if the modal should hide on backdrop press
@@ -82,8 +82,6 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     switch (position) {
       case "center":
         return styles.center
-      case "top":
-        return styles.top
       case "bottom":
         return styles.bottom
     }
@@ -92,11 +90,9 @@ export const Modal = observer(function Modal(props: ModalProperties) {
   const getStyleBodyByPosition = () => {
     switch (position) {
       case "center":
-        return styles.borderRadiusAll
-      case "top":
-        return styles.borderRadiusTop
+        return styles.bodyCenter
       case "bottom":
-        return styles.borderRadiusBottom
+        return styles.bodyBottom
     }
   }
 
@@ -104,10 +100,8 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     switch (position) {
       case "center":
         return "zoomIn"
-      case "top":
-        return "slideInUp"
       case "bottom":
-        return "slideInDown"
+        return "slideInUp"
     }
   }
 
@@ -115,8 +109,6 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     switch (position) {
       case "center":
         return "zoomOut"
-      case "top":
-        return "slideOutUp"
       case "bottom":
         return "slideOutDown"
     }
@@ -157,26 +149,24 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
     padding: spacing[3],
     position: "relative",
+  },
+  bodyBottom: {
+    borderTopLeftRadius: spacing[3],
+    borderTopRightRadius: spacing[3],
+    width: "100%",
+  },
+  bodyCenter: {
+    borderRadius: spacing[3],
     width: "90%",
   },
-  borderRadiusAll: {
-    borderRadius: spacing[2],
-  },
-  borderRadiusBottom: {
-    borderTopLeftRadius: spacing[2],
-    borderTopRightRadius: spacing[2],
-  },
-  borderRadiusTop: {
-    borderBottomLeftRadius: spacing[2],
-    borderBottomRightRadius: spacing[2],
-  },
+
   bottom: {
+    bottom: 0,
     justifyContent: "flex-end",
+    margin: 0,
   },
   center: {
-    alignSelf: "center",
     margin: "auto",
-    maxWidth: "90%",
   },
 
   container: {
@@ -189,15 +179,14 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    alignItems: "center",
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    width: "100%",
   },
   imgClose: {
     height: 20,
     width: 20,
   },
-
   top: {
     justifyContent: "flex-start",
   },

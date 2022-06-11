@@ -256,4 +256,22 @@ export class Api {
   async changePassword(email: string, password: string): Promise<CommonResponse> {
     return await this.request({ email, password }, `/users/change-password`, "POST")
   }
+
+  /**
+   *
+   * @description Request a dish when is not found
+   */
+  async requestDish(
+    dishName: string,
+    dishPeople: number,
+    dishDate: string,
+    userEmail: string,
+    userId: number,
+  ): Promise<CommonResponse> {
+    return await this.request(
+      { dishName, dishPeople, dishDate, userEmail, userId },
+      `/dishes/request`,
+      "POST",
+    )
+  }
 }

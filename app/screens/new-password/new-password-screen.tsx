@@ -133,7 +133,12 @@ const ModalPasswordChanged = (props: {
   toLoginScreen: () => void
 }) => {
   return (
-    <Modal modal={modalState} hideOnBackdropPress={false} isVisibleIconClose={false}>
+    <Modal
+      modal={modalState}
+      styleBody={styles.w80}
+      hideOnBackdropPress={false}
+      isVisibleIconClose={false}
+    >
       <View>
         <LottieView loop={false} style={styles.icon} source={images.resetPassword} autoPlay />
         <Text
@@ -182,5 +187,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: spacing[5],
+  },
+  w80: {
+    width: "80%",
   },
 })

@@ -6,7 +6,8 @@ import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { Button, Header, InputText, Loader, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -100,7 +101,7 @@ const ModalSendedEmail = (props: {
   }
 
   return (
-    <Modal modal={modalState} style={styles.w100}>
+    <Modal modal={modalState} styleBody={styles.w80}>
       <View>
         <Text
           tx="recoverPasswordScreen.ready"
@@ -162,7 +163,7 @@ const styles = StyleSheet.create({
     paddingTop: spacing[6],
     width: "75%",
   },
-  w100: {
-    width: "100%",
+  w80: {
+    width: "80%",
   },
 })

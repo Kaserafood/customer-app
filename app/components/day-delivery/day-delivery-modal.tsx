@@ -3,11 +3,12 @@ import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { Button, Text } from ".."
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { AutoImage } from "../auto-image/auto-image"
+import { Button } from "../button/button"
+import { Text } from "../text/text"
 
 interface ModalState {
   isVisibleWhy: boolean
