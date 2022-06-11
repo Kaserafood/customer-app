@@ -7,6 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import {
   AutoImage,
+  Button,
   DishChef,
   Header,
   Icon,
@@ -25,6 +26,7 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
+import { getI18nText } from "../../utils/translate"
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
@@ -142,19 +144,17 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
           <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
         </ScrollView>
-        <TouchableOpacity
-          onPress={methods.handleSubmit(onSubmit)}
-          activeOpacity={0.7}
-          style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
-        >
-          <Icon name="cart" size={30} color={color.palette.white}></Icon>
-          <Text
-            preset="semiBold"
-            style={[styles.textAddToOrder, utilSpacing.mx3]}
-            tx="dishDetailScreen.addToOrder"
-          ></Text>
-          <Text preset="semiBold" style={styles.textAddToOrder} text={`${getFormat(total)}`}></Text>
-        </TouchableOpacity>
+
+        <View style={{ borderTopColor: color.palette.grayLigth, borderTopWidth: 1 }}>
+          <View style={[utilSpacing.mx7, utilSpacing.pb3, utilSpacing.pt5, {}]}>
+            <Button
+              style={utilSpacing.py5}
+              textStyle={{ fontSize: 19 }}
+              block
+              text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(total)}`}
+            ></Button>
+          </View>
+        </View>
 
         <Loader></Loader>
       </Screen>
