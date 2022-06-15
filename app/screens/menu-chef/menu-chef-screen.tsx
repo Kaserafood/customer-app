@@ -1,14 +1,14 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import {
   AutoImage,
+  ButtonFooter,
   Dish,
   EmptyData,
   Header,
-  Icon,
   ModalCart,
   ModalRequestDish,
   Price,
@@ -28,6 +28,7 @@ import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
+import { getI18nText } from "../../utils/translate"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
@@ -136,23 +137,10 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           </View>
         </ScrollView>
         {cartStore.hasItems && (
-          <TouchableOpacity
+          <ButtonFooter
             onPress={() => modalStateCart.setVisible(true)}
-            activeOpacity={0.7}
-            style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
-          >
-            <Icon name="cart" size={30} color={color.palette.white}></Icon>
-            <Text
-              preset="bold"
-              style={[styles.textAddToOrder, utilSpacing.mx3]}
-              tx="menuChefScreen.watchCart"
-            ></Text>
-            <Text
-              preset="bold"
-              style={styles.textAddToOrder}
-              text={getFormat(cartStore.subtotal)}
-            ></Text>
-          </TouchableOpacity>
+            text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(cartStore.subtotal)}`}
+          ></ButtonFooter>
         )}
 
         <ModalCart

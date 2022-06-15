@@ -8,13 +8,13 @@ import { getUniqueId } from "react-native-device-info"
 import images from "../../assets/images"
 import {
   AutoImage,
+  ButtonFooter,
   Card,
   Header,
   InputText,
   Loader,
   ModalDeliveryDate,
   PaymentCard,
-  Price,
   Screen,
   Separator,
   Text,
@@ -25,10 +25,11 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
-import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
 import { getCountryCode, getCurrencyCode } from "../../utils/location"
 import { showMessageError } from "../../utils/messages"
+import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
@@ -141,13 +142,13 @@ export const DeliveryDetailScreen: FC<
           await saveString("deliveryTime", labelDeliveryTime)
 
           console.log("order added", res.data)
-          // navigation.navigate("endOrder", {
-          //   orderId: Number(res.data),
-          //   deliveryDate: dayStore.currentDay.dayName,
-          //   deliveryTime: labelDeliveryTime,
-          //   deliveryAddress: addressStore.current.address,
-          //   imageChef: commonStore.currentChefImage,
-          // })
+          navigation.navigate("endOrder", {
+            orderId: Number(res.data),
+            deliveryDate: dayStore.currentDay.dayName,
+            deliveryTime: labelDeliveryTime,
+            deliveryAddress: addressStore.current.address,
+            imageChef: commonStore.currentChefImage,
+          })
         } else if (Number(res.data) === -1)
           showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
         else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
@@ -303,24 +304,11 @@ export const DeliveryDetailScreen: FC<
           </Card>
         </View>
       </ScrollView>
-      <TouchableOpacity
+      <ButtonFooter
         onPress={methods.handleSubmit(onSubmit, onError)}
-        activeOpacity={0.7}
-        style={[styles.addToOrder, utilFlex.flexCenter]}
-      >
-        <View style={[utilSpacing.py3, utilFlex.flexRow]}>
-          <Text
-            preset="bold"
-            style={[styles.textAddToOrder, utilSpacing.mx1]}
-            tx="dishDetailScreen.pay"
-          ></Text>
-          <Price
-            amount={cartStore.subtotal + 20}
-            textStyle={[utilText.bold, styles.textAddToOrder]}
-            style={styles.price}
-          ></Price>
-        </View>
-      </TouchableOpacity>
+        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(cartStore.subtotal + 20)}`}
+      ></ButtonFooter>
+
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
       <Loader></Loader>

@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import {
   AutoImage,
-  Button,
+  ButtonFooter,
   DishChef,
   Header,
   Icon,
@@ -144,18 +144,10 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
           <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
         </ScrollView>
-
-        <View style={{ borderTopColor: color.palette.grayLigth, borderTopWidth: 1 }}>
-          <View style={[utilSpacing.mx7, utilSpacing.pb3, utilSpacing.pt5, {}]}>
-            <Button
-              style={utilSpacing.py5}
-              textStyle={{ fontSize: 19 }}
-              block
-              text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(total)}`}
-            ></Button>
-          </View>
-        </View>
-
+        <ButtonFooter
+          onPress={methods.handleSubmit(onSubmit)}
+          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(total)}`}
+        ></ButtonFooter>
         <Loader></Loader>
       </Screen>
     )
