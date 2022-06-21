@@ -19,4 +19,6 @@ export const palette = {
   blackTransparent: "#00000066",
   shadow: "#2D0000",
   segmentedControl: "#efeff0",
+  grayDisabled: "#ffffffb3",
+  grayLoader: "#ffffff66",
 }

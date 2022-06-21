@@ -1,4 +1,4 @@
-import { Instance, types } from "mobx-state-tree"
+import { Instance, SnapshotIn, types } from "mobx-state-tree"
 
 export const optionAddon = types.model("OptionAddon", {
   label: types.maybe(types.string),
@@ -8,7 +8,7 @@ export const optionAddon = types.model("OptionAddon", {
 })
 export interface OptionAddon extends Instance<typeof optionAddon> {}
 
-export const addons = types.model("Addons", {
+export const addon = types.model("Addons", {
   name: types.maybe(types.string),
   title_format: types.maybe(types.string),
   description_enable: types.maybe(types.number),
@@ -25,8 +25,15 @@ export const addons = types.model("Addons", {
   min: types.maybe(types.number),
   max: types.maybe(types.number),
   options: types.maybe(types.optional(types.array(optionAddon), [])),
+  incrementable: types.maybe(types.string),
+  label_option: types.maybe(types.string),
+  show_title: types.maybe(types.string),
+  option_boolean: types.maybe(types.string),
+  multiple_choice: types.maybe(types.string),
+  num_option_selectables: types.maybe(types.string),
+  hide_in_app: types.maybe(types.string),
 })
-export interface Addons extends Instance<typeof addons> {}
+export interface Addon extends SnapshotIn<typeof addon> {}
 
 export const dish = types.model("Dish").props({
   id: types.maybe(types.number),
@@ -34,6 +41,6 @@ export const dish = types.model("Dish").props({
   description: types.maybe(types.string),
   price: types.maybe(types.number),
   image: types.maybe(types.string),
-  addons: types.maybe(types.optional(types.array(addons), [])),
+  addons: types.maybe(types.optional(types.array(addon), [])),
 })
 export interface Dish extends Instance<typeof dish> {}

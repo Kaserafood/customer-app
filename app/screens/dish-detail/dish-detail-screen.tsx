@@ -6,6 +6,7 @@ import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import {
+  Addons,
   AutoImage,
   ButtonFooter,
   DishChef,
@@ -98,6 +99,8 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           <Text style={[utilSpacing.mb2, utilSpacing.mx4]} text={currentDish.description}></Text>
           <Price style={styles.price} amount={currentDish.price}></Price>
           <Separator style={utilSpacing.my3}></Separator>
+
+          <Addons addons={params.addons} ></Addons>
 
           <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
             <View style={styles.containerUnities}>

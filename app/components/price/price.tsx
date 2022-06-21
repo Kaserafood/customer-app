@@ -42,7 +42,7 @@ export interface PriceProps {
   /**
    * Preset of price.
    */
-  preset?: "delivery" | "dish"
+  preset?: "delivery" | "dish" | "simple"
 
   /**
    * Styles for price text.
@@ -68,7 +68,7 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Dish = () => {
-    const styles = Object.assign({}, CONTAINER, style)
+    const styles = [CONTAINER, style]
     return (
       <View style={styles}>
         <Text style={textStyle} text={`${price}`}></Text>
@@ -76,9 +76,15 @@ export const Price = observer(function Price(props: PriceProps) {
     )
   }
 
+  const Simple = () => {
+    return <Text style={textStyle} text={`${price}`}></Text>
+  }
+
   if (preset === "delivery") {
     return <Delivery></Delivery>
-  } else {
+  } else if (preset === "dish") {
     return <Dish></Dish>
+  } else {
+    return <Simple></Simple>
   }
 })

@@ -409,5 +409,12 @@
     "changeDate": "Cambiar fecha",
     "writeHere": "Escribe aquí",
     "requestDish": "Solicitar platillo"
+  },
+  "addons": {
+    "chooseYourAddons": "Elige tus complementos",
+    "choice": "Elige",
+    "options": "opciones",
+    "option": "opción",
+    "each" :"c/u"
   }
 }

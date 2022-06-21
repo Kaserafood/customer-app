@@ -3,6 +3,7 @@ import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { color, spacing } from "../../theme"
+import { utilFlex } from "../../theme/Util"
 import { Text } from "../text/text"
 import { CheckboxProps } from "./checkbox.props"
 
@@ -23,7 +24,7 @@ export function Checkbox(props: CheckboxProps) {
     roundedStyle.height = 19
     roundedStyle.width = 19
   }
-  const rootStyle = [ROOT, style]
+  const rootStyle = [ROOT, utilFlex.flexCenterVertical, style]
 
   const onPress = props.onToggle ? () => props.onToggle && props.onToggle(!props.value) : null
 
@@ -48,6 +49,12 @@ export function Checkbox(props: CheckboxProps) {
                 <IconRN name="check-circle-outline" size={20} color={color.palette.black} />
               </Animated.View>
             )}
+
+            {preset === "medium" && (
+              <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+                <IconRN name="check-circle-outline" size={25} color={color.palette.black} />
+              </Animated.View>
+            )}
           </View>
         ) : (
           <View>
@@ -56,6 +63,10 @@ export function Checkbox(props: CheckboxProps) {
             )}
             {preset === "tiny" && (
               <IconRN name="radio-button-unchecked" size={20} color={color.palette.black} />
+            )}
+
+            {preset === "medium" && (
+              <IconRN name="radio-button-unchecked" size={25} color={color.palette.black} />
             )}
           </View>
         )}

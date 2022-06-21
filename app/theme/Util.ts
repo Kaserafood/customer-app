@@ -1,7 +1,7 @@
 import { StyleSheet, ViewStyle } from "react-native"
 import { color } from "./color"
 import { spacing } from "./spacing"
-import { typography } from "./typography"
+import { typography, typographySize } from "./typography"
 export const ROOT: ViewStyle = {
   backgroundColor: color.background,
   flex: 1,
@@ -44,9 +44,17 @@ export const utilText = StyleSheet.create({
   textGray: {
     color: color.palette.grayDark,
   },
+
+  textSm: {
+    fontSize: typographySize.sm,
+  },
 })
 
 export const utilFlex = StyleSheet.create({
+  felxColumn: {
+    display: "flex",
+    flexDirection: "column",
+  },
   flex: {
     display: "flex",
   },
@@ -64,17 +72,16 @@ export const utilFlex = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+
   flexCenterVertical: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
   },
-
   flexRow: {
     display: "flex",
     flexDirection: "row",
   },
-
   flexWrap: {
     display: "flex",
     flexWrap: "wrap",
