@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, {
+  Easing,
   FadeInDown,
   FadeOutDown,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
-  ZoomIn,
-  ZoomOut,
+  withTiming,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Addon } from "../../models/dish"
@@ -30,37 +29,40 @@ export interface IncrementableProps {
 export const Incrementable = function Incrementable(props: IncrementableProps) {
   const {
     onPress,
-    addon: { required, name, label_option: labelOption, min },
+    addon: { required, name, label_option: labelOption },
     state,
   } = props
 
-  const offset = useSharedValue(required === 1 ? 60 : 0)
+  let min = props.addon.min
+
+  const offset = useSharedValue(0)
+
+  const config = {
+    duration: 800,
+    easing: Easing.bezierFn(0.5, 0.01, 0, 1),
+  }
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      transform: [{ translateX: offset.value }],
+      width: withTiming(offset.value, config),
     }
   })
 
   const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
 
-  useEffect(() => {
-    if (Number(state[name].value) === 0) {
-      setIsVisibleMinus(false)
-      offset.value = withSpring(0)
-    }
-  }, [state[name].value])
+  if (min === 0) min = 1
 
   const plus = () => {
+    offset.value = 30
     if (isVisibleMinus) onPress(name, Number(state[name].value), true)
     else {
       setIsVisibleMinus(true)
-      offset.value = withSpring(60)
       onPress(name, Number(state[name].value), true)
     }
   }
 
   const minus = () => {
+    console.log(required, ` ${min}`)
     // Se valida si el valor es mayor o igual al valor minimo requerido para el campo
     if (Number(state[name].value) - 1 >= min) {
       onPress(name, Number(state[name].value), false)
@@ -68,59 +70,46 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
       // Si no es requerido, se oculta el boton de restar y se hace la resta correspondiente
       if (required !== 1) {
         setIsVisibleMinus(false)
-        offset.value = withSpring(0)
+        offset.value = 0
         onPress(name, Number(state[name].value), false)
       }
     }
   }
 
   return (
-    <Card style={[styles.card, utilSpacing.mb4, utilSpacing.p0, utilFlex.flexCenterVertical]}>
-      <Animated.View
-        style={[styles.box, utilFlex.flexCenterVertical, utilSpacing.mx4, animatedStyles]}
-      >
+    <Card style={[styles.card, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
+      {isVisibleMinus && (
         <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-          <TouchableOpacity
-            onPress={() => plus()}
-            style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
-          >
-            <IconRN name="add" color={color.palette.black} size={24}></IconRN>
-          </TouchableOpacity>
+          <Animated.View style={animatedStyles}>
+            <TouchableOpacity
+              onPress={() => minus()}
+              style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
+            >
+              <IconRN name="remove" color={color.palette.black} size={24}></IconRN>
+            </TouchableOpacity>
+          </Animated.View>
 
-          <Text numberOfLines={1} style={utilSpacing.ml4} text={labelOption}></Text>
+          <Text numberOfLines={1} text={`${state[name].value}`} style={utilSpacing.mx4}></Text>
         </View>
-      </Animated.View>
+      )}
 
-      <View style={utilFlex.flexCenterVertical}>
-        <View
-          style={[
-            utilFlex.flexRow,
-            utilSpacing.px4,
-            utilFlex.flexCenterVertical,
-            utilFlex.flex1,
-            styles.zIndex9,
-          ]}
+      <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+        <TouchableOpacity
+          onPress={() => plus()}
+          style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
         >
-          {isVisibleMinus && (
-            <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-              <TouchableOpacity
-                onPress={() => minus()}
-                style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
-              >
-                <IconRN name="remove" color={color.palette.black} size={24}></IconRN>
-              </TouchableOpacity>
-            </Animated.View>
-          )}
-
-          <Text numberOfLines={1} text={`${state[name].value}`} style={styles.text}></Text>
-        </View>
-        <PriceOption
-          amout={Number(state[name].total)}
-          isVisiblePriceUnity={Number(state[name].value) > 1}
-          priceUnity={Number(state[name].price)}
-          isVisiblePlus={isVisibleMinus}
-        ></PriceOption>
+          <IconRN name="add" color={color.palette.black} size={24}></IconRN>
+        </TouchableOpacity>
       </View>
+
+      <Text numberOfLines={1} style={[utilSpacing.ml4, utilFlex.flex1]} text={labelOption}></Text>
+
+      <PriceOption
+        amout={Number(state[name].total)}
+        isVisiblePriceUnity={Number(state[name].value) > 1}
+        priceUnity={Number(state[name].price)}
+        isVisiblePlus={isVisibleMinus}
+      ></PriceOption>
     </Card>
   )
 }
@@ -135,14 +124,10 @@ export const PriceOption = (props: {
 
   if (amout > 0) {
     return (
-      <View style={styles.containerPrice}>
+      <View>
         <View style={utilFlex.felxColumn}>
           <View style={utilFlex.flexRow}>
-            {isVisiblePlus && (
-              <Animated.Text entering={ZoomIn}>
-                <Text text="+"></Text>
-              </Animated.Text>
-            )}
+            {isVisiblePlus && <Text text="+"></Text>}
             <Price
               preset="simple"
               textStyle={[utilSpacing.pr4, utilSpacing.pl2]}
@@ -172,13 +157,6 @@ export const PriceOption = (props: {
 }
 
 const styles = StyleSheet.create({
-  box: {
-    backgroundColor: color.background,
-    height: "100%",
-    position: "absolute",
-    width: "100%",
-    zIndex: 10,
-  },
   btnRounded: {
     backgroundColor: color.palette.grayLigth,
     borderRadius: 24,
@@ -190,23 +168,9 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     zIndex: 10,
   },
-  containerPrice: {
-    paddingVertical: 30,
-    position: "absolute",
-    right: 0,
-    zIndex: 20,
-  },
 
   price: {
     backgroundColor: color.background,
     right: 0,
-  },
-  text: {
-    minWidth: 30,
-    textAlign: "center",
-  },
-
-  zIndex9: {
-    zIndex: 9,
   },
 })
