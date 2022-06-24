@@ -31,14 +31,23 @@ export interface AddonsProps {
    * Addons to display
    */
   addons: Addon[]
+
+  /**
+   * Callback when total price changes
+   */
+  onTotalPriceChange: (totalPrice: number) => void
 }
 
 const stateHandler = new StateHandler()
 
+export const getMetaData = () => {
+  return stateHandler.getMetaData()
+}
+
 /**
  * Component to show addons form dishes
  */
-export const Addons = observer(function Complements(props: AddonsProps) {
+export const Addons = observer(function Addons(props: AddonsProps) {
   const { style, addons } = props
 
   const {
@@ -48,11 +57,16 @@ export const Addons = observer(function Complements(props: AddonsProps) {
     changeValueCheckedOption,
     uncheckAllOptions,
     onDisableOptions,
-  } = useAddon(stateHandler, addons)
+  } = useAddon(stateHandler)
 
   useEffect(() => {
-    initState()
-  }, [])
+    initState(addons)
+    // console.log("addons", JSON.parse(JSON.stringify(addons)))
+  }, [addons])
+
+  useEffect(() => {
+    props.onTotalPriceChange(stateHandler.total)
+  }, [stateHandler.total])
 
   if (!stateHandler.state[addons[0].name]) return null
 
@@ -87,8 +101,6 @@ export const Addons = observer(function Complements(props: AddonsProps) {
         state={stateHandler.state}
         addons={addons}
       ></MultipleChoice>
-
-      <Text text={`TOTAL A PAGAR: ${stateHandler.total}`}></Text>
     </View>
   )
 })
@@ -124,13 +136,13 @@ const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
   if (addonsWithoutTitle.length === 0) return null
 
   return (
-    <>
+    <View>
       <Separator style={utilSpacing.my5}></Separator>
       <Text preset="bold" tx="addons.chooseYourAddons" style={utilSpacing.mb3}></Text>
       {addonsWithoutTitle.map((addon) => (
         <Incrementable key={addon.name} {...props} addon={addon}></Incrementable>
       ))}
-    </>
+    </View>
   )
 }
 

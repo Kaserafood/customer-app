@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx"
+import { MetaDataCart } from "../../models/cart-store"
 
 export class StateHandler {
   state = {}
@@ -17,6 +18,26 @@ export class StateHandler {
 
   setStateValue(name: string, value: any) {
     this.state[name] = value
+  }
+
+  getMetaData(): MetaDataCart[] {
+    const keys = Object.keys(this.state)
+    const metaData = []
+    keys.forEach((key) => {
+      const addon = this.state[key]
+
+      if (addon.checked) {
+        const meta: MetaDataCart = {
+          key: `${key} (${addon.total})`,
+          value: `${addon.value}`,
+          label: addon.label,
+          total: addon.total,
+        }
+
+        metaData.push(meta)
+      }
+    })
+    return metaData
   }
 
   get total() {

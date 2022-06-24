@@ -3,14 +3,15 @@ import { StateHandler } from "./stateHandler"
 
 const MULTIPLE_CHOICE = "multiple_choice"
 
-export const useAddon = (stateHandler: StateHandler, addons: Addon[]) => {
-  const initState = () => {
+export const useAddon = (stateHandler: StateHandler) => {
+  const initState = (addons: Addon[]) => {
     const newState = {}
     addons.forEach((addon) => {
       let state: any = {
         value: addon.required ? 1 : 0,
         price: addon.price,
         total: addon.price,
+        label: addon.label_option,
       }
       if (addon.type === MULTIPLE_CHOICE) {
         state = {

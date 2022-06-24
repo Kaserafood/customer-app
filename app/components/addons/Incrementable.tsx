@@ -51,14 +51,13 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
     }
   }, [state[name].value])
 
-  useEffect(() => {
-    if (isVisibleMinus && required !== 1) onPress(name, Number(state[name].value), true)
-  }, [isVisibleMinus])
-
   const plus = () => {
     if (isVisibleMinus) onPress(name, Number(state[name].value), true)
-    setIsVisibleMinus(true)
-    offset.value = withSpring(60)
+    else {
+      setIsVisibleMinus(true)
+      offset.value = withSpring(60)
+      onPress(name, Number(state[name].value), true)
+    }
   }
 
   const minus = () => {
@@ -82,7 +81,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
       >
         <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
           <TouchableOpacity
-            onPressOut={() => plus()}
+            onPress={() => plus()}
             style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
           >
             <IconRN name="add" color={color.palette.black} size={24}></IconRN>
@@ -105,7 +104,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
           {isVisibleMinus && (
             <Animated.View entering={ZoomIn} exiting={ZoomOut}>
               <TouchableOpacity
-                onPressOut={() => minus()}
+                onPress={() => minus()}
                 style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
               >
                 <IconRN name="remove" color={color.palette.black} size={24}></IconRN>
@@ -160,7 +159,6 @@ export const PriceOption = (props: {
                   textStyle={[utilText.textGray, utilText.textSm]}
                   amount={priceUnity}
                 ></Price>
-                {" "}
                 <Text caption size="sm" tx="addons.each"></Text>
               </View>
             </Animated.View>

@@ -1,5 +1,5 @@
+import { configure, getStorybookUI } from "@storybook/react-native"
 import React, { useEffect } from "react"
-import { getStorybookUI, configure } from "@storybook/react-native"
 import { initFonts } from "../app/theme/fonts"
 
 declare let module
@@ -10,7 +10,7 @@ configure(() => {
 
 const StorybookUI = getStorybookUI({
   port: 9001,
-  host: "localhost",
+  // host: "localhost",
   onDeviceUI: true,
   asyncStorage: require("@react-native-async-storage/async-storage").default || null,
 })

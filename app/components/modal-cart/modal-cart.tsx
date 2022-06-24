@@ -6,6 +6,7 @@ import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { useStores } from "../../models"
+import { MetaDataCart } from "../../models/cart-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -80,13 +81,8 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                     <Text preset="semiBold" text={`X ${item.quantity.toString()}`}></Text>
                   </View>
                   <View style={utilFlex.flex1}>
-                    <Text preset="semiBold" numberOfLines={1} text={item.dish.title}></Text>
-                    <Text
-                      size="sm"
-                      numberOfLines={1}
-                      text={item.dish.description}
-                      style={utilText.textGray}
-                    ></Text>
+                    <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
+                    <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
                   </View>
                 </View>
 
@@ -124,6 +120,26 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
     </Modal>
   )
 })
+
+export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
+  const { metaDataCart } = props
+  return (
+    <View style={utilSpacing.mt2}>
+      {metaDataCart.map((item) => (
+        <View key={item.key} style={utilFlex.flexRow}>
+          {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
+          <Text
+            numberOfLines={1}
+            style={utilSpacing.ml2}
+            caption
+            size="sm"
+            text={`${item.label}`}
+          ></Text>
+        </View>
+      ))}
+    </View>
+  )
+}
 
 const styles = StyleSheet.create({
   body: {

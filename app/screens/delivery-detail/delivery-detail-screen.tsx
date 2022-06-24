@@ -142,13 +142,13 @@ export const DeliveryDetailScreen: FC<
           await saveString("deliveryTime", labelDeliveryTime)
 
           console.log("order added", res.data)
-          navigation.navigate("endOrder", {
-            orderId: Number(res.data),
-            deliveryDate: dayStore.currentDay.dayName,
-            deliveryTime: labelDeliveryTime,
-            deliveryAddress: addressStore.current.address,
-            imageChef: commonStore.currentChefImage,
-          })
+          // navigation.navigate("endOrder", {
+          //   orderId: Number(res.data),
+          //   deliveryDate: dayStore.currentDay.dayName,
+          //   deliveryTime: labelDeliveryTime,
+          //   deliveryAddress: addressStore.current.address,
+          //   imageChef: commonStore.currentChefImage,
+          // })
         } else if (Number(res.data) === -1)
           showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
         else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
@@ -163,9 +163,10 @@ export const DeliveryDetailScreen: FC<
       return {
         productId: item.dish.id,
         quantity: item.quantity,
-        price: item.dish.price,
+        price: item.total,
         name: item.dish.title,
         noteChef: item.noteChef, // Nota que desea agregar al cliente para el chef
+        metaData: item.metaData,
       }
     })
   }
@@ -289,13 +290,20 @@ export const DeliveryDetailScreen: FC<
 
         <View style={utilSpacing.mx4}>
           <Separator style={utilSpacing.my6}></Separator>
-          <Text preset="semiBold" tx="deliveryDetailScreen.delivery"></Text>
-          <Text
-            preset="semiBold"
-            caption
-            text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
-            style={utilSpacing.mb6}
-          ></Text>
+          <View style={utilFlex.flexRow}>
+            <Text
+              style={utilSpacing.mr2}
+              preset="semiBold"
+              tx="deliveryDetailScreen.delivery"
+            ></Text>
+            <Text
+              preset="semiBold"
+              caption
+              text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
+              style={utilSpacing.mb6}
+            ></Text>
+          </View>
+
           {/* Resume order */}
           <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
             <DishesList></DishesList>
