@@ -15,7 +15,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     const toLogin = () => navigation.navigate("loginForm")
 
     useLayoutEffect(() => {
-      console.log("in init screen")
+      __DEV__ && console.log("in init screen")
       changeNavigationBarColor(color.primary, false, true)
     }, [])
 

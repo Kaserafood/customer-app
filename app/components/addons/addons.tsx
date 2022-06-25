@@ -17,10 +17,7 @@ import { useAddon } from "./useAddons"
 interface AddonsSectionProps extends IncrementableProps {
   addons: Addon[]
 }
-const TRUE = "yes"
-const FALSE = ""
-const MULTIPLE_CHOICE = "multiple_choice"
-const INPUT_MULTIPLER = "input_multiplier"
+
 export interface AddonsProps {
   /**
    * An optional style override useful for padding & margin.
@@ -64,6 +61,7 @@ export const Addons = observer(function Addons(props: AddonsProps) {
 
   useEffect(() => {
     initState(addons)
+    __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addons)))
   }, [addons])
 
   useEffect(() => {
@@ -169,14 +167,14 @@ const OptionBoolean = (props: AddonsSectionProps) => {
         >
           <Card style={utilFlex.flexCenterVertical}>
             <Checkbox
-              value={props.state[addon.name].checked}
+              value={props.state[addon.name]?.checked}
               preset="medium"
               text={addon.label_option}
               style={utilFlex.flex1}
             ></Checkbox>
             <PriceOption
               amout={Number(addon.options[0].price)}
-              isVisiblePlus={props.state[addon.name].checked}
+              isVisiblePlus={props.state[addon.name]?.checked}
             ></PriceOption>
           </Card>
         </Ripple>
