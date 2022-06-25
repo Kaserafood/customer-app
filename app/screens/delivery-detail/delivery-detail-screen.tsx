@@ -143,13 +143,13 @@ export const DeliveryDetailScreen: FC<
           await saveString("deliveryTime", labelDeliveryTime)
 
           console.log("order added", res.data)
-          // navigation.navigate("endOrder", {
-          //   orderId: Number(res.data),
-          //   deliveryDate: dayStore.currentDay.dayName,
-          //   deliveryTime: labelDeliveryTime,
-          //   deliveryAddress: addressStore.current.address,
-          //   imageChef: commonStore.currentChefImage,
-          // })
+          navigation.navigate("endOrder", {
+            orderId: Number(res.data),
+            deliveryDate: dayStore.currentDay.dayName,
+            deliveryTime: labelDeliveryTime,
+            deliveryAddress: addressStore.current.address,
+            imageChef: commonStore.currentChefImage,
+          })
         } else if (Number(res.data) === -1)
           showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
         else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
