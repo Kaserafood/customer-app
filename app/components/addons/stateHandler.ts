@@ -22,6 +22,7 @@ export class StateHandler {
 
   getMetaData(): MetaDataCart[] {
     const keys = Object.keys(this.state)
+    console.log("STATE ON GETMETA", this.state)
     const metaData = []
     keys.forEach((key) => {
       const addon = this.state[key]
@@ -31,7 +32,7 @@ export class StateHandler {
           key: `${key} (${addon.total})`,
           value: `${addon.value}`,
           label: addon.label,
-          total: addon.total,
+          total: Number(addon.total),
         }
 
         metaData.push(meta)

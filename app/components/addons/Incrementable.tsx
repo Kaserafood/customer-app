@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, {
   Easing,
@@ -35,7 +35,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
 
   let min = props.addon.min
 
-  const offset = useSharedValue(0)
+  const offset = useSharedValue(required === 1 ? 30 : 0)
 
   const config = {
     duration: 800,
@@ -53,12 +53,12 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
   if (min === 0) min = 1
 
   const plus = () => {
-    offset.value = 30
-    if (isVisibleMinus) onPress(name, Number(state[name].value), true)
-    else {
+    if (!isVisibleMinus) {
       setIsVisibleMinus(true)
-      onPress(name, Number(state[name].value), true)
+      offset.value = 30
     }
+
+    onPress(name, Number(state[name].value), true)
   }
 
   const minus = () => {

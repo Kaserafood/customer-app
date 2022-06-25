@@ -57,6 +57,9 @@ export const Addons = observer(function Addons(props: AddonsProps) {
     changeValueCheckedOption,
     uncheckAllOptions,
     onDisableOptions,
+    getAddonsWithTitle,
+    getAddonsWithoutTitle,
+    getAddonsBoolean,
   } = useAddon(stateHandler)
 
   useEffect(() => {
@@ -72,12 +75,19 @@ export const Addons = observer(function Addons(props: AddonsProps) {
 
   return (
     <View style={[style, utilSpacing.m4]}>
+      {getAddonsWithTitle(addons).length > 0 && <Separator style={utilSpacing.my5}></Separator>}
       <IncrementableWithTitle
         onPress={(name, value, isIncrement) => changeValueIncrement(name, value, isIncrement)}
         state={stateHandler.state}
         addons={addons}
       ></IncrementableWithTitle>
 
+      {getAddonsWithoutTitle(addons).concat(getAddonsBoolean(addons)).length > 0 && (
+        <View>
+          <Separator style={utilSpacing.my5}></Separator>
+          <Text preset="bold" tx="addons.chooseYourAddons" style={utilSpacing.mb3}></Text>
+        </View>
+      )}
       <IncrementableWithoutTitle
         onPress={(name, value, isIncrement) => changeValueIncrement(name, value, isIncrement)}
         state={stateHandler.state}
@@ -108,10 +118,10 @@ export const Addons = observer(function Addons(props: AddonsProps) {
  * Show addons with title. As long as the addon is incrementable, show title is true and multiple choice type
  */
 const IncrementableWithTitle = (props: AddonsSectionProps) => {
-  const addonsWithTitle = props.addons.filter(
-    (addon) =>
-      addon.show_title === TRUE && addon.incrementable === TRUE && addon.type === MULTIPLE_CHOICE,
-  )
+  const { getAddonsWithTitle } = useAddon()
+  const addonsWithTitle = getAddonsWithTitle(props.addons)
+
+  if (addonsWithTitle.length === 0) return null
   return (
     <>
       {addonsWithTitle.map((addon) => (
@@ -128,17 +138,13 @@ const IncrementableWithTitle = (props: AddonsSectionProps) => {
 }
 
 const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
-  const addonsWithoutTitle = props.addons.filter(
-    (addon) =>
-      addon.show_title === FALSE && addon.incrementable === TRUE && addon.type === INPUT_MULTIPLER,
-  )
+  const { getAddonsWithoutTitle } = useAddon()
+  const addonsWithoutTitle = getAddonsWithoutTitle(props.addons)
 
   if (addonsWithoutTitle.length === 0) return null
 
   return (
     <View>
-      <Separator style={utilSpacing.my5}></Separator>
-      <Text preset="bold" tx="addons.chooseYourAddons" style={utilSpacing.mb3}></Text>
       {addonsWithoutTitle.map((addon) => (
         <Incrementable key={addon.name} {...props} addon={addon}></Incrementable>
       ))}
@@ -147,10 +153,8 @@ const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
 }
 
 const OptionBoolean = (props: AddonsSectionProps) => {
-  const addonsBoolean = props.addons.filter(
-    (addon) =>
-      addon.show_title === FALSE && addon.option_boolean === TRUE && addon.type === MULTIPLE_CHOICE,
-  )
+  const { getAddonsBoolean } = useAddon()
+  const addonsBoolean = getAddonsBoolean(props.addons)
 
   if (addonsBoolean.length === 0) return null
 
@@ -171,7 +175,10 @@ const OptionBoolean = (props: AddonsSectionProps) => {
               text={addon.label_option}
               style={utilFlex.flex1}
             ></Checkbox>
-            <PriceOption amout={Number(addon.options[0].price)}></PriceOption>
+            <PriceOption
+              amout={Number(addon.options[0].price)}
+              isVisiblePlus={props.state[addon.name].checked}
+            ></PriceOption>
           </Card>
         </Ripple>
       ))}
@@ -181,10 +188,8 @@ const OptionBoolean = (props: AddonsSectionProps) => {
 
 const MultipleChoice = (props: AddonsSectionProps) => {
   const { state } = props
-  const addonsMultipleChoice = props.addons.filter(
-    (addon) =>
-      addon.show_title === TRUE && addon.multiple_choice === TRUE && addon.type === MULTIPLE_CHOICE,
-  )
+  const { getAddonsMultileChoice } = useAddon()
+  const addonsMultipleChoice = getAddonsMultileChoice(props.addons)
 
   const validCheckedOption = (addon: Addon, index: number, option: any, isChecked: boolean) => {
     let countSelected = state[addon.name].options.filter((option) => option.checked).length
@@ -223,7 +228,7 @@ const MultipleChoice = (props: AddonsSectionProps) => {
       <Separator style={utilSpacing.my5}></Separator>
 
       {addonsMultipleChoice.map((addon) => (
-        <View key={addon.name}>
+        <View key={addon.name} style={utilSpacing.mb4}>
           <Text text={addon.name} preset="bold"></Text>
           <Text
             size="sm"
@@ -283,7 +288,7 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
             text={option.label}
             style={utilFlex.flex1}
           ></Checkbox>
-          <PriceOption amout={Number(option.price)}></PriceOption>
+          <PriceOption isVisiblePlus amout={Number(option.price ?? 0)}></PriceOption>
         </Card>
       </Ripple>
     </View>

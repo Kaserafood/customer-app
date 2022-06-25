@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import images from "../../assets/images"
 import {
@@ -93,6 +93,7 @@ export const DeliveryDetailScreen: FC<
   }
 
   const onSubmit = async (data) => {
+    Keyboard.dismiss()
     if (!dayStore.currentDay) {
       showMessageError(getI18nText("deliveryDetailScreen.errorDayDelivery"))
       return

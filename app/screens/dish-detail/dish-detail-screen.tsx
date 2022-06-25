@@ -63,7 +63,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }, [])
 
     useEffect(() => {
-      setTotal((params.price + totalAddon) * quantity)
+      setTotal((currentDish.price + totalAddon) * quantity)
     }, [quantity, totalAddon])
 
     const minusQuantity = (number: number) => {

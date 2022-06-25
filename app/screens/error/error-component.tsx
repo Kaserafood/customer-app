@@ -1,7 +1,7 @@
 import React, { ErrorInfo } from "react"
-import { TextStyle, View, ViewStyle, ScrollView, ImageStyle } from "react-native"
-import { color } from "../../theme"
+import { ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import { Button, Icon, Text } from "../../components"
+import { color } from "../../theme"
 
 const CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -75,7 +75,7 @@ export const ErrorComponent = (props: ErrorComponentProps) => {
       <View style={ERROR_DETAILS_CONTAINER}>
         <ScrollView>
           <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
-          {/* <Text selectable style={CONTENT_BACKTRACE} text={`${props.errorInfo.componentStack}`} /> */}
+          <Text selectable text={`${props.errorInfo.componentStack}`} />
         </ScrollView>
       </View>
       <Button block rounded style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
