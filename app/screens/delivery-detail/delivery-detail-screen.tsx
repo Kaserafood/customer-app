@@ -89,7 +89,7 @@ export const DeliveryDetailScreen: FC<
   }, [])
 
   const onError: SubmitErrorHandler<any> = (errors) => {
-    return console.log({ errors })
+    __DEV__ && console.log({ errors })
   }
 
   const onSubmit = async (data) => {
@@ -136,13 +136,13 @@ export const DeliveryDetailScreen: FC<
       .add(order)
       .then(async (res) => {
         commonStore.setVisibleLoading(false)
-        console.log("Code order reponse", res)
+        __DEV__ && console.log("Code order reponse", res)
         if (Number(res.data) > 0) {
           await saveString("taxId", data.taxId)
           await saveString("customerNote", data.customerNote)
           await saveString("deliveryTime", labelDeliveryTime)
 
-          console.log("order added", res.data)
+          __DEV__ && console.log("order added", res.data)
           navigation.navigate("endOrder", {
             orderId: Number(res.data),
             deliveryDate: dayStore.currentDay.dayName,
@@ -156,7 +156,7 @@ export const DeliveryDetailScreen: FC<
       })
       .finally(() => commonStore.setVisibleLoading(false))
 
-    console.log(order)
+    __DEV__ && console.log(order)
   }
 
   const getProducts = (): Products[] => {

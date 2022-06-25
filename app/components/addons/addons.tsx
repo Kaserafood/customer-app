@@ -64,7 +64,6 @@ export const Addons = observer(function Addons(props: AddonsProps) {
 
   useEffect(() => {
     initState(addons)
-    // console.log("addons", JSON.parse(JSON.stringify(addons)))
   }, [addons])
 
   useEffect(() => {

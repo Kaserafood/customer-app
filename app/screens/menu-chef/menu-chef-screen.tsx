@@ -38,8 +38,10 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const { dayStore, commonStore, dishStore, cartStore } = useStores()
 
     useEffect(() => {
-      console.log("MenuChefScreen: useEffect")
-      console.log(params)
+      if (__DEV__) {
+        console.log("MenuChefScreen: useEffect")
+        console.log(params)
+      }
     }, [])
 
     const onChangeDay = async (day: Day) => {

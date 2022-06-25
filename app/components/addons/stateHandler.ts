@@ -22,7 +22,7 @@ export class StateHandler {
 
   getMetaData(): MetaDataCart[] {
     const keys = Object.keys(this.state)
-    console.log("STATE ON GETMETA", this.state)
+
     const metaData = []
     keys.forEach((key) => {
       const addon = this.state[key]

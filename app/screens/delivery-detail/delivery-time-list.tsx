@@ -32,7 +32,6 @@ export const DeliveryTimeList = forwardRef(
       newData[index].value = value
       setData(newData)
       props.onSelectItem(newData[index].label)
-      console.log(value)
     }
 
     useImperativeHandle(ref, () => ({

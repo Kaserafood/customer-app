@@ -23,7 +23,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
     }
 
     const onSubmit = (data) => {
-      console.log(data, params)
       const address = {
         ...data,
         ...params,

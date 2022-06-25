@@ -39,7 +39,7 @@ export function Button(props: ButtonProps) {
 
   const content = children || <Text tx={tx} text={text} style={textStyles} />
 
-  console.log("Button", preset, viewStyle.width)
+  __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
     <TouchableOpacity style={viewStyles} {...rest} activeOpacity={0.8}>
       {content}

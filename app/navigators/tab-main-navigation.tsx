@@ -12,7 +12,6 @@ export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
-    console.log("opeing")
   }
   return (
     <Tab.Navigator

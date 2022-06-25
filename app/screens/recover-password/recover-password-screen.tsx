@@ -21,11 +21,11 @@ export const RecoverPasswordScreen: FC<
   const { userStore, commonStore } = useStores()
 
   useEffect(() => {
-    console.log("recoverPasswordScreen : useEffect")
+    __DEV__ && console.log("recoverPasswordScreen : useEffect")
   }, [])
 
   const onError: SubmitErrorHandler<any> = (errors) => {
-    return console.log({ errors })
+    __DEV__ && console.log({ errors })
   }
 
   const onSubmit = (data: { email: string }) => {

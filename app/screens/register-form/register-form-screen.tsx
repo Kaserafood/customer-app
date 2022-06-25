@@ -35,7 +35,7 @@ export const RegisterFormScreen: FC<
   }
 
   const onError: SubmitErrorHandler<UserRegister> = (errors) => {
-    return console.log({ errors })
+    __DEV__ && console.log({ errors })
   }
 
   return (

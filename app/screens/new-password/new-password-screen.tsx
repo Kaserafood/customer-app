@@ -35,7 +35,6 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
 
     useEffect(() => {
       if (canRemoveScreen) {
-        console.log("changedCanRemove", canRemoveScreen)
         modalState.setVisible(false)
         navigation.navigate("loginForm")
       }
@@ -63,7 +62,6 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
     }
 
     const toLoginScreen = () => {
-      console.log("login", canRemoveScreen)
       setCanRemoveScreen(true)
     }
 

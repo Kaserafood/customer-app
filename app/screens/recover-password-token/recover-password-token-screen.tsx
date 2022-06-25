@@ -25,7 +25,7 @@ export const RecoverPasswordTokenScreen: FC<
 
   const changeFocus = (name: string, text: string) => {
     text = text.substring(0, 1)
-    console.log("changeFocus", name, text)
+
     methods.setValue(name, text)
     if (text.length === 1) {
       switch (name) {

@@ -52,7 +52,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
   }, [modalStateCalendar.isVisible, selectedDate])
 
   const onError = (error: any) => {
-    console.log(error)
+    __DEV__ && console.log(error)
   }
 
   const onSubmit = (data: any) => {
@@ -201,7 +201,7 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
 
   if (initialDate.length === 0) {
     initialDate = dayStore.days[1].date
-    console.log(initialDate)
+    __DEV__ && console.log(initialDate)
   }
   return (
     <Modal modal={modalStateCalendar}>

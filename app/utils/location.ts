@@ -4,11 +4,11 @@ export async function getCountryCode(): Promise<string> {
   return await DeviceCountry.getCountryCode()
     .then((result) => {
       // {"code": "BY", "type": "telephony"}
-      console.log(result)
+      __DEV__ && console.log(result)
       return result.code.toUpperCase()
     })
     .catch((e) => {
-      console.log(e)
+      __DEV__ && console.log(e)
       return ""
     })
 }

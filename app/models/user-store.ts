@@ -97,7 +97,7 @@ export const UserRegisterModel = userRegister
       const api = new Api()
 
       const result = yield api.updateAddressId(userId, addressId)
-      console.log(result)
+      __DEV__ && console.log(result)
     }),
 
     sendEmailRecoverPassword: flow(function* sendEmailRecoverPassword(email: string) {
