@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { Addon } from "../../models/dish"
@@ -10,9 +10,9 @@ import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-import { Incrementable, IncrementableProps, PriceOption } from "./Incrementable"
+import { Incrementable, IncrementableProps, PriceOption } from "./incrementable"
 import { StateHandler } from "./stateHandler"
-import { useAddon } from "./useAddons"
+import { TRUE, useAddon } from "./useAddons"
 
 interface AddonsSectionProps extends IncrementableProps {
   addons: Addon[]
@@ -190,22 +190,46 @@ const MultipleChoice = (props: AddonsSectionProps) => {
 
   const validCheckedOption = (addon: Addon, index: number, option: any, isChecked: boolean) => {
     let countSelected = state[addon.name].options.filter((option) => option.checked).length
+
     if (isChecked) countSelected++
     else countSelected--
-    if (Number(addon.num_option_selectables) === 1) {
+
+    if (addon.hash?.length > 0) {
+      const currentValueSelected = Number(
+        state[addon.name].options.find((option) => option.checked)?.label,
+      )
+
+      const addonDependency = addonsMultipleChoice.find(
+        (item) => item.dependencies.hash === addon.hash,
+      )
+
+      if (Number(option.label) < currentValueSelected) {
+        if (addonDependency) {
+          props.onDisableOptions(addonDependency.name, addonDependency.options, false)
+          props.uncheckAllOptions(addonDependency.name)
+        }
+      } else {
+        const optionsDisabled = state[addonDependency.name].options.filter((opt) => opt.disabled)
+        if (optionsDisabled.length > 0)
+          props.onDisableOptions(addonDependency.name, state[addonDependency.name].options, false)
+      }
+    }
+
+    if (getNumberOptionSelectables(addon) === 1) {
       // if only one option is selectable, then uncheck all other options
       props.uncheckAllOptions(addon.name)
       props.onCheckedOption(addon.name, option, true)
     }
 
-    if (Number(addon.num_option_selectables) > 1) {
+    if (getNumberOptionSelectables(addon) > 1) {
       // Si el numero maximo de opciones seleccionables es igual a la cantidad de opciones
       // selecionadas, "disable" las opciones que no estan seleccionadas
-      if (Number(addon.num_option_selectables) === countSelected) {
+
+      if (getNumberOptionSelectables(addon) === countSelected) {
         const unselected = state[addon.name].options.filter(
           (opt) => !opt.checked && opt.label !== option.label,
         )
-
+        console.log("toUnseletd =", unselected)
         props.onDisableOptions(addon.name, unselected, true)
       } else {
         // If exists someone disbled, enable all options
@@ -218,6 +242,23 @@ const MultipleChoice = (props: AddonsSectionProps) => {
     }
   }
 
+  const getNumberOptionSelectables = (addon: Addon): number => {
+    // Si la dependencia es de tipo "Cantidad"
+    if (isDependencyQuantity(addon)) {
+      const addonName: string = addonsMultipleChoice.find(
+        (item) => item.hash === addon.dependencies.hash,
+      ).name
+
+      return Number(state[addonName].options.find((option) => option.checked)?.label) ?? 0
+    }
+
+    return Number(addon.num_option_selectables)
+  }
+
+  const isDependencyQuantity = (addon: Addon): boolean => {
+    return addon.dependencies?.hash?.length > 0 && addon.dependencies?.quantity === TRUE
+  }
+
   if (addonsMultipleChoice.length === 0) return null
 
   return (
@@ -225,28 +266,36 @@ const MultipleChoice = (props: AddonsSectionProps) => {
       <Separator style={utilSpacing.my5}></Separator>
 
       {addonsMultipleChoice.map((addon) => (
-        <View key={addon.name} style={utilSpacing.mb4}>
-          <Text text={addon.name} preset="bold"></Text>
-          <Text
-            size="sm"
-            caption
-            text={`${getI18nText("addons.choice")} ${addon.num_option_selectables} ${getI18nText(
-              Number(addon.num_option_selectables) === 1 ? "addons.option" : "addons.options",
-            )}`}
-            style={utilSpacing.mb3}
-          ></Text>
-          {addon.options.map((option, index) => (
-            <OptionMultiChoice
-              key={option.label}
-              option={option}
-              addon={addon}
-              index={index}
-              state={state}
-              validCheckedOption={(addon, index, option, isChecked) =>
-                validCheckedOption(addon, index, option, isChecked)
-              }
-            ></OptionMultiChoice>
-          ))}
+        <View key={addon.name}>
+          {getNumberOptionSelectables(addon) > 0 && (
+            <View style={utilSpacing.mb4}>
+              <Text text={addon.name} preset="bold"></Text>
+
+              <Text
+                size="sm"
+                caption
+                text={`${getI18nText("addons.choice")} ${getNumberOptionSelectables(
+                  addon,
+                )} ${getI18nText(
+                  Number(addon.num_option_selectables) === 1 ? "addons.option" : "addons.options",
+                )}`}
+                style={utilSpacing.mb3}
+              ></Text>
+
+              {addon.options.map((option, index) => (
+                <OptionMultiChoice
+                  key={option.label}
+                  option={option}
+                  addon={addon}
+                  index={index}
+                  state={state}
+                  validCheckedOption={(addon, index, option, isChecked) =>
+                    validCheckedOption(addon, index, option, isChecked)
+                  }
+                ></OptionMultiChoice>
+              ))}
+            </View>
+          )}
         </View>
       ))}
     </>
@@ -263,20 +312,23 @@ interface OptionMultiChoiceProos {
 
 const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
   const { option, addon, index, state, validCheckedOption } = props
+  const [isDisabled, setIsDisabled] = useState(false)
+
+  useEffect(() => {
+    setIsDisabled(state[addon.name].options[index].disabled)
+  }, [state[addon.name].options[index].disabled])
 
   return (
     <View key={option.label}>
-      <View
-        style={[styles.disabled, state[addon.name].options[index].disabled && styles.h48]}
-      ></View>
-
+      {isDisabled && <View style={styles.optionDisabled}></View>}
       <Ripple
         onPress={() =>
+          !isDisabled &&
           validCheckedOption(addon, index, option, !state[addon.name].options[index].checked)
         }
-        rippleOpacity={0.2}
+        rippleOpacity={isDisabled ? 0 : 0.2}
         rippleDuration={400}
-        style={utilSpacing.mb4}
+        style={[utilSpacing.mb4, styles.option]}
       >
         <Card key={option.label} style={utilFlex.flexCenterVertical}>
           <Checkbox
@@ -293,18 +345,17 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
 }
 
 const styles = StyleSheet.create({
-  disabled: {
+  option: {
+    zIndex: 10,
+  },
+  optionDisabled: {
     backgroundColor: color.palette.grayDisabled,
     borderRadius: spacing[2],
-    height: 0,
+    height: 48,
     position: "absolute",
     width: "100%",
     zIndex: 15,
   },
-  h48: {
-    height: 48,
-  },
-
   textRequired: {
     color: color.primary,
   },

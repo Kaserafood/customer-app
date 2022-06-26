@@ -4,7 +4,7 @@ import { StateHandler } from "./stateHandler"
 const MULTIPLE_CHOICE = "multiple_choice"
 const INPUT_MULTIPLER = "input_multiplier"
 const CHECKBOX = "checkbox"
-const TRUE = "yes"
+export const TRUE = "yes"
 const FALSE = ""
 
 export const useAddon = (stateHandler?: StateHandler) => {
@@ -25,6 +25,7 @@ export const useAddon = (stateHandler?: StateHandler) => {
           options: addon.options.map((option) => {
             return { ...option, checked: false, disabled: false }
           }),
+          dependencies: addon.dependencies,
         }
         if (addon.required === 1 && addon.option_boolean !== TRUE && addon.multiple_choice !== TRUE)
           state.checked = true
@@ -91,20 +92,25 @@ export const useAddon = (stateHandler?: StateHandler) => {
 
   const uncheckAllOptions = (name: string) => {
     const newState = stateHandler.getState()
-    newState[name].options.forEach((option) => {
+    newState[name].options = newState[name].options.map((option) => {
       option.checked = false
+      return option
     })
 
+    console.log("uncheckAllOptions", newState[name].options)
     stateHandler.setState(newState)
   }
 
   const onDisableOptions = (name: string, options: any, isDisabled: boolean) => {
     const newState = stateHandler.getState()
-    newState[name].options.forEach((option) => {
+    newState[name].options = newState[name].options.map((option) => {
       const includes = options.find((opt) => opt.label === option.label)
+      const opt = { ...option }
       if (includes) {
-        option.disabled = isDisabled
+        opt.disabled = isDisabled
       }
+
+      return opt
     })
 
     stateHandler.setState(newState)

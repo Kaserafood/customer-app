@@ -1,5 +1,10 @@
 import { Instance, SnapshotIn, types } from "mobx-state-tree"
 
+const dependencies = types.model("DependenciesAddon", {
+  hash: types.string,
+  quantity: types.string,
+})
+
 export const optionAddon = types.model("OptionAddon", {
   label: types.maybe(types.string),
   price: types.maybe(types.string),
@@ -32,6 +37,8 @@ export const addon = types.model("Addons", {
   multiple_choice: types.maybe(types.string),
   num_option_selectables: types.maybe(types.string),
   hide_in_app: types.maybe(types.string),
+  dependencies: types.maybe(dependencies),
+  hash: types.maybe(types.string),
 })
 export interface Addon extends SnapshotIn<typeof addon> {}
 
