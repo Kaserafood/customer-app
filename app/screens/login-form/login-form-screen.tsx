@@ -25,7 +25,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     }, [navigation])
 
     const onError: SubmitErrorHandler<UserLogin> = (errors) => {
-      return console.log({ errors })
+      __DEV__ && console.log({ errors })
     }
 
     const onSubmit = (data: UserLogin) => {

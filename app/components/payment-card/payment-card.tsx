@@ -52,7 +52,6 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
         labelTx="paymentCard.name"
         styleContainer={[utilSpacing.my3]}
         maxLength={50}
-        value="Name card"
       ></InputText>
 
       <InputText
@@ -71,7 +70,6 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
         maxLength={100}
         keyboardType="numeric"
         mask={maskCard}
-        value="4000 1234 5678 9010"
       ></InputText>
 
       <View style={utilFlex.flexRow}>
@@ -86,7 +84,6 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
           styleContainer={[utilSpacing.my3, utilSpacing.mr2, utilFlex.flex1]}
           mask="[00]/[00]"
           keyboardType="numeric"
-          value="12/22"
         ></InputText>
 
         <InputText
@@ -100,7 +97,6 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
           styleContainer={[utilSpacing.my3, utilSpacing.ml2, utilFlex.flex1]}
           mask={maskCVV}
           keyboardType="numeric"
-          value="123"
         ></InputText>
       </View>
     </View>

@@ -41,8 +41,6 @@ export const useLocation = () => {
     else permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
     return await requestPermission(permission).then(async (granted) => {
       if (granted) {
-        console.log("MapScreen: granted")
-
         const config = {
           priority: HIGH_ACCURACY,
           alwaysShow: true,
@@ -72,7 +70,7 @@ export const useLocation = () => {
   const addListenerLocation = async (): Promise<Location> => {
     return new Promise((resolve) => {
       const listener = addListener(({ locationEnabled }) => {
-        console.log(`Location are ${locationEnabled ? "enabled" : "disabled"}`)
+        __DEV__ && console.log(`Location are ${locationEnabled ? "enabled" : "disabled"}`)
 
         if (locationEnabled) {
           RNLocation.getLatestLocation({ timeout: 60000 })
@@ -85,7 +83,7 @@ export const useLocation = () => {
               }
               setLocation({ ...location })
 
-              console.log("MapScreen: latestLocation", latestLocation)
+              __DEV__ && console.log("MapScreen: latestLocation", latestLocation)
               listener.remove()
               resolve(location)
             })

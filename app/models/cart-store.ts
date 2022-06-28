@@ -1,18 +1,27 @@
-import { SnapshotOut, types } from "mobx-state-tree"
-import { DishChef, dishChef } from "./dish-store"
+import { cast, SnapshotIn, types } from "mobx-state-tree"
+import { dishChef } from "./dish-store"
+import { metaData } from "./order/order"
+
+const metaDataCart = metaData.props({
+  label: types.string,
+  total: types.number,
+})
 
 const itemCartStore = types.model("ItemCartStore").props({
   dish: types.maybe(dishChef),
   quantity: types.maybe(types.number),
   noteChef: types.maybe(types.string),
   total: types.maybe(types.number),
+  metaData: types.array(metaDataCart),
 })
-export interface ItemCart extends SnapshotOut<typeof itemCartStore> {}
+export interface ItemCart extends SnapshotIn<typeof itemCartStore> {}
+export interface MetaDataCart extends SnapshotIn<typeof metaDataCart> {}
 
 export const CartStoreModel = types
   .model("CartStoreModel")
   .props({
-    cart: types.optional(types.array(itemCartStore), []),
+    cart: types.array(itemCartStore),
+    isSubmited: types.maybe(types.boolean),
   })
   .views((self) => ({
     get subtotal() {
@@ -23,24 +32,34 @@ export const CartStoreModel = types
     },
   }))
   .actions((self) => ({
-    addItem(dish: DishChef, quantity: number, noteChef: string) {
-      const exists = self.cart.find((item) => item.dish?.id === dish.id)
-      if (exists) {
-        exists.quantity += quantity
-        exists.noteChef = noteChef
-        exists.total += dish.price * quantity
+    addItem(itemCart: ItemCart) {
+      const { dish, quantity, noteChef } = itemCart
+      let currentItem = self.cart.find((item) => item.dish?.id === dish.id)
 
-        self.cart[self.cart.indexOf(exists)] = exists
+      if (currentItem) {
+        currentItem = {
+          ...currentItem,
+          quantity: currentItem.quantity + quantity,
+          noteChef: noteChef,
+          total: itemCart.total + (currentItem.total ?? 0),
+          metaData: cast(itemCart.metaData),
+        }
+
+        self.cart[self.cart.indexOf(currentItem)] = JSON.parse(JSON.stringify(currentItem))
       } else {
         self.cart.push({
           dish: JSON.parse(JSON.stringify(dish)),
           quantity,
           noteChef: noteChef,
-          total: dish.price * quantity,
+          total: itemCart.total,
+          metaData: cast(itemCart.metaData),
         })
       }
     },
     removeItem(index: number) {
       self.cart.splice(index, 1)
+    },
+    setSubmited(isSubmited: boolean) {
+      self.isSubmited = isSubmited
     },
   }))

@@ -36,7 +36,6 @@ export const RegisterPagerScreen: FC<
 
   useEffect(() => {
     function handleBackButton() {
-      console.log("back button pressed")
       goBack()
       if (page === 0) changeNavigationBarColor(color.primary, false, true)
       setPage(0)
@@ -66,7 +65,6 @@ export const RegisterPagerScreen: FC<
   ]
 
   const nextPage = () => {
-    console.log("NEXT PAGE")
     pageView.setPage(page + 1)
     setPage(page + 1)
   }

@@ -80,7 +80,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }, [])
 
     useEffect(() => {
-      console.log("Home  useEffect")
+      __DEV__ && console.log("Home  useEffect")
 
       async function fetch() {
         commonStore.setVisibleLoading(true)
@@ -92,12 +92,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           .then(() => setCurrentDay(days[0]))
           .finally(() => {
             commonStore.setVisibleLoading(false)
-            console.log("hide loaindg")
+            __DEV__ && console.log("hide loaindg")
           })
       }
       async function setUserStoreData() {
         if (!userStore.userId) {
-          console.log("Getting string user data")
+          __DEV__ && console.log("Getting string user data")
           const id = await loadString("userId")
           const displayName = await loadString("displayName")
           const addressId = await loadString("addressId")
@@ -130,7 +130,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             days={dayStore.days}
             onWhyPress={(state) => modalState.setVisibleWhy(state)}
             onPress={(day) => {
-              console.log("clcik day", day)
               onChangeDay(day)
             }}
           ></DayDelivery>

@@ -16,7 +16,7 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
   function OrdersScreen() {
     const { orderStore, userStore, commonStore } = useStores()
     useEffect(() => {
-      console.log("orders screen: useEffect")
+      __DEV__ && console.log("orders screen: useEffect")
       async function fetchOrders() {
         commonStore.setVisibleLoading(true)
         await orderStore

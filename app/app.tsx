@@ -47,7 +47,7 @@ function App() {
       setupRootStore()
         .then(setRootStore)
         .catch((error) => {
-          console.log("FATAL ERROR APP: -> useEffect: ", error)
+          __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
     })()
   }, [])

@@ -1,7 +1,9 @@
 import React, { ErrorInfo } from "react"
-import { TextStyle, View, ViewStyle, ScrollView, ImageStyle } from "react-native"
+import { ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
+import IconRN from "react-native-vector-icons/MaterialIcons"
+import { Button, Text } from "../../components"
 import { color } from "../../theme"
-import { Button, Icon, Text } from "../../components"
+import { utilSpacing } from "../../theme/Util"
 
 const CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -64,21 +66,22 @@ export interface ErrorComponentProps {
 }
 
 /**
- * Describe your component here
+ * Show the error message
  */
 export const ErrorComponent = (props: ErrorComponentProps) => {
   return (
     <View style={CONTAINER}>
-      <Icon style={ICON} icon="bug" />
+      <IconRN style={utilSpacing.my5} name="bug-report" light size={70} color={color.primary} />
       <Text style={TITLE_ERROR} tx={"errorScreen.title"} />
       <Text style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
       <View style={ERROR_DETAILS_CONTAINER}>
         <ScrollView>
+          {/* Algo no ha funcionado como se esperaba (Button -> Reestablecer) */}
           <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
-          {/* <Text selectable style={CONTENT_BACKTRACE} text={`${props.errorInfo.componentStack}`} /> */}
+          {__DEV__ && <Text selectable text={`${props.errorInfo.componentStack}`} />}
         </ScrollView>
       </View>
-      <Button block rounded style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
+      <Button block style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
     </View>
   )
 }

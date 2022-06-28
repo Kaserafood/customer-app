@@ -55,11 +55,11 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
   const { dayStore, commonStore } = useStores()
 
   useEffect(() => {
-    console.log("ModalDeliveryDate: useEffect")
+    __DEV__ && console.log("ModalDeliveryDate: useEffect")
 
     async function fetchData() {
       await dayStore.getDaysByChef(RNLocalize.getTimeZone(), commonStore.currentChefId)
-      console.log(dayStore.daysByChef)
+      __DEV__ && console.log(dayStore.daysByChef)
     }
     fetchData()
   }, [])

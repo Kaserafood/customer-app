@@ -45,7 +45,7 @@ class ModalState {
   nextDish(item: ChefItemModel, index: number) {
     if (item.currentIndexPage < item.dishes.length - 1) {
       item.pageView.setPage(item.currentIndexPage + 1)
-      console.log("INDEX PAGE STATE", item.currentIndexPage)
+
       item.currentDishName = item.dishes[item.currentIndexPage + 1].title
       item.currentIndexPage++
       this.data[index] = item
@@ -55,7 +55,7 @@ class ModalState {
   previousDish(item: ChefItemModel, index: number) {
     if (item.currentIndexPage > 0) {
       item.pageView.setPage(item.currentIndexPage - 1)
-      console.log("INDEX PAGE STATE", item.currentIndexPage)
+
       item.currentDishName = item.dishes[item.currentIndexPage - 1].title
       item.currentIndexPage--
       this.data[index] = item
@@ -65,8 +65,6 @@ class ModalState {
   chanageDish(item: ChefItemModel, position: number, index: number) {
     if (item.currentIndexPage !== position) {
       item.pageView.setPage(position)
-
-      console.log("INDEX PAGE STATE", item.currentIndexPage)
       item.currentIndexPage = position
       item.currentDishName = item.dishes[item.currentIndexPage].title
       this.data[index] = item
@@ -91,7 +89,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     }, [])
 
     useEffect(() => {
-      console.log("chefs useEffect")
+      __DEV__ && console.log("chefs useEffect")
       commonStore.setVisibleLoading(true)
       async function fetch() {
         // if (dishStore.dishesGroupedByChef.length > 0) return
@@ -110,7 +108,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     useEffect(() => {
       if (dishStore.formatDishesGropuedByChef.length > 0) {
         modalState.setData(dishStore.formatDishesGropuedByChef)
-        console.log("formatData changed")
+        __DEV__ && console.log("formatData changed")
       }
     }, [dishStore.formatDishesGropuedByChef])
 

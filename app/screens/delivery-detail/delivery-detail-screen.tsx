@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import images from "../../assets/images"
 import {
@@ -89,10 +89,11 @@ export const DeliveryDetailScreen: FC<
   }, [])
 
   const onError: SubmitErrorHandler<any> = (errors) => {
-    return console.log({ errors })
+    __DEV__ && console.log({ errors })
   }
 
   const onSubmit = async (data) => {
+    Keyboard.dismiss()
     if (!dayStore.currentDay) {
       showMessageError(getI18nText("deliveryDetailScreen.errorDayDelivery"))
       return
@@ -135,13 +136,13 @@ export const DeliveryDetailScreen: FC<
       .add(order)
       .then(async (res) => {
         commonStore.setVisibleLoading(false)
-        console.log("Code order reponse", res)
+        __DEV__ && console.log("Code order reponse", res)
         if (Number(res.data) > 0) {
           await saveString("taxId", data.taxId)
           await saveString("customerNote", data.customerNote)
           await saveString("deliveryTime", labelDeliveryTime)
 
-          console.log("order added", res.data)
+          __DEV__ && console.log("order added", res.data)
           navigation.navigate("endOrder", {
             orderId: Number(res.data),
             deliveryDate: dayStore.currentDay.dayName,
@@ -155,7 +156,7 @@ export const DeliveryDetailScreen: FC<
       })
       .finally(() => commonStore.setVisibleLoading(false))
 
-    console.log(order)
+    __DEV__ && console.log(order)
   }
 
   const getProducts = (): Products[] => {
@@ -163,9 +164,10 @@ export const DeliveryDetailScreen: FC<
       return {
         productId: item.dish.id,
         quantity: item.quantity,
-        price: item.dish.price,
+        price: item.total,
         name: item.dish.title,
         noteChef: item.noteChef, // Nota que desea agregar al cliente para el chef
+        metaData: item.metaData,
       }
     })
   }
@@ -289,13 +291,20 @@ export const DeliveryDetailScreen: FC<
 
         <View style={utilSpacing.mx4}>
           <Separator style={utilSpacing.my6}></Separator>
-          <Text preset="semiBold" tx="deliveryDetailScreen.delivery"></Text>
-          <Text
-            preset="semiBold"
-            caption
-            text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
-            style={utilSpacing.mb6}
-          ></Text>
+          <View style={utilFlex.flexRow}>
+            <Text
+              style={utilSpacing.mr2}
+              preset="semiBold"
+              tx="deliveryDetailScreen.delivery"
+            ></Text>
+            <Text
+              preset="semiBold"
+              caption
+              text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
+              style={utilSpacing.mb6}
+            ></Text>
+          </View>
+
           {/* Resume order */}
           <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
             <DishesList></DishesList>

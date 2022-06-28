@@ -1,7 +1,7 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { Api, CommonResponse, OrderOverviewResponse } from "../../services/api"
 
-const metaData = types.model("metaData").props({
+export const metaData = types.model("metaData").props({
   key: types.maybe(types.string),
   value: types.maybe(types.string),
 })
@@ -10,6 +10,7 @@ const product = types.model("Product").props({
   quantity: types.maybe(types.number),
   name: types.maybe(types.string),
   price: types.maybe(types.number),
+  metaData: types.array(metaData),
 })
 
 const card = types.model("Card").props({

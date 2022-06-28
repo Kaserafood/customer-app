@@ -79,7 +79,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       clearTimeout(timeOut)
       timeOut = setTimeout(() => {
         if (location.latitude !== region.latitude && location.longitude !== region.longitude) {
-          console.log(`Change region2: ${JSON.stringify(region)}`)
+          __DEV__ && console.log(`Change region2: ${JSON.stringify(region)}`)
 
           setLocation({ ...region })
           loadingState.setLoading(true)

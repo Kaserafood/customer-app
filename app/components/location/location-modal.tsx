@@ -72,7 +72,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
     async function fetch() {
       if (userStore.userId && userStore.userId > 0)
         if (addressStore.addresses.length === 0) {
-          console.log("GETTING ADDRESS LISET USER")
+          __DEV__ && console.log("GETTING ADDRESS LISET USER")
           await addressStore.getAll(userStore.userId)
           const address = addressStore.addresses.find(
             (address) => address.id === userStore.addressId,

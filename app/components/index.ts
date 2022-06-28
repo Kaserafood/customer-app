@@ -1,12 +1,11 @@
 export * from "./auto-image/auto-image"
-
 export * from "./bullet-item/bullet-item"
 export * from "./button/button"
 export * from "./card/card"
 export * from "./categories/categories"
 export * from "./checkbox/checkbox"
 export * from "./chip/chip"
-export * from "./complements/complements"
+export * from "./addons/addons"
 export * from "./day-delivery/day-delivery"
 export * from "./dish-chef/dish-chef"
 export * from "./dish/dish"
