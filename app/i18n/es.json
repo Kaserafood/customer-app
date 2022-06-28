@@ -415,6 +415,7 @@
     "choice": "Elige",
     "options": "opciones",
     "option": "opción",
-    "each" :"c/u"
+    "each": "c/u",
+    "obligatory": "Obligatorio"
   }
 }

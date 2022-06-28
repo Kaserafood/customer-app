@@ -14,6 +14,7 @@ import {
   Header,
   Icon,
   InputText,
+  isValidAddons,
   Loader,
   Price,
   Screen,
@@ -47,6 +48,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       setAddonsAvailable(currentDish.addons.filter((addon) => addon.hide_in_app !== "yes"))
       setQuantity(1)
       setTotal(params.price)
+      cartStore.setSubmited(false)
 
       async function fetch() {
         if (commonStore.currentChefId !== params.chef.id) {
@@ -73,6 +75,12 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }
 
     const onSubmit = (data) => {
+      if (!cartStore.isSubmited) cartStore.setSubmited(true)
+
+      if (!isValidAddons(currentDish.addons)) return
+
+      cartStore.setSubmited(false)
+
       const itemCart: ItemCart = {
         dish: currentDish,
         quantity: quantity,
@@ -80,7 +88,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         metaData: getMetaData(),
         total: total,
       }
-      console.log(itemCart)
+      __DEV__ && console.log(itemCart)
       cartStore.addItem(itemCart)
       methods.setValue("comment", "")
       setQuantity(1)

@@ -1,7 +1,9 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import Animated, { ZoomIn } from "react-native-reanimated"
+import { useStores } from "../../models"
 import { Addon } from "../../models/dish"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -12,18 +14,13 @@ import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
 import { Incrementable, IncrementableProps, PriceOption } from "./incrementable"
 import { StateHandler } from "./stateHandler"
-import { TRUE, useAddon } from "./useAddons"
+import { useAddon } from "./useAddons"
 
 interface AddonsSectionProps extends IncrementableProps {
   addons: Addon[]
 }
 
 export interface AddonsProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
-  style?: StyleProp<ViewStyle>
-
   /**
    * Addons to display
    */
@@ -41,11 +38,17 @@ export const getMetaData = () => {
   return stateHandler.getMetaData()
 }
 
+export const isValidAddons = (addons: Addon[]): boolean => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { isValidAddonsMultiChoice } = useAddon()
+  return isValidAddonsMultiChoice(addons, stateHandler.getState())
+}
+
 /**
  * Component to show addons form dishes
  */
 export const Addons = observer(function Addons(props: AddonsProps) {
-  const { style, addons } = props
+  const { addons } = props
 
   const {
     initState,
@@ -71,7 +74,7 @@ export const Addons = observer(function Addons(props: AddonsProps) {
   if (!stateHandler.state[addons[0].name]) return null
 
   return (
-    <View style={[style, utilSpacing.m4]}>
+    <View style={utilSpacing.m4}>
       {getAddonsWithTitle(addons).length > 0 && <Separator style={utilSpacing.my5}></Separator>}
       <IncrementableWithTitle
         onPress={(name, value, isIncrement) => changeValueIncrement(name, value, isIncrement)}
@@ -183,10 +186,11 @@ const OptionBoolean = (props: AddonsSectionProps) => {
   )
 }
 
-const MultipleChoice = (props: AddonsSectionProps) => {
-  const { state } = props
-  const { getAddonsMultileChoice } = useAddon()
-  const addonsMultipleChoice = getAddonsMultileChoice(props.addons)
+const MultipleChoice = observer((props: AddonsSectionProps) => {
+  const { state, addons } = props
+  const { getAddonsMultileChoice, getNumberOptionSelectables } = useAddon()
+  const addonsMultipleChoice = getAddonsMultileChoice(addons)
+  const { cartStore } = useStores()
 
   const validCheckedOption = (addon: Addon, index: number, option: any, isChecked: boolean) => {
     let countSelected = state[addon.name].options.filter((option) => option.checked).length
@@ -215,17 +219,17 @@ const MultipleChoice = (props: AddonsSectionProps) => {
       }
     }
 
-    if (getNumberOptionSelectables(addon) === 1) {
+    if (getNumberOptionSelectables(addon, addons, state) === 1) {
       // if only one option is selectable, then uncheck all other options
       props.uncheckAllOptions(addon.name)
       props.onCheckedOption(addon.name, option, true)
     }
 
-    if (getNumberOptionSelectables(addon) > 1) {
+    if (getNumberOptionSelectables(addon, addons, state) > 1) {
       // Si el numero maximo de opciones seleccionables es igual a la cantidad de opciones
       // selecionadas, "disable" las opciones que no estan seleccionadas
 
-      if (getNumberOptionSelectables(addon) === countSelected) {
+      if (getNumberOptionSelectables(addon, addons, state) === countSelected) {
         const unselected = state[addon.name].options.filter(
           (opt) => !opt.checked && opt.label !== option.label,
         )
@@ -242,23 +246,6 @@ const MultipleChoice = (props: AddonsSectionProps) => {
     }
   }
 
-  const getNumberOptionSelectables = (addon: Addon): number => {
-    // Si la dependencia es de tipo "Cantidad"
-    if (isDependencyQuantity(addon)) {
-      const addonName: string = addonsMultipleChoice.find(
-        (item) => item.hash === addon.dependencies.hash,
-      ).name
-
-      return Number(state[addonName].options.find((option) => option.checked)?.label) ?? 0
-    }
-
-    return Number(addon.num_option_selectables)
-  }
-
-  const isDependencyQuantity = (addon: Addon): boolean => {
-    return addon.dependencies?.hash?.length > 0 && addon.dependencies?.quantity === TRUE
-  }
-
   if (addonsMultipleChoice.length === 0) return null
 
   return (
@@ -267,7 +254,7 @@ const MultipleChoice = (props: AddonsSectionProps) => {
 
       {addonsMultipleChoice.map((addon) => (
         <View key={addon.name}>
-          {getNumberOptionSelectables(addon) > 0 && (
+          {getNumberOptionSelectables(addon, addons, state) > 0 && (
             <View style={utilSpacing.mb4}>
               <Text text={addon.name} preset="bold"></Text>
 
@@ -276,11 +263,17 @@ const MultipleChoice = (props: AddonsSectionProps) => {
                 caption
                 text={`${getI18nText("addons.choice")} ${getNumberOptionSelectables(
                   addon,
+                  addons,
+                  state,
                 )} ${getI18nText(
                   Number(addon.num_option_selectables) === 1 ? "addons.option" : "addons.options",
                 )}`}
                 style={utilSpacing.mb3}
               ></Text>
+
+              {addon.required === 1 && cartStore.isSubmited && (
+                <Required addon={addon} addons={addons} state={state}></Required>
+              )}
 
               {addon.options.map((option, index) => (
                 <OptionMultiChoice
@@ -300,7 +293,7 @@ const MultipleChoice = (props: AddonsSectionProps) => {
       ))}
     </>
   )
-}
+})
 
 interface OptionMultiChoiceProos {
   option: any
@@ -344,6 +337,28 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
   )
 }
 
+const Required = observer((props: { addon: Addon; addons: Addon[]; state: any }) => {
+  const { addon, addons, state } = props
+
+  const { getNumberOptionSelectables } = useAddon()
+
+  const selectable = getNumberOptionSelectables(addon, addons, state)
+  const selected = state[addon.name].options.filter((option) => option.checked).length
+
+  if (selected < selectable) {
+    return (
+      <Animated.View
+        entering={ZoomIn}
+        style={[utilSpacing.px5, utilSpacing.py3, styles.required, utilSpacing.mb4]}
+      >
+        <Text tx="addons.obligatory" preset="semiBold" style={styles.textRequired}></Text>
+      </Animated.View>
+    )
+  }
+
+  return null
+})
+
 const styles = StyleSheet.create({
   option: {
     zIndex: 10,
@@ -356,7 +371,12 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 15,
   },
+  required: {
+    alignSelf: "flex-start",
+    backgroundColor: color.palette.redLight,
+    borderRadius: spacing[2],
+  },
   textRequired: {
-    color: color.primary,
+    color: color.palette.redRequired,
   },
 })

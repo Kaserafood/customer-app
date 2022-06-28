@@ -2,23 +2,6 @@ import { cast, SnapshotIn, types } from "mobx-state-tree"
 import { dishChef } from "./dish-store"
 import { metaData } from "./order/order"
 
-const Number = types.custom<string, number>({
-  name: "Number",
-  fromSnapshot(value: string) {
-    return Number(value)
-  },
-  toSnapshot(value: number) {
-    return value.toString()
-  },
-  isTargetType(value: any): boolean {
-    return typeof value === "number"
-  },
-  getValidationMessage(value: string): string {
-    if (/^-?\d+\.\d+$/.test(value)) return "" // OK
-    return `'${value}' doesn't look like a valid decimal number`
-  },
-})
-
 const metaDataCart = metaData.props({
   label: types.string,
   total: types.number,
@@ -38,6 +21,7 @@ export const CartStoreModel = types
   .model("CartStoreModel")
   .props({
     cart: types.array(itemCartStore),
+    isSubmited: types.maybe(types.boolean),
   })
   .views((self) => ({
     get subtotal() {
@@ -74,5 +58,8 @@ export const CartStoreModel = types
     },
     removeItem(index: number) {
       self.cart.splice(index, 1)
+    },
+    setSubmited(isSubmited: boolean) {
+      self.isSubmited = isSubmited
     },
   }))

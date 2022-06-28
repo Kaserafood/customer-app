@@ -35,6 +35,13 @@ export class StateHandler {
           total: Number(addon.total),
         }
 
+        if (addon.options) {
+          meta.label = addon.options
+            .filter((option) => option.checked)
+            .map((option) => option.label)
+            .join(", ")
+        }
+
         metaData.push(meta)
       }
     })

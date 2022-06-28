@@ -76,6 +76,7 @@ export const ErrorComponent = (props: ErrorComponentProps) => {
       <Text style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
       <View style={ERROR_DETAILS_CONTAINER}>
         <ScrollView>
+          {/* Algo no ha funcionado como se esperaba (Button -> Reestablecer) */}
           <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
           {__DEV__ && <Text selectable text={`${props.errorInfo.componentStack}`} />}
         </ScrollView>

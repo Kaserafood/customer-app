@@ -149,6 +149,37 @@ export const useAddon = (stateHandler?: StateHandler) => {
     )
   }
 
+  const getNumberOptionSelectables = (addon: Addon, addons: Addon[], state: any): number => {
+    // Si la dependencia es de tipo "Cantidad"
+    if (isDependencyQuantity(addon)) {
+      const addonName: string = getAddonsMultileChoice(addons).find(
+        (item) => item.hash === addon.dependencies.hash,
+      ).name
+
+      return Number(state[addonName].options.find((option) => option.checked)?.label) ?? 0
+    }
+
+    return Number(addon.num_option_selectables)
+  }
+
+  const isDependencyQuantity = (addon: Addon): boolean => {
+    return addon.dependencies?.hash?.length > 0 && addon.dependencies?.quantity === TRUE
+  }
+
+  const isValidAddonsMultiChoice = (addons: Addon[], state: any): boolean => {
+    let isValid = true
+    if (getAddonsMultileChoice(addons).length > 0) {
+      getAddonsMultileChoice(addons).forEach((addon) => {
+        const selectable = getNumberOptionSelectables(addon, addons, state)
+        const selected = state[addon.name].options.filter((option) => option.checked).length
+
+        if (selected < selectable) isValid = false
+      })
+    }
+
+    return isValid
+  }
+
   return {
     initState,
     changeValueIncrement,
@@ -160,5 +191,7 @@ export const useAddon = (stateHandler?: StateHandler) => {
     getAddonsWithoutTitle,
     getAddonsBoolean,
     getAddonsMultileChoice,
+    getNumberOptionSelectables,
+    isValidAddonsMultiChoice,
   }
 }

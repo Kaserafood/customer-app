@@ -21,4 +21,6 @@ export const palette = {
   segmentedControl: "#efeff0",
   grayDisabled: "#ffffffb3",
   grayLoader: "#ffffff66",
+  redLight: "#ffebee",
+  redRequired: "#f44336",
 }
