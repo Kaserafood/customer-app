@@ -7,9 +7,11 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import {
   Categories,
+  Chip,
   DayDelivery,
   Loader,
   Location,
+  ModalDeliveryDate,
   Screen,
   Separator,
   Text,
@@ -23,6 +25,7 @@ import { Dish } from "../../models/dish"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { ChefItem, ChefItemModel } from "./chef-item"
 
 class ModalState {
@@ -76,6 +79,7 @@ class ModalState {
   }
 }
 const modalState = new ModalState()
+const modalDeliveryDate = new ModalStateHandler()
 
 /**
  * Chef screen for show all chefs with dishes
@@ -165,22 +169,30 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               onPress={(category) => toCategory(category)}
             ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
-            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+            <View
+              style={[
+                utilFlex.flexRow,
+                utilSpacing.mt3,
+                utilSpacing.mb6,
+                utilFlex.flexCenterVertical,
+              ]}
+            >
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
-              <Text
-                size="lg"
-                style={utilSpacing.ml3}
-                preset="bold"
+              <Chip
+                active
+                onPress={() => modalDeliveryDate.setVisible(true)}
                 text={dayStore.currentDay.dayName}
-              ></Text>
+                style={[utilSpacing.ml3, styles.chip]}
+              ></Chip>
             </View>
-            <Separator style={utilSpacing.my4}></Separator>
+
             <ListChef toDishDetail={(dish, chef) => toDishDetail(dish, chef)}></ListChef>
           </View>
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader visible={commonStore.isVisibleLoading}></Loader>
+        <ModalDeliveryDate isAllGet modal={modalDeliveryDate}></ModalDeliveryDate>
       </Screen>
     )
   },
@@ -212,5 +224,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
     flex: 1,
     paddingTop: spacing[2],
+  },
+  chip: {
+    borderRadius: spacing[3],
+    marginRight: spacing[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
   },
 })
