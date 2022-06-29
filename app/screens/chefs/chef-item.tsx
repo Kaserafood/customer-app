@@ -46,13 +46,18 @@ export interface ChefItemProps {
    * onDishPress callback
    */
   onDishPress?: (dish: Dish) => void
+
+  /**
+   * Callcback on press chef image
+   */
+  onChefPress?: () => void
 }
 
 /**
  * Chef item Pager
  */
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
-  const { style, item, onPrevious, onNext, onChangePosition, onDishPress } = props
+  const { style, item, onPrevious, onNext, onChangePosition, onDishPress, onChefPress } = props
 
   return (
     <View style={style} key={item.id}>
@@ -121,9 +126,9 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
             <Price preset="delivery" amount={30} style={utilSpacing.mr3}></Price>
           </View>
         </View>
-        <View>
+        <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={() => onChefPress()}>
           <AutoImage style={styles.imageChef} source={{ uri: item.image }}></AutoImage>
-        </View>
+        </Ripple>
       </View>
     </View>
   )

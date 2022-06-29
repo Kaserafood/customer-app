@@ -22,7 +22,7 @@ export const CategoryStoreModel = types
   }))
   .actions((self) => ({
     getAll: flow(function* getAll() {
-      if (self.categories.length > 0) return
+      // if (self.categories.length > 0) return
       const api = new Api()
       const result = yield api.getAllCategories()
 

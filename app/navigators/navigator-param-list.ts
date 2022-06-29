@@ -33,6 +33,9 @@ interface tokenScreenParams {
 }
 
 interface newPasswordScreenParams extends tokenScreenParams {}
+interface MenuChef extends DishChef {
+  isGetMenu: boolean
+}
 
 export type NavigatorParamList = {
   init: undefined
@@ -43,7 +46,7 @@ export type NavigatorParamList = {
   loginForm: undefined
   main: undefined
   dishDetail: DishChef
-  menuChef: DishChef
+  menuChef: MenuChef
   deliveryDetail: undefined
   endOrder: endOrderParams
   category: Category

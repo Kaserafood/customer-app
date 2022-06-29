@@ -42,11 +42,19 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         console.log("MenuChefScreen: useEffect")
         console.log(params)
       }
+
+      ;(async () => {
+        if (params.isGetMenu) getDishByChef()
+      })()
     }, [])
 
     const onChangeDay = async (day: Day) => {
-      commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
+      await getDishByChef()
+    }
+
+    const getDishByChef = async () => {
+      commonStore.setVisibleLoading(true)
       await dishStore.getByChef(params.chef.id).finally(() => {
         commonStore.setVisibleLoading(false)
       })

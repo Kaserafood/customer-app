@@ -80,7 +80,7 @@ class ModalState {
 }
 const modalState = new ModalState()
 const modalDeliveryDate = new ModalStateHandler()
-
+type Screen = "dishDetail" | "menuChef"
 /**
  * Chef screen for show all chefs with dishes
  */
@@ -102,7 +102,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
           .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
           .finally(() => {
             commonStore.setVisibleLoading(false)
-            console.log("hide loaindg")
+            __DEV__ && console.log("hide loaindg")
           })
       }
 
@@ -122,7 +122,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       })
     }
 
-    const toDishDetail = (dish: Dish, userChef: ChefItemModel) => {
+    const toScreen = (screen: Screen, dish: Dish, userChef: ChefItemModel) => {
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
@@ -130,12 +130,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       dishStore.clearDishesChef()
       const chef = {
         ...userChef,
+        isGetMenu: screen === "menuChef",
       }
       delete chef.category
       delete chef.currentDishName
       delete chef.pageView
       delete chef.currentIndexPage
-      navigation.push("dishDetail", { ...dish, chef: { ...chef } })
+      navigation.push(screen, { ...dish, chef: { ...chef } })
     }
 
     const onChangeDay = async (day: Day) => {
@@ -186,7 +187,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               ></Chip>
             </View>
 
-            <ListChef toDishDetail={(dish, chef) => toDishDetail(dish, chef)}></ListChef>
+            <ListChef toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}></ListChef>
           </View>
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
@@ -199,20 +200,20 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 )
 
 const ListChef = observer(function ListChef(props: {
-  toDishDetail: (dish: Dish, userChef: ChefItemModel) => void
+  toScreen: (screen: Screen, dish: Dish, userChef: ChefItemModel) => void
 }) {
   return (
     <View>
       {modalState.data.map((chef, index) => (
         <View key={chef.id}>
           <ChefItem
-            onDishPress={(dish) => props.toDishDetail(dish, chef)}
+            onDishPress={(dish) => props.toScreen("dishDetail", dish, chef)}
+            onChefPress={() => props.toScreen("menuChef", chef.dishes[0], chef)}
             onPrevious={() => modalState.previousDish(chef, index)}
             onNext={() => modalState.nextDish(chef, index)}
             onChangePosition={(position) => modalState.chanageDish(chef, position, index)}
             item={chef}
           ></ChefItem>
-          {index !== modalState.data.length - 1 && <Separator style={utilSpacing.mb5}></Separator>}
         </View>
       ))}
     </View>
