@@ -34,7 +34,7 @@ interface tokenScreenParams {
 
 interface newPasswordScreenParams extends tokenScreenParams {}
 interface MenuChef extends DishChef {
-  isGetMenu: boolean
+  isGetMenu?: boolean
 }
 
 export type NavigatorParamList = {

@@ -112,13 +112,15 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView ref={scrollRef} style={utilSpacing.p4}>
-          <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
-          <View style={[utilFlex.flexRow, utilSpacing.my3, utilSpacing.mx4]}>
-            <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+        <ScrollView ref={scrollRef}>
+          <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
+            <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
+            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+              <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+            </View>
+            <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
+            <Price style={styles.price} amount={currentDish.price}></Price>
           </View>
-          <Text style={[utilSpacing.mb2, utilSpacing.mx4]} text={currentDish.description}></Text>
-          <Price style={styles.price} amount={currentDish.price}></Price>
 
           {addonsAvailable.length > 0 ? (
             <Addons
@@ -126,7 +128,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               onTotalPriceChange={(total) => setTotalAddon(total)}
             ></Addons>
           ) : (
-            <Separator style={utilSpacing.my3}></Separator>
+            <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>
           )}
 
           <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
@@ -167,7 +169,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             </FormProvider>
           </View>
 
-          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilFlex.flexRow]}>
+          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilSpacing.ml5, utilFlex.flexRow]}>
             <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
@@ -188,7 +190,7 @@ const ListDish = observer(
   (props: { onChangeDish: (dish: DishChefModel) => void; dishId: number }) => {
     const { dishStore } = useStores()
     return (
-      <ScrollView horizontal style={utilSpacing.mb4}>
+      <ScrollView horizontal style={[utilSpacing.mb4, utilSpacing.ml5]}>
         {dishStore.dishesChef.map(
           (dish) =>
             props.dishId !== dish.id && (
@@ -239,12 +241,11 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: spacing[2],
-    height: 200,
+    height: 230,
     width: "100%",
   },
   price: {
     alignSelf: "flex-start",
-    marginLeft: spacing[3],
   },
   textAddToOrder: {
     color: color.palette.white,

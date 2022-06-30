@@ -22,6 +22,7 @@ import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { Dish } from "../../models/dish"
+import { UserChef } from "../../models/user-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -96,10 +97,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       __DEV__ && console.log("chefs useEffect")
       commonStore.setVisibleLoading(true)
       async function fetch() {
-        // if (dishStore.dishesGroupedByChef.length > 0) return
-
         await dishStore
           .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+          .then(() => {
+            modalState.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+          })
           .finally(() => {
             commonStore.setVisibleLoading(false)
             __DEV__ && console.log("hide loaindg")
@@ -108,13 +110,6 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 
       fetch()
     }, [])
-
-    useEffect(() => {
-      if (dishStore.formatDishesGropuedByChef.length > 0) {
-        modalState.setData(dishStore.formatDishesGropuedByChef)
-        __DEV__ && console.log("formatData changed")
-      }
-    }, [dishStore.formatDishesGropuedByChef])
 
     const toCategory = (category: Category) => {
       navigation.navigate("category", {
@@ -139,8 +134,42 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     }
 
     const onChangeDay = async (day: Day) => {
+      commonStore.setVisibleLoading(true)
+      modalState.setData([])
       dayStore.setCurrentDay(day)
-      await dishStore.getGroupedByChef(day.date, RNLocalize.getTimeZone())
+      await dishStore
+        .getGroupedByChef(day.date, RNLocalize.getTimeZone())
+        .then(() => {
+          if (dishStore.dishesGroupedByChef.length > 0) {
+            modalState.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+            __DEV__ && console.log("formatData changed")
+          }
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
+    }
+
+    const formatDishesGropuedByChef = (dishes: UserChef[]) => {
+      return dishes.map((chef: UserChef) => {
+        return {
+          ...chef,
+          category: getCategoriesName(chef.categories),
+          currentIndexPage: 0,
+          pageView: null,
+          currentDishName: chef.dishes.length > 0 ? chef.dishes[0]?.title : "",
+        }
+      })
+    }
+
+    const getCategoriesName = (categories: Category[]) => {
+      let categoriesStr = ""
+      if (categories && Array.isArray(categories)) {
+        categories.forEach((category) => {
+          categoriesStr += `${category.name} - `
+        })
+        return categoriesStr.substring(0, categoriesStr.length - 2)
+      }
+
+      return ""
     }
 
     return (
