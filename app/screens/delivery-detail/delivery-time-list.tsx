@@ -52,7 +52,7 @@ export const DeliveryTimeList = forwardRef(
                 rounded
                 style={utilSpacing.px3}
                 value={item.value}
-                preset="tiny"
+                preset="medium"
                 text={item.label}
               ></Checkbox>
             </Ripple>

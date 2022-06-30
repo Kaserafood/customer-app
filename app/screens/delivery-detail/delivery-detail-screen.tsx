@@ -264,7 +264,7 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
-          <View style={utilFlex.flexRow}>
+          <View style={[utilFlex.flexRow]}>
             <Text
               preset="bold"
               caption
@@ -272,9 +272,9 @@ export const DeliveryDetailScreen: FC<
               style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
             ></Text>
             <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
               <AutoImage style={styles.imageCard} source={images.cardVisa}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
             </View>
           </View>
 
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   imageCard: {
-    borderColor: color.palette.grayLigth,
+    // borderColor: color.palette.grayLigth,
     borderRadius: spacing[1],
     borderWidth: 1,
     height: 24,

@@ -34,9 +34,9 @@ const images = {
   back: require("./images/back.png"),
   notFound: require("./images/notFound.json"),
   remove: require("./images/remove.png"),
-  cardAmex: require("./images/card-amex.png"),
-  cardMastercard: require("./images/card-mastercard.png"),
-  cardVisa: require("./images/card-visa.png"),
+  cardAmex: require("./images/american-express.png"),
+  cardMastercard: require("./images/mastercard.png"),
+  cardVisa: require("./images/visa.png"),
   resetPassword: require("./json/reset-password.json"),
   soup: require("./images/soup.png"),
 }
