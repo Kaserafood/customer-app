@@ -116,11 +116,12 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
       <View style={[styles.flex, styles.footer]}>
         <View style={[utilFlex.flex1, styles.textContainer, utilSpacing.pt3]}>
           <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
-          <Text numberOfLines={1} text={item.currentDishName}></Text>
+          <Text style={styles.textDescription} numberOfLines={1} text={item.currentDishName}></Text>
           <View style={styles.flex}>
             <Text
+              caption
               numberOfLines={1}
-              style={[utilFlex.flex1, styles.textCategory, utilSpacing.mr2]}
+              style={[utilFlex.flex1, utilSpacing.mr2]}
               text={item.category}
             ></Text>
             <Price preset="delivery" amount={30} style={utilSpacing.mr3}></Price>
@@ -201,11 +202,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "75%",
   },
-  textCategory: {
-    color: color.palette.grayDark,
-  },
   textContainer: {
     justifyContent: "space-between",
-    height: 66,
+    height: 70,
+  },
+  textDescription: {
+    lineHeight: 23,
   },
 })

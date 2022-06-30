@@ -171,7 +171,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
-        <ModalDeliveryDate isAllGet modal={modalDeliveryDate}></ModalDeliveryDate>
+        <ModalDeliveryDate
+          isAllGet
+          modal={modalDeliveryDate}
+          onSelectDay={(day) => onChangeDay(day)}
+        ></ModalDeliveryDate>
         <Loader></Loader>
       </Screen>
     )

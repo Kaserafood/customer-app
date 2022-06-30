@@ -130,13 +130,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       dishStore.clearDishesChef()
       const chef = {
         ...userChef,
-        isGetMenu: screen === "menuChef",
       }
       delete chef.category
       delete chef.currentDishName
       delete chef.pageView
       delete chef.currentIndexPage
-      navigation.push(screen, { ...dish, chef: { ...chef } })
+      navigation.push(screen, { ...dish, chef: { ...chef }, isGetMenu: screen === "menuChef" })
     }
 
     const onChangeDay = async (day: Day) => {
@@ -193,7 +192,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader visible={commonStore.isVisibleLoading}></Loader>
-        <ModalDeliveryDate isAllGet modal={modalDeliveryDate}></ModalDeliveryDate>
+        <ModalDeliveryDate
+          isAllGet
+          modal={modalDeliveryDate}
+          onSelectDay={(day) => onChangeDay(day)}
+        ></ModalDeliveryDate>
       </Screen>
     )
   },

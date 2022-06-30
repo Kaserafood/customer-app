@@ -44,7 +44,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       }
 
       ;(async () => {
-        if (params.isGetMenu) getDishByChef()
+        if (params.isGetMenu) await getDishByChef()
       })()
     }, [])
 
@@ -104,7 +104,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 ></Text>
               </View>
               <View style={utilFlex.flex1}>
-                <Text style={utilSpacing.mx3} text={params.chef.description}></Text>
+                <Text
+                  numberOfLines={5}
+                  style={utilSpacing.mx3}
+                  text={params.chef.description}
+                ></Text>
               </View>
             </View>
             <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>

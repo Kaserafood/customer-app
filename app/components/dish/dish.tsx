@@ -57,7 +57,13 @@ export const Dish = observer(function Dish(props: DishProps) {
               numberOfLines={2}
               preset="semiBold"
             ></Text>
-            <Text text={dish.description} size="sm" style={utilFlex.flex1} caption numberOfLines={2}></Text>
+            <Text
+              text={dish.description}
+              size="sm"
+              style={utilFlex.flex1}
+              caption
+              numberOfLines={2}
+            ></Text>
             {visibleChefImage && (
               <Text
                 style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
@@ -72,7 +78,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             {visiblePriceDelivery && <Price amount={dish.price} preset="delivery"></Price>}
           </View>
         </View>
-        <View style={styles.column}>
+        <View style={[styles.column, !visibleChefImage && styles.h120]}>
           <AutoImage
             style={[styles.imageDish, !visibleChefImage && styles.h100]}
             source={{ uri: dish.image }}
@@ -105,7 +111,10 @@ const styles = StyleSheet.create({
   },
 
   h100: {
-    height: 150,
+    height: 120,
+  },
+  h120: {
+    height: 125,
   },
   imageChef: {
     borderColor: color.palette.white,

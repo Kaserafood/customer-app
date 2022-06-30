@@ -49,6 +49,12 @@ export interface ModalDeliveryDateProps {
    * If get all days
    */
   isAllGet?: boolean
+
+  /**
+   *
+   * Callback on select day
+   */
+  onSelectDay?: (day: Day) => void
 }
 
 /**
@@ -57,7 +63,7 @@ export interface ModalDeliveryDateProps {
 export const ModalDeliveryDate = observer(function ModalDeliveryDate(
   props: ModalDeliveryDateProps,
 ) {
-  const { style, modal, isAllGet } = props
+  const { style, modal, isAllGet, onSelectDay } = props
   const { dayStore, commonStore } = useStores()
 
   useEffect(() => {
@@ -87,7 +93,11 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
             ></Chip>
           </View>
           <ScrollView style={[utilSpacing.mt5, styles.body]}>
-            <ListDay isGetAll={isAllGet} modalState={modal}></ListDay>
+            <ListDay
+              isGetAll={isAllGet}
+              modalState={modal}
+              onSelectDay={(day) => onSelectDay(day)}
+            ></ListDay>
           </ScrollView>
           <View style={[styles.containerButton, utilFlex.selfCenter]}>
             <Button
@@ -104,46 +114,47 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
     </>
   )
 })
-const ListDay = observer((props: { isGetAll: boolean; modalState: ModalState }) => {
-  const { dayStore } = useStores()
-  const { onChangeDay } = useDay()
-  const [days, setDays] = useState([])
-  const { isGetAll, modalState } = props
+const ListDay = observer(
+  (props: { isGetAll: boolean; modalState: ModalState; onSelectDay?: (day: Day) => void }) => {
+    const { dayStore } = useStores()
+    const [days, setDays] = useState([])
+    const { isGetAll, modalState, onSelectDay } = props
 
-  useEffect(() => {
-    if (isGetAll) setDays(dayStore.days)
-    else setDays(dayStore.daysByChef)
-  }, [])
+    useEffect(() => {
+      if (isGetAll) setDays(dayStore.days)
+      else setDays(dayStore.daysByChef)
+    }, [])
 
-  const onPress = (day: Day) => {
-    dayStore.setActiveDay(day)
-    dayStore.setCurrentDay(day)
-    onChangeDay(day)
-    modalState.setVisible(false)
-  }
+    const onPress = (day: Day) => {
+      onSelectDay(day)
+      dayStore.setActiveDay(day)
+      dayStore.setCurrentDay(day)
+      modalState.setVisible(false)
+    }
 
-  return (
-    <View>
-      {days.map((day) => (
-        <Card style={[utilSpacing.mt4, utilSpacing.mx3, utilSpacing.p0]} key={day.date}>
-          <Ripple
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            style={[utilSpacing.px3, utilSpacing.py2]}
-            onPress={() => onPress(day)}
-          >
-            <Checkbox
-              rounded
-              value={day.date === dayStore.currentDay.date}
-              preset="medium"
-              text={day.dayName}
-            ></Checkbox>
-          </Ripple>
-        </Card>
-      ))}
-    </View>
-  )
-})
+    return (
+      <View>
+        {days.map((day) => (
+          <Card style={[utilSpacing.mt4, utilSpacing.mx3, utilSpacing.p0]} key={day.date}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              style={[utilSpacing.px3, utilSpacing.py2]}
+              onPress={() => onPress(day)}
+            >
+              <Checkbox
+                rounded
+                value={day.date === dayStore.currentDay.date}
+                preset="medium"
+                text={day.dayName}
+              ></Checkbox>
+            </Ripple>
+          </Card>
+        ))}
+      </View>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   body: {
