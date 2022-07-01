@@ -4,6 +4,7 @@ import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { color, spacing } from "../../theme"
 import { utilFlex } from "../../theme/Util"
+import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
 import { CheckboxProps } from "./checkbox.props"
 
@@ -46,13 +47,13 @@ export function Checkbox(props: CheckboxProps) {
 
             {preset === "tiny" && (
               <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                <IconRN name="check-circle-outline" size={20} color={color.palette.black} />
+                <IconRN name="circle-check" size={20} color={color.palette.black} />
               </Animated.View>
             )}
 
             {preset === "medium" && (
               <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                <IconRN name="check-circle-outline" size={25} color={color.palette.black} />
+                <Icon name="circle-check-1" size={25} color={color.palette.black} />
               </Animated.View>
             )}
           </View>
@@ -61,13 +62,9 @@ export function Checkbox(props: CheckboxProps) {
             {preset === "default" && (
               <IconRN name="check-box-outline-blank" size={30} color={color.palette.green} />
             )}
-            {preset === "tiny" && (
-              <IconRN name="radio-button-unchecked" size={20} color={color.palette.black} />
-            )}
+            {preset === "tiny" && <Icon name="circle" size={20} color={color.palette.black} />}
 
-            {preset === "medium" && (
-              <IconRN name="radio-button-unchecked" size={25} color={color.palette.black} />
-            )}
+            {preset === "medium" && <Icon name="circle-1" size={25} color={color.palette.black} />}
           </View>
         )}
       </View>

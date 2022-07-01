@@ -1,7 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
 import React from "react"
-import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Icon } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, typographySize } from "../theme"
@@ -26,9 +25,18 @@ export function TabMainNavigation({ navigationRef }) {
           color: color.palette.black,
         },
         tabBarStyle: {
-          backgroundColor: color.palette.white,
+          backgroundColor: color.background,
           borderTopWidth: 0,
           height: 55,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.27,
+          shadowRadius: 4.65,
+
+          elevation: 6,
         },
       }}
     >
@@ -36,7 +44,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt2} name="home" size={30} color={color} />
+            return <Icon style={utilSpacing.mt2} name="house" size={30} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.home")}
@@ -58,7 +66,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt2} name="search" size={35} color={color} />
+            return <Icon style={utilSpacing.mt2} name="magnifying-glass" size={30} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.search")}
@@ -69,7 +77,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <IconRN style={utilSpacing.mt2} name="menu" light size={30} color={color} />
+            return <Icon style={utilSpacing.mt2} name="bars" size={30} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.more")}

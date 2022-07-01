@@ -5,6 +5,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
+import IconRN from "react-native-vector-icons/FontAwesome"
 import {
   Addons,
   AutoImage,
@@ -12,7 +13,6 @@ import {
   DishChef,
   getMetaData,
   Header,
-  Icon,
   InputText,
   isValidAddons,
   Loader,
@@ -141,7 +141,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
               <TouchableOpacity activeOpacity={0.7} onPress={() => minusQuantity(1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <Icon name="minus" size={12} color={color.palette.white}></Icon>
+                  <IconRN name="minus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
               <Text
@@ -151,7 +151,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               ></Text>
               <TouchableOpacity activeOpacity={0.7} onPress={() => setQuantity(quantity + 1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <Icon name="plus" size={12} color={color.palette.white}></Icon>
+                  <IconRN name="plus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
             </View>

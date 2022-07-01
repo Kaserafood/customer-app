@@ -61,7 +61,7 @@ export const Price = observer(function Price(props: PriceProps) {
   const Delivery = () => {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
-        <Icon name="delivery" size={18} color={color.text} style={utilSpacing.mr2}></Icon>
+        <Icon name="moped" size={18} color={color.text} style={utilSpacing.mr2}></Icon>
         <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )

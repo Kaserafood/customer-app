@@ -60,7 +60,12 @@ export function Header(props: HeaderProps) {
       {leftIcon ? (
         <TouchableOpacity style={BUTTON} onPress={onLeftPress} activeOpacity={0.5}>
           {leftIcon === "back" && (
-            <Icon name="back" style={utilSpacing.mr2} size={15} color={color.palette.white}></Icon>
+            <Icon
+              name="angle-left-1"
+              style={utilSpacing.mr2}
+              size={24}
+              color={color.palette.white}
+            ></Icon>
           )}
         </TouchableOpacity>
       ) : (
