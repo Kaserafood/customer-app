@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -34,13 +35,27 @@ export interface DishProps {
    * Visible price delivery
    */
   visiblePriceDelivery?: boolean
+
+  /**
+   * Currency code from chef
+   */
+  currencyCode?: string
 }
 
 /**
  * Describe your component here
  */
 export const Dish = observer(function Dish(props: DishProps) {
-  const { style, dish, onPress, visibleChefImage = true, visiblePriceDelivery = true } = props
+  const {
+    style,
+    dish,
+    onPress,
+    visibleChefImage = true,
+    visiblePriceDelivery = true,
+    currencyCode,
+  } = props
+  const { orderStore } = useStores()
+
   return (
     <Ripple
       style={[utilSpacing.py3, style]}
@@ -73,9 +88,19 @@ export const Dish = observer(function Dish(props: DishProps) {
             )}
           </View>
 
-          <View style={[utilFlex.flexRow, styles.containerPrice]}>
-            <Price amount={dish.price} style={utilSpacing.mr3}></Price>
-            {visiblePriceDelivery && <Price amount={dish.price} preset="delivery"></Price>}
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+            <Price
+              amount={dish.price}
+              style={utilSpacing.mr3}
+              currencyCode={currencyCode || dish.chef.currencyCode}
+            ></Price>
+            {visiblePriceDelivery && (
+              <Price
+                currencyCode={currencyCode || dish.chef.currencyCode}
+                amount={orderStore.priceDelivery}
+                preset="delivery"
+              ></Price>
+            )}
           </View>
         </View>
         <View style={[styles.column, !visibleChefImage && styles.h120]}>
@@ -100,10 +125,6 @@ const styles = StyleSheet.create({
   },
   column: {
     height: 155,
-  },
-  containerPrice: {
-    alignItems: "flex-end",
-    flexDirection: "row",
   },
   containerTextDish: {
     flex: 1,

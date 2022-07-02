@@ -20,8 +20,6 @@ const CONTAINER_DELIVERY: ViewStyle = {
   alignSelf: "flex-end",
 }
 
-type currency = "GTQ"
-
 export interface PriceProps {
   /**
    * An optional style override useful for padding & margin.
@@ -35,9 +33,9 @@ export interface PriceProps {
   amount: number
 
   /**
-   * Currency of price.
+   * Currency code .
    */
-  currency?: currency
+  currencyCode?: string
 
   /**
    * Preset of price.
@@ -51,23 +49,24 @@ export interface PriceProps {
 }
 
 /**
- * Price of dish or delivery.
+ * Component to show prices.
  */
 
 export const Price = observer(function Price(props: PriceProps) {
-  const { style, amount, preset = "dish", textStyle } = props
+  const { style, amount, preset = "dish", textStyle, currencyCode } = props
 
-  const price = getFormat(amount)
+  const price = getFormat(amount, currencyCode)
   const Delivery = () => {
     return (
       <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
-        <Icon name="moped" size={18} color={color.text} style={utilSpacing.mr2}></Icon>
+        <Icon name="moped" size={16} color={color.text} style={utilSpacing.mr2}></Icon>
         <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )
   }
 
   const Dish = () => {
+    const price = getFormat(amount, currencyCode)
     const styles = [CONTAINER, style]
     return (
       <View style={styles}>
@@ -77,14 +76,11 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Simple = () => {
+    const price = getFormat(amount, currencyCode)
     return <Text style={textStyle} text={`${price}`}></Text>
   }
 
-  if (preset === "delivery") {
-    return <Delivery></Delivery>
-  } else if (preset === "dish") {
-    return <Dish></Dish>
-  } else {
-    return <Simple></Simple>
-  }
+  if (preset === "delivery") return <Delivery></Delivery>
+  else if (preset === "dish") return <Dish></Dish>
+  else return <Simple></Simple>
 })

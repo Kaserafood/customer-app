@@ -124,7 +124,12 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
               style={[utilFlex.flex1, utilSpacing.mr2]}
               text={item.category}
             ></Text>
-            <Price preset="delivery" amount={30} style={utilSpacing.mr3}></Price>
+            <Price
+              preset="delivery"
+              amount={30}
+              style={utilSpacing.mr3}
+              currencyCode={item.currencyCode}
+            ></Price>
           </View>
         </View>
         <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={() => onChefPress()}>

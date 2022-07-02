@@ -274,4 +274,11 @@ export class Api {
       "POST",
     )
   }
+
+  /**
+   * @description Get price to delivery
+   */
+  async getPriceDelivery(): Promise<CommonResponse> {
+    return await this.request({}, `/orders/price-delivery`, "GET")
+  }
 }

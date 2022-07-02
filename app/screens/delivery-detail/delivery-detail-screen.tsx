@@ -27,7 +27,6 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
-import { getCountryCode, getCurrencyCode } from "../../utils/location"
 import { showMessageError } from "../../utils/messages"
 import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
@@ -104,9 +103,6 @@ export const DeliveryDetailScreen: FC<
       return
     }
 
-    const countryCode = await getCountryCode()
-    const currencyCode = getCurrencyCode(countryCode)
-
     const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
 
     const order: Order = {
@@ -117,10 +113,10 @@ export const DeliveryDetailScreen: FC<
       city: addressStore.current.city,
       region: addressStore.current.address,
       products: getProducts(),
-      priceDelivery: 20,
+      priceDelivery: orderStore.priceDelivery,
       metaData: getMetaData(taxId),
       customerNote: data.customerNote,
-      currencyCode: currencyCode,
+      currencyCode: cartStore.cart[0].dish.chef.currencyCode,
       taxId: taxId,
       uuid: getUniqueId(),
       card: {
@@ -315,7 +311,10 @@ export const DeliveryDetailScreen: FC<
       </ScrollView>
       <ButtonFooter
         onPress={methods.handleSubmit(onSubmit, onError)}
-        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(cartStore.subtotal + 20)}`}
+        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(
+          cartStore.subtotal + orderStore.priceDelivery,
+          cartStore.cart[0].dish.chef.currencyCode,
+        )}`}
       ></ButtonFooter>
 
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>

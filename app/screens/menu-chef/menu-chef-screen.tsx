@@ -35,7 +35,8 @@ const modalStateRequestDish = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const { dayStore, commonStore, dishStore, cartStore } = useStores()
+    const { dayStore, commonStore, dishStore, cartStore, orderStore } = useStores()
+    const { currencyCode, name, image, description, categories } = params.chef
 
     useEffect(() => {
       if (__DEV__) {
@@ -95,20 +96,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           <View style={[styles.card, { ...SHADOW }]}>
             <View style={utilFlex.flexRow}>
               <View>
-                <AutoImage style={styles.imageChef} source={{ uri: params.chef.image }}></AutoImage>
-                <Text
-                  size="lg"
-                  style={utilSpacing.mt4}
-                  preset="bold"
-                  text={params.chef.name}
-                ></Text>
+                <AutoImage style={styles.imageChef} source={{ uri: image }}></AutoImage>
+                <Text size="lg" style={utilSpacing.mt4} preset="bold" text={name}></Text>
               </View>
               <View style={utilFlex.flex1}>
-                <Text
-                  numberOfLines={5}
-                  style={utilSpacing.mx3}
-                  text={params.chef.description}
-                ></Text>
+                <Text numberOfLines={5} style={utilSpacing.mx3} text={description}></Text>
               </View>
             </View>
             <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>
@@ -116,9 +108,14 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 numberOfLines={3}
                 preset="semiBold"
                 style={[utilText.textGray, utilFlex.flex1]}
-                text={getCategoriesName(params.chef.categories)}
+                text={getCategoriesName(categories)}
               ></Text>
-              <Price amount={30} style={utilSpacing.ml3} preset="delivery"></Price>
+              <Price
+                amount={orderStore.priceDelivery}
+                style={utilSpacing.ml3}
+                preset="delivery"
+                currencyCode={currencyCode}
+              ></Price>
             </View>
           </View>
           <View style={utilSpacing.m4}>
@@ -137,6 +134,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                   visibleChefImage={false}
                   visiblePriceDelivery={false}
                   dish={dish}
+                  currencyCode={currencyCode}
                   onPress={() => toDishDetail(dish)}
                 ></Dish>
                 {index !== dishStore.dishesChef.length - 1 && (
@@ -153,7 +151,10 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         {cartStore.hasItems && (
           <ButtonFooter
             onPress={() => modalStateCart.setVisible(true)}
-            text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(cartStore.subtotal)}`}
+            text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(
+              cartStore.subtotal,
+              currencyCode,
+            )}`}
           ></ButtonFooter>
         )}
 

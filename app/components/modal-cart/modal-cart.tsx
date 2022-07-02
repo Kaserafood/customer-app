@@ -87,7 +87,12 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                 </View>
 
                 <View>
-                  <Price style={styles.price} textStyle={utilText.bold} amount={item.total}></Price>
+                  <Price
+                    style={styles.price}
+                    textStyle={utilText.bold}
+                    amount={item.total}
+                    currencyCode={chef.currencyCode}
+                  ></Price>
                 </View>
                 <Ripple
                   rippleContainerBorderRadius={100}
@@ -106,7 +111,11 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
           </View>
           <View style={[utilFlex.flexRow, utilSpacing.mx6]}>
             <Text preset="bold" style={utilFlex.flex1} tx="common.subtotal"></Text>
-            <Price style={styles.price} amount={cartStore.subtotal}></Price>
+            <Price
+              style={styles.price}
+              amount={cartStore.subtotal}
+              currencyCode={chef.currencyCode}
+            ></Price>
           </View>
           <Button
             disabled={!cartStore.hasItems}

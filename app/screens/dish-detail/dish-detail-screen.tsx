@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -33,6 +33,7 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
+export const CurrencyContext = createContext({ currencyCode: "" })
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
@@ -119,14 +120,20 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
             </View>
             <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
-            <Price style={styles.price} amount={currentDish.price}></Price>
+            <Price
+              style={styles.price}
+              amount={currentDish.price}
+              currencyCode={currentDish.chef.currencyCode}
+            ></Price>
           </View>
 
           {addonsAvailable.length > 0 ? (
-            <Addons
-              addons={addonsAvailable}
-              onTotalPriceChange={(total) => setTotalAddon(total)}
-            ></Addons>
+            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef.currencyCode }}>
+              <Addons
+                addons={addonsAvailable}
+                onTotalPriceChange={(total) => setTotalAddon(total)}
+              ></Addons>
+            </CurrencyContext.Provider>
           ) : (
             <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>
           )}
@@ -174,11 +181,18 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
 
-          <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
+          <ListDish
+            currencyCode={currentDish.chef.currencyCode}
+            onChangeDish={(dish) => changeDish(dish)}
+            dishId={currentDish.id}
+          ></ListDish>
         </ScrollView>
         <ButtonFooter
           onPress={methods.handleSubmit(onSubmit)}
-          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(total)}`}
+          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(
+            total,
+            currentDish.chef.currencyCode,
+          )}`}
         ></ButtonFooter>
         <Loader></Loader>
       </Screen>
@@ -187,7 +201,11 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 )
 
 const ListDish = observer(
-  (props: { onChangeDish: (dish: DishChefModel) => void; dishId: number }) => {
+  (props: {
+    onChangeDish: (dish: DishChefModel) => void
+    dishId: number
+    currencyCode: string
+  }) => {
     const { dishStore } = useStores()
     return (
       <ScrollView horizontal style={[utilSpacing.mb4, utilSpacing.ml5]}>
@@ -198,6 +216,7 @@ const ListDish = observer(
                 onPress={() => props.onChangeDish(dish)}
                 dish={dish}
                 key={dish.id}
+                currencyCode={props.currencyCode}
               ></DishChef>
             ),
         )}

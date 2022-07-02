@@ -6,17 +6,22 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 export const Totals = () => {
-  const { cartStore } = useStores()
+  const { cartStore, orderStore } = useStores()
+  const { currencyCode } = cartStore.cart[0].dish.chef
   return (
     <View>
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.subtotal"></Text>
-        <Price style={styles.price} amount={cartStore.subtotal}></Price>
+        <Price style={styles.price} amount={cartStore.subtotal} currencyCode={currencyCode}></Price>
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
-        <Price style={styles.price} amount={20}></Price>
+        <Price
+          style={styles.price}
+          amount={orderStore.priceDelivery}
+          currencyCode={currencyCode}
+        ></Price>
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
@@ -24,7 +29,8 @@ export const Totals = () => {
         <Price
           style={styles.price}
           textStyle={utilText.bold}
-          amount={cartStore.subtotal + 20}
+          amount={cartStore.subtotal + orderStore.priceDelivery}
+          currencyCode={currencyCode}
         ></Price>
       </View>
     </View>

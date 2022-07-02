@@ -23,13 +23,18 @@ export interface DishChefProps {
    * onPress callback
    */
   onPress?: () => void
+
+  /**
+   * Currency code from chef
+   */
+  currencyCode?: string
 }
 
 /**
  * Dish for chef
  */
 export const DishChef = observer(function DishChef(props: DishChefProps) {
-  const { style, dish, onPress } = props
+  const { style, dish, onPress, currencyCode } = props
 
   return (
     <Ripple
@@ -45,7 +50,7 @@ export const DishChef = observer(function DishChef(props: DishChefProps) {
         style={[utilSpacing.mt3, styles.title]}
         text={dish.title}
       ></Text>
-      <Price style={utilSpacing.mt3} amount={dish.price}></Price>
+      <Price style={utilSpacing.mt3} amount={dish.price} currencyCode={currencyCode}></Price>
     </Ripple>
   )
 })

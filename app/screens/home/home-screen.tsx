@@ -58,7 +58,7 @@ const modalDeliveryDate = new ModalStateHandler()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, commonStore, categoryStore, userStore } = useStores()
+    const { dishStore, dayStore, commonStore, categoryStore, userStore, orderStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -91,6 +91,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
           categoryStore.getAll(),
+          orderStore.getPriceDelivery(),
         ])
           .then(() => setCurrentDay(days[0]))
           .finally(() => {
