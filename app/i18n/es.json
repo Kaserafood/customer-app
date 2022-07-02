@@ -408,7 +408,10 @@
     "request": "Solicitar",
     "changeDate": "Cambiar fecha",
     "writeHere": "Escribe aquí",
-    "requestDish": "Solicitar platillo"
+    "requestDish": "Solicitar platillo",
+    "ready": "¡Listo!",
+    "confirmationInfo": "Te enviaremos un correo cuando encontremos al chef indicado para esta receta.",
+    "continue": "Seguir"
   },
   "addons": {
     "chooseYourAddons": "Elige tus complementos",
