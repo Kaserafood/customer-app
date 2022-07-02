@@ -59,6 +59,9 @@ export const CartStoreModel = types
     removeItem(index: number) {
       self.cart.splice(index, 1)
     },
+    cleanItems() {
+      self.cart.clear()
+    },
     setSubmited(isSubmited: boolean) {
       self.isSubmited = isSubmited
     },

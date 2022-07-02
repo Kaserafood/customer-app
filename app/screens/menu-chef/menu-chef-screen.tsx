@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
-import { StyleSheet, View } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { Alert, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import {
   AutoImage,
@@ -29,13 +29,16 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
+import { ModalLeave } from "./modal-clean-cart"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
+const modalStateLeave = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
     const { dayStore, commonStore, dishStore, cartStore, orderStore } = useStores()
+    const [currentAction, setCurrentAction] = useState<any>()
     const { currencyCode, name, image, description, categories } = params.chef
 
     useEffect(() => {
@@ -48,6 +51,26 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         if (params.isGetMenu) await getDishByChef()
       })()
     }, [])
+
+    useEffect(
+      () =>
+        navigation.addListener("beforeRemove", (e) => {
+          e.preventDefault()
+          setCurrentAction(e.data.action)
+
+          if (cartStore.hasItems) modalStateLeave.setVisible(true)
+          else navigation.dispatch(e.data.action)
+        }),
+      [navigation],
+    )
+
+    const onPressLeave = () => {
+      if (currentAction) {
+        cartStore.cleanItems()
+        navigation.dispatch(currentAction)
+        modalStateLeave.setVisible(false)
+      }
+    }
 
     const onChangeDay = async (day: Day) => {
       dayStore.setCurrentDay(day)
@@ -164,6 +187,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           modal={modalStateCart}
         ></ModalCart>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
+        <ModalLeave modalState={modalStateLeave} onPressLeave={() => onPressLeave()}></ModalLeave>
       </Screen>
     )
   },

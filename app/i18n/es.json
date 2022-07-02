@@ -214,7 +214,11 @@
     "title": "Menú",
     "dayDelivery": "Días de entrega del chef:",
     "chefMenu": "Menú del chef",
-    "watchCart": "Ver carrito"
+    "watchCart": "Ver carrito",
+    "leave": "¿Deseas salir?",
+    "leaveDescription": "Vas a perder los platillos que agregaste a tu orden",
+    "yesLeave": "Sí, salir",
+    "noLeave": "No, continuar"
   },
   "deliveryDetailScreen": {
     "title": "Detalles de entrega",
