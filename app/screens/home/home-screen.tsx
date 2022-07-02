@@ -105,10 +105,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           const id = await loadString("userId")
           const displayName = await loadString("displayName")
           const addressId = await loadString("addressId")
+          const email = await loadString("email")
 
           userStore.setUserId(Number(id))
           userStore.setDisplayName(displayName)
           userStore.setAddressId(Number(addressId))
+          userStore.setEmail(email)
         }
       }
       setUserStoreData()

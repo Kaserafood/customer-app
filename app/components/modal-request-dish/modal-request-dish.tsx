@@ -4,12 +4,13 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Keyboard, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { Calendar, LocaleConfig } from "react-native-calendars"
 import Ripple from "react-native-material-ripple"
+import images from "../../assets/images"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
-import { showMessageSucess } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
+import { AutoImage } from "../auto-image/auto-image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { InputText } from "../input-text/input-text"
@@ -19,6 +20,8 @@ import { Text } from "../text/text"
 import { useModalRequest } from "./useModalRequest"
 
 const modalStateCalendar = new ModalStateHandler()
+const modalStateConfirmation = new ModalStateHandler()
+modalStateConfirmation.setVisible(true)
 
 export interface ModalRequestDishProps {
   /**
@@ -61,7 +64,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
       .request(data.dishName, data.peopleCount, selectedDate, userStore.email, userStore.userId)
       .then((response) => {
         if (response.data > 0) {
-          showMessageSucess(response.message)
+          modalStateConfirmation.setVisible(true)
           modalState.setVisible(false)
           setSelectedDate("")
           methods.resetField("dishName")
@@ -188,6 +191,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
         onDayPress={(date) => onDayPress(date)}
         initialDate={selectedDate}
       ></CalendarPicker>
+      <ModalConfirmation></ModalConfirmation>
       <Loader></Loader>
     </>
   )
@@ -224,6 +228,37 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
   )
 }
 
+const ModalConfirmation = () => {
+  return (
+    <Modal modal={modalStateConfirmation}>
+      <View style={utilSpacing.p4}>
+        <Text
+          size="lg"
+          preset="semiBold"
+          tx="modalRequestDish.ready"
+          style={utilSpacing.mb5}
+        ></Text>
+        <Text
+          preset="semiBold"
+          tx="modalRequestDish.confirmationInfo"
+          style={utilSpacing.mb5}
+        ></Text>
+
+        <AutoImage
+          resizeMode="contain"
+          style={[styles.imgNotFound, utilSpacing.mb5, utilSpacing.ml2]}
+          source={images.soup}
+        ></AutoImage>
+        <Button
+          tx="modalRequestDish.continue"
+          style={styles.btnContinue}
+          onPress={() => modalStateConfirmation.setVisible(false)}
+        ></Button>
+      </View>
+    </Modal>
+  )
+}
+
 const styles = StyleSheet.create({
   btn: {
     width: "90%",
@@ -234,5 +269,16 @@ const styles = StyleSheet.create({
   },
   dateCard: {
     height: 80,
+  },
+  imgNotFound: {
+    alignSelf: "center",
+    height: 200,
+    width: "100%",
+    position: "relative",
+    left: 15,
+  },
+  btnContinue: {
+    minWidth: "75%",
+    alignSelf: "center",
   },
 })
