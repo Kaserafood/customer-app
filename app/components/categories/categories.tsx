@@ -40,6 +40,7 @@ export const Categories = observer(function Categories(props: CategoriesProps) {
             onPress={() => onPress(category)}
             rippleOpacity={0.2}
             rippleDuration={400}
+            rippleContainerBorderRadius={16}
             key={category.id}
             style={[utilSpacing.p4, styles.containerCategoryItem]}
           >

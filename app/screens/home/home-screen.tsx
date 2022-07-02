@@ -9,11 +9,13 @@ import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { useDay } from "../../common/hooks/useDay"
 import {
   Categories,
+  Chip,
   DayDelivery,
   Dish,
   EmptyData,
   Loader,
   Location,
+  ModalDeliveryDate,
   ModalRequestDish,
   Screen,
   Separator,
@@ -48,6 +50,7 @@ class ModalState {
 }
 const modalState = new ModalState()
 const modalStateRequestDish = new ModalStateHandler()
+const modalDeliveryDate = new ModalStateHandler()
 
 /**
  * Home Screen to show main dishes
@@ -55,7 +58,7 @@ const modalStateRequestDish = new ModalStateHandler()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, commonStore, categoryStore, userStore } = useStores()
+    const { dishStore, dayStore, commonStore, categoryStore, userStore, orderStore } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -88,6 +91,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
           categoryStore.getAll(),
+          orderStore.getPriceDelivery(),
         ])
           .then(() => setCurrentDay(days[0]))
           .finally(() => {
@@ -140,16 +144,22 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               onPress={(category) => toCategory(category)}
             ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
-            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+            <View
+              style={[
+                utilFlex.flexRow,
+                utilSpacing.mt3,
+                utilSpacing.mb6,
+                utilFlex.flexCenterVertical,
+              ]}
+            >
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
-              <Text
-                size="lg"
-                style={utilSpacing.ml3}
-                preset="bold"
+              <Chip
+                active
+                onPress={() => modalDeliveryDate.setVisible(true)}
                 text={currentDay.dayName}
-              ></Text>
+                style={[utilSpacing.ml3, styles.chip]}
+              ></Chip>
             </View>
-            <Separator style={utilSpacing.my4}></Separator>
             <ListDishes toDetail={(dish) => toDetail(dish)}></ListDishes>
           </View>
           <View style={utilSpacing.mb8}>
@@ -162,6 +172,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
+        <ModalDeliveryDate
+          isAllGet
+          modal={modalDeliveryDate}
+          onSelectDay={(day) => onChangeDay(day)}
+        ></ModalDeliveryDate>
         <Loader></Loader>
       </Screen>
     )
@@ -192,5 +207,11 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: spacing[4],
     width: 24,
+  },
+  chip: {
+    borderRadius: spacing[3],
+    marginRight: spacing[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
   },
 })

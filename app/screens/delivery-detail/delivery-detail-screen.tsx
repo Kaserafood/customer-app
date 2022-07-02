@@ -27,7 +27,6 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
-import { getCountryCode, getCurrencyCode } from "../../utils/location"
 import { showMessageError } from "../../utils/messages"
 import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
@@ -104,9 +103,6 @@ export const DeliveryDetailScreen: FC<
       return
     }
 
-    const countryCode = await getCountryCode()
-    const currencyCode = getCurrencyCode(countryCode)
-
     const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
 
     const order: Order = {
@@ -117,10 +113,10 @@ export const DeliveryDetailScreen: FC<
       city: addressStore.current.city,
       region: addressStore.current.address,
       products: getProducts(),
-      priceDelivery: 20,
+      priceDelivery: orderStore.priceDelivery,
       metaData: getMetaData(taxId),
       customerNote: data.customerNote,
-      currencyCode: currencyCode,
+      currencyCode: cartStore.cart[0].dish.chef.currencyCode,
       taxId: taxId,
       uuid: getUniqueId(),
       card: {
@@ -264,7 +260,7 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
-          <View style={utilFlex.flexRow}>
+          <View style={[utilFlex.flexRow]}>
             <Text
               preset="bold"
               caption
@@ -272,9 +268,9 @@ export const DeliveryDetailScreen: FC<
               style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
             ></Text>
             <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
               <AutoImage style={styles.imageCard} source={images.cardVisa}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
+              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
             </View>
           </View>
 
@@ -315,7 +311,10 @@ export const DeliveryDetailScreen: FC<
       </ScrollView>
       <ButtonFooter
         onPress={methods.handleSubmit(onSubmit, onError)}
-        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(cartStore.subtotal + 20)}`}
+        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(
+          cartStore.subtotal + orderStore.priceDelivery,
+          cartStore.cart[0].dish.chef.currencyCode,
+        )}`}
       ></ButtonFooter>
 
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
@@ -343,7 +342,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   imageCard: {
-    borderColor: color.palette.grayLigth,
+    // borderColor: color.palette.grayLigth,
     borderRadius: spacing[1],
     borderWidth: 1,
     height: 24,

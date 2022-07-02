@@ -62,6 +62,7 @@ export const OrderModel = types
   .model("Order")
   .props({
     ordersOverview: types.optional(types.array(orderOverviewModel), []),
+    priceDelivery: types.optional(types.number, 0),
   })
   .views((self) => ({
     // Retorna la ordenes que estan en estado "En espera" o "Procesnado"
@@ -96,5 +97,12 @@ export const OrderModel = types
       if (result && result.kind === "ok") {
         self.ordersOverview.replace(result.data)
       } else self.ordersOverview.replace([])
+    }),
+    getPriceDelivery: flow(function* getPriceDelivery() {
+      const api = new Api()
+      const result: CommonResponse = yield api.getPriceDelivery()
+      if (result && result.kind === "ok") {
+        self.priceDelivery = Number(result.data.data)
+      }
     }),
   }))

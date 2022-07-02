@@ -8,7 +8,7 @@ import { AutoImage, Price, Text } from "../../components"
 import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 
 export interface ChefItemModel extends UserChef {
   category: string
@@ -46,13 +46,18 @@ export interface ChefItemProps {
    * onDishPress callback
    */
   onDishPress?: (dish: Dish) => void
+
+  /**
+   * Callcback on press chef image
+   */
+  onChefPress?: () => void
 }
 
 /**
  * Chef item Pager
  */
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
-  const { style, item, onPrevious, onNext, onChangePosition, onDishPress } = props
+  const { style, item, onPrevious, onNext, onChangePosition, onDishPress, onChefPress } = props
 
   return (
     <View style={style} key={item.id}>
@@ -109,30 +114,27 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
         )}
       </View>
       <View style={[styles.flex, styles.footer]}>
-        <View style={styles.flex1}>
-          <Text
-            numberOfLines={1}
-            text={`${item.name}`}
-            preset="bold"
-            style={utilSpacing.mb1}
-          ></Text>
-          <Text
-            numberOfLines={1}
-            text={item.currentDishName}
-            style={[utilSpacing.mb1, styles.nameDish]}
-          ></Text>
+        <View style={[utilFlex.flex1, styles.textContainer, utilSpacing.pt3]}>
+          <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
+          <Text style={styles.textDescription} numberOfLines={1} text={item.currentDishName}></Text>
           <View style={styles.flex}>
             <Text
+              caption
               numberOfLines={1}
-              style={[styles.flex1, styles.textCategory, utilSpacing.mr2]}
+              style={[utilFlex.flex1, utilSpacing.mr2]}
               text={item.category}
             ></Text>
-            <Price preset="delivery" amount={30} style={utilSpacing.mr3}></Price>
+            <Price
+              preset="delivery"
+              amount={30}
+              style={utilSpacing.mr3}
+              currencyCode={item.currencyCode}
+            ></Price>
           </View>
         </View>
-        <View>
+        <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={() => onChefPress()}>
           <AutoImage style={styles.imageChef} source={{ uri: item.image }}></AutoImage>
-        </View>
+        </Ripple>
       </View>
     </View>
   )
@@ -169,12 +171,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  flex1: {
-    flex: 1,
-  },
   footer: {
     alignItems: "flex-end",
-
     top: -28,
   },
   icon: {
@@ -186,7 +184,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     height: 200,
-
     width: "100%",
   },
 
@@ -210,7 +207,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "75%",
   },
-  textCategory: {
-    color: color.palette.grayDark,
+  textContainer: {
+    justifyContent: "space-between",
+    height: 70,
+  },
+  textDescription: {
+    lineHeight: 23,
   },
 })

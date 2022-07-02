@@ -1,26 +1,13 @@
-import { flow, Instance, types } from "mobx-state-tree"
+import { detach, flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../services/api"
-import { Category } from "./category-store"
 import { dish } from "./dish"
-import { userChef, UserChef } from "./user-store"
+import { userChef } from "./user-store"
 
 export const dishChef = dish.props({
   chef: types.optional(types.maybe(userChef), {}),
 })
 
 export interface DishChef extends Instance<typeof dishChef> {}
-
-const getCategoriesName = (categories: Category[]) => {
-  let categoriesStr = ""
-  if (categories && Array.isArray(categories)) {
-    categories.forEach((category) => {
-      categoriesStr += `${category.name} - `
-    })
-    return categoriesStr.substring(0, categoriesStr.length - 2)
-  }
-
-  return ""
-}
 
 export const DishStoreModel = types
   .model("DishStoreModel")
@@ -33,17 +20,6 @@ export const DishStoreModel = types
   .views((self) => ({
     get totalDishes() {
       return self.dishes.length
-    },
-    get formatDishesGropuedByChef() {
-      return self.dishesGroupedByChef.map((chef: UserChef) => {
-        return {
-          ...chef,
-          category: getCategoriesName(chef.categories),
-          currentIndexPage: 0,
-          pageView: null,
-          currentDishName: chef.dishes.length > 0 ? chef.dishes[0]?.title : "",
-        }
-      })
     },
   }))
   .actions((self) => ({

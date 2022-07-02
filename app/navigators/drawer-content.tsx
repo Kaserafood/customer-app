@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
-import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"
@@ -26,8 +25,10 @@ export default function DrawerContent(props) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View style={[styles.containerAvatar, utilSpacing.mt5, utilFlex.flexCenter, utilFlex.selfCenter]}>
-        <IconRN name="person" size={50} color={color.palette.white} />
+      <View
+        style={[styles.containerAvatar, utilSpacing.mt5, utilFlex.flexCenter, utilFlex.selfCenter]}
+      >
+        <Icon name="user" size={45} color={color.palette.white} />
       </View>
       <Text
         preset="bold"
@@ -38,8 +39,13 @@ export default function DrawerContent(props) {
       <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={order}>
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon name="order" style={utilSpacing.mr4} size={30} color={color.palette.grayDark} />
-            <Text tx="drawerContent.myOrdres" preset="semiBold" size="lg"></Text>
+            <Icon
+              name="pot-food"
+              style={utilSpacing.mr4}
+              size={30}
+              color={color.palette.grayDark}
+            />
+            <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
           </View>
         </Card>
       </Ripple>
@@ -51,13 +57,13 @@ export default function DrawerContent(props) {
       >
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <IconRN
-              name="logout"
+            <Icon
+              name="arrow-right-from-bracket"
               style={utilSpacing.mr4}
               size={30}
               color={color.palette.grayDark}
             />
-            <Text tx="drawerContent.closeSession" preset="semiBold" size="lg"></Text>
+            <Text tx="drawerContent.closeSession" preset="semiBold" size="md"></Text>
           </View>
         </Card>
       </Ripple>

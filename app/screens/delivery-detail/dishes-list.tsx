@@ -19,7 +19,11 @@ export const DishesList = () => {
             <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
           </View>
           <View style={utilSpacing.ml3}>
-            <Price style={styles.price} amount={item.total}></Price>
+            <Price
+              style={styles.price}
+              amount={item.total}
+              currencyCode={item.dish.chef.currencyCode}
+            ></Price>
           </View>
         </View>
       ))}

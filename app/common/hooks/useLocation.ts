@@ -56,7 +56,7 @@ export const useLocation = () => {
         // Adds a listener to be invoked when location settings checked using
         return await addListenerLocation()
       } else {
-        showMessageInfo(getI18nText("mapScreen.disabledLocation"))
+        // showMessageInfo(getI18nText("mapScreen.disabledLocation"))
         console.log(`MapScreen: denied, ${granted}`)
         return {
           latitude: 0,
@@ -103,7 +103,7 @@ export const useLocation = () => {
             latitudeDelta: 0,
             longitudeDelta: 0,
           })
-          showMessageInfo(getI18nText("mapScreen.disabledLocation"))
+          // showMessageInfo(getI18nText("mapScreen.disabledLocation"))
         }
       })
     })

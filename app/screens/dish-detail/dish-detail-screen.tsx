@@ -1,10 +1,11 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
+import IconRN from "react-native-vector-icons/FontAwesome"
 import {
   Addons,
   AutoImage,
@@ -12,7 +13,6 @@ import {
   DishChef,
   getMetaData,
   Header,
-  Icon,
   InputText,
   isValidAddons,
   Loader,
@@ -33,6 +33,7 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
+export const CurrencyContext = createContext({ currencyCode: "" })
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
@@ -112,21 +113,29 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView ref={scrollRef} style={utilSpacing.p4}>
-          <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
-          <View style={[utilFlex.flexRow, utilSpacing.my3, utilSpacing.mx4]}>
-            <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+        <ScrollView ref={scrollRef}>
+          <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
+            <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
+            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+              <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+            </View>
+            <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
+            <Price
+              style={styles.price}
+              amount={currentDish.price}
+              currencyCode={currentDish.chef.currencyCode}
+            ></Price>
           </View>
-          <Text style={[utilSpacing.mb2, utilSpacing.mx4]} text={currentDish.description}></Text>
-          <Price style={styles.price} amount={currentDish.price}></Price>
 
           {addonsAvailable.length > 0 ? (
-            <Addons
-              addons={addonsAvailable}
-              onTotalPriceChange={(total) => setTotalAddon(total)}
-            ></Addons>
+            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef.currencyCode }}>
+              <Addons
+                addons={addonsAvailable}
+                onTotalPriceChange={(total) => setTotalAddon(total)}
+              ></Addons>
+            </CurrencyContext.Provider>
           ) : (
-            <Separator style={utilSpacing.my3}></Separator>
+            <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>
           )}
 
           <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
@@ -139,7 +148,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
               <TouchableOpacity activeOpacity={0.7} onPress={() => minusQuantity(1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <Icon name="minus" size={12} color={color.palette.white}></Icon>
+                  <IconRN name="minus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
               <Text
@@ -149,7 +158,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               ></Text>
               <TouchableOpacity activeOpacity={0.7} onPress={() => setQuantity(quantity + 1)}>
                 <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
-                  <Icon name="plus" size={12} color={color.palette.white}></Icon>
+                  <IconRN name="plus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
             </View>
@@ -167,16 +176,23 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             </FormProvider>
           </View>
 
-          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilFlex.flexRow]}>
+          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilSpacing.ml5, utilFlex.flexRow]}>
             <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
 
-          <ListDish onChangeDish={(dish) => changeDish(dish)} dishId={currentDish.id}></ListDish>
+          <ListDish
+            currencyCode={currentDish.chef.currencyCode}
+            onChangeDish={(dish) => changeDish(dish)}
+            dishId={currentDish.id}
+          ></ListDish>
         </ScrollView>
         <ButtonFooter
           onPress={methods.handleSubmit(onSubmit)}
-          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(total)}`}
+          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(
+            total,
+            currentDish.chef.currencyCode,
+          )}`}
         ></ButtonFooter>
         <Loader></Loader>
       </Screen>
@@ -185,10 +201,14 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 )
 
 const ListDish = observer(
-  (props: { onChangeDish: (dish: DishChefModel) => void; dishId: number }) => {
+  (props: {
+    onChangeDish: (dish: DishChefModel) => void
+    dishId: number
+    currencyCode: string
+  }) => {
     const { dishStore } = useStores()
     return (
-      <ScrollView horizontal style={utilSpacing.mb4}>
+      <ScrollView horizontal style={[utilSpacing.mb4, utilSpacing.ml5]}>
         {dishStore.dishesChef.map(
           (dish) =>
             props.dishId !== dish.id && (
@@ -196,6 +216,7 @@ const ListDish = observer(
                 onPress={() => props.onChangeDish(dish)}
                 dish={dish}
                 key={dish.id}
+                currencyCode={props.currencyCode}
               ></DishChef>
             ),
         )}
@@ -239,12 +260,11 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: spacing[2],
-    height: 200,
+    height: 230,
     width: "100%",
   },
   price: {
     alignSelf: "flex-start",
-    marginLeft: spacing[3],
   },
   textAddToOrder: {
     color: color.palette.white,

@@ -7,9 +7,11 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import {
   Categories,
+  Chip,
   DayDelivery,
   Loader,
   Location,
+  ModalDeliveryDate,
   Screen,
   Separator,
   Text,
@@ -20,9 +22,11 @@ import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { Dish } from "../../models/dish"
+import { UserChef } from "../../models/user-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { ChefItem, ChefItemModel } from "./chef-item"
 
 class ModalState {
@@ -76,7 +80,8 @@ class ModalState {
   }
 }
 const modalState = new ModalState()
-
+const modalDeliveryDate = new ModalStateHandler()
+type Screen = "dishDetail" | "menuChef"
 /**
  * Chef screen for show all chefs with dishes
  */
@@ -92,25 +97,19 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       __DEV__ && console.log("chefs useEffect")
       commonStore.setVisibleLoading(true)
       async function fetch() {
-        // if (dishStore.dishesGroupedByChef.length > 0) return
-
         await dishStore
           .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+          .then(() => {
+            modalState.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+          })
           .finally(() => {
             commonStore.setVisibleLoading(false)
-            console.log("hide loaindg")
+            __DEV__ && console.log("hide loaindg")
           })
       }
 
       fetch()
     }, [])
-
-    useEffect(() => {
-      if (dishStore.formatDishesGropuedByChef.length > 0) {
-        modalState.setData(dishStore.formatDishesGropuedByChef)
-        __DEV__ && console.log("formatData changed")
-      }
-    }, [dishStore.formatDishesGropuedByChef])
 
     const toCategory = (category: Category) => {
       navigation.navigate("category", {
@@ -118,7 +117,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       })
     }
 
-    const toDishDetail = (dish: Dish, userChef: ChefItemModel) => {
+    const toScreen = (screen: Screen, dish: Dish, userChef: ChefItemModel) => {
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
@@ -131,12 +130,46 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       delete chef.currentDishName
       delete chef.pageView
       delete chef.currentIndexPage
-      navigation.push("dishDetail", { ...dish, chef: { ...chef } })
+      navigation.push(screen, { ...dish, chef: { ...chef }, isGetMenu: screen === "menuChef" })
     }
 
     const onChangeDay = async (day: Day) => {
+      commonStore.setVisibleLoading(true)
+      modalState.setData([])
       dayStore.setCurrentDay(day)
-      await dishStore.getGroupedByChef(day.date, RNLocalize.getTimeZone())
+      await dishStore
+        .getGroupedByChef(day.date, RNLocalize.getTimeZone())
+        .then(() => {
+          if (dishStore.dishesGroupedByChef.length > 0) {
+            modalState.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+            __DEV__ && console.log("formatData changed")
+          }
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
+    }
+
+    const formatDishesGropuedByChef = (dishes: UserChef[]) => {
+      return dishes.map((chef: UserChef) => {
+        return {
+          ...chef,
+          category: getCategoriesName(chef.categories),
+          currentIndexPage: 0,
+          pageView: null,
+          currentDishName: chef.dishes.length > 0 ? chef.dishes[0]?.title : "",
+        }
+      })
+    }
+
+    const getCategoriesName = (categories: Category[]) => {
+      let categoriesStr = ""
+      if (categories && Array.isArray(categories)) {
+        categories.forEach((category) => {
+          categoriesStr += `${category.name} - `
+        })
+        return categoriesStr.substring(0, categoriesStr.length - 2)
+      }
+
+      return ""
     }
 
     return (
@@ -165,42 +198,54 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               onPress={(category) => toCategory(category)}
             ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
-            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+            <View
+              style={[
+                utilFlex.flexRow,
+                utilSpacing.mt3,
+                utilSpacing.mb6,
+                utilFlex.flexCenterVertical,
+              ]}
+            >
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
-              <Text
-                size="lg"
-                style={utilSpacing.ml3}
-                preset="bold"
+              <Chip
+                active
+                onPress={() => modalDeliveryDate.setVisible(true)}
                 text={dayStore.currentDay.dayName}
-              ></Text>
+                style={[utilSpacing.ml3, styles.chip]}
+              ></Chip>
             </View>
-            <Separator style={utilSpacing.my4}></Separator>
-            <ListChef toDishDetail={(dish, chef) => toDishDetail(dish, chef)}></ListChef>
+
+            <ListChef toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}></ListChef>
           </View>
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <Loader visible={commonStore.isVisibleLoading}></Loader>
+        <ModalDeliveryDate
+          isAllGet
+          modal={modalDeliveryDate}
+          onSelectDay={(day) => onChangeDay(day)}
+        ></ModalDeliveryDate>
       </Screen>
     )
   },
 )
 
 const ListChef = observer(function ListChef(props: {
-  toDishDetail: (dish: Dish, userChef: ChefItemModel) => void
+  toScreen: (screen: Screen, dish: Dish, userChef: ChefItemModel) => void
 }) {
   return (
     <View>
       {modalState.data.map((chef, index) => (
         <View key={chef.id}>
           <ChefItem
-            onDishPress={(dish) => props.toDishDetail(dish, chef)}
+            onDishPress={(dish) => props.toScreen("dishDetail", dish, chef)}
+            onChefPress={() => props.toScreen("menuChef", chef.dishes[0], chef)}
             onPrevious={() => modalState.previousDish(chef, index)}
             onNext={() => modalState.nextDish(chef, index)}
             onChangePosition={(position) => modalState.chanageDish(chef, position, index)}
             item={chef}
           ></ChefItem>
-          {index !== modalState.data.length - 1 && <Separator style={utilSpacing.mb5}></Separator>}
         </View>
       ))}
     </View>
@@ -212,5 +257,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
     flex: 1,
     paddingTop: spacing[2],
+  },
+  chip: {
+    borderRadius: spacing[3],
+    marginRight: spacing[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
   },
 })

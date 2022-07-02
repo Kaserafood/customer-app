@@ -77,23 +77,25 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     return (
       <Screen preset="fixed" style={styles.root}>
         <Header headerText={params.name} leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView style={styles.container}>
+        <ScrollView>
           <DayDelivery
             days={dayStore.days}
             onWhyPress={() => modalState.setVisibleWhy(true)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
-          <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>
-          <View style={utilSpacing.mb8}>
-            {dishesCategory.map((dish, index) => (
-              <View key={dish.id}>
-                <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
+          <View style={styles.container}>
+            <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>
+            <View style={utilSpacing.mb8}>
+              {dishesCategory.map((dish, index) => (
+                <View key={dish.id}>
+                  <Dish dish={dish} onPress={() => toDetail(dish)}></Dish>
 
-                {index !== dishesCategory.length - 1 && (
-                  <Separator style={utilSpacing.my3}></Separator>
-                )}
-              </View>
-            ))}
+                  {index !== dishesCategory.length - 1 && (
+                    <Separator style={utilSpacing.my3}></Separator>
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
 
           <EmptyData

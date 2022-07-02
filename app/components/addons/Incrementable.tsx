@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, {
   Easing,
@@ -10,6 +10,7 @@ import Animated, {
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Addon } from "../../models/dish"
+import { CurrencyContext } from "../../screens"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { Card } from "../card/card"
@@ -38,7 +39,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
   const offset = useSharedValue(required === 1 ? 30 : 0)
 
   const config = {
-    duration: 800,
+    duration: 500,
     easing: Easing.bezierFn(0.5, 0.01, 0, 1),
   }
 
@@ -121,7 +122,7 @@ export const PriceOption = (props: {
   priceUnity?: number
 }) => {
   const { amout, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
-
+  const { currencyCode } = useContext(CurrencyContext)
   if (amout > 0) {
     return (
       <View>
@@ -132,6 +133,7 @@ export const PriceOption = (props: {
               preset="simple"
               textStyle={[utilSpacing.pr4, utilSpacing.pl2]}
               amount={amout}
+              currencyCode={currencyCode}
             ></Price>
           </View>
 
@@ -143,6 +145,7 @@ export const PriceOption = (props: {
                   style={[styles.price, utilSpacing.px1]}
                   textStyle={[utilText.textGray, utilText.textSm]}
                   amount={priceUnity}
+                  currencyCode={currencyCode}
                 ></Price>
                 <Text caption size="sm" tx="addons.each"></Text>
               </View>

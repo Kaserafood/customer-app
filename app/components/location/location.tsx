@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
-import IconRN from "react-native-vector-icons/FontAwesome"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { Icon } from "../icon/icon"
@@ -29,13 +28,13 @@ export const Location = observer(function Location(props: LocationProps) {
   return (
     <View style={[styles.containerAddress, style]}>
       <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
-        <Icon name="location-1" size={24} color={color.palette.white} />
+        <Icon name="location-dot" size={24} color={color.palette.white} />
         <Text
           numberOfLines={1}
           style={styles.textAddress}
           text={addressStore.current.address}
         ></Text>
-        <IconRN name="caret-down" size={24} color={color.palette.white} />
+        <Icon name="angle-down" size={24} color={color.palette.white} />
       </TouchableOpacity>
     </View>
   )
@@ -64,5 +63,6 @@ const styles = StyleSheet.create({
     marginLeft: spacing[2],
     marginRight: spacing[2],
     position: "relative",
+    top: 2,
   },
 })
