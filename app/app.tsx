@@ -67,6 +67,7 @@ function App() {
         if (userId && userId.length > 0 && !rootStore.commonStore.isSignedIn) {
           console.log("USER LOGIN")
           rootStore.commonStore.setIsSignedIn(true)
+          rootStore.commonStore.setVisibleLoading(false)
           rootStore.dishStore.clearDishes()
         }
       }

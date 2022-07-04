@@ -72,15 +72,15 @@ export const UserRegisterModel = userRegister
     },
   }))
   .actions((self) => ({
-    register: async (user: UserRegister) => {
+    register: async (user: UserRegister): Promise<boolean> => {
       const userApi = new Api()
       const result = await userApi.register(user)
 
       if (result && result.kind === "ok") {
         self.saveData(result)
-        return result
+        return true
       }
-      return null
+      return false
     },
 
     login: async (user: UserLogin): Promise<boolean> => {

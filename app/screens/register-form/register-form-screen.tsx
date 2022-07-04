@@ -17,7 +17,7 @@ export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
-  const { ...methods } = useForm({ mode: "onChange" })
+  const { ...methods } = useForm({ mode: "onBlur" })
   const { userStore, commonStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
@@ -29,8 +29,14 @@ export const RegisterFormScreen: FC<
     } else {
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
-      console.log(data)
-      userStore.register(data).finally(() => commonStore.setVisibleLoading(false))
+      __DEV__ && console.log(data)
+      userStore
+        .register(data)
+        .then((userValid: boolean) => {
+          commonStore.setVisibleLoading(false)
+          if (userValid) commonStore.setIsSignedIn(true)
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
     }
   }
 

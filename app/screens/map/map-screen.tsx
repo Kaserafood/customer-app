@@ -5,8 +5,9 @@ import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps"
+import IconRN from "react-native-vector-icons/MaterialIcons"
 import { useLocation } from "../../common/hooks/useLocation"
-import { Button, Header, Icon, Screen, Text } from "../../components"
+import { Button, Header, Screen, Text } from "../../components"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
@@ -110,7 +111,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           ></MapView>
 
           <View pointerEvents="none" style={styles.containerMarker}>
-            <Icon name="location" size={50} color={color.primary}></Icon>
+            <IconRN name="place" size={50} color={color.primary}></IconRN>
           </View>
         </View>
         {loadingState.loading ? (
