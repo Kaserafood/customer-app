@@ -59,7 +59,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
   ({ navigation }) => {
     const { onChangeDay } = useDay()
     const [dishes, setDishes] = useState<DishChef[]>([])
-    const { dishStore, dayStore, commonStore, categoryStore, userStore, orderStore } = useStores()
+    const {
+      dishStore,
+      dayStore,
+      commonStore,
+      categoryStore,
+      userStore,
+      orderStore,
+      cartStore,
+    } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -72,6 +80,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
+      cartStore.cleanItems()
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
       navigation.navigate("dishDetail", {

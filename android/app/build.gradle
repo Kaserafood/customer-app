@@ -136,8 +136,8 @@ android {
         applicationId "com.kasera.client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "0.8.1"
     }
     splits {
         abi {
@@ -155,10 +155,12 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file('kasera-customer.keystore')
-            storePassword 'Kapibara.42'
-            keyAlias 'kasera-customer'
-            keyPassword 'Kapibara.42'
+            if (project.hasProperty('KASERA_UPLOAD_STORE_FILE')) {
+                storeFile file(KASERA_UPLOAD_STORE_FILE)
+                storePassword KASERA_UPLOAD_STORE_PASSWORD
+                keyAlias KASERA_UPLOAD_KEY_ALIAS
+                keyPassword KASERA_UPLOAD_KEY_PASSWORD
+            }
         }
     }
     buildTypes {

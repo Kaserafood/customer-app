@@ -29,6 +29,7 @@ import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
 import { showMessageError } from "../../utils/messages"
 import { getFormat } from "../../utils/price"
+import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
@@ -87,6 +88,13 @@ export const DeliveryDetailScreen: FC<
     loadSavedStrings()
   }, [])
 
+  useEffect(() => {
+    if (!cartStore.hasItems) {
+      console.log("to main screen")
+      navigation.navigate("main")
+    }
+  }, [navigation])
+
   const onError: SubmitErrorHandler<any> = (errors) => {
     __DEV__ && console.log({ errors })
   }
@@ -103,6 +111,8 @@ export const DeliveryDetailScreen: FC<
       return
     }
 
+    commonStore.setVisibleLoading(true)
+    console.log("Submitted")
     const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
 
     const order: Order = {
@@ -116,18 +126,18 @@ export const DeliveryDetailScreen: FC<
       priceDelivery: orderStore.priceDelivery,
       metaData: getMetaData(taxId),
       customerNote: data.customerNote,
-      currencyCode: cartStore.cart[0].dish.chef.currencyCode,
+      currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
       taxId: taxId,
       uuid: getUniqueId(),
       card: {
-        cardNumber: data.number.split(" ").join(""),
-        dateExpiry: data.expirationDate,
-        cvv: data.cvv,
-        name: data.name,
-        type: getCardType(data.number).toLocaleLowerCase(),
+        cardNumber: encrypt(data.number.split(" ").join("")),
+        dateExpiry: encrypt(data.expirationDate),
+        cvv: encrypt(data.cvv),
+        name: encrypt(data.name),
+        type: encrypt(getCardType(data.number).toLocaleLowerCase()),
       },
     }
-    commonStore.setVisibleLoading(true)
+
     orderStore
       .add(order)
       .then(async (res) => {
@@ -313,7 +323,7 @@ export const DeliveryDetailScreen: FC<
         onPress={methods.handleSubmit(onSubmit, onError)}
         text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(
           cartStore.subtotal + orderStore.priceDelivery,
-          cartStore.cart[0].dish.chef.currencyCode,
+          cartStore.cart[0]?.dish.chef.currencyCode,
         )}`}
       ></ButtonFooter>
 
@@ -342,7 +352,6 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   imageCard: {
-    // borderColor: color.palette.grayLigth,
     borderRadius: spacing[1],
     borderWidth: 1,
     height: 24,

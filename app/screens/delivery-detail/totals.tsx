@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { Price, Text } from "../../components"
 import { useStores } from "../../models"
@@ -7,7 +7,12 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 export const Totals = () => {
   const { cartStore, orderStore } = useStores()
-  const { currencyCode } = cartStore.cart[0].dish.chef
+  const [currencyCode, setCurrencyCode] = useState("")
+
+  useEffect(() => {
+    if (cartStore.cart.length > 0) setCurrencyCode(cartStore.cart[0].dish.chef.currencyCode)
+  }, [])
+
   return (
     <View>
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
