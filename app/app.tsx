@@ -64,9 +64,12 @@ function App() {
     if (rootStore) {
       async function verifyUser() {
         const userId = await loadString("userId")
-        if (userId && userId.length > 0 && !rootStore.commonStore.isSignedIn) {
-          console.log("USER LOGIN")
-          rootStore.commonStore.setIsSignedIn(true)
+        if (userId && userId.length > 0) {
+          if (!rootStore.commonStore.isSignedIn) {
+            console.log("USER LOGIN")
+            rootStore.commonStore.setIsSignedIn(true)
+          }
+          rootStore.commonStore.setVisibleLoading(false)
           rootStore.dishStore.clearDishes()
         }
       }

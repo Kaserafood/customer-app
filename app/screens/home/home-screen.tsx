@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect } from "react"
+import React, { FC, useEffect, useLayoutEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
@@ -25,7 +25,7 @@ import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-mod
 import { LocationModal } from "../../components/location/location-modal"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
-import { DishChef as DishModel } from "../../models/dish-store"
+import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -58,7 +58,16 @@ const modalDeliveryDate = new ModalStateHandler()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const { onChangeDay } = useDay()
-    const { dishStore, dayStore, commonStore, categoryStore, userStore, orderStore } = useStores()
+    const [dishes, setDishes] = useState<DishChef[]>([])
+    const {
+      dishStore,
+      dayStore,
+      commonStore,
+      categoryStore,
+      userStore,
+      orderStore,
+      cartStore,
+    } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
     const toCategory = (category: Category) => {
@@ -71,6 +80,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
+      cartStore.cleanItems()
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
       navigation.navigate("dishDetail", {
@@ -89,11 +99,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         commonStore.setVisibleLoading(true)
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
-          dishStore.getAll(days[0].date, RNLocalize.getTimeZone()),
+          dishStore.getAll(days[0].date, RNLocalize.getTimeZone(), userStore.userId),
           categoryStore.getAll(),
           orderStore.getPriceDelivery(),
         ])
-          .then(() => setCurrentDay(days[0]))
+          .then(() => {
+            setCurrentDay(days[0])
+            setDishes(dishStore.dishes)
+          })
           .finally(() => {
             commonStore.setVisibleLoading(false)
             __DEV__ && console.log("hide loaindg")
@@ -162,7 +175,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
-            <ListDishes toDetail={(dish) => toDetail(dish)}></ListDishes>
+            <ListDishes dishes={dishes} toDetail={(dish) => toDetail(dish)}></ListDishes>
           </View>
           <View style={utilSpacing.mb8}>
             <EmptyData
@@ -184,12 +197,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     )
   },
 )
-const ListDishes = observer(function ListDishes(props: { toDetail: (dish: DishModel) => void }) {
+const ListDishes = observer(function ListDishes(props: {
+  toDetail: (dish: DishModel) => void
+  dishes: DishChef[]
+}) {
   const { dishStore } = useStores()
 
   return (
     <View>
-      {dishStore.dishes.map((dish, index) => (
+      {props.dishes.map((dish, index) => (
         <View key={dish.id}>
           <Dish dish={dish} onPress={() => props.toDetail(dish)}></Dish>
           {index !== dishStore.totalDishes - 1 && <Separator style={utilSpacing.my3}></Separator>}

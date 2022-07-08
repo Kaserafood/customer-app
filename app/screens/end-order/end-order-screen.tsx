@@ -2,10 +2,10 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import { AutoImage, Button, Card, Header, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
-// import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
@@ -18,48 +18,53 @@ const ROOT: ViewStyle = {
 }
 
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
-  ({ navigation, route: { params } }) => {
-    const toMain = () => navigation.navigate("main")
+  function ({ route: { params }, navigation }) {
+    const toMain = () => {
+      console.log("to main")
+      navigation.navigate("main")
+    }
 
     const [order, setOrder] = useState("")
     const [thankYou, setThankYou] = useState("")
-    const { userStore } = useStores()
+    const { userStore, cartStore } = useStores()
     useEffect(() => {
+      cartStore.cleanItems()
       setOrder(`${getI18nText("endOrderScreen.order")} #${params.orderId}`)
       setThankYou(`¡${getI18nText("endOrderScreen.thankYou")} ${userStore.displayName}!`)
     }, [])
 
     return (
-      <Screen style={ROOT} preset="scroll">
+      <Screen style={ROOT} preset="fixed">
         <Header style={styles.header} headerTx="endOrderScreen.title" />
+        <ScrollView style={utilSpacing.pb7}>
+          <Card style={[styles.card, utilSpacing.px5]}>
+            <Text tx="endOrderScreen.deliveryOn" caption></Text>
+            <Text text={params.deliveryAddress} style={utilSpacing.mb4}></Text>
 
-        <Card style={[styles.card, utilSpacing.px5]}>
-          <Text tx="endOrderScreen.deliveryOn" caption></Text>
-          <Text text={params.deliveryAddress} style={utilSpacing.mb4}></Text>
+            <Text tx="endOrderScreen.deliveryDate" caption></Text>
+            <Text text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
+          </Card>
+          <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
+          <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
+            <Text size="lg" text={order} preset="bold"></Text>
+          </View>
+          <View>
+            <View style={[utilFlex.flexCenter, styles.content, utilSpacing.py5, utilSpacing.mb7]}>
+              <View style={[styles.body, utilFlex.flexCenter]}>
+                <View></View>
+                <Text style={utilSpacing.my5} size="lg" text={thankYou} preset="bold"></Text>
 
-          <Text tx="endOrderScreen.deliveryDate" caption></Text>
-          <Text text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
-        </Card>
-        <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
-        <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
-          <Text size="lg" text={order} preset="bold"></Text>
-        </View>
-        <View>
-          <View style={[utilFlex.flexCenter, styles.content, utilSpacing.py5]}>
-            <View style={[styles.body, utilFlex.flexCenter]}>
-              <View></View>
-              <Text style={utilSpacing.my5} size="lg" text={thankYou} preset="bold"></Text>
-
-              <AutoImage style={styles.imageChef} source={{ uri: params.imageChef }}></AutoImage>
-              <Text
-                style={utilSpacing.my5}
-                size="lg"
-                preset="bold"
-                tx="endOrderScreen.cookWithLove"
-              ></Text>
+                <AutoImage style={styles.imageChef} source={{ uri: params.imageChef }}></AutoImage>
+                <Text
+                  style={utilSpacing.my5}
+                  size="lg"
+                  preset="bold"
+                  tx="endOrderScreen.cookWithLove"
+                ></Text>
+              </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
 
         <View style={[styles.containerButton, utilFlex.flexCenter, utilSpacing.p4]}>
           <Button
@@ -87,11 +92,6 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     backgroundColor: color.background,
-
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-    right: 0,
   },
   content: {
     alignSelf: "center",

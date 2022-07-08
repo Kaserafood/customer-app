@@ -23,11 +23,16 @@ export const DishStoreModel = types
     },
   }))
   .actions((self) => ({
-    getAll: flow(function* getByChef(date: string, timeZone: string, categoryId?: number) {
+    getAll: flow(function* getByChef(
+      date: string,
+      timeZone: string,
+      userId: number,
+      categoryId?: number,
+    ) {
       if (categoryId) self.dishesCategory.clear()
       else self.dishes.clear()
       const api = new Api()
-      const result = yield api.getAllDishes(date, timeZone, categoryId)
+      const result = yield api.getAllDishes(date, timeZone, userId, categoryId)
 
       if (result && result.kind === "ok") {
         if (categoryId) self.dishesCategory.replace(result.data)

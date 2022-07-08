@@ -88,6 +88,12 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   }, [userStore.userId])
 
   useEffect(() => {
+    if (userStore.addressId > 0) {
+      modalPersistent.setPersistent(false)
+    }
+  }, [userStore.addressId])
+
+  useEffect(() => {
     if (modal.isVisibleLocation && addressText.length === 0) {
       permission().then((location) => {
         if (location.latitude !== 0 && location.longitude !== 0) {
@@ -148,7 +154,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               <Card>
                 <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                   <View style={[styles.button, utilSpacing.mr3, utilFlex.flexCenter]}>
-                    <Icon name="location" color={color.palette.white} size={24}></Icon>
+                    <Icon name="location-dot" color={color.palette.white} size={24}></Icon>
                   </View>
                   <View style={utilFlex.flex1}>
                     <Text

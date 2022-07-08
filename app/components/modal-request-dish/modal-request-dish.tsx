@@ -21,7 +21,6 @@ import { useModalRequest } from "./useModalRequest"
 
 const modalStateCalendar = new ModalStateHandler()
 const modalStateConfirmation = new ModalStateHandler()
-modalStateConfirmation.setVisible(true)
 
 export interface ModalRequestDishProps {
   /**

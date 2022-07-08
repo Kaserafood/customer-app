@@ -46,13 +46,19 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       dayStore,
       dishStore: { dishesCategory, getAll },
       commonStore,
+      userStore,
     } = useStores()
 
     useEffect(() => {
       console.log(params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
-        await getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), params.id)
+        await getAll(
+          dayStore.currentDay.date,
+          RNLocalize.getTimeZone(),
+          userStore.userId,
+          params.id,
+        )
       }
 
       fetch().finally(() => {

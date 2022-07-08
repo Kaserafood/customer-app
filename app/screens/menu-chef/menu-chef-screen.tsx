@@ -1,8 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import * as RNLocalize from "react-native-localize"
 import {
   AutoImage,
   ButtonFooter,
@@ -21,6 +22,7 @@ import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { Dish as DishModel } from "../../models/dish"
+import { DishChef } from "../../models/dish-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
@@ -29,14 +31,18 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
+import { ModalLeave } from "./modal-clean-cart"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
+const modalStateLeave = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
     const { dayStore, commonStore, dishStore, cartStore, orderStore } = useStores()
-    const { currencyCode, name, image, description, categories } = params.chef
+    const [currentAction, setCurrentAction] = useState<any>()
+    const { currencyCode, name, image, description, categories, id } = params.chef
+    const [dishes, setDishes] = useState<DishChef[]>([])
 
     useEffect(() => {
       if (__DEV__) {
@@ -45,9 +51,35 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       }
 
       ;(async () => {
-        if (params.isGetMenu) await getDishByChef()
+        dayStore.getDaysByChef(RNLocalize.getTimeZone(), id)
+        if (params.isGetMenu) {
+          await getDishByChef()
+          setDishes(dishStore.dishesChef)
+        } else {
+          setDishes(dishStore.dishesChef)
+        }
       })()
     }, [])
+
+    useEffect(
+      () =>
+        navigation.addListener("beforeRemove", (e) => {
+          e.preventDefault()
+          setCurrentAction(e.data.action)
+
+          if (cartStore.hasItems) modalStateLeave.setVisible(true)
+          else navigation.dispatch(e.data.action)
+        }),
+      [navigation],
+    )
+
+    const onPressLeave = () => {
+      if (currentAction) {
+        cartStore.cleanItems()
+        navigation.dispatch(currentAction)
+        modalStateLeave.setVisible(false)
+      }
+    }
 
     const onChangeDay = async (day: Day) => {
       dayStore.setCurrentDay(day)
@@ -86,7 +118,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
           <DayDelivery
             titleTx="menuChefScreen.dayDelivery"
-            days={dayStore.days}
+            days={dayStore.daysByChef}
             hideWhyButton
             onPress={(day) => {
               onChangeDay(day)
@@ -128,7 +160,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             <Separator style={utilSpacing.mt4}></Separator>
           </View>
           <View style={[utilSpacing.mb6, utilSpacing.mx5]}>
-            {dishStore.dishesChef.map((dish, index) => (
+            {dishes.map((dish, index) => (
               <View key={dish.id}>
                 <Dish
                   visibleChefImage={false}
@@ -164,6 +196,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           modal={modalStateCart}
         ></ModalCart>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
+        <ModalLeave modalState={modalStateLeave} onPressLeave={() => onPressLeave()}></ModalLeave>
       </Screen>
     )
   },

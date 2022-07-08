@@ -121,11 +121,17 @@ export class Api {
    *
    * @description Get all dishes
    */
-  async getAllDishes(date: string, timeZone: string, categoryId?: number): Promise<DishResponse> {
+  async getAllDishes(
+    date: string,
+    timeZone: string,
+    userId: number,
+    categoryId?: number,
+  ): Promise<DishResponse> {
     return await this.request(
       {
         date,
         timeZone,
+        userId,
         categoryId,
       },
       "/dishes",
