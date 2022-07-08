@@ -68,7 +68,6 @@ export const RecoverPasswordScreen: FC<
                 },
               }}
               maxLength={200}
-              defaultValue={"cunquero.carlos@gmail.com"}
             ></InputText>
             <View style={[styles.containerBtn, utilSpacing.mt9]}>
               <Button

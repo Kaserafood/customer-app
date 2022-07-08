@@ -79,7 +79,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                   },
                 }}
                 maxLength={200}
-                defaultValue={"cunquero.carlos@gmail.com"}
               ></InputText>
               <InputText
                 name="password"
@@ -93,7 +92,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                     message: "registerFormScreen.passwordMinLength",
                   },
                 }}
-                defaultValue={"Kapibara.42"}
                 maxLength={100}
               ></InputText>
 
