@@ -9,7 +9,7 @@ import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageInfo } from "../../utils/messages"
 
@@ -115,7 +115,7 @@ export const RegisterFormScreen: FC<
                 maxLength={100}
               ></InputText>
               <View style={styles.containerTermsBtn}>
-                <View style={styles.containerTerms}>
+                <View style={[utilFlex.flexRow, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
                   <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
                   <View style={styles.containerTermsText}>
                     <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
@@ -167,17 +167,11 @@ const styles = StyleSheet.create({
     paddingTop: spacing[6],
     width: "80%",
   },
-  containerTerms: {
-    alignItems: "flex-start",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginBottom: spacing[3],
-  },
+
   containerTermsBtn: {
     alignSelf: "center",
     display: "flex",
-    width: "85%",
+    width: "100%",
   },
   containerTermsText: {
     display: "flex",

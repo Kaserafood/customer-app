@@ -92,7 +92,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             })
             .finally(() => loadingState.setLoading(false))
         }
-      }, 1500)
+      }, 1000)
     }
     return (
       <Screen preset="scroll">
