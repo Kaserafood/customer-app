@@ -5,7 +5,6 @@ import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import Ripple from "react-native-material-ripple"
-import { useDay } from "../../common/hooks/useDay"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -55,6 +54,11 @@ export interface ModalDeliveryDateProps {
    * Callback on select day
    */
   onSelectDay?: (day: Day) => void
+
+  /**
+   * If the button continue is visible
+   */
+  isVisibleContinue?: boolean
 }
 
 /**
@@ -63,7 +67,7 @@ export interface ModalDeliveryDateProps {
 export const ModalDeliveryDate = observer(function ModalDeliveryDate(
   props: ModalDeliveryDateProps,
 ) {
-  const { style, modal, isAllGet, onSelectDay } = props
+  const { style, modal, isAllGet, onSelectDay = () => {}, isVisibleContinue = true } = props
   const { dayStore, commonStore } = useStores()
 
   useEffect(() => {
@@ -99,15 +103,17 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
               onSelectDay={(day) => onSelectDay(day)}
             ></ListDay>
           </ScrollView>
-          <View style={[styles.containerButton, utilFlex.selfCenter]}>
-            <Button
-              onPress={() => modal.setVisible(false)}
-              style={utilSpacing.mt5}
-              block
-              preset="primary"
-              tx="common.continue"
-            ></Button>
-          </View>
+          {isVisibleContinue && (
+            <View style={[styles.containerButton, utilFlex.selfCenter]}>
+              <Button
+                onPress={() => modal.setVisible(false)}
+                style={utilSpacing.mt5}
+                block
+                preset="primary"
+                tx="common.continue"
+              ></Button>
+            </View>
+          )}
         </View>
       </Modal>
       <DayDeliveryModal modal={modalState}></DayDeliveryModal>

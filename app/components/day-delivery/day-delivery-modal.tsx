@@ -52,7 +52,12 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
             </TouchableOpacity>
           </View>
           <View style={utilSpacing.p4}>
-            <Text preset="bold" tx="modalDeliveryDay.title" style={utilSpacing.mb5}></Text>
+            <Text
+              preset="bold"
+              size="lg"
+              tx="modalDeliveryDay.title"
+              style={utilSpacing.mb5}
+            ></Text>
             <Text tx="modalDeliveryDay.description"></Text>
             <View style={[styles.containerImgModalWhy, utilSpacing.my5]}>
               <AutoImage style={styles.imgModalWhy} source={images.step2}></AutoImage>

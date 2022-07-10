@@ -77,10 +77,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }
 
     const toDetail = (dish: DishModel) => {
+      if (cartStore.hasItems) cartStore.cleanItems()
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
-      cartStore.cleanItems()
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
       navigation.navigate("dishDetail", {
@@ -97,6 +97,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
       async function fetch() {
         commonStore.setVisibleLoading(true)
+        /*
+         * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
+         */
+        if (!__DEV__) {
+          if (cartStore.hasItems) cartStore.cleanItems()
+        }
         await dayStore.getDays(RNLocalize.getTimeZone())
         await Promise.all([
           dishStore.getAll(days[0].date, RNLocalize.getTimeZone(), userStore.userId),
@@ -191,6 +197,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           isAllGet
           modal={modalDeliveryDate}
           onSelectDay={(day) => onChangeDay(day)}
+          isVisibleContinue={false}
         ></ModalDeliveryDate>
         <Loader></Loader>
       </Screen>

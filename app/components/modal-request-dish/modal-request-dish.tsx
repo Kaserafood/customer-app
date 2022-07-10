@@ -99,6 +99,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
           <View style={utilSpacing.mx4}>
             <Text
               preset="bold"
+              size="lg"
               style={[utilSpacing.mt4, utilSpacing.mb2]}
               tx="modalRequestDish.tellUsWhatYouNeed"
             ></Text>

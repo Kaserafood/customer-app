@@ -92,7 +92,12 @@ const Order = (props: { order: OrderOverview }) => {
               caption
               text={`${order.productCount} ${getI18nText("ordersScreen.articles")} - `}
             ></Text>
-            <Price style={styles.price} textStyle={utilText.textGray} amount={order.total}></Price>
+            <Price
+              style={styles.price}
+              currencyCode={order.currencyCode}
+              textStyle={utilText.textGray}
+              amount={order.total}
+            ></Price>
           </View>
 
           <Text caption text={order.status}></Text>

@@ -113,15 +113,15 @@ export const DeliveryDetailScreen: FC<
 
     commonStore.setVisibleLoading(true)
     console.log("Submitted")
-    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
+    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId.toUpperCase()
 
     const order: Order = {
       id: 0,
       customerId: userStore.userId,
-      address: addressStore.current.address,
+      address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
       country: addressStore.current.country,
       city: addressStore.current.city,
-      region: addressStore.current.address,
+      region: addressStore.current.region,
       products: getProducts(),
       priceDelivery: orderStore.priceDelivery,
       metaData: getMetaData(taxId),
@@ -133,8 +133,8 @@ export const DeliveryDetailScreen: FC<
         cardNumber: encrypt(data.number.split(" ").join("")),
         dateExpiry: encrypt(data.expirationDate),
         cvv: encrypt(data.cvv),
-        name: encrypt(data.name),
-        type: encrypt(getCardType(data.number).toLocaleLowerCase()),
+        name: data.name,
+        type: getCardType(data.number).toLocaleLowerCase(),
       },
     }
 
@@ -240,6 +240,7 @@ export const DeliveryDetailScreen: FC<
             preset="card"
             labelTx="deliveryDetailScreen.deliveryNote"
             placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
+            value={addressStore.current.instructionsDelivery}
           ></InputText>
           <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
 
