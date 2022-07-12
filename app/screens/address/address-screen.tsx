@@ -116,7 +116,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             ></Button>
           </View>
         </ScrollView>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </Screen>
     )
   },

@@ -14,7 +14,6 @@ import { AutoImage } from "../auto-image/auto-image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { InputText } from "../input-text/input-text"
-import { Loader } from "../loader/loader"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
 import { useModalRequest } from "./useModalRequest"
@@ -192,7 +191,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
         initialDate={selectedDate}
       ></CalendarPicker>
       <ModalConfirmation></ModalConfirmation>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })

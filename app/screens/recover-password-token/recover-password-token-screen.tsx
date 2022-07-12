@@ -154,7 +154,7 @@ export const RecoverPasswordTokenScreen: FC<
         </FormProvider>
       </ScrollView>
 
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </Screen>
   )
 })

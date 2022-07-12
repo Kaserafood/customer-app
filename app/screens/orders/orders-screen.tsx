@@ -51,7 +51,7 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
           )}
         </ScrollView>
 
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </Screen>
     )
   },

@@ -194,7 +194,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             currentDish.chef.currencyCode,
           )}`}
         ></ButtonFooter>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </Screen>
     )
   },

@@ -84,7 +84,7 @@ export const RecoverPasswordScreen: FC<
           email={methods.getValues("email")}
         ></ModalSendedEmail>
       </Screen>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })

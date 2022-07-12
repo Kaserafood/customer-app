@@ -13,7 +13,6 @@ import {
   DayDelivery,
   Dish,
   EmptyData,
-  Loader,
   Location,
   ModalDeliveryDate,
   ModalRequestDish,
@@ -199,7 +198,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           onSelectDay={(day) => onChangeDay(day)}
           isVisibleContinue={false}
         ></ModalDeliveryDate>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </Screen>
     )
   },

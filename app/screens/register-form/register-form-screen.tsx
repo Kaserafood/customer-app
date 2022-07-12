@@ -154,7 +154,7 @@ export const RegisterFormScreen: FC<
           </View>
         </ScrollView>
       </Screen>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })

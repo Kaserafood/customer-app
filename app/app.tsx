@@ -15,6 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
+import { Loader } from "./components"
 import "./i18n"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -87,6 +88,7 @@ function App() {
                 initialState={initialNavigationState}
                 onStateChange={onNavigationStateChange}
               />
+              <Loader></Loader>
             </GestureHandlerRootView>
 
             <FlashMessage position="top" />

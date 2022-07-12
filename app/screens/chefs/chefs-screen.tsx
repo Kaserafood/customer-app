@@ -9,7 +9,6 @@ import {
   Categories,
   Chip,
   DayDelivery,
-  Loader,
   Location,
   ModalDeliveryDate,
   Screen,
@@ -220,7 +219,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
-        <Loader visible={commonStore.isVisibleLoading}></Loader>
+        {/* <Loader visible={commonStore.isVisibleLoading}></Loader> */}
         <ModalDeliveryDate
           isAllGet
           modal={modalDeliveryDate}

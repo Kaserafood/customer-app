@@ -117,7 +117,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             </View>
           </ScrollView>
         </Screen>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </>
     )
   },

@@ -330,7 +330,7 @@ export const DeliveryDetailScreen: FC<
 
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </Screen>
   )
 })

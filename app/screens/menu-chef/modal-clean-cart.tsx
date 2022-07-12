@@ -29,8 +29,10 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
           tx="menuChefScreen.yesLeave"
           style={[utilSpacing.mb5, utilFlex.selfCenter]}
           onPress={() => onPressLeave()}
+          block
         ></Button>
         <Button
+          block
           preset="white"
           style={[utilSpacing.mb3, utilFlex.selfCenter]}
           tx="menuChefScreen.noLeave"

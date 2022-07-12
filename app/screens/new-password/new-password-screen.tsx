@@ -116,7 +116,7 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
             </View>
           </FormProvider>
         </View>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
         <ModalPasswordChanged
           navigation={navigation}
           toLoginScreen={toLoginScreen}
