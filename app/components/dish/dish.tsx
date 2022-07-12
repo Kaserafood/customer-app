@@ -6,7 +6,7 @@ import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Text } from "../text/text"
 
@@ -104,12 +104,12 @@ export const Dish = observer(function Dish(props: DishProps) {
           </View>
         </View>
         <View style={[styles.column, !visibleChefImage && styles.h120]}>
-          <AutoImage
+          <Image
             style={[styles.imageDish, !visibleChefImage && styles.h100]}
             source={{ uri: dish.image }}
-          ></AutoImage>
+          ></Image>
           {visibleChefImage && (
-            <AutoImage style={styles.imageChef} source={{ uri: dish.chef.image }}></AutoImage>
+            <Image style={styles.imageChef} source={{ uri: dish.chef.image }}></Image>
           )}
         </View>
       </View>

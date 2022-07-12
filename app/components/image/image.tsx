@@ -27,7 +27,7 @@ type ImageProps = DefaultImageProps & {
  * Image import from react-native. Now all images in that file are handled by this
  * component and are web-ready if not explicitly sized in the style property.
  */
-export function AutoImage(props: ImageProps) {
+export function Image(props: ImageProps) {
   const onError = (error: NativeSyntheticEvent<ImageErrorEventData>) => {
     if (error)
       console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)

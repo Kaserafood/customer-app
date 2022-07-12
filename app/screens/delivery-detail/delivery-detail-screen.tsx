@@ -7,12 +7,11 @@ import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-
 import { getUniqueId } from "react-native-device-info"
 import images from "../../assets/images"
 import {
-  AutoImage,
   ButtonFooter,
   Card,
   Header,
+  Image,
   InputText,
-  Loader,
   ModalDeliveryDate,
   PaymentCard,
   Screen,
@@ -279,9 +278,9 @@ export const DeliveryDetailScreen: FC<
               style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
             ></Text>
             <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-              <AutoImage style={styles.imageCard} source={images.cardVisa}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
+              <Image style={styles.imageCard} source={images.cardVisa}></Image>
+              <Image style={styles.imageCard} source={images.cardMastercard}></Image>
+              <Image style={styles.imageCard} source={images.cardAmex}></Image>
             </View>
           </View>
 

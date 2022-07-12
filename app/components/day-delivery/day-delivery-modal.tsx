@@ -6,7 +6,7 @@ import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
 
@@ -48,7 +48,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
         <View style={styles.bodyModal}>
           <View style={styles.containerImgClose}>
             <TouchableOpacity onPress={() => modal.setVisibleWhy(false)} activeOpacity={0.7}>
-              <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
+              <Image style={styles.imgClose} source={images.close}></Image>
             </TouchableOpacity>
           </View>
           <View style={utilSpacing.p4}>
@@ -60,7 +60,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
             ></Text>
             <Text tx="modalDeliveryDay.description"></Text>
             <View style={[styles.containerImgModalWhy, utilSpacing.my5]}>
-              <AutoImage style={styles.imgModalWhy} source={images.step2}></AutoImage>
+              <Image style={styles.imgModalWhy} source={images.step2}></Image>
             </View>
 
             <Button

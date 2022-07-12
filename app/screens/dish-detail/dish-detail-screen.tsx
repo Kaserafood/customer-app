@@ -8,14 +8,13 @@ import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/FontAwesome"
 import {
   Addons,
-  AutoImage,
   ButtonFooter,
   DishChef,
   getMetaData,
   Header,
+  Image,
   InputText,
   isValidAddons,
-  Loader,
   Price,
   Screen,
   Text,
@@ -115,7 +114,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
         <ScrollView ref={scrollRef}>
           <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
-            <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
+            <Image style={styles.image} source={{ uri: currentDish.image }}></Image>
             <View style={[utilFlex.flexRow, utilSpacing.my3]}>
               <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
             </View>

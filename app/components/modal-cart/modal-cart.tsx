@@ -10,7 +10,7 @@ import { MetaDataCart } from "../../models/cart-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { Price } from "../price/price"
@@ -64,12 +64,12 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       <View style={styles.content}>
         <View style={styles.containerImgClose}>
           <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-            <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
+            <Image style={styles.imgClose} source={images.close}></Image>
           </TouchableOpacity>
         </View>
         <View style={styles.body}>
           <View style={[utilFlex.flexRow, utilSpacing.mb4, utilSpacing.ml4]}>
-            <AutoImage source={{ uri: chef.image }} style={styles.imageChef}></AutoImage>
+            <Image source={{ uri: chef.image }} style={styles.imageChef}></Image>
             <Text preset="bold" style={utilFlex.flex1} text={chef.name}></Text>
           </View>
 
@@ -103,7 +103,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                   style={[utilSpacing.p2, styles.containerIconRemove]}
                   onPress={() => cartStore.removeItem(index)}
                 >
-                  <AutoImage style={[styles.iconRemove]} source={images.close}></AutoImage>
+                  <Image style={[styles.iconRemove]} source={images.close}></Image>
                 </Ripple>
               </Card>
             ))}

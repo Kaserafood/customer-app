@@ -10,7 +10,7 @@ import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { AutoImage, Card, Icon, Text } from ".."
+import { Card, Icon, Image, Text } from ".."
 import images from "../../assets/images"
 import { useLocation } from "../../common/hooks/useLocation"
 import { Address, useStores } from "../../models"
@@ -133,7 +133,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
               }}
               activeOpacity={0.7}
             >
-              <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
+              <Image style={styles.imgClose} source={images.close}></Image>
             </TouchableOpacity>
           </View>
           <View>

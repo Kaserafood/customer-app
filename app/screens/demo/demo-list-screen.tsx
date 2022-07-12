@@ -1,11 +1,11 @@
-import React, { useEffect, FC } from "react"
-import { FlatList, TextStyle, View, ViewStyle, ImageStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import { Header, Screen, Text, AutoImage as Image, GradientBackground } from "../../components"
-import { color, spacing } from "../../theme"
+import React, { FC, useEffect } from "react"
+import { FlatList, ImageStyle, TextStyle, View, ViewStyle } from "react-native"
+import { GradientBackground, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
+import { color, spacing } from "../../theme"
 
 const FULL: ViewStyle = {
   flex: 1,

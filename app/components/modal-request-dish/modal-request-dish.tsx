@@ -10,7 +10,7 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
 import { ModalStateHandler } from "../../utils/modalState"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { InputText } from "../input-text/input-text"
@@ -243,11 +243,11 @@ const ModalConfirmation = () => {
           style={utilSpacing.mb5}
         ></Text>
 
-        <AutoImage
+        <Image
           resizeMode="contain"
           style={[styles.imgNotFound, utilSpacing.mb5, utilSpacing.ml2]}
           source={images.soup}
-        ></AutoImage>
+        ></Image>
         <Button
           tx="modalRequestDish.continue"
           style={styles.btnContinue}

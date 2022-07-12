@@ -6,7 +6,7 @@ import ModalRN from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 
 interface ModalState {
   isVisible: boolean
@@ -131,7 +131,7 @@ export const Modal = observer(function Modal(props: ModalProperties) {
           {isVisibleIconClose && (
             <View style={styles.containerImgClose}>
               <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-                <AutoImage style={styles.imgClose} source={iconClose ?? images.close}></AutoImage>
+                <Image style={styles.imgClose} source={iconClose ?? images.close}></Image>
               </TouchableOpacity>
             </View>
           )}

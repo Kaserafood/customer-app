@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { AutoImage, Card, Header, Loader, Price, Screen, Text } from "../../components"
+import { Card, Header, Image, Price, Screen, Text } from "../../components"
 import { OrderOverview, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -82,7 +82,7 @@ const Order = (props: { order: OrderOverview }) => {
     <Card style={[utilSpacing.mx4, utilSpacing.mt4, utilSpacing.p4]}>
       <View style={utilFlex.flexRow}>
         <View>
-          <AutoImage source={{ uri: order.chefImage }} style={styles.chefImage}></AutoImage>
+          <Image source={{ uri: order.chefImage }} style={styles.chefImage}></Image>
           <Text caption style={[utilFlex.selfCenter, utilSpacing.mt3]} text={`#${order.id}`}></Text>
         </View>
         <View style={utilSpacing.ml3}>

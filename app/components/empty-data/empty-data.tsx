@@ -4,7 +4,7 @@ import { ImageRequireSource, StyleProp, StyleSheet, View, ViewStyle } from "reac
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
 
@@ -48,11 +48,7 @@ export const EmptyData = observer(function EmptyData(props: EmptyDataProps) {
       <View style={style}>
         {lengthData === 0 && !commonStore.isVisibleLoading && userStore.userId > 0 && (
           <View>
-            <AutoImage
-              resizeMode="contain"
-              style={styles.imgNotFound}
-              source={images.soup}
-            ></AutoImage>
+            <Image resizeMode="contain" style={styles.imgNotFound} source={images.soup}></Image>
             {message ? (
               <Text style={styles.textNotFound} text={message}></Text>
             ) : (

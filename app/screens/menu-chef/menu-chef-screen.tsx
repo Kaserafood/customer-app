@@ -5,11 +5,11 @@ import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import {
-  AutoImage,
   ButtonFooter,
   Dish,
   EmptyData,
   Header,
+  Image,
   ModalCart,
   ModalRequestDish,
   Price,
@@ -128,7 +128,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           <View style={[styles.card, { ...SHADOW }]}>
             <View style={utilFlex.flexRow}>
               <View>
-                <AutoImage style={styles.imageChef} source={{ uri: image }}></AutoImage>
+                <Image style={styles.imageChef} source={{ uri: image }}></Image>
                 <Text size="lg" style={utilSpacing.mt4} preset="bold" text={name}></Text>
               </View>
               <View style={utilFlex.flex1}>
