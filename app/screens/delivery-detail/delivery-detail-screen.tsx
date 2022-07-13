@@ -10,6 +10,7 @@ import {
   ButtonFooter,
   Card,
   Header,
+  Icon,
   Image,
   InputText,
   ModalDeliveryDate,
@@ -231,6 +232,7 @@ export const DeliveryDetailScreen: FC<
               placeholderTx="deliveryDetailScreen.addressPlaceholder"
               editable={false}
               value={`${addressStore.current.name} - ${addressStore.current.address}`}
+              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
 
@@ -251,6 +253,7 @@ export const DeliveryDetailScreen: FC<
               placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
               editable={false}
               value={dayStore.currentDay.dayName}
+              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
 

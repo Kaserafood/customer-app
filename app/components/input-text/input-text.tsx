@@ -71,6 +71,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     preset = "normal",
     mask,
     counter,
+    iconRight,
     ...rest
   } = props
 
@@ -132,6 +133,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             mask={mask}
             {...rest}
           />
+          {iconRight && <View style={styles.iconRightCard}>{iconRight}</View>}
         </View>
 
         <ErrorMessage name={name}></ErrorMessage>
@@ -174,5 +176,11 @@ const styles = StyleSheet.create({
     position: "relative",
     textAlign: "right",
     width: "100%",
+  },
+  iconRightCard: {
+    position: "absolute",
+    right: 5,
+    backgroundColor: color.background,
+    bottom: 16,
   },
 })
