@@ -246,7 +246,7 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.deliveryDate"
               placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
               editable={false}
-              value={dayStore.currentDay.dayNameLong}
+              value={getNameDayDelivery()}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>

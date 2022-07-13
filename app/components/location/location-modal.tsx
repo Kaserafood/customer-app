@@ -225,7 +225,12 @@ const AddressItem = observer((props: { address: Address }) => {
       onPress={() => updateAddressId(address.id)}
     >
       <View style={[utilFlex.flexRow, utilSpacing.py3]}>
-        <View style={utilFlex.flex1}>
+        {addressStore.current.id === address.id && (
+          <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+            <IconRN name="check-circle" size={30} color={color.primary} />
+          </Animated.View>
+        )}
+        <View style={[utilFlex.flex1, utilSpacing.ml3]}>
           <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
           <Text
             size="sm"
@@ -234,11 +239,6 @@ const AddressItem = observer((props: { address: Address }) => {
             text={address.address}
           ></Text>
         </View>
-        {addressStore.current.id === address.id && (
-          <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-            <IconRN name="check-circle" size={30} color={color.primary} />
-          </Animated.View>
-        )}
       </View>
     </Ripple>
   )
