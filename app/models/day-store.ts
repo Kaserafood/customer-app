@@ -3,6 +3,7 @@ import { Api } from "../services/api"
 
 const dayStore = types.model("DayStore").props({
   dayName: types.maybe(types.string),
+  dayNameLong: types.maybe(types.string),
   date: types.maybe(types.string),
   active: types.maybe(types.boolean),
 })
@@ -26,7 +27,6 @@ export const DayStoreModel = types
   .actions((self) => ({
     getDays: flow(function* getDays(timeZone: string) {
       const api = new Api()
-
       const result = yield api.getDaysDelivery(timeZone)
 
       if (result && result.kind === "ok") {

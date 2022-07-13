@@ -28,6 +28,7 @@ import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
 import { showMessageError } from "../../utils/messages"
+import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
@@ -48,20 +49,8 @@ class ModalState {
   }
 }
 
-class ModalDelivery {
-  isVisible = false
-
-  setVisible(state: boolean) {
-    this.isVisible = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
 const modalState = new ModalState()
-const modalDelivery = new ModalDelivery()
+const modalDelivery = new ModalStateHandler()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
@@ -214,6 +203,11 @@ export const DeliveryDetailScreen: FC<
     return data
   }
 
+  const getNameDayDelivery = (): string => {
+    if (dayStore.currentDay.dayName.includes(" ")) return dayStore.currentDay.dayNameLong
+    return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
+  }
+
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -252,7 +246,7 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.deliveryDate"
               placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
               editable={false}
-              value={dayStore.currentDay.dayName}
+              value={dayStore.currentDay.dayNameLong}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
@@ -309,7 +303,7 @@ export const DeliveryDetailScreen: FC<
             <Text
               preset="semiBold"
               caption
-              text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
+              text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
               style={utilSpacing.mb6}
             ></Text>
           </View>
@@ -332,7 +326,6 @@ export const DeliveryDetailScreen: FC<
 
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
-      {/* <Loader></Loader> */}
     </Screen>
   )
 })

@@ -207,9 +207,8 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             >
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
               <Chip
-                active
                 onPress={() => modalDeliveryDate.setVisible(true)}
-                text={dayStore.currentDay.dayName}
+                text={dayStore.currentDay.dayNameLong}
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
@@ -219,7 +218,6 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         </ScrollView>
         <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
-        {/* <Loader visible={commonStore.isVisibleLoading}></Loader> */}
         <ModalDeliveryDate
           isAllGet
           modal={modalDeliveryDate}

@@ -75,7 +75,6 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
 
     async function fetchData() {
       await dayStore.getDaysByChef(RNLocalize.getTimeZone(), commonStore.currentChefId)
-      __DEV__ && console.log(dayStore.daysByChef)
     }
     fetchData()
   }, [])
@@ -140,8 +139,16 @@ const ListDay = observer(
 
     return (
       <View>
-        {days.map((day) => (
-          <Card style={[utilSpacing.mt4, utilSpacing.mx3, utilSpacing.p0]} key={day.date}>
+        {days.map((day, index) => (
+          <Card
+            style={[
+              utilSpacing.mb4,
+              utilSpacing.mx3,
+              utilSpacing.p0,
+              index === 0 && utilSpacing.mt3,
+            ]}
+            key={day.date}
+          >
             <Ripple
               rippleOpacity={0.2}
               rippleDuration={400}
@@ -152,7 +159,7 @@ const ListDay = observer(
                 rounded
                 value={day.date === dayStore.currentDay.date}
                 preset="medium"
-                text={day.dayName}
+                text={day.dayNameLong}
               ></Checkbox>
             </Ripple>
           </Card>

@@ -175,7 +175,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
               <Chip
                 onPress={() => modalDeliveryDate.setVisible(true)}
-                text={currentDay.dayName}
+                text={currentDay.dayNameLong}
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
@@ -197,7 +197,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           onSelectDay={(day) => onChangeDay(day)}
           isVisibleContinue={false}
         ></ModalDeliveryDate>
-        {/* <Loader></Loader> */}
       </Screen>
     )
   },
