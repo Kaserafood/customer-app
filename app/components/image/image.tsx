@@ -6,6 +6,7 @@ import {
   ImageURISource,
   NativeSyntheticEvent,
   StyleProp,
+  StyleSheet,
 } from "react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
 
@@ -35,13 +36,14 @@ export function Image(props: ImageProps) {
   }
 
   if (props.source?.uri?.length > 0) {
+    const style = [styles.image, props.style]
     return (
       <FastImage
         source={{
           uri: props.source.uri,
           priority: FastImage.priority.normal,
         }}
-        style={props.style}
+        style={style}
         onError={() => onError(null)}
       />
     )
@@ -51,3 +53,9 @@ export function Image(props: ImageProps) {
 
   return null
 }
+
+const styles = StyleSheet.create({
+  image: {
+    // backgroundColor: "#eee",
+  },
+})

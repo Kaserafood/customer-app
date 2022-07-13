@@ -43,7 +43,7 @@ export interface DishProps {
 }
 
 /**
- * Describe your component here
+ * Component to display a dish
  */
 export const Dish = observer(function Dish(props: DishProps) {
   const {
@@ -68,7 +68,7 @@ export const Dish = observer(function Dish(props: DishProps) {
           <View style={utilFlex.flex1}>
             <Text
               text={dish.title}
-              style={utilSpacing.mb2}
+              style={utilSpacing.mb1}
               numberOfLines={2}
               preset="semiBold"
             ></Text>
@@ -81,7 +81,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             ></Text>
             {visibleChefImage && (
               <Text
-                style={[styles.chefDish, utilSpacing.mt4, utilSpacing.mb2]}
+                style={[styles.chefDish, utilSpacing.mb2]}
                 size="sm"
                 text={dish.chef.name}
               ></Text>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing[0],
   },
   column: {
-    height: 155,
+    height: 125,
   },
   containerTextDish: {
     flex: 1,
@@ -132,16 +132,16 @@ const styles = StyleSheet.create({
   },
 
   h100: {
-    height: 120,
+    height: 105,
   },
   h120: {
-    height: 125,
+    height: 110,
   },
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: 16,
     borderWidth: 1,
-    bottom: 15,
+    bottom: 0,
     height: 45,
     position: "absolute",
     right: spacing[1],
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   },
   imageDish: {
     borderRadius: 8,
-    height: 114,
-    width: 160,
+    height: 100,
+    width: 140,
   },
 })
