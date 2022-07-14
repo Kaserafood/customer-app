@@ -68,4 +68,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Icon to display on the right side of the input
    */
   iconRight?: React.ReactElement
+
+  /**
+   * Required flag
+   */
+  required?: boolean
 }

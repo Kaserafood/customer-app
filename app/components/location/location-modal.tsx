@@ -225,10 +225,12 @@ const AddressItem = observer((props: { address: Address }) => {
       onPress={() => updateAddressId(address.id)}
     >
       <View style={[utilFlex.flexRow, utilSpacing.py3]}>
-        {addressStore.current.id === address.id && (
+        {addressStore.current.id === address.id ? (
           <Animated.View entering={ZoomIn} exiting={ZoomOut}>
             <IconRN name="check-circle" size={30} color={color.primary} />
           </Animated.View>
+        ) : (
+          <View style={styles.w30}></View>
         )}
         <View style={[utilFlex.flex1, utilSpacing.ml3]}>
           <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
@@ -285,5 +287,8 @@ const styles = StyleSheet.create({
   imgClose: {
     height: 20,
     width: 20,
+  },
+  w30: {
+    width: 30,
   },
 })

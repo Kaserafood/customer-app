@@ -7,12 +7,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave: () => void }) => {
   const { modalState, onPressLeave } = props
   return (
-    <Modal
-      modal={modalState}
-      style={styles.modal}
-      isVisibleIconClose={false}
-      hideOnBackdropPress={false}
-    >
+    <Modal modal={modalState} style={styles.modal}>
       <View style={utilSpacing.p4}>
         <Text
           preset="bold"
