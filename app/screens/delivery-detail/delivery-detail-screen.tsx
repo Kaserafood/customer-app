@@ -225,7 +225,7 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.address"
               placeholderTx="deliveryDetailScreen.addressPlaceholder"
               editable={false}
-              value={`${addressStore.current.name} - ${addressStore.current.address}`}
+              value={`${addressStore.current.name ?? ""} - ${addressStore.current.address}`}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
