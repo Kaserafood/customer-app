@@ -55,4 +55,7 @@ export const AddressModelStore = types
     setCurrent(address: Address) {
       self.current = address
     },
+    setAddresses(addresses: Address[]) {
+      self.addresses.replace(addresses)
+    },
   }))

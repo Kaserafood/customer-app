@@ -3,13 +3,14 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageInfo } from "../../utils/messages"
 
@@ -115,8 +116,15 @@ export const RegisterFormScreen: FC<
                 maxLength={100}
               ></InputText>
               <View style={styles.containerTermsBtn}>
-                <View style={styles.containerTerms}>
-                  <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
+                <View style={[utilFlex.flexRow, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
+                  <TouchableOpacity
+                    onPress={() => setTerms(!terms)}
+                    activeOpacity={1}
+                    style={[utilSpacing.p4]}
+                  >
+                    <Checkbox value={terms}></Checkbox>
+                  </TouchableOpacity>
+
                   <View style={styles.containerTermsText}>
                     <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
                     <Text
@@ -146,7 +154,7 @@ export const RegisterFormScreen: FC<
           </View>
         </ScrollView>
       </Screen>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })
@@ -167,17 +175,11 @@ const styles = StyleSheet.create({
     paddingTop: spacing[6],
     width: "80%",
   },
-  containerTerms: {
-    alignItems: "flex-start",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginBottom: spacing[3],
-  },
+
   containerTermsBtn: {
     alignSelf: "center",
     display: "flex",
-    width: "85%",
+    width: "100%",
   },
   containerTermsText: {
     display: "flex",

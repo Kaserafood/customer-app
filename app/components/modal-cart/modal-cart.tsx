@@ -10,7 +10,7 @@ import { MetaDataCart } from "../../models/cart-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { Price } from "../price/price"
@@ -64,12 +64,12 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       <View style={styles.content}>
         <View style={styles.containerImgClose}>
           <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-            <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
+            <Image style={styles.imgClose} source={images.close}></Image>
           </TouchableOpacity>
         </View>
         <View style={styles.body}>
           <View style={[utilFlex.flexRow, utilSpacing.mb4, utilSpacing.ml4]}>
-            <AutoImage source={{ uri: chef.image }} style={styles.imageChef}></AutoImage>
+            <Image source={{ uri: chef.image }} style={styles.imageChef}></Image>
             <Text preset="bold" style={utilFlex.flex1} text={chef.name}></Text>
           </View>
 
@@ -82,7 +82,9 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                   </View>
                   <View style={utilFlex.flex1}>
                     <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
-                    <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
+                    {item.metaData.length > 0 && (
+                      <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
+                    )}
                   </View>
                 </View>
 
@@ -96,12 +98,12 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                 </View>
                 <Ripple
                   rippleContainerBorderRadius={100}
-                  rippleOpacity={0.2}
+                  rippleOpacity={0.1}
                   rippleDuration={400}
                   style={[utilSpacing.p2, styles.containerIconRemove]}
                   onPress={() => cartStore.removeItem(index)}
                 >
-                  <AutoImage style={styles.iconRemove} source={images.close}></AutoImage>
+                  <Image style={[styles.iconRemove]} source={images.close}></Image>
                 </Ripple>
               </Card>
             ))}
@@ -132,8 +134,9 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
 
 export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
   const { metaDataCart } = props
+  console.log(JSON.stringify(metaDataCart))
   return (
-    <View style={utilSpacing.mt2}>
+    <View style={[utilSpacing.mt2, { backgroundColor: "red" }]}>
       {metaDataCart.map((item) => (
         <View key={item.key} style={utilFlex.flexRow}>
           {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     bottom: 0,
     position: "relative",
-    width: "90%",
+    width: "97%",
   },
   button: {
     alignSelf: "center",
@@ -179,8 +182,8 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingLeft: 16,
     position: "absolute",
-    right: 2,
-    top: 2,
+    right: 4,
+    top: 4,
   },
   containerImgClose: {
     alignItems: "flex-end",

@@ -21,7 +21,7 @@
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
-    "byChefIndependently": "Por chef independientes",
+    "byChefIndependently": "Por chefs independientes",
     "register": "Regístrate",
     "login": "Iniciar sesión"
   },
@@ -43,7 +43,7 @@
     "emailRequired": "Debes ingresar tu correo electrónico",
     "passwordRequired": "Debes ingresar tu contraseña",
     "phoneRequired": "Debes ingresar tu número de teléfono",
-    "emailFormat": "Debe tener el formato : correo@email.com",
+    "emailFormat": "Debes ingresar un correo electrónico válido",
     "acceptsTerms": "Debes aceptar los términos y condiciones",
     "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
     "passwordMinLength": "La contraseña debe tener al menos 4 caracteres"
@@ -99,11 +99,99 @@
 
     "text22": "Tienes el derecho, autoridad y capacidad para entrar en este Acuerdo y regirte por los términos y condiciones de este Acuerdo, y que vas a regirte por este Acuerdo;",
 
-    "text23": "Has leído, entendido y aceptado ser afecto a los Términos y Condiciones y la Política de Privacidad;"
+    "text23": "Has leído, entendido y aceptado ser afecto a los Términos y Condiciones y la Política de Privacidad;",
+
+    "text24": "Que respetarás la privacidad (incluyendo pero no limitada a la vida privada, hogareña o familiar) y los derechos de protección de los usuarios con los que te comunicas a través de la plataforma de Kasera;",
+
+    "text25": "Que vas a cumplir tus compromisos hechos a otros usuarios, vas a comunicarte claramente y respetuosamente, proveerás o aceptarás Comidas en el horario acordado y que solo utilizarás métodos de pagos seleccionados o aprobados por Kasera para hacer o recibir pagos a a través de el Servicio;",
+
+    "text26": "Que vas actuar profesional y responsablemente en tus interacciones con otros usuarios;",
+
+    "text27": "Que utilizarás tu nombre o nombre real de tu negocio en tu perfil; ",
+
+    "text28": "Al usar o acceder el Servicio, incluyendo cuando preparas, empacas, entregues, proveas o recibas Comidas, vas a actuar en cumplimiento en buena fé de todas las leyes y regulaciones aplicables, locales, estatales, departamentales y nacionales;",
+
+    "text29": "Que no tienes ninguna motivación, estatus o interés del que Kasera necesite o desee saber en conexión a El Servicio, incluyendo pero no limitado a, si estás usando o vas a utilizar el Servicio para cualquier propósito periodístico, académico, investigador, o ilegal.",
+    "text30": "Los Vendedores adicionalmente declaran y garantizan qué:",
+    "text31": "",
+    "text32": "Al vender a través de el Servicio, estás operando como un propietario único, pequeño contribuyente, sociedad, sociedad anónima, sociedad limitada, corporación o cualquier otra entidad fiscal o empresarial;",
+    "text33": "Que tienes un negocio independientemente establecido vendiendo bienes similares a los bienes que vendes a Clientes a través del Servicio de Kasera y que mantienes una clientela independiente;",
+    "text34": "Que tienes el derecho irrestricto a generar ingresos en la jurisdicción donde venderás Comida;",
+    "text35": "Si vendes Comida en una jurisdicción que requiere que tengas alguna(s) licencia(s) y/o registro fiscal, garantizas que tienes la(s) licencia(s) requeridas y/o el registro tributario.",
+    "text36": "Tú eres responsable por identificar y obtener cualquier licencia, permiso o registro antes de vender comida a través de el Servicio.",
+    "text37": "Cuentas con cualquiera y todos los tipos de seguros requeridos para operar tu negocio y vender comida a través de el Servicio.",
+    "text38": "Que usarás tu nombre o el nombre real de tu negocio para vender comida a través de el Servicio.",
+    "text39": "Vas a honrar tus compromisos a otros usuarios en la plataforma, incluyendo cumplir con las órdenes de productos a tiempo según lo acordado con el Cliente, proveyendo comida de alta calidad y en tiempo a los Clientes.",
+    "text40": "Solo venderás comida de forma segura y de acuerdo a todas las leyes aplicables.",
+    "text41": "Para cada producto que vendas, indicarás todos los ingredientes que contiene.",
+    "text42": "Solo cocinarás en una ubicación en donde tengas permiso legal y de Kasera para cocinar.",
+    "text43": "Aceptas que podemos (pero no necesariamente será así) obtener información acerca de ti, incluyendo tu record policiaco y aceptas proveer cualquier otra autorización necesaria para facilitar nuestro acceso a esos registros mientras dure el Acuerdo;",
+    "text44": "Vas a pagar todos los impuestos aplicables a tus ingresos por la venta de Comidas en la jurisdicción donde operes. (Kasera podrá retener impuestos por tus ventas de alimentos en algunas situaciones).",
+    "text45": "Instalaciones de Vendedores: Adicionalmente a las restricciones de conducta anteriormente mencionadas, tu declaras y garantizas que tu uso de los Servicios para mercadear, publicitar y vender Comidas, no viola ninguna ley aplicable o regulación: Para vendedores en California: incluyendo pero no limitado al Retail Food Code (extraído de el código de salud y seguridad de California). Declaras y garantizas que preparas todas tus Comidas a Clientes utilizando una adecuada i) “Food Facility” (según lo definido en el Section 113789 of the California Retail Food Code); ii) “Food Processing Establishment” (según lo definido en el Section 111955 of the California Retail Food Code, y modificaciones); o (iii) “Cottage Food Operation” (según lo definido en el Section 111955 of the California Retail Food Code, y modificaciones). Si eres un Vendedor preparando y proveyendo Comidas desde una instalación de comida que clasifique únicamente como una “Microentreprise Home Kitchen”  (Según lo definido en la Section 113825 del California Retail Food Code, y modificaciones), tu declaras y garantizas en cumples con los términos del ",
+    "text46": "",
+    "text47": "Chapter 11.6 of the California Retail Food Code, y modificaciones, que requiere. Y para vendedores en Guatemala, incluyendo pero no limitado,  declaras y garantizas que cumples con los términos establecidos en el Decreto número 90-97 del Congreso de la República de Guatemala, los acuerdos gubernativos 249-2002, 969-99, 002-99, 72-2003, 8-2020, 787-97, las actas municipales 68-2019.4, 16.01.2001 o cualquier regulación pertinente al manejo de alimentos y venta de comida.",
+    "text48": "",
+    "text49": " ",
+    "text50": "",
+    "text51": "Ingredientes y alérgenos: Los Vendedores deberán proveer una lista completa de los ingredientes contenidos o utilizados en cada Comida posteada y/o vendida en el Servicio, incluyendo alérgenos conocidos. Kasera no es responsable por la exactitud de la información y etiqueta de Comidas entregadas a Clientes. Los Clientes deben ser alertados que las Comidas pueden ser preparadas en instalaciones usando el mismo equipo usado para preparar Comidas que contienen alérgenos, aún si el alérgeno no está contenido en la receta. Kasera no podrá ser demandada por ninguna enfermedad, problema de salud u otros daños que puedan resultar de cualquier orden o el consumo de cualquier de las Comidas o artículos relacionados comprados mediante el Servicio.",
+    "text52": "",
+    "text53": " ",
+    "text54": "",
+    "text55": "Seguros para Vendedores: Kasera no mantiene seguros por responsabilidades o demandas que puedan surgir de tu uso del Servicio tanto como Cliente o como Vendedor. Si eres un Vendedor, Kasera recomienda que obtengas un seguro adecuado para cubrir la operación de tu instalación de comida y la preparación y entrega de Comidas. ",
+    "text56": "Reglas para reseñas: En la medida que seas un cliente, Kasera podrá darte permisos para subir contenido y dejar reseñas relacionadas a tus compras de Comidas. Kasera podrá aceptar, rechazar o remover reseñas o cualquier contenido asociado de forma unilateral. Kasera no tiene ninguna obligación de moderar o borrar reseñas o contenido asociado, aún si alguien considera que la reseña es cuestionable o inexacta. Los clientes que publiquen reseñas deberán cumplir con los siguientes criterios: 1) deberán tener experiencia personal con el producto/persona del que escriben la reseña; 2) los reviews no deberán contener lenguaje ofensivo, de odio, profano, racista, discriminatorio, sexual, religioso, referente a actividades ilegales o político; 3) quienes hagan reseñas no pueden estar afiliados a competidores si publican reseñas negativas; 4) quienes hagan reseñas no deberán hacer ninguna conclusión sobre la legalidad de una conducta; y 5) quienes hagan reseñas no podrán postear declaraciones falsas u organizar campañas para motivar a otros a postear reseñas positivas o negativas. Las reseñas no son avaladas por Kasera y no representan el punto de vista de Kasera o cualquier afiliado o socio. Kasera no asume responsabilidad por ninguna reseña o sus contenidos, o las responsabilidades o pérdidas que se produzcan como resultado de una reseña. Cualquier reseña que publiques será considerada como contenido de usuarios (según lo definido abajo).",
+    "text57": "",
+    "text58": "Riesgo de mercado: Kasera no está afiliado o avalada por ningún Vendedor, restaurante u otros servicios de preparación de alimentos disponibles a través del Servicio. Más allá de su capacidad como mercado y plataforma tecnológica, Kasera no actúa como Cliente, Vendedor (o afiliado para un Cliente o Vendedor) o corredor (corretaje) respecto a ninguna transacción. Debes asumir que existen riesgos al lidiar con usuarios (incluyendo aquellos que puedan estar actuando en mala fé) y que todos los riesgos son tuyos y no de Kasera. Te recomendamos utilizados las diferentes funciones de el Servicio (perfiles, opciones de Comidas y reseñas) para ayudarte a evaluar al usuario con el que estás lidiando.",
+    "text59": "",
+    "text60": "Los Vendedores como dueños de negocios independientes / contratistas independientes: Los usuarios del Servicio actuando en capacidad de Vendedores lo hacen en su capacidad personal como negocios y contratistas independientes y no como empleados de Kasera. Como Vendedor, aceptas qué: i) eres un dueño o miembro de un negocio independiente y no un empleado de Kasera; ii) que eres el único responsable de determinar los medios y la manera en que crearás los productos que vendes a través de el Sitio Web; iii) Estos Términos y Condiciones no crean una asociación, empresa conjunta, sociedad, franquicia o relación de empleado/empleador entre tú y Kasera, y entre tú y un Cliente; iv) No te describirás como un empleado o agente de Kasera ante ningún cliente; v) No tendrás derecho a ninguno de los beneficios que Kasera provea a sus empleados, incluyendo, pero no limitados a: vacaciones pagas, baja por enfermedad, programas de seguros, seguros de salud grupales o beneficios de retiro; y vi) no eres elegible para cobrar beneficios o exigir pago o remuneración alguna en caso de una lesión. Como vendedor, nunca abordarás a un Cliente de manera que pueda comprometer tu estatus como un negocio independiente.",
+
+    "text61": "Por favor contáctanos al correo kaserafood@gmail.com para reportar cualquier violación a los Términos y Condiciones, o sobre cualquier duda que puedas tener sobre los mismos."
   },
   "privacyPolicy": {
-    "title": "Política de privacidad",
-    "text1": "What is Lorem Ipsum?Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Why do we use it?It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like). Where does it come from?Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.purpose (injected humour and the like). Where does it come from?Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of \"de Finibus Bonorum et Malorum\" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, \"Lorem ipsum dolor sit amet..\", comes from a line in section 1.10.32. The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from \"de Finibus Bonorum et Malorum\" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. "
+    "title": "Política de Privacidad",
+    "text1": "¿Quienes somos?",
+    "text2": "Puedes encontrar información sobre Kasera en la página web   www.kaserafood.com",
+    "text3": "",
+    "text4": "Comentarios",
+    "text5": "Cuando los visitantes dejan comentarios en el sitio web, recolectamos la información mostrada en los comentarios, así como la dirección IP del visitando y otra información del navegador para apoyar a la detección de spam. ",
+    "text6": "",
+    "text7": "Medios",
+    "text8": "Si subes imágenes al sitio web, deberás evitar imágenes que tengan información de tu ubicación. (EXIF GPS) Los visitantes del sitio web pueden descargar y extraer cualquier información sobre tu ubicación del sitio web.",
+    "text9": "",
+    "text10": "Cookies",
+    "text11": "Si dejas un comentario en nuestro sitio podrás optar por grabar tu correo y nombre en las “cookies”. Esto es por tu conveniencia, para que no debas volver a llenar la información otra vez cuando dejes otro comentario. Estas “cookies” durarán 1 año. ",
+    "text12": "",
+    "text13": "Si visitas nuestra página de inicio, crearemos una “cookie” temporal para determinar si tu navegador acepta “cookies”. Esta “cookie” no contiene información personal y es desechada cuando cierras tu navegador.",
+    "text14": "",
+    "text15": "Cuando inicias sesión, creamos varias “cookies” para grabar tu información de inicio y tus preferencias visuales. Las “cookies” de inicio de sesión duran 2 días y las “cookies” de tus preferencias visuales duran 1 año. Si seleccionas “recuérdame”, tu inicio de sesión durará por 2 semanas. Si cierras la sesión de tu cuenta, las “cookies” se borrarán.",
+    "text16": "",
+    "text17": "Si editas o publicas una receta o un artículo una “cookie” adicional será grabada en tu navegador. Esta “cookie” no contiene información personal y simplemente indica el “ID” de la publicación que editaste y expira en 1 día.",
+    "text18": "",
+    "text19": "Contenido insertado desde otros sitios web",
+    "text20": "Artículos en este sitio web pueden incluir contenido insertado (por ejemplo, videos, imágenes, artículos, etc.) El contenido insertado de otros sitios web se comporta de la misma exacta manera a que si el visitante estuviese visitando el otro sitio web.",
+    "text21": "",
+    "text22": "Estos sitios pueden recolectar información acerca de ti, usar “cookies”, insertar otros servicios de rastreo, monitorear tu interacción con el contenido insertado, incluyendo, rastrear tu interacción con el contenido insertado si tienes una cuenta o tienes una sesión iniciada en ese sitio web.",
+    "text23": "",
+    "text24": "¿Con quién compartimos tu información?",
+    "text25": "Tu información será compartida con proveedores estratégicos de Kasera para poder cumplir con el funcionamiento normal de la plataforma. Estos proveedores, incluyen, pero no están limitados a: proveedores de servicios de entrega, instituciones financieras, pasarelas de pago, servicios de marketing y otros proveedores de servicios de información. ",
+    "text26": "",
+    "text27": "Toda tu información vivirá en servidores de plataformas como Google Cloud o Amazon Web Services.",
+    "text28": "",
+    "text29": "Kasera hará todo lo posible para proteger tu información utilizando tecnologías de encriptación razonables, así como limitando el acceso físico sin autorización a la misma. También reconocemos que ningún sistema es perfecto por lo que no podemos garantizar al 100% que la información nunca será verá comprometida. Si acaso existiera un compromiso a tu información Kasera se compromete a investigar y tomar las acciones legales pertinentes, así como notificarte si tu información se viese afectada.",
+    "text30": "",
+    "text31": "¿Por cuánto tiempo retenemos tu información? ",
+    "text32": "Para usuarios que se registran en nuestra plataforma, almacenamos la información personal que provean a su perfil de usuario. Todos los usuarios pueden ver, editar o borrar su información personal en cualquier momento. (A excepción de su usuario). Los administradores del sitio también podrán ver y borrar esa información.",
+    "text33": "",
+    "text34": "¿Qué derechos tienes sobre tu información?",
+    "text35": "Si tienes una cuenta en esta plataforma, o has dejado comentarios, pueden solicitar que te enviemos un archivo exportado de la información personal que almacenamos sobre ti, incluyendo cualquier información que nos hayas proveído. También podrás solicitar borrar cualquier información personal que guardemos sobre ti. Esto no incluye cualquier información que estamos obligados a guardar para fines administrativos, legales o de seguridad. ",
+    "text36": "",
+    "text37": "¿A dónde enviamos tu información?",
+    "text38": " Tu información podrá ser enviada a proveedores de servicios independientes y siempre haremos el esfuerzo más razonable por mantener una lista actualizada y publicada de estos proveedores. ",
+    "text39": "",
+    "text40": "¿Cómo manejamos la información de tus tarjetas de crédito?",
+    "text41": "Kasera no almacenará ninguna información de tus tarjetas de créditos de forma directa sino utilizará proveedores “PCI Compliant” como Pagadito, QPay Pro, Págalo, Visanet, Credomatic, 2Checkout o Stripe. Kasera solo almacenará “tokens” para que puedas realizar nuevas compras sin deber ingresar todos los datos. Podrás borrar cualquier información de tus tarjetas en tu perfil de la plataforma.",
+    "text42": "",
+    "text43": "Contacto legal:",
+    "text44": "Escríbenos al correo kaserafood@gmail.com para cualquier consulta o solicitud relacionada al manejo de tus datos."
   },
 
   "registerPagerScreen": {
@@ -216,9 +304,9 @@
     "chefMenu": "Menú del chef",
     "watchCart": "Ver carrito",
     "leave": "¿Deseas salir?",
-    "leaveDescription": "Vas a perder los platillos que agregaste a tu orden",
+    "leaveDescription": "Perderás los platillos que agregaste a tu orden",
     "yesLeave": "Sí, salir",
-    "noLeave": "No, continuar"
+    "noLeave": "Regresar"
   },
   "deliveryDetailScreen": {
     "title": "Detalles de entrega",

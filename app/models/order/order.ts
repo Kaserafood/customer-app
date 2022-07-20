@@ -48,6 +48,7 @@ const orderOverviewModel = types.model("OrderOverview").props({
   productCount: types.maybe(types.number),
   total: types.maybe(types.number),
   chefImage: types.maybe(types.string),
+  currencyCode: types.maybe(types.string),
 })
 
 export interface Order extends SnapshotOut<typeof orderModel> {}

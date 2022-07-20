@@ -7,7 +7,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
-import { AutoImage, Card, Header, ModalRequestDish, Screen, Text } from "../../components"
+import { Card, Header, Image, ModalRequestDish, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -57,10 +57,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
             >
               <Card style={styles.card}>
                 <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
-                  <AutoImage
-                    style={[utilSpacing.mr2, styles.image]}
-                    source={images.step1}
-                  ></AutoImage>
+                  <Image style={[utilSpacing.mr2, styles.image]} source={images.step1}></Image>
                   <Text
                     style={utilSpacing.mt4}
                     preset="semiBold"
@@ -82,10 +79,10 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                       style={styles.containerCard}
                     >
                       <Card style={styles.card}>
-                        <AutoImage
+                        <Image
                           style={[utilSpacing.mr2, styles.image]}
                           source={{ uri: category.image }}
-                        ></AutoImage>
+                        ></Image>
                         <View style={[utilFlex.flexCenter, utilFlex.flex1]}>
                           <Text
                             style={[utilSpacing.mt4, styles.text]}
@@ -105,10 +102,10 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                         style={styles.containerCard}
                       >
                         <Card style={styles.card}>
-                          <AutoImage
+                          <Image
                             style={[utilSpacing.mr2, styles.image]}
                             source={{ uri: categories[index + 1]?.image }}
-                          ></AutoImage>
+                          ></Image>
                           <View style={[utilFlex.flexCenter, utilFlex.flex1]}>
                             <Text
                               style={[utilSpacing.mt4, styles.text]}

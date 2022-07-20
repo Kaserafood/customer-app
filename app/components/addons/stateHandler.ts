@@ -26,8 +26,8 @@ export class StateHandler {
     const metaData = []
     keys.forEach((key) => {
       const addon = this.state[key]
-
-      if (addon.checked) {
+      console.log(addon)
+      if (addon.checked && addon.total > 0) {
         const meta: MetaDataCart = {
           key: `${key} (${addon.total})`,
           value: `${addon.value}`,

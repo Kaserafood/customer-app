@@ -7,12 +7,12 @@ import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-
 import { getUniqueId } from "react-native-device-info"
 import images from "../../assets/images"
 import {
-  AutoImage,
   ButtonFooter,
   Card,
   Header,
+  Icon,
+  Image,
   InputText,
-  Loader,
   ModalDeliveryDate,
   PaymentCard,
   Screen,
@@ -28,6 +28,7 @@ import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
 import { showMessageError } from "../../utils/messages"
+import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
@@ -48,20 +49,8 @@ class ModalState {
   }
 }
 
-class ModalDelivery {
-  isVisible = false
-
-  setVisible(state: boolean) {
-    this.isVisible = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
 const modalState = new ModalState()
-const modalDelivery = new ModalDelivery()
+const modalDelivery = new ModalStateHandler()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
@@ -113,15 +102,15 @@ export const DeliveryDetailScreen: FC<
 
     commonStore.setVisibleLoading(true)
     console.log("Submitted")
-    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId
+    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId.toUpperCase()
 
     const order: Order = {
       id: 0,
       customerId: userStore.userId,
-      address: addressStore.current.address,
+      address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
       country: addressStore.current.country,
       city: addressStore.current.city,
-      region: addressStore.current.address,
+      region: addressStore.current.region,
       products: getProducts(),
       priceDelivery: orderStore.priceDelivery,
       metaData: getMetaData(taxId),
@@ -133,8 +122,8 @@ export const DeliveryDetailScreen: FC<
         cardNumber: encrypt(data.number.split(" ").join("")),
         dateExpiry: encrypt(data.expirationDate),
         cvv: encrypt(data.cvv),
-        name: encrypt(data.name),
-        type: encrypt(getCardType(data.number).toLocaleLowerCase()),
+        name: data.name,
+        type: getCardType(data.number).toLocaleLowerCase(),
       },
     }
 
@@ -214,6 +203,11 @@ export const DeliveryDetailScreen: FC<
     return data
   }
 
+  const getNameDayDelivery = (): string => {
+    if (dayStore.currentDay.dayName.includes(" ")) return dayStore.currentDay.dayNameLong
+    return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
+  }
+
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -231,7 +225,8 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.address"
               placeholderTx="deliveryDetailScreen.addressPlaceholder"
               editable={false}
-              value={`${addressStore.current.name} - ${addressStore.current.address}`}
+              value={`${addressStore.current.name ?? ""} - ${addressStore.current.address}`}
+              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
 
@@ -240,6 +235,7 @@ export const DeliveryDetailScreen: FC<
             preset="card"
             labelTx="deliveryDetailScreen.deliveryNote"
             placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
+            value={addressStore.current.instructionsDelivery}
           ></InputText>
           <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
 
@@ -250,7 +246,8 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.deliveryDate"
               placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
               editable={false}
-              value={dayStore.currentDay.dayName}
+              value={getNameDayDelivery()}
+              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
 
@@ -278,9 +275,9 @@ export const DeliveryDetailScreen: FC<
               style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
             ></Text>
             <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-              <AutoImage style={styles.imageCard} source={images.cardVisa}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardMastercard}></AutoImage>
-              <AutoImage style={styles.imageCard} source={images.cardAmex}></AutoImage>
+              <Image style={styles.imageCard} source={images.cardVisa}></Image>
+              <Image style={styles.imageCard} source={images.cardMastercard}></Image>
+              <Image style={styles.imageCard} source={images.cardAmex}></Image>
             </View>
           </View>
 
@@ -306,7 +303,7 @@ export const DeliveryDetailScreen: FC<
             <Text
               preset="semiBold"
               caption
-              text={`${dayStore.currentDay.dayName} ${labelDeliveryTime}`}
+              text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
               style={utilSpacing.mb6}
             ></Text>
           </View>
@@ -329,7 +326,6 @@ export const DeliveryDetailScreen: FC<
 
       <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
-      <Loader></Loader>
     </Screen>
   )
 })

@@ -51,9 +51,11 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       // Request permision to access the location and then enable the location from the device
       permission()
         .then((location) => {
-          fetchAddressText(location.latitude, location.longitude).then((address) => {
-            address && setAddress(address)
-          })
+          if (location.latitude > 0 && location.longitude > 0) {
+            fetchAddressText(location.latitude, location.longitude).then((address) => {
+              address && setAddress(address)
+            })
+          }
         })
         .finally(() => loadingState.setLoading(false))
     }, [])
@@ -92,7 +94,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             })
             .finally(() => loadingState.setLoading(false))
         }
-      }, 1500)
+      }, 1000)
     }
     return (
       <Screen preset="scroll">

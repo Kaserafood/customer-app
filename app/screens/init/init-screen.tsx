@@ -2,6 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { Button, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
@@ -20,8 +21,9 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }, [])
 
     return (
-      <View style={styles.root}>
+      <ScrollView contentContainerStyle={styles.root}>
         <StatusBar backgroundColor={color.primary} barStyle="light-content" />
+
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} tx="initScreen.homemadeFood"></Text>
         <Text
@@ -45,7 +47,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             onPress={toLogin}
           ></Button>
         </View>
-      </View>
+      </ScrollView>
     )
   },
 )
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     backgroundColor: color.primary,
-    flex: 1,
+    flexGrow: 1,
     justifyContent: "center",
   },
   textSecondary: {

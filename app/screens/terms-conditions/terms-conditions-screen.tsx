@@ -1,13 +1,13 @@
-import React, { FC } from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, ScrollView, TextStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { NavigatorParamList } from "../../navigators"
+import { observer } from "mobx-react-lite"
+import React, { FC } from "react"
+import { ScrollView, TextStyle, ViewStyle } from "react-native"
 import { Header, Screen, Text } from "../../components"
-import { color } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
+import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
+import { utilSpacing } from "../../theme/Util"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -19,7 +19,7 @@ export const TermsConditionsScreen: FC<
 > = observer(function TermsConditionsScreen() {
   const textList = []
 
-  for (let i = 1; i <= 23; i++) {
+  for (let i = 1; i <= 61; i++) {
     const text1 = "termsConditionsScreen.text" + i
     const styles: TextStyle = { ...utilSpacing.mb4 }
     if (i === 1) {

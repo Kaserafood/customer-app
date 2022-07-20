@@ -60,6 +60,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 labelTx="addressScreen.addressComplete"
                 styleContainer={[utilSpacing.mb6, utilSpacing.mt6]}
                 maxLength={400}
+                required
               ></InputText>
 
               <InputText
@@ -116,7 +117,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             ></Button>
           </View>
         </ScrollView>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </Screen>
     )
   },

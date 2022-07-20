@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { AutoImage, Button, Card, Header, Screen, Text } from "../../components"
+import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 // import { useStores } from "../../models"
@@ -54,7 +54,7 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
                 <View></View>
                 <Text style={utilSpacing.my5} size="lg" text={thankYou} preset="bold"></Text>
 
-                <AutoImage style={styles.imageChef} source={{ uri: params.imageChef }}></AutoImage>
+                <Image style={styles.imageChef} source={{ uri: params.imageChef }}></Image>
                 <Text
                   style={utilSpacing.my5}
                   size="lg"

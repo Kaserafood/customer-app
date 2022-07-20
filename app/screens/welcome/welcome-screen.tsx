@@ -1,17 +1,10 @@
-import React, { FC } from "react"
-import { View, ViewStyle, TextStyle, ImageStyle, SafeAreaView } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import {
-  Button,
-  Header,
-  Screen,
-  Text,
-  GradientBackground,
-  AutoImage as Image,
-} from "../../components"
-import { color, spacing, typography } from "../../theme"
+import React, { FC } from "react"
+import { ImageStyle, SafeAreaView, TextStyle, View, ViewStyle } from "react-native"
+import { Button, GradientBackground, Header, Image, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
+import { color, spacing, typography } from "../../theme"
 
 const bowserLogo = require("./bowser.png")
 
