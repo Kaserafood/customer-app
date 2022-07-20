@@ -37,3 +37,5 @@ target 'ClientApp' do
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
   end
 end
+pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text', :modular_headers => true
+
