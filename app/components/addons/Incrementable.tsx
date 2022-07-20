@@ -1,16 +1,15 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, {
-  Easing,
   FadeInDown,
   FadeOutDown,
   useAnimatedStyle,
   useSharedValue,
-  withTiming,
+  withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Addon } from "../../models/dish"
-import { CurrencyContext } from "../../screens"
+import { CurrencyContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { Card } from "../card/card"
@@ -34,31 +33,25 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
     state,
   } = props
 
-  let min = props.addon.min
-
+  const [min, setMin] = useState(props.addon.min)
+  const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
   const offset = useSharedValue(required === 1 ? 30 : 0)
 
-  const config = {
-    duration: 500,
-    easing: Easing.bezierFn(0.5, 0.01, 0, 1),
-  }
+  useEffect(() => {
+    if (min === 0) setMin(1)
+  }, [])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      width: withTiming(offset.value, config),
+      width: withSpring(offset.value),
     }
   })
-
-  const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
-
-  if (min === 0) min = 1
 
   const plus = () => {
     if (!isVisibleMinus) {
       setIsVisibleMinus(true)
       offset.value = 30
     }
-
     onPress(name, Number(state[name].value), true)
   }
 

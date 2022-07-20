@@ -304,9 +304,9 @@
     "chefMenu": "Menú del chef",
     "watchCart": "Ver carrito",
     "leave": "¿Deseas salir?",
-    "leaveDescription": "Vas a perder los platillos que agregaste a tu orden",
+    "leaveDescription": "Perderás los platillos que agregaste a tu orden",
     "yesLeave": "Sí, salir",
-    "noLeave": "No, continuar"
+    "noLeave": "Regresar"
   },
   "deliveryDetailScreen": {
     "title": "Detalles de entrega",

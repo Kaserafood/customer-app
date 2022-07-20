@@ -5,7 +5,7 @@ import Ripple from "react-native-material-ripple"
 import images from "../../assets/images"
 import { Category } from "../../models/category-store"
 import { utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Text } from "../text/text"
 
 export interface CategoriesProps {
@@ -44,11 +44,11 @@ export const Categories = observer(function Categories(props: CategoriesProps) {
             key={category.id}
             style={[utilSpacing.p4, styles.containerCategoryItem]}
           >
-            <AutoImage
+            <Image
               defaultSource={images.category}
               style={styles.imgCategory}
               source={{ uri: category.image }}
-            ></AutoImage>
+            ></Image>
             <Text style={utilSpacing.mt3} text={category.name}></Text>
           </Ripple>
         ))}

@@ -7,7 +7,7 @@ import TextInputMask from "react-native-text-input-mask"
 import { translate } from "../../i18n"
 import { color, spacing, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Card } from "../card/card"
 import { Text } from "../text/text"
 import { InputTextProps } from "./input-text.props"
@@ -71,6 +71,8 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
     preset = "normal",
     mask,
     counter,
+    iconRight,
+    required,
     ...rest
   } = props
 
@@ -117,7 +119,10 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
       <View>
         <View style={CONTAINER_INPUT_CARD}>
           {labelTx && (
-            <Text tx={labelTx} style={[utilSpacing.mt3, styleLabel]} preset="semiBold"></Text>
+            <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>
+              <Text tx={labelTx} style={styleLabel} preset="semiBold"></Text>
+              {required && <Text text="*" style={styles.textRed}></Text>}
+            </View>
           )}
           <TextInputMask
             selectionColor={color.palette.grayDark}
@@ -132,6 +137,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             mask={mask}
             {...rest}
           />
+          {iconRight && <View style={styles.iconRightCard}>{iconRight}</View>}
         </View>
 
         <ErrorMessage name={name}></ErrorMessage>
@@ -174,5 +180,14 @@ const styles = StyleSheet.create({
     position: "relative",
     textAlign: "right",
     width: "100%",
+  },
+  iconRightCard: {
+    position: "absolute",
+    right: 5,
+    backgroundColor: color.background,
+    bottom: 16,
+  },
+  textRed: {
+    color: color.error,
   },
 })

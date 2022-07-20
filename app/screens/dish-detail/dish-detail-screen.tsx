@@ -5,17 +5,17 @@ import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
 import {
   Addons,
-  AutoImage,
   ButtonFooter,
   DishChef,
   getMetaData,
   Header,
+  Image,
   InputText,
   isValidAddons,
-  Loader,
   Price,
   Screen,
   Text,
@@ -44,6 +44,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const scrollRef = useRef<ScrollView>()
     const { ...methods } = useForm({ mode: "onBlur" })
     const { dishStore, commonStore, cartStore } = useStores()
+    const [loading, setLoading] = useState(false)
 
     useEffect(() => {
       setAddonsAvailable(currentDish.addons.filter((addon) => addon.hide_in_app !== "yes"))
@@ -97,6 +98,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }
 
     const changeDish = (dish: DishChefModel) => {
+      setLoading(true)
       if (currentDish.id !== dish.id) {
         setCurrentDish({ ...dish, chef: params.chef })
         setQuantity(1)
@@ -108,6 +110,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           animated: true,
         })
       }
+      setTimeout(() => {
+        setLoading(false)
+      }, 500)
     }
 
     return (
@@ -115,16 +120,44 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
         <ScrollView ref={scrollRef}>
           <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
-            <AutoImage style={styles.image} source={{ uri: currentDish.image }}></AutoImage>
-            <View style={[utilFlex.flexRow, utilSpacing.my3]}>
-              <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
-            </View>
-            <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
-            <Price
-              style={styles.price}
-              amount={currentDish.price}
-              currencyCode={currentDish.chef.currencyCode}
-            ></Price>
+            {loading ? (
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={"100%"}>
+                  <SkeletonPlaceholder.Item width={"100%"} height={230} borderRadius={8} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={12}
+                    width={"100%"}
+                    height={20}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    marginTop={6}
+                    width={"100%"}
+                    height={40}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    marginTop={12}
+                    width={50}
+                    height={20}
+                    borderRadius={8}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder>
+            ) : (
+              <>
+                <Image style={styles.image} source={{ uri: currentDish.image }}></Image>
+                <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+                  <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+                </View>
+                <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
+                <Price
+                  style={styles.price}
+                  amount={currentDish.price}
+                  currencyCode={currentDish.chef.currencyCode}
+                ></Price>
+              </>
+            )}
           </View>
 
           {addonsAvailable.length > 0 ? (
@@ -194,7 +227,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             currentDish.chef.currencyCode,
           )}`}
         ></ButtonFooter>
-        <Loader></Loader>
       </Screen>
     )
   },

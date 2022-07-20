@@ -8,5 +8,5 @@ export function getFormat(amount: number, currencyCode: string): string {
     format = format.split(".")[0]
   }
 
-  return `${currency} ${format}`
+  return `${currency}${format}`
 }

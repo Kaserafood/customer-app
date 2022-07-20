@@ -10,11 +10,10 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
 import { ModalStateHandler } from "../../utils/modalState"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { InputText } from "../input-text/input-text"
-import { Loader } from "../loader/loader"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
 import { useModalRequest } from "./useModalRequest"
@@ -99,6 +98,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
           <View style={utilSpacing.mx4}>
             <Text
               preset="bold"
+              size="lg"
               style={[utilSpacing.mt4, utilSpacing.mb2]}
               tx="modalRequestDish.tellUsWhatYouNeed"
             ></Text>
@@ -191,7 +191,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
         initialDate={selectedDate}
       ></CalendarPicker>
       <ModalConfirmation></ModalConfirmation>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })
@@ -243,11 +243,11 @@ const ModalConfirmation = () => {
           style={utilSpacing.mb5}
         ></Text>
 
-        <AutoImage
+        <Image
           resizeMode="contain"
           style={[styles.imgNotFound, utilSpacing.mb5, utilSpacing.ml2]}
           source={images.soup}
-        ></AutoImage>
+        ></Image>
         <Button
           tx="modalRequestDish.continue"
           style={styles.btnContinue}

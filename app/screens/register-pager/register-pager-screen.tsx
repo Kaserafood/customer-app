@@ -1,12 +1,12 @@
 import { StackScreenProps } from "@react-navigation/stack"
 
-import images from "../../assets/images"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { BackHandler, ImageURISource, StyleSheet, View, ViewStyle } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import PagerView from "react-native-pager-view"
-import { AutoImage, Button, Dot, Screen, Text } from "../../components"
+import images from "../../assets/images"
+import { Button, Dot, Image, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
@@ -90,7 +90,7 @@ export const RegisterPagerScreen: FC<
       >
         {data.map((page, index) => (
           <View style={styles.page} key={index + 1}>
-            <AutoImage style={styles.image} source={page.image}></AutoImage>
+            <Image style={styles.image} source={page.image}></Image>
 
             <Text
               style={[utilSpacing.mb3, utilText.textCenter]}

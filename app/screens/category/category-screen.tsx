@@ -9,7 +9,6 @@ import {
   DayDelivery,
   Dish,
   Header,
-  Loader,
   ModalRequestDish,
   Screen,
   Separator,
@@ -110,7 +109,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           ></EmptyData>
         </ScrollView>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
       </Screen>
     )

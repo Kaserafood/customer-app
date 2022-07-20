@@ -4,7 +4,7 @@ import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
-import { AutoImage, Price, Text } from "../../components"
+import { Price, Text } from "../../components"
 import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
@@ -133,7 +133,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
           </View>
         </View>
         <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={() => onChefPress()}>
-          <AutoImage style={styles.imageChef} source={{ uri: item.image }}></AutoImage>
+          <Image style={styles.imageChef} source={{ uri: item.image }}></Image>
         </Ripple>
       </View>
     </View>

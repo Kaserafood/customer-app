@@ -1,4 +1,4 @@
-export * from "./auto-image/auto-image"
+export * from "./image/image"
 export * from "./bullet-item/bullet-item"
 export * from "./button/button"
 export * from "./card/card"

@@ -1,19 +1,19 @@
-import React, { FC } from "react"
-import { ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
+import React, { FC } from "react"
+import { ImageStyle, Platform, TextStyle, View, ViewStyle } from "react-native"
 import {
   BulletItem,
   Button,
-  Header,
-  Text,
-  Screen,
-  AutoImage as Image,
   GradientBackground,
+  Header,
+  Image,
+  Screen,
+  Text,
 } from "../../components"
 import { NavigatorParamList } from "../../navigators"
-import { color, spacing } from "../../theme"
 import { Api } from "../../services/api"
+import { color, spacing } from "../../theme"
 import { save } from "../../utils/storage"
 export const logoIgnite = require("./logo-ignite.png")
 export const heart = require("./heart.png")
@@ -122,7 +122,8 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
           preview: "More control with display()",
           important: true,
           image: {
-            uri: "https://avatars2.githubusercontent.com/u/3902527?s=200&u=a0d16b13ed719f35d95ca0f4440f5d07c32c349a&v=4",
+            uri:
+              "https://avatars2.githubusercontent.com/u/3902527?s=200&u=a0d16b13ed719f35d95ca0f4440f5d07c32c349a&v=4",
           },
         })
         // make an API call for the demo

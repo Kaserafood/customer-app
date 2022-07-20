@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
@@ -116,7 +117,14 @@ export const RegisterFormScreen: FC<
               ></InputText>
               <View style={styles.containerTermsBtn}>
                 <View style={[utilFlex.flexRow, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
-                  <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
+                  <TouchableOpacity
+                    onPress={() => setTerms(!terms)}
+                    activeOpacity={1}
+                    style={[utilSpacing.p4]}
+                  >
+                    <Checkbox value={terms}></Checkbox>
+                  </TouchableOpacity>
+
                   <View style={styles.containerTermsText}>
                     <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
                     <Text
@@ -146,7 +154,7 @@ export const RegisterFormScreen: FC<
           </View>
         </ScrollView>
       </Screen>
-      <Loader></Loader>
+      {/* <Loader></Loader> */}
     </>
   )
 })

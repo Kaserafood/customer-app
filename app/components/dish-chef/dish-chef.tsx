@@ -4,7 +4,7 @@ import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { utilSpacing } from "../../theme/Util"
-import { AutoImage } from "../auto-image/auto-image"
+import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Text } from "../text/text"
 
@@ -43,7 +43,7 @@ export const DishChef = observer(function DishChef(props: DishChefProps) {
       onPress={onPress}
       style={[styles.containerFavoriteImageDish, utilSpacing.my4, utilSpacing.mr4, style]}
     >
-      <AutoImage style={styles.image} source={{ uri: dish.image }}></AutoImage>
+      <Image style={styles.image} source={{ uri: dish.image }}></Image>
       <Text
         preset="semiBold"
         numberOfLines={1}

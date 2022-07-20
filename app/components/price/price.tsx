@@ -13,11 +13,10 @@ const CONTAINER: ViewStyle = {
   borderRadius: 100,
   paddingHorizontal: spacing[4],
   paddingVertical: spacing[0],
-  paddingBottom: 2,
 }
 
 const CONTAINER_DELIVERY: ViewStyle = {
-  alignSelf: "flex-end",
+  // alignSelf: "flex-end",
 }
 
 export interface PriceProps {
@@ -58,8 +57,8 @@ export const Price = observer(function Price(props: PriceProps) {
   const price = getFormat(amount, currencyCode)
   const Delivery = () => {
     return (
-      <View style={[CONTAINER_DELIVERY, utilFlex.flexRow, style]}>
-        <Icon name="moped" size={16} color={color.text} style={utilSpacing.mr2}></Icon>
+      <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, style]}>
+        <Icon name="moped" size={15} color={color.text} style={utilSpacing.mr2}></Icon>
         <Text style={textStyle} text={`${price}`}></Text>
       </View>
     )

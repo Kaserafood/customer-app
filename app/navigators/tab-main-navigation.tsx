@@ -27,7 +27,7 @@ export function TabMainNavigation({ navigationRef }) {
         tabBarStyle: {
           backgroundColor: color.background,
           borderTopWidth: 0,
-          height: 55,
+          height: 60,
           shadowColor: "#000",
           shadowOffset: {
             width: 0,
@@ -77,7 +77,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt2} name="bars" size={30} color={color} />
+            return <Icon style={utilSpacing.mt4} name="bars-1" size={30} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.more")}

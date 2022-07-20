@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { Button, Header, InputText, Loader, Screen, Text } from "../../components"
@@ -58,63 +59,65 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             leftIcon="back"
             onLeftPress={handleBack}
           ></Header>
-          <View style={styles.containerForm}>
-            <Text
-              preset="semiBold"
-              tx="loginFormScreen.info"
-              style={[utilSpacing.mb8, utilSpacing.mt4]}
-            />
+          <ScrollView style={styles.w100} contentContainerStyle={utilFlex.flexCenterHorizontal}>
+            <View style={styles.containerForm}>
+              <Text
+                preset="semiBold"
+                tx="loginFormScreen.info"
+                style={[utilSpacing.mb8, utilSpacing.mt4]}
+              />
 
-            <FormProvider {...methods}>
-              <InputText
-                name="email"
-                keyboardType="email-address"
-                placeholderTx="loginFormScreen.email"
-                styleContainer={utilSpacing.mb6}
-                rules={{
-                  required: "registerFormScreen.emailRequired",
-                  pattern: {
-                    value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
-                    message: "registerFormScreen.emailFormat",
-                  },
-                }}
-                maxLength={200}
-              ></InputText>
-              <InputText
-                name="password"
-                placeholderTx="loginFormScreen.password"
-                styleContainer={styles.input}
-                secureTextEntry
-                rules={{
-                  required: "registerFormScreen.passwordRequired",
-                  minLength: {
-                    value: 4,
-                    message: "registerFormScreen.passwordMinLength",
-                  },
-                }}
-                maxLength={100}
-              ></InputText>
+              <FormProvider {...methods}>
+                <InputText
+                  name="email"
+                  keyboardType="email-address"
+                  placeholderTx="loginFormScreen.email"
+                  styleContainer={utilSpacing.mb6}
+                  rules={{
+                    required: "registerFormScreen.emailRequired",
+                    pattern: {
+                      value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                      message: "registerFormScreen.emailFormat",
+                    },
+                  }}
+                  maxLength={200}
+                ></InputText>
+                <InputText
+                  name="password"
+                  placeholderTx="loginFormScreen.password"
+                  styleContainer={styles.input}
+                  secureTextEntry
+                  rules={{
+                    required: "registerFormScreen.passwordRequired",
+                    minLength: {
+                      value: 4,
+                      message: "registerFormScreen.passwordMinLength",
+                    },
+                  }}
+                  maxLength={100}
+                ></InputText>
 
-              <View style={[styles.containerBtn, utilSpacing.mt9]}>
-                <Button
-                  tx="loginFormScreen.continue"
-                  style={[styles.btn, utilSpacing.py5]}
-                  onPress={methods.handleSubmit(onSubmit, onError)}
-                ></Button>
-              </View>
-            </FormProvider>
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              rippleContainerBorderRadius={10}
-              style={[utilSpacing.py5, utilSpacing.px6, utilSpacing.mt7, utilFlex.selfCenter]}
-              onPress={toRecoverPassword}
-            >
-              <Text preset="bold" size="lg" tx="loginFormScreen.recoverPassword"></Text>
-            </Ripple>
-          </View>
+                <View style={[styles.containerBtn, utilSpacing.mt9]}>
+                  <Button
+                    tx="loginFormScreen.continue"
+                    style={[styles.btn, utilSpacing.py5]}
+                    onPress={methods.handleSubmit(onSubmit, onError)}
+                  ></Button>
+                </View>
+              </FormProvider>
+              <Ripple
+                rippleOpacity={0.2}
+                rippleDuration={400}
+                rippleContainerBorderRadius={10}
+                style={[utilSpacing.py5, utilSpacing.px6, utilSpacing.mt7, utilFlex.selfCenter]}
+                onPress={toRecoverPassword}
+              >
+                <Text preset="bold" size="lg" tx="loginFormScreen.recoverPassword"></Text>
+              </Ripple>
+            </View>
+          </ScrollView>
         </Screen>
-        <Loader></Loader>
+        {/* <Loader></Loader> */}
       </>
     )
   },
@@ -141,5 +144,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: spacing[5],
+  },
+  w100: {
+    width: "100%",
   },
 })

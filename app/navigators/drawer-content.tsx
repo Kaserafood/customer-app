@@ -7,15 +7,20 @@ import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
-import { remove } from "../utils/storage"
+import { clear } from "../utils/storage"
 
 export default function DrawerContent(props) {
-  const { commonStore, userStore } = useStores()
+  const { commonStore, userStore, addressStore, cartStore } = useStores()
   const navigation = useNavigation()
   const closeSession = async () => {
-    await remove("userId")
-    await remove("displayName")
-    await remove("addressId")
+    await clear()
+    userStore.setUserId(undefined)
+    userStore.setDisplayName(undefined)
+    userStore.setAddressId(undefined)
+    userStore.setEmail(undefined)
+    addressStore.setCurrent(undefined)
+    addressStore.setAddresses([])
+    cartStore.cleanItems()
     commonStore.setIsSignedIn(false)
   }
 
