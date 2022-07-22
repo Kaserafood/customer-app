@@ -17,13 +17,10 @@ target 'ClientApp' do
     :path => config[:reactNativePath],
     :hermes_enabled => podfile_properties['expo.jsEngine'] == 'hermes'
   )
-
   permissions_path = '../node_modules/react-native-permissions/ios'
-
 
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
-
 
   target 'ClientAppTests' do
     inherit! :complete
@@ -43,3 +40,4 @@ target 'ClientApp' do
   end
 end
 pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text', :modular_headers => true
+

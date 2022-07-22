@@ -9,6 +9,6 @@
 // It's easier just to leave it here.
 import App from "./app/app.tsx"
 import { AppRegistry } from "react-native"
-
-AppRegistry.registerComponent("ClientApp", () => App)
+console.log('getAppKeys()=',AppRegistry.getAppKeys());
+ AppRegistry.registerComponent("ClientApp", () => App)
 export default App

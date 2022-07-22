@@ -57,7 +57,6 @@
 		<string>Poppins-Bold.ttf</string>
 		<string>Poppins-SemiBold.ttf</string>
 		<string>Poppins-ExtraBold.ttf</string>
-	
 		<string>fontello.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
@@ -77,6 +76,6 @@
 		<string>Zocial.ttf</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
+  <string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
 </dict>
 </plist>
