@@ -19,9 +19,9 @@ target 'ClientApp' do
   )
   permissions_path = '../node_modules/react-native-permissions/ios'
 
- 
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
+
   target 'ClientAppTests' do
     inherit! :complete
     # Pods for testing

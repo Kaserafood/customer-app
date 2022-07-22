@@ -76,6 +76,6 @@
 		<string>Zocial.ttf</string>
 	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  	<string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
+  <string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
 </dict>
 </plist>
