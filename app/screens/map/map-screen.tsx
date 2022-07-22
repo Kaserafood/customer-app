@@ -6,7 +6,7 @@ import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { useLocation } from "../../common/hooks/useLocation"
+import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Screen, Text } from "../../components"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -27,37 +27,37 @@ class LoadingState {
   }
 }
 
-interface Address {
-  city: string
-  region: string
-  formatted: string
-  country: string
-}
-
 const loadingState = new LoadingState()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { fetchAddressText, location, permission, setLocation } = useLocation()
+    const { fetchAddressText, getCurrentPosition } = useLocation()
     const [address, setAddress] = useState<Address>({
       city: "",
       country: "",
       formatted: getI18nText("mapScreen.addressPlaceholder"),
       region: "",
     })
+    const [location, setLocation] = useState<Location>({
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: 0,
+      longitudeDelta: 0,
+    })
     let timeOut: NodeJS.Timeout
 
     useEffect(() => {
       // Request permision to access the location and then enable the location from the device
-      permission()
-        .then((location) => {
-          if (location.latitude > 0 && location.longitude > 0) {
-            fetchAddressText(location.latitude, location.longitude).then((address) => {
+      getCurrentPosition((location) => {
+        if (location.locationAvailable) {
+          setLocation(location)
+          fetchAddressText(location.latitude, location.longitude)
+            .then((address) => {
               address && setAddress(address)
             })
-          }
-        })
-        .finally(() => loadingState.setLoading(false))
+            .finally(() => loadingState.setLoading(false))
+        }
+      })
     }, [])
 
     const toAddress = () => {
@@ -83,7 +83,6 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       timeOut = setTimeout(() => {
         if (location.latitude !== region.latitude && location.longitude !== region.longitude) {
           __DEV__ && console.log(`Change region2: ${JSON.stringify(region)}`)
-
           setLocation({ ...region })
           loadingState.setLoading(true)
           fetchAddressText(region.latitude, region.longitude)
