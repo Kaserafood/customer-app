@@ -26,6 +26,7 @@
 		53D5E61B42264F3CB1DFE1A3 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCEAFF2055A641789D8DA009 /* Poppins-Regular.ttf */; };
 		55031C84237F48EDB5B9B6A4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3674C209B8D24A619232E00C /* SimpleLineIcons.ttf */; };
 		566F80C1685020AB2B9D9743 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD00143C8AA5EF71C17FFB /* ExpoModulesProvider.swift */; };
+		573DFCEE288CFFAE00E3BA79 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 573DFCED288CFFAE00E3BA79 /* icomoon.ttf */; };
 		62010014DD06470BAB8DA616 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A821C24896B4C349C4C5009 /* EvilIcons.ttf */; };
 		62735319C7584C9A8E418119 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 43AE25D2DDCF4291AB9CB6CF /* Foundation.ttf */; };
 		638E77C4F0D64F0EB0190B41 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC24CCAA75B64C8F90178606 /* FontAwesome5_Solid.ttf */; };
@@ -87,6 +88,9 @@
 		43AE25D2DDCF4291AB9CB6CF /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		4D40708BE521DBE7DC6E68C8 /* Pods-ClientApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApp.release.xcconfig"; path = "Target Support Files/Pods-ClientApp/Pods-ClientApp.release.xcconfig"; sourceTree = "<group>"; };
 		53F2B6CBAF3646AFADDD9BA3 /* fontello.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.ttf; path = ../assets/fonts/fontello.ttf; sourceTree = "<group>"; };
+		5726B526288BA57C00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
+		5726B528288BAF8F00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
+		573DFCED288CFFAE00E3BA79 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
 		671EA18E537547558040C4DF /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		7A821C24896B4C349C4C5009 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		815BCD5292094B8DA162656E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		13B07FAE1A68108700A75B9A /* ClientApp */ = {
 			isa = PBXGroup;
 			children = (
+				5726B52C288BBF5800DD0AE9 /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -193,9 +198,18 @@
 			name = ClientApp;
 			sourceTree = "<group>";
 		};
+		5726B52C288BBF5800DD0AE9 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				573DFCED288CFFAE00E3BA79 /* icomoon.ttf */,
+			);
+			name = Fonts;
+			sourceTree = "<group>";
+		};
 		63800B1FFD034B2289BFB8A8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				5726B528288BAF8F00DD0AE9 /* icomoon.ttf */,
 				DCEAFF2055A641789D8DA009 /* Poppins-Regular.ttf */,
 				E40E306184D749389D9A7DDE /* Poppins-Bold.ttf */,
 				06751CCDF5E2408093F98F5C /* Poppins-SemiBold.ttf */,
@@ -251,6 +265,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				5726B526288BA57C00DD0AE9 /* icomoon.ttf */,
 				13B07FAE1A68108700A75B9A /* ClientApp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* ClientAppTests */,
@@ -429,6 +444,7 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				53D5E61B42264F3CB1DFE1A3 /* Poppins-Regular.ttf in Resources */,
+				573DFCEE288CFFAE00E3BA79 /* icomoon.ttf in Resources */,
 				10C098831F2B40419912313D /* Poppins-Bold.ttf in Resources */,
 				09EB39C9F5AA45559FD33A75 /* Poppins-SemiBold.ttf in Resources */,
 				50C94AB0A5A14B42ACEAC7CA /* Poppins-ExtraBold.ttf in Resources */,
@@ -511,27 +527,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ClientApp/Pods-ClientApp-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-60309c9c/AccessibilityResources.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-9d1fe9bd/AccessibilityResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
-				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 			);
@@ -605,7 +607,8 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ClientApp-ClientAppTests/Pods-ClientApp-ClientAppTests-resources.sh",
-				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-60309c9c/AccessibilityResources.bundle",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core-9d1fe9bd/AccessibilityResources.bundle",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
@@ -626,6 +629,7 @@
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",

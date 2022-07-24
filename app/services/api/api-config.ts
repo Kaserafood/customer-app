@@ -24,5 +24,5 @@ export interface ApiConfig {
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: API_URL,
-  timeout: 10000,
+  timeout: 50000,
 }
