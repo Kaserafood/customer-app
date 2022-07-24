@@ -18,6 +18,8 @@ const TEXT_STYLES: TextStyle = {
   marginBottom: -3,
   fontSize: typographySize.md,
   color: color.text,
+  borderBottomWidth: 1,
+  borderBottomColor: color.palette.grayLigth
 }
 const TEXT_ERROR: TextStyle = {
   color: color.error,

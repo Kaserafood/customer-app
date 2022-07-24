@@ -349,7 +349,6 @@ const styles = StyleSheet.create({
   },
   imageCard: {
     borderRadius: spacing[1],
-    borderWidth: 1,
     height: 24,
     marginLeft: spacing[1],
     width: 35,
