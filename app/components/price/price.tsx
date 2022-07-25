@@ -12,7 +12,7 @@ const CONTAINER: ViewStyle = {
   backgroundColor: color.palette.greenLigth,
   borderRadius: 100,
   paddingHorizontal: spacing[4],
-  paddingVertical: spacing[0],
+  paddingBottom: spacing[1],
 }
 
 const CONTAINER_DELIVERY: ViewStyle = {

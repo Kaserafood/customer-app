@@ -35,20 +35,20 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     }
 
     return (
-      <>
+    
         <Screen
           preset="fixed"
-          style={styles.container}
+          style={{backgroundColor: "#aaa"}}
           statusBar="dark-content"
-          statusBarBackgroundColor={color.palette.white}
+          statusBarBackgroundColor={color.primary}
         >
           <FocusAwareStatusBar barStyle="light-content" backgroundColor={color.primary} />
           <Header
             headerTx="searchScreen.title"
-            titleStyle={[utilSpacing.pt4, utilSpacing.mb2]}
+            titleStyle={[utilSpacing.pt2 ,utilSpacing.mb2]}
             onLeftPress={goBack}
           />
-          <ScrollView style={styles.body}>
+          <ScrollView style={[styles.body]}>
             <Ripple
               rippleOpacity={0.2}
               rippleDuration={400}
@@ -123,7 +123,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
           </ScrollView>
           <ModalRequestDish modalState={modalState}></ModalRequestDish>
         </Screen>
-      </>
+    
     )
   },
 )
@@ -139,6 +139,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     minWidth: 300,
     width: "88%",
+    backgroundColor: "#000",
+    flex: 1
   },
   card: {
     alignItems: "center",

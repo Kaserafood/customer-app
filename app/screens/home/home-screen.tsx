@@ -138,7 +138,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     return (
       <Screen
-        preset="scroll"
+        preset="fixed"
         style={styles.container}
         statusBar="dark-content"
         statusBarBackgroundColor={color.palette.white}

@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { color, typographySize } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Button } from "../button/button"
@@ -16,9 +17,10 @@ export interface ButtonFooterProps extends ButtonProps {
 /**
  * Button to use on footer of screen.
  */
+
 export const ButtonFooter = observer(function ButtonFooter(props: ButtonFooterProps) {
   const { style, onPress, ...rest } = props
-
+  const insets = useSafeAreaInsets()
   return (
     <View style={[styles.container, style]}>
       <View style={[utilSpacing.mx7, utilSpacing.pb3, utilSpacing.pt5, {}]}>
@@ -30,6 +32,7 @@ export const ButtonFooter = observer(function ButtonFooter(props: ButtonFooterPr
           {...rest}
         ></Button>
       </View>
+  
     </View>
   )
 })
@@ -41,5 +44,6 @@ const styles = StyleSheet.create({
   container: {
     borderTopColor: color.palette.grayLigth,
     borderTopWidth: 1,
+    backgroundColor: color.background,
   },
 })

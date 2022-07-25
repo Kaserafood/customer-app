@@ -53,7 +53,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
 
     return (
       <>
-        <Screen style={styles.container} preset="scroll" bottomBar="dark-content">
+        <Screen style={styles.container} preset="fixed" bottomBar="dark-content">
           <Header
             headerTx="loginFormScreen.title"
             leftIcon="back"
