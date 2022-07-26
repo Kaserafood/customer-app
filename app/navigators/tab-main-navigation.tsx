@@ -25,10 +25,11 @@ export function TabMainNavigation({ navigationRef }) {
         tabBarLabelStyle: {
           fontSize: typographySize.sm,
           color: color.text,
-        paddingBottom: spacing[1]
+          paddingBottom: spacing[1],
         },
-      
+
         tabBarStyle: {
+          backgroundColor: color.palette.white,
           borderTopWidth: 0,
           height: 63 + insets.bottom,
           shadowColor: color.text,
@@ -38,7 +39,7 @@ export function TabMainNavigation({ navigationRef }) {
           },
           shadowOpacity: 0.5,
           shadowRadius: 4.65,
-        
+
           elevation: 9,
         },
       }}
