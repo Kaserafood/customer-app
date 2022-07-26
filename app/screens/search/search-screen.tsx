@@ -38,7 +38,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     
         <Screen
           preset="fixed"
-          style={{backgroundColor: "#aaa"}}
+    
           statusBar="dark-content"
           statusBarBackgroundColor={color.primary}
         >
@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     minWidth: 300,
     width: "88%",
-    backgroundColor: "#000",
     flex: 1
   },
   card: {
