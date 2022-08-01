@@ -196,16 +196,16 @@
 
   "registerPagerScreen": {
     "page1": {
-      "title": "Comida casera preparada por chefs independientes",
-      "description": "Olvídate de comer lo mismo de siempre y de la comida que daña tu salud"
+      "title": "Comida casera que no encuentras en restaurantes.",
+      "description": "Prueba platillos auténticos de chefs y cocineros locales y apoya la gastronomía artesanal."
     },
     "page2": {
-      "title": "Platillos preparados con ingredientes frescos",
-      "description": "Pide con anticipación durnate el día antes, para que los chefs cocinen con los mejores ingredientes frescos"
+      "title": "Platillos que vale la pena reservar",
+      "description": "Pide con anticipación para que los chefs puedan conseguir ingredientes frescos. "
     },
     "page3": {
       "title": "Recibe tu comida lista para calentar",
-      "description": "Olvidate de comer lo mismo de siempre y de la comida que daña tu salud"
+      "description": "Recibe tu comida fresca y lista para calentar cuando decidas comértela."
     },
     "skip": "Saltar",
     "next": "Siguiente"
