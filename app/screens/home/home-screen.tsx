@@ -109,7 +109,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         ])
           .then(() => {
             setCurrentDay(days[0])
-            setDishes(dishStore.dishes)
+            setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
@@ -142,7 +142,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBar="dark-content"
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView nestedScrollEnabled style={styles.container}>
           <Location
             onPress={() => {
               modalState.setVisibleLocation(true)
