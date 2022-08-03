@@ -11,12 +11,12 @@ export const SHADOW: ViewStyle = {
   shadowColor: color.palette.grayDark,
   shadowOffset: {
     width: 0,
-    height: 8,
+    height: 3,
   },
-  shadowOpacity: 0.46,
-  shadowRadius: 11.14,
+  shadowOpacity: 0.25,
+  shadowRadius: 4.84,
 
-  elevation: 7,
+  elevation: 5,
 }
 
 export const NO_SHADOW: ViewStyle = {

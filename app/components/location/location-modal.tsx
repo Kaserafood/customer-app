@@ -62,7 +62,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   const { addressStore, userStore } = useStores()
   const [addressText, setAddressText] = useState("")
   const navigation = useNavigation<homeScreenProp>()
-  const { permission, fetchAddressText } = useLocation()
+  const { fetchAddressText, getCurrentPosition } = useLocation()
 
   const toMap = () => {
     navigation.navigate("map", { screenToReturn: screenToReturn })
@@ -95,14 +95,12 @@ export const LocationModal = observer(function Location(props: LocationProps) {
 
   useEffect(() => {
     if (modal.isVisibleLocation && addressText.length === 0) {
-      permission().then((location) => {
-        if (location.latitude !== 0 && location.longitude !== 0) {
-          fetchAddressText(location.latitude, location.longitude).then((address) => {
-            if (address) {
-              setAddressText(address.formatted)
-            }
-          })
-        }
+      getCurrentPosition((position) => {
+        const { latitude, longitude } = position
+        __DEV__ && console.log("position", position)
+        fetchAddressText(latitude, longitude).then((address) => {
+          address && setAddressText(address.formatted)
+        })
       })
     }
   }, [modal.isVisibleLocation])

@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { translate } from "../../i18n/"
 import { color, spacing } from "../../theme"
 import { typography } from "../../theme/typography"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
 import { HeaderProps } from "./header.props"
@@ -25,7 +25,8 @@ const TITLE: TextStyle = {
   fontFamily: typography.primaryBold,
   marginBottom: -spacing[1],
   fontSize: 22,
-  paddingTop: 4,
+
+  
 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }
@@ -56,7 +57,7 @@ export function Header(props: HeaderProps) {
   const header = headerText || (headerTx && translate(headerTx)) || ""
 
   return (
-    <View style={[ROOT, style]}>
+    <View style={[ROOT, style, utilFlex.flexCenterHorizontal]}>
       {leftIcon ? (
         <TouchableOpacity style={BUTTON} onPress={onLeftPress} activeOpacity={0.5}>
           {leftIcon === "back" && (

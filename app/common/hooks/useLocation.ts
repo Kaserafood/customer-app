@@ -1,26 +1,16 @@
-import { useState } from "react"
-import { Platform } from "react-native"
-import RNLocation from "react-native-location"
-import LocationEnabler from "react-native-location-enabler"
-import { Permission, PERMISSIONS } from "react-native-permissions"
-import { showMessageError, showMessageInfo } from "../../utils/messages"
-import { requestPermission } from "../../utils/permissions"
-import { getI18nText } from "../../utils/translate"
-const {
-  PRIORITIES: { HIGH_ACCURACY },
-  addListener,
-  checkSettings,
-  requestResolutionSettings,
-} = LocationEnabler
+import { PermissionsAndroid, Platform } from "react-native"
+import Geolocation from "react-native-geolocation-service"
+import { showMessageError } from "../../utils/messages"
 
-interface Location {
-  latitude: number
-  longitude: number
-  longitudeDelta: number
-  latitudeDelta: number
+export interface Location {
+  latitude?: number
+  longitude?: number
+  longitudeDelta?: number
+  latitudeDelta?: number
+  locationAvailable?: boolean
 }
 
-interface Address {
+export interface Address {
   city: string
   region: string
   formatted: string
@@ -28,87 +18,6 @@ interface Address {
 }
 
 export const useLocation = () => {
-  const [location, setLocation] = useState<Location>({
-    latitude: 0,
-    longitude: 0,
-    longitudeDelta: 0,
-    latitudeDelta: 0,
-  })
-
-  const permission = async (): Promise<Location> => {
-    let permission: Permission
-    if (Platform.OS === "android") permission = PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION
-    else permission = PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
-    return await requestPermission(permission).then(async (granted) => {
-      if (granted) {
-        const config = {
-          priority: HIGH_ACCURACY,
-          alwaysShow: true,
-          needBle: false,
-        }
-
-        // Check if location is enabled or not
-        checkSettings(config)
-
-        // If location is disabled, prompt the user to turn on device location
-        requestResolutionSettings(config)
-
-        // Adds a listener to be invoked when location settings checked using
-        return await addListenerLocation()
-      } else {
-        // showMessageInfo(getI18nText("mapScreen.disabledLocation"))
-        console.log(`MapScreen: denied, ${granted}`)
-        return {
-          latitude: 0,
-          longitude: 0,
-          longitudeDelta: 0,
-          latitudeDelta: 0,
-        }
-      }
-    })
-  }
-  const addListenerLocation = async (): Promise<Location> => {
-    return new Promise((resolve) => {
-      const listener = addListener(({ locationEnabled }) => {
-        __DEV__ && console.log(`Location are ${locationEnabled ? "enabled" : "disabled"}`)
-
-        if (locationEnabled) {
-          RNLocation.getLatestLocation({ timeout: 60000 })
-            .then((latestLocation) => {
-              const location: Location = {
-                latitude: latestLocation.latitude,
-                longitude: latestLocation.longitude,
-                latitudeDelta: 0.020000524857270108,
-                longitudeDelta: 0.004366971552371979,
-              }
-              setLocation({ ...location })
-
-              __DEV__ && console.log("MapScreen: latestLocation", latestLocation)
-              listener.remove()
-              resolve(location)
-            })
-            .catch(() => {
-              resolve({
-                latitude: 0,
-                longitude: 0,
-                latitudeDelta: 0,
-                longitudeDelta: 0,
-              })
-              showMessageInfo(getI18nText("mapScreen.errorToGetLocation"))
-            })
-        } else {
-          resolve({
-            latitude: 0,
-            longitude: 0,
-            latitudeDelta: 0,
-            longitudeDelta: 0,
-          })
-          // showMessageInfo(getI18nText("mapScreen.disabledLocation"))
-        }
-      })
-    })
-  }
-
   const fetchAddressText = async (latitude: number, longitude: number): Promise<Address> => {
     const requestOptions: RequestInit = {
       method: "GET",
@@ -170,10 +79,66 @@ export const useLocation = () => {
       })
   }
 
+  const requestLocationPermission = async () => {
+    if (Platform.OS === "ios") {
+      Geolocation.requestAuthorization("whenInUse")
+      // IOS permission request does not offer a callback
+      return null
+    }
+    if (Platform.OS === "android") {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) return true
+
+        return false
+      } catch (err) {
+        console.warn(err.message)
+        return false
+      }
+    }
+    return false
+  }
+
+  async function getCurrentPosition(callback: (location: Location) => void) {
+    const hasLocationPermission = await requestLocationPermission()
+    /* This will only be fired on Android. On Apple we can not detect when/if a
+     * location permission has been granted or denied. For that reason after a
+     * predefined period we just timeout.
+     */
+
+    if (hasLocationPermission === false) {
+      callback({
+        locationAvailable: false,
+      })
+      __DEV__ && console.log("Can not obtain location permission")
+      return
+    }
+
+    Geolocation.getCurrentPosition(
+      (position) => {
+        callback({
+          locationAvailable: true,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+          latitudeDelta: 0.020000524857270108,
+          longitudeDelta: 0.004366971552371979,
+        })
+      },
+      (error) => {
+        callback({
+          locationAvailable: false,
+        })
+
+        __DEV__ && console.log(error.message, error.code)
+      },
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 },
+    )
+  }
+
   return {
-    location,
-    permission,
-    setLocation,
+    getCurrentPosition,
     fetchAddressText,
   }
 }

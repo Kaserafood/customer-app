@@ -1,7 +1,7 @@
 // Use this import if you want to use "env.js" file
 // const { API_URL } = require("../../config/env")
 // Or just specify it directly like this:
-//const API_URL = "http://192.168.0.4:3000"
+//const API_URL = "http://192.168.0.15:3000"
 const API_URL = "https://kasera-customer-api.azurewebsites.net"
 
 /**
@@ -24,5 +24,5 @@ export interface ApiConfig {
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: API_URL,
-  timeout: 10000,
+  timeout: 50000,
 }

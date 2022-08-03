@@ -14,7 +14,7 @@ export function getFormatMaskPhone(): string {
 
 export function getMaskLength(mask: string): number {
   if (!mask) return 0
-  return mask.replaceAll("[", "").replaceAll("]", "").length
+  return mask.split("[").join("").split("]").join("").length
 }
 
 export function getMaskCard(number: string) {

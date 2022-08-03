@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { StyleSheet, TextStyle, View, ViewStyle } from "react-native"
+import { Platform, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import TextInputMask from "react-native-text-input-mask"
 import { translate } from "../../i18n"
@@ -18,6 +18,10 @@ const TEXT_STYLES: TextStyle = {
   marginBottom: -3,
   fontSize: typographySize.md,
   color: color.text,
+}
+const BORDER_BOTTOM = {
+  borderBottomWidth: 1,
+  borderBottomColor: color.palette.grayLigth,
 }
 const TEXT_ERROR: TextStyle = {
   color: color.error,
@@ -38,7 +42,7 @@ const CONTAINER_INPUT_CARD: ViewStyle = {
 const CONTAINER: ViewStyle = {
   width: "100%",
 }
-
+const isIos = Platform.OS === "ios"
 export const InputText = (props: InputTextProps) => {
   const { name } = props
 
@@ -129,7 +133,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
             underlineColorAndroid={color.palette.grayLigth}
-            style={stylesInput}
+            style={[stylesInput, isIos && BORDER_BOTTOM]}
             ref={forwardedRef}
             onChangeText={field.onChange}
             onBlur={field.onBlur}

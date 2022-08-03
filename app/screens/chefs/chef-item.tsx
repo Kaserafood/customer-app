@@ -90,7 +90,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
               key={dish.id}
               rippleOpacity={0.2}
               rippleDuration={400}
-              onPress={() => onDishPress(dish)}
+              onPress={() => onChefPress()}
               style={styles.dish}
             >
               <Image style={[styles.dish, styles.imageDish]} source={{ uri: dish.image }}></Image>
