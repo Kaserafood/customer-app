@@ -1,4 +1,4 @@
-import { detach, flow, Instance, types } from "mobx-state-tree"
+import { flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../services/api"
 import { dish } from "./dish"
 import { userChef } from "./user-store"
@@ -52,6 +52,7 @@ export const DishStoreModel = types
       self.dishesGroupedByChef.clear()
       const api = new Api()
       const result = yield api.getDishesGroupedByChef(date, timeZone)
+      console.log(result)
       if (result.kind === "ok") {
         self.dishesGroupedByChef.replace(result.data)
       }

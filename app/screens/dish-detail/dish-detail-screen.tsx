@@ -45,6 +45,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const { ...methods } = useForm({ mode: "onBlur" })
     const { dishStore, commonStore, cartStore } = useStores()
     const [loading, setLoading] = useState(false)
+    const [loadingDishes, setLoadingDishes] = useState(true)
 
     useEffect(() => {
       setAddonsAvailable(currentDish.addons.filter((addon) => addon.hide_in_app !== "yes"))
@@ -56,9 +57,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         if (commonStore.currentChefId !== params.chef.id) {
           commonStore.setCurrentChefId(params.chef.id)
           commonStore.setCurrentChefImage(params.chef.image)
-          commonStore.setVisibleLoading(true)
+          setLoadingDishes(true)
           await dishStore.getByChef(params.chef.id).finally(() => {
-            commonStore.setVisibleLoading(false)
+            setLoadingDishes(false)
           })
         }
       }
@@ -112,7 +113,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       }
       setTimeout(() => {
         setLoading(false)
-      }, 500)
+      }, 300)
     }
 
     return (
@@ -213,12 +214,66 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
             <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
           </View>
-
-          <ListDish
-            currencyCode={currentDish.chef.currencyCode}
-            onChangeDish={(dish) => changeDish(dish)}
-            dishId={currentDish.id}
-          ></ListDish>
+          {loadingDishes ? (
+            <SkeletonPlaceholder>
+              <SkeletonPlaceholder.Item width={"100%"} flexDirection="row" marginLeft={spacing[4]}>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder.Item>
+            </SkeletonPlaceholder>
+          ) : (
+            <ListDish
+              currencyCode={currentDish.chef.currencyCode}
+              onChangeDish={(dish) => changeDish(dish)}
+              dishId={currentDish.id}
+            ></ListDish>
+          )}
         </ScrollView>
         <ButtonFooter
           onPress={methods.handleSubmit(onSubmit)}

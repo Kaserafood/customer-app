@@ -99,18 +99,17 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         /*
          * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
          */
-        if (!__DEV__) {
-          if (cartStore.hasItems) cartStore.cleanItems()
-        }
-        await dayStore.getDays(RNLocalize.getTimeZone())
+        if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
+
         await Promise.all([
-          dishStore.getAll(days[0].date, RNLocalize.getTimeZone(), userStore.userId),
+          dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
           categoryStore.getAll(),
           orderStore.getPriceDelivery(),
+          dayStore.getDays(RNLocalize.getTimeZone()),
         ])
           .then(() => {
             setCurrentDay(days[0])
-            setDishes(dishStore.dishes)
+            setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
@@ -143,7 +142,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBar="dark-content"
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView nestedScrollEnabled style={styles.container}>
           <Location
             onPress={() => {
               modalState.setVisibleLocation(true)
