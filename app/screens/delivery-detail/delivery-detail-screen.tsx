@@ -19,7 +19,7 @@ import {
   Separator,
   Text,
 } from "../../components"
-import { LocationModal } from "../../components/location/location-modal"
+import { ModalLocation } from "../../components/location/modal-location"
 import { MetaData, Order, Products, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -324,7 +324,7 @@ export const DeliveryDetailScreen: FC<
         )}`}
       ></ButtonFooter>
 
-      <LocationModal screenToReturn={"deliveryDetail"} modal={modalState}></LocationModal>
+      <ModalLocation screenToReturn={"deliveryDetail"} modal={modalState}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
     </Screen>
   )

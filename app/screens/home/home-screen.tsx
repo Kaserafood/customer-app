@@ -21,7 +21,7 @@ import {
   Text,
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { LocationModal } from "../../components/location/location-modal"
+import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
@@ -187,7 +187,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             ></EmptyData>
           </View>
         </ScrollView>
-        <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
+        <ModalLocation screenToReturn="main" modal={modalState}></ModalLocation>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
         <ModalDeliveryDate

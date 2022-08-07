@@ -12,7 +12,7 @@ import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-import { Incrementable, IncrementableProps, PriceOption } from "./incrementable"
+import { Incrementable, IncrementableProps, PriceOption } from "./incrementable-item"
 import { StateHandler } from "./stateHandler"
 import { useAddon } from "./useAddons"
 

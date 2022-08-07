@@ -56,7 +56,7 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
  * Modal to select location and add new location
  */
 const modalPersistent = new ModalPersistent()
-export const LocationModal = observer(function Location(props: LocationProps) {
+export const ModalLocation = observer(function Location(props: LocationProps) {
   const { style, modal, screenToReturn } = props
 
   const { addressStore, userStore } = useStores()
