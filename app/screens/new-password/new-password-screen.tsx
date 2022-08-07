@@ -5,7 +5,7 @@ import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, View } from "react-native"
 import images from "../../assets/images"
-import { Button, Header, InputText, Loader, Modal, Screen, Text } from "../../components"
+import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
@@ -116,7 +116,6 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
             </View>
           </FormProvider>
         </View>
-        {/* <Loader></Loader> */}
         <ModalPasswordChanged
           navigation={navigation}
           toLoginScreen={toLoginScreen}

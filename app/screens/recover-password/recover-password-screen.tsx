@@ -4,7 +4,7 @@ import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
-import { Button, Header, InputText, Loader, Modal, Screen, Text } from "../../components"
+import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -84,7 +84,6 @@ export const RecoverPasswordScreen: FC<
           email={methods.getValues("email")}
         ></ModalSendedEmail>
       </Screen>
-      {/* <Loader></Loader> */}
     </>
   )
 })
