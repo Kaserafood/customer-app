@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Modal from "react-native-modal"
@@ -6,8 +5,8 @@ import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import { Image } from "../image/image"
 import { Button } from "../button/button"
+import { Image } from "../image/image"
 import { Text } from "../text/text"
 
 interface ModalState {

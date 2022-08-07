@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
 import { utilFlex, utilSpacing } from "../../theme/Util"
