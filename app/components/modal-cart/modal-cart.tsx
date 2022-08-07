@@ -10,17 +10,13 @@ import { MetaDataCart } from "../../models/cart-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-
-interface ModalState {
-  isVisible: boolean
-  setVisible: (state: boolean) => void
-}
 
 export interface ModalCartProps {
   /**
@@ -129,9 +125,9 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
 
 export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
   const { metaDataCart } = props
-  console.log(JSON.stringify(metaDataCart))
+
   return (
-    <View style={[utilSpacing.mt2, { backgroundColor: "red" }]}>
+    <View style={[utilSpacing.mt2]}>
       {metaDataCart.map((item) => (
         <View key={item.key} style={utilFlex.flexRow}>
           {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}

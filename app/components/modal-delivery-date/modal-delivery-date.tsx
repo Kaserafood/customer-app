@@ -1,4 +1,3 @@
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
@@ -8,6 +7,7 @@ import Ripple from "react-native-material-ripple"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalState, ModalStateHandler } from "../../utils/modalState"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
@@ -15,23 +15,8 @@ import { Chip } from "../chip/chip"
 import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
-interface ModalState {
-  isVisible: boolean
-  setVisible: (state: boolean) => void
-}
 
-class ModalWhyState {
-  isVisibleWhy = false
-
-  setVisibleWhy(state: boolean) {
-    this.isVisibleWhy = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-const modalState = new ModalWhyState()
+const modalState = new ModalStateHandler()
 
 export interface ModalDeliveryDateProps {
   /**
@@ -90,7 +75,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
             <Chip
               tx="modalDeliveryDate.why"
               style={utilSpacing.pb2}
-              onPressIn={() => modalState.setVisibleWhy(true)}
+              onPressIn={() => modalState.setVisible(true)}
             ></Chip>
           </View>
           <ScrollView style={[utilSpacing.mt5, styles.body]}>
