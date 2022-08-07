@@ -2,9 +2,9 @@ import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, View, ViewStyle } from "react-native"
-import Animated, { color, FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 import { useStores } from "../../models/root-store/root-store-context"
-import { color as colorTheme, spacing } from "../../theme"
+import { color as colorTheme } from "../../theme"
 const CONTAINER: ViewStyle = {
   flex: 1,
   position: "absolute",

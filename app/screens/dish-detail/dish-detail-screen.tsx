@@ -61,7 +61,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           await dishStore.getByChef(params.chef.id).finally(() => {
             setLoadingDishes(false)
           })
-        }
+        } else setLoadingDishes(false)
       }
 
       fetch()

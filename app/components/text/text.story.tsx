@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-native/no-color-literals */
 
+import { storiesOf } from "@storybook/react-native"
 import * as React from "react"
 import { View, ViewStyle } from "react-native"
-import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { color } from "../../theme"
 import { Text } from "./text"
 
@@ -35,11 +35,6 @@ storiesOf("Text", module)
       <UseCase text="bold" usage="Used for bolded body text.">
         <View style={VIEWSTYLE}>
           <Text preset="bold">Osnap! I'm puffy.</Text>
-        </View>
-      </UseCase>
-      <UseCase text="header" usage="Used for major section headers.">
-        <View style={VIEWSTYLE}>
-          <Text preset="header">Behold!</Text>
         </View>
       </UseCase>
     </Story>

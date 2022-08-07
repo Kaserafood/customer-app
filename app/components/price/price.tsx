@@ -15,10 +15,6 @@ const CONTAINER: ViewStyle = {
   paddingBottom: spacing[1],
 }
 
-const CONTAINER_DELIVERY: ViewStyle = {
-  // alignSelf: "flex-end",
-}
-
 export interface PriceProps {
   /**
    * An optional style override useful for padding & margin.

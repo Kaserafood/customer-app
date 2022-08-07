@@ -1,15 +1,13 @@
-import * as React from "react"
 import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { color } from "../../theme"
-import { InputText } from "./input-text"
+import * as React from "react"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 
 storiesOf("InputText", module)
   .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
   .add("Style Presets", () => (
     <Story>
       <UseCase text="Primary" usage="The primary.">
-        <InputText style={{ backgroundColor: color.error }} />
+        {/* TODO: Add stories for this component */}
       </UseCase>
     </Story>
   ))

@@ -4,7 +4,7 @@ import React, { FC } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { Button, Header, InputText, Loader, Screen } from "../../components"
+import { Button, Header, InputText, Screen } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -117,7 +117,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             ></Button>
           </View>
         </ScrollView>
-        {/* <Loader></Loader> */}
       </Screen>
     )
   },

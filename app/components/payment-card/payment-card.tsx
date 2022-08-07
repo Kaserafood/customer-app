@@ -1,16 +1,10 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
-import { StyleProp, View, ViewStyle } from "react-native"
+import { View } from "react-native"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"
 import { InputText } from "../input-text/input-text"
 
 export interface PaymentCardProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
-  style?: StyleProp<ViewStyle>
-
   /**
    * Methods from FormProvider
    */
@@ -18,10 +12,10 @@ export interface PaymentCardProps {
 }
 
 /**
- * Describe your component here
+ * Inputs for payment card
  */
-export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps) {
-  const { style, methods } = props
+export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
+  const { methods } = props
   const [maskCard, setMaskCard] = useState("")
   const [maskCVV, setMaskCVV] = useState("")
   const [placeholderCVV, setPlaceholderCVV] = useState("paymentCard.cvvPlaceholder3")
@@ -41,7 +35,7 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
   }, [watchCardNumber])
 
   return (
-    <View style={style}>
+    <View>
       <InputText
         name="name"
         preset="card"
@@ -101,4 +95,4 @@ export const PaymentCard = observer(function PaymentCard(props: PaymentCardProps
       </View>
     </View>
   )
-})
+}

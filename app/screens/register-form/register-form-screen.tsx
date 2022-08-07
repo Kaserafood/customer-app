@@ -4,7 +4,7 @@ import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { Button, Checkbox, Header, InputText, Loader, Screen, Text } from "../../components"
+import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -154,7 +154,6 @@ export const RegisterFormScreen: FC<
           </View>
         </ScrollView>
       </Screen>
-      {/* <Loader></Loader> */}
     </>
   )
 })

@@ -6,7 +6,7 @@ import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { Button, Header, InputText, Loader, Screen, Text } from "../../components"
+import { Button, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserLogin } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -117,7 +117,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             </View>
           </ScrollView>
         </Screen>
-        {/* <Loader></Loader> */}
       </>
     )
   },

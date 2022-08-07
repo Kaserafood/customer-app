@@ -1,5 +1,4 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
@@ -21,7 +20,7 @@ import {
   Text,
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { LocationModal } from "../../components/location/location-modal"
+import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
@@ -31,23 +30,8 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 
-class ModalState {
-  isVisibleWhy = false
-  isVisibleLocation = false
-
-  setVisibleWhy(state: boolean) {
-    this.isVisibleWhy = state
-  }
-
-  setVisibleLocation(state: boolean) {
-    this.isVisibleLocation = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-const modalState = new ModalState()
+const modalStateWhy = new ModalStateHandler()
+const modalStateLocation = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 
@@ -145,13 +129,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         <ScrollView nestedScrollEnabled style={styles.container}>
           <Location
             onPress={() => {
-              modalState.setVisibleLocation(true)
+              modalStateLocation.setVisible(true)
             }}
             style={utilSpacing.px4}
           ></Location>
           <DayDelivery
             days={dayStore.days}
-            onWhyPress={(state) => modalState.setVisibleWhy(state)}
+            onWhyPress={(state) => modalStateWhy.setVisible(state)}
             onPress={(day) => {
               onChangeDay(day)
             }}
@@ -187,8 +171,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             ></EmptyData>
           </View>
         </ScrollView>
-        <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
-        <DayDeliveryModal modal={modalState}></DayDeliveryModal>
+        <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
+        <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
         <ModalDeliveryDate
           isAllGet

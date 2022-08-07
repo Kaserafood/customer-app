@@ -1,6 +1,5 @@
 import * as React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet } from "react-native"
-import { observer } from "mobx-react-lite"
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { color, spacing } from "../../theme"
 import { SHADOW } from "../../theme/Util"
 
@@ -19,11 +18,11 @@ export interface CardProps {
 /**
  * Describe your component here
  */
-export const Card = observer(function Card(props: CardProps) {
+export const Card = function Card(props: CardProps) {
   const { style, children } = props
 
   return <View style={[styles.card, style]}>{children}</View>
-})
+}
 
 const styles = StyleSheet.create({
   card: {
