@@ -1,25 +1,4 @@
-## Link assets
-
-to to folder "app/assets"
-run command yarn link
-
-then in the root path run "yarn link assets"
-
-# Welcome to your new ignited app!
-
-[![CircleCI](https://circleci.com/gh/infinitered/ignite.svg?style=svg)](https://circleci.com/gh/infinitered/ignite)
-
-## The latest and greatest boilerplate for Infinite Red opinions
-
-This is the boilerplate that [Infinite Red](https://infinite.red) uses as a way to test bleeding-edge changes to our React Native stack.
-
-Currently includes:
-
-- React Native
-- React Navigation
-- MobX State Tree
-- TypeScript
-- And more!
+# Kasera Customer App!
 
 ## Quick Start
 
@@ -144,7 +123,4 @@ For Visual Studio Code users, there is a handy extension that makes it easy to l
 ## Running e2e tests
 
 Read [e2e setup instructions](./e2e/README.md).
-<<<<<<< Updated upstream
-
-## Previous Boilerplates
 
