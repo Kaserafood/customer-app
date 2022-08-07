@@ -28,18 +28,8 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ChefItem, ChefItemModel } from "./chef-item"
 
-class ModalState {
-  isVisibleWhy = false
+class DataState {
   data: ChefItemModel[] = []
-  isVisibleLocation = false
-
-  setVisibleLocation(state: boolean) {
-    this.isVisibleLocation = state
-  }
-
-  setVisibleWhy(state: boolean) {
-    this.isVisibleWhy = state
-  }
 
   setData(data: ChefItemModel[]) {
     this.data = data
@@ -78,7 +68,9 @@ class ModalState {
     makeAutoObservable(this)
   }
 }
-const modalState = new ModalState()
+const modalState = new DataState()
+const modalStateLocation = new ModalStateHandler()
+const modalStateDay = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 type ScreenType = "dishDetail" | "menuChef"
 /**
@@ -181,13 +173,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         <ScrollView style={styles.container}>
           <Location
             onPress={() => {
-              modalState.setVisibleLocation(true)
+              modalStateLocation.setVisible(true)
             }}
             style={utilSpacing.px4}
           ></Location>
           <DayDelivery
             days={dayStore.days}
-            onWhyPress={(state) => modalState.setVisibleWhy(state)}
+            onWhyPress={(state) => modalStateDay.setVisible(state)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
           <View style={utilSpacing.px4}>
@@ -216,8 +208,8 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             <ListChef toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}></ListChef>
           </View>
         </ScrollView>
-        <ModalLocation screenToReturn="main" modal={modalState}></ModalLocation>
-        <DayDeliveryModal modal={modalState}></DayDeliveryModal>
+        <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
+        <DayDeliveryModal modal={modalStateDay}></DayDeliveryModal>
         <ModalDeliveryDate
           isAllGet
           modal={modalDeliveryDate}
