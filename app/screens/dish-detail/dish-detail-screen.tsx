@@ -151,7 +151,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
                 <View style={[utilFlex.flexRow, utilSpacing.my3]}>
                   <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
                 </View>
-                <Text style={[utilSpacing.mb2]} text={currentDish.description}></Text>
+                <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
                 <Price
                   style={styles.price}
                   amount={currentDish.price}

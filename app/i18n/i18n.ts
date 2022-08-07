@@ -1,4 +1,3 @@
-import * as Localization from "expo-localization"
 import i18n from "i18n-js"
 import es from "./es.json"
 
@@ -12,7 +11,7 @@ i18n.locale = "es"
  * Builds up valid keypaths for translations.
  * Update to your default locale of choice if not English.
  */
-type DefaultLocale = typeof en
+type DefaultLocale = typeof es
 export type TxKeyPath = RecursiveKeyOf<DefaultLocale>
 
 type RecursiveKeyOf<TObj extends Record<string, any>> = {

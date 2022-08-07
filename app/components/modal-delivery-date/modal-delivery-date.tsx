@@ -50,7 +50,7 @@ export interface ModalDeliveryDateProps {
  * Modal for display delivery dates avalibales for the order
  */
 export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDeliveryDateProps) {
-  const { style, modal, isAllGet, onSelectDay = () => {}, isVisibleContinue = true } = props
+  const { style, modal, isAllGet, onSelectDay, isVisibleContinue = true } = props
   const { dayStore, commonStore } = useStores()
 
   useEffect(() => {
@@ -82,7 +82,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
             <ListDay
               isGetAll={isAllGet}
               modalState={modal}
-              onSelectDay={(day) => onSelectDay(day)}
+              onSelectDay={(day) => onSelectDay && onSelectDay(day)}
             ></ListDay>
           </ScrollView>
           {isVisibleContinue && (

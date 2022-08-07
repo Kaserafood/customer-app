@@ -185,10 +185,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   iconRightCard: {
-    position: "absolute",
-    right: 5,
     backgroundColor: color.background,
     bottom: 16,
+    position: "absolute",
+    right: 5,
   },
   textRed: {
     color: color.error,

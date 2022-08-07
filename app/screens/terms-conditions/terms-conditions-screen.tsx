@@ -20,7 +20,7 @@ export const TermsConditionsScreen: FC<
   const textList = []
 
   for (let i = 1; i <= 61; i++) {
-    const text1 = "termsConditionsScreen.text" + i
+    const text1 = `termsConditionsScreen.text${i}`
     const styles: TextStyle = { ...utilSpacing.mb4 }
     if (i === 1) {
       styles.marginTop = spacing[4]

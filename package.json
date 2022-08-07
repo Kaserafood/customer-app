@@ -178,6 +178,7 @@
       "prettier/@typescript-eslint"
     ],
     "plugins": [
+      "prettier",
       "@typescript-eslint",
       "react",
       "react-native",
@@ -237,9 +238,6 @@
       "prettier/prettier": ["error", {
         "no-inline-styles": true
       }] 
-    },
-    "resolutions": {
-      "@react-native-community/cli-debugger-ui": "4.7.0"
     }
   }
 }

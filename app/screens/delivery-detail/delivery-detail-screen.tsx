@@ -254,7 +254,7 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
-          <View style={[utilFlex.flexRow]}>
+          <View style={utilFlex.flexRow}>
             <Text
               preset="bold"
               caption

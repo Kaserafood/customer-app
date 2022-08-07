@@ -38,8 +38,8 @@ const styles = StyleSheet.create({
     fontSize: typographySize.lg,
   },
   container: {
+    backgroundColor: color.background,
     borderTopColor: color.palette.grayLigth,
     borderTopWidth: 1,
-    backgroundColor: color.background,
   },
 })

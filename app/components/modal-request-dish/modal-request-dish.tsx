@@ -261,6 +261,10 @@ const styles = StyleSheet.create({
   btn: {
     width: "90%",
   },
+  btnContinue: {
+    alignSelf: "center",
+    minWidth: "75%",
+  },
   cardActive: {
     borderColor: color.primary,
     borderWidth: 2,
@@ -271,12 +275,8 @@ const styles = StyleSheet.create({
   imgNotFound: {
     alignSelf: "center",
     height: 200,
-    width: "100%",
-    position: "relative",
     left: 15,
-  },
-  btnContinue: {
-    minWidth: "75%",
-    alignSelf: "center",
+    position: "relative",
+    width: "100%",
   },
 })

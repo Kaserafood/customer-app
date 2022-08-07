@@ -40,9 +40,9 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
 
 const styles = StyleSheet.create({
   modal: {
-    width: "80%",
-    minWidth: 300,
     alignSelf: "center",
+    minWidth: 300,
+    width: "80%",
   },
   textCenter: {
     textAlign: "center",
