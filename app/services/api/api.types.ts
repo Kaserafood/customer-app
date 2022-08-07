@@ -1,6 +1,5 @@
 import { Address, OrderOverview } from "../../models"
 import { Category } from "../../models/category-store"
-import { Character } from "../../models/character/character"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
 import { UserChef } from "../../models/user-store"
@@ -19,9 +18,6 @@ export interface User {
 
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
 export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem
-
-export type GetCharactersResult = { kind: "ok"; characters: Character[] } | GeneralApiProblem
-export type GetCharacterResult = { kind: "ok"; character: Character } | GeneralApiProblem
 
 type kind = {
   kind: typeKind
