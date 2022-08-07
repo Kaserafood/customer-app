@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ImageURISource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -63,7 +64,7 @@ interface ModalProperties {
 /**
  * Modal base for all modals.
  */
-export const Modal = function Modal(props: ModalProperties) {
+export const Modal = observer(function Modal(props: ModalProperties) {
   const {
     style,
     modal,
@@ -140,7 +141,7 @@ export const Modal = function Modal(props: ModalProperties) {
       </View>
     </ModalRN>
   )
-}
+})
 
 const styles = StyleSheet.create({
   body: {

@@ -17,6 +17,7 @@ import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 
 class ModalPersistent {
   isPersistent = false
@@ -29,10 +30,7 @@ class ModalPersistent {
     makeAutoObservable(this)
   }
 }
-interface ModalState {
-  isVisibleLocation: boolean
-  setVisibleLocation: (state: boolean) => void
-}
+
 export interface LocationProps {
   /**
    * An optional style override useful for padding & margin.
@@ -42,7 +40,7 @@ export interface LocationProps {
   /**
    * Modal state to handle visibility
    */
-  modal: ModalState
+  modal: ModalStateHandler
 
   /**
    * Screen to navigate to when user select location
@@ -56,7 +54,7 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
  * Modal to select location and add new location
  */
 const modalPersistent = new ModalPersistent()
-export const LocationModal = observer(function Location(props: LocationProps) {
+export const ModalLocation = observer(function Location(props: LocationProps) {
   const { style, modal, screenToReturn } = props
 
   const { addressStore, userStore } = useStores()
@@ -94,7 +92,7 @@ export const LocationModal = observer(function Location(props: LocationProps) {
   }, [userStore.addressId])
 
   useEffect(() => {
-    if (modal.isVisibleLocation && addressText.length === 0) {
+    if (modal.isVisible && addressText.length === 0) {
       getCurrentPosition((position) => {
         const { latitude, longitude } = position
         __DEV__ && console.log("position", position)
@@ -103,15 +101,15 @@ export const LocationModal = observer(function Location(props: LocationProps) {
         })
       })
     }
-  }, [modal.isVisibleLocation])
+  }, [modal.isVisible])
 
   const hideModal = () => {
-    if (!modalPersistent.isPersistent) modal.setVisibleLocation(false)
+    if (!modalPersistent.isPersistent) modal.setVisible(false)
   }
 
   return (
     <Modal
-      isVisible={modal.isVisibleLocation || modalPersistent.isPersistent}
+      isVisible={modal.isVisible || modalPersistent.isPersistent}
       backdropColor={color.palette.grayTransparent}
       animationIn="zoomIn"
       animationOut="zoomOut"

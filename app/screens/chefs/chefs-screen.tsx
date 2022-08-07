@@ -16,7 +16,7 @@ import {
   Text,
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { LocationModal } from "../../components/location/location-modal"
+import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
@@ -216,7 +216,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             <ListChef toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}></ListChef>
           </View>
         </ScrollView>
-        <LocationModal screenToReturn="main" modal={modalState}></LocationModal>
+        <ModalLocation screenToReturn="main" modal={modalState}></ModalLocation>
         <DayDeliveryModal modal={modalState}></DayDeliveryModal>
         <ModalDeliveryDate
           isAllGet

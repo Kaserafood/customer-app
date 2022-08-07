@@ -1,5 +1,4 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
@@ -25,19 +24,7 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
-class ModalState {
-  isVisibleWhy = false
-
-  setVisibleWhy(state: boolean) {
-    this.isVisibleWhy = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
-const modalState = new ModalState()
+const modalStateWhy = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">> = observer(
   ({ route: { params }, navigation }) => {
@@ -85,7 +72,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
         <ScrollView>
           <DayDelivery
             days={dayStore.days}
-            onWhyPress={() => modalState.setVisibleWhy(true)}
+            onWhyPress={() => modalStateWhy.setVisible(true)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
           <View style={styles.container}>
@@ -108,8 +95,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
           ></EmptyData>
         </ScrollView>
-        <DayDeliveryModal modal={modalState}></DayDeliveryModal>
-        {/* <Loader></Loader> */}
+        <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
       </Screen>
     )
