@@ -45,12 +45,6 @@ export function Checkbox(props: CheckboxProps) {
               </Animated.View>
             )}
 
-            {preset === "tiny" && (
-              <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                <IconRN name="circle-check" size={20} color={color.palette.black} />
-              </Animated.View>
-            )}
-
             {preset === "medium" && (
               <Animated.View entering={ZoomIn} exiting={ZoomOut}>
                 <Icon name="circle-check-1" size={24} color={color.palette.black} />
@@ -62,7 +56,6 @@ export function Checkbox(props: CheckboxProps) {
             {preset === "default" && (
               <IconRN name="check-box-outline-blank" size={30} color={color.palette.green} />
             )}
-            {preset === "tiny" && <Icon name="circle" size={20} color={color.palette.black} />}
 
             {preset === "medium" && <Icon name="circle-1" size={24} color={color.palette.black} />}
           </View>
