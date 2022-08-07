@@ -232,7 +232,11 @@
       "space-before-function-paren": 0,
       "prefer-template": "error",
       "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "off"
+      "react-hooks/exhaustive-deps": "off",
+      "react-native/no-inline-styles": 1,
+      "prettier/prettier": ["error", {
+        "no-inline-styles": true
+      }] 
     },
     "resolutions": {
       "@react-native-community/cli-debugger-ui": "4.7.0"

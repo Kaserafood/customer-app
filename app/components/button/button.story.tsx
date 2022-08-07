@@ -1,7 +1,7 @@
-import * as React from "react"
-import { ViewStyle, TextStyle, Alert } from "react-native"
 import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
+import * as React from "react"
+import { Alert, TextStyle, ViewStyle } from "react-native"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { Button } from "./button"
 
 declare let module
@@ -28,6 +28,15 @@ storiesOf("Button", module)
           style={buttonStyleArray}
           textStyle={buttonTextStyleArray}
         />
+      </UseCase>
+      <UseCase text="White" usage="Button color white">
+        <Button text="Click It" preset="white" onPress={() => Alert.alert("pressed")} />
+      </UseCase>
+      <UseCase text="Block" usage="Full width container">
+        <Button text="Click It" preset="white" block onPress={() => Alert.alert("pressed")} />
+      </UseCase>
+      <UseCase text="Runded" usage="Rounded button">
+        <Button text="Click It" preset="primary" rounded onPress={() => Alert.alert("pressed")} />
       </UseCase>
     </Story>
   ))

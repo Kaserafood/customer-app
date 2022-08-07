@@ -1,15 +1,17 @@
-import * as React from "react"
 import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { color } from "../../theme"
+import * as React from "react"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { Dot } from "./dot"
 
 storiesOf("Dot", module)
   .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
-  .add("Style Presets", () => (
+  .add("Behaviour", () => (
     <Story>
-      <UseCase text="Primary" usage="The primary.">
-        <Dot style={{ backgroundColor: color.error }} />
+      <UseCase text="Normal" usage="Normal style">
+        <Dot />
+      </UseCase>
+      <UseCase text="Active" usage="When dot is active state">
+        <Dot active />
       </UseCase>
     </Story>
   ))

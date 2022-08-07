@@ -55,7 +55,7 @@ export interface ChipProps extends TouchableOpacityProps {
 /**
  * Component Chip
  */
-export const Chip = observer(function Chip(props: ChipProps) {
+export const Chip = function Chip(props: ChipProps) {
   const { style, tx, text, textstyle, active, ...rest } = props
   if (active) {
     CONTAINER.backgroundColor = color.palette.grayLigth
@@ -64,11 +64,12 @@ export const Chip = observer(function Chip(props: ChipProps) {
     CONTAINER.shadowColor = color.palette.black
   }
   // const styles = Object.assign({}, CONTAINER, style)
-  const styleText = Object.assign([], TEXT, textstyle)
+  const styleText = [TEXT, textstyle]
+  const styleBtn = [CONTAINER, style]
   const content = <Text tx={tx} text={text} style={styleText} />
   return (
-    <TouchableOpacity activeOpacity={0.5} style={[CONTAINER, style]} {...rest}>
+    <TouchableOpacity activeOpacity={0.5} style={styleBtn} {...rest}>
       {content}
     </TouchableOpacity>
   )
-})
+}

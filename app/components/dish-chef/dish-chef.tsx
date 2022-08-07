@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
@@ -33,7 +32,7 @@ export interface DishChefProps {
 /**
  * Dish for chef
  */
-export const DishChef = observer(function DishChef(props: DishChefProps) {
+export const DishChef = function DishChef(props: DishChefProps) {
   const { style, dish, onPress, currencyCode } = props
 
   return (
@@ -53,7 +52,7 @@ export const DishChef = observer(function DishChef(props: DishChefProps) {
       <Price style={utilSpacing.mt3} amount={dish.price} currencyCode={currencyCode}></Price>
     </Ripple>
   )
-})
+}
 
 const styles = StyleSheet.create({
   containerFavoriteImageDish: {

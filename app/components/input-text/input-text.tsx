@@ -1,4 +1,3 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { Platform, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
@@ -60,7 +59,7 @@ export const InputText = (props: InputTextProps) => {
   return <ControlledInput {...props} />
 }
 
-const ControlledInput = observer(function InputText(props: InputTextProps) {
+const ControlledInput = function InputText(props: InputTextProps) {
   const {
     style,
     styleContainer,
@@ -153,7 +152,7 @@ const ControlledInput = observer(function InputText(props: InputTextProps) {
       )}
     </Card>
   )
-})
+}
 
 const ErrorMessage = (props: { name: string }) => {
   const { name } = props

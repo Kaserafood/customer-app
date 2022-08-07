@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { ScrollView, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -10,9 +10,9 @@ import { MetaDataCart } from "../../models/cart-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
+import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
@@ -23,11 +23,6 @@ interface ModalState {
 }
 
 export interface ModalCartProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
-  style?: StyleProp<ViewStyle>
-
   /**
    * Mutable class for managing component visivility.
    */
@@ -48,14 +43,14 @@ export interface ModalCartProps {
  * Describe your component here
  */
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
-  const { style, modal, onContinue, chef } = props
+  const { modal, onContinue, chef } = props
 
   const { cartStore } = useStores()
 
   return (
     <Modal
       onBackdropPress={() => modal.setVisible(false)}
-      style={[styles.container, style]}
+      style={[styles.container]}
       isVisible={modal.isVisible}
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}

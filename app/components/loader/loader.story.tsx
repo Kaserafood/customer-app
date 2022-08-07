@@ -1,15 +1,14 @@
-import * as React from "react"
 import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { color } from "../../theme"
+import * as React from "react"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { Loader } from "./loader"
 
 storiesOf("Loader", module)
   .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
-  .add("Style Presets", () => (
+  .add("Behavior", () => (
     <Story>
-      <UseCase text="Primary" usage="The primary.">
-        <Loader style={{ backgroundColor: color.error }} />
+      <UseCase text="Loader default" usage="On ajax request">
+        <Loader visible></Loader>
       </UseCase>
     </Story>
   ))

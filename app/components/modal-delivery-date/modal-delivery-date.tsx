@@ -64,9 +64,7 @@ export interface ModalDeliveryDateProps {
 /**
  * Modal for display delivery dates avalibales for the order
  */
-export const ModalDeliveryDate = observer(function ModalDeliveryDate(
-  props: ModalDeliveryDateProps,
-) {
+export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDeliveryDateProps) {
   const { style, modal, isAllGet, onSelectDay = () => {}, isVisibleContinue = true } = props
   const { dayStore, commonStore } = useStores()
 
@@ -118,7 +116,7 @@ export const ModalDeliveryDate = observer(function ModalDeliveryDate(
       <DayDeliveryModal modal={modalState}></DayDeliveryModal>
     </>
   )
-})
+}
 const ListDay = observer(
   (props: { isGetAll: boolean; modalState: ModalState; onSelectDay?: (day: Day) => void }) => {
     const { dayStore } = useStores()

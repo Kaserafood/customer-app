@@ -191,7 +191,6 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
         initialDate={selectedDate}
       ></CalendarPicker>
       <ModalConfirmation></ModalConfirmation>
-      {/* <Loader></Loader> */}
     </>
   )
 })
