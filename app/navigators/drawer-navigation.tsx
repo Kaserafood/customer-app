@@ -1,15 +1,14 @@
 import { createDrawerNavigator } from "@react-navigation/drawer"
 import React from "react"
 import { View } from "react-native"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { color } from "../theme"
+import { utilFlex } from "../theme/Util"
 import DrawerContent from "./drawer-content"
 import { TabMainNavigation } from "./tab-main-navigation"
 
 const Drawer = createDrawerNavigator()
 
 export default function DrawerNavigation(args) {
-  const insets = useSafeAreaInsets()
   return (
     <Drawer.Navigator
       screenOptions={{
@@ -26,7 +25,7 @@ export default function DrawerNavigation(args) {
     >
       <Drawer.Screen name="MenuDrawer">
         {(props) => (
-          <View style={{ flex: 1 }}>
+          <View style={utilFlex.flex1}>
             <TabMainNavigation {...props} navigationRef={args.navigationRef} />
           </View>
         )}

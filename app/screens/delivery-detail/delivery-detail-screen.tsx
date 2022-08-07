@@ -1,5 +1,4 @@
 import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
@@ -37,19 +36,7 @@ import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { Totals } from "./totals"
 
-class ModalState {
-  isVisibleLocation = false
-
-  setVisibleLocation(state: boolean) {
-    this.isVisibleLocation = state
-  }
-
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-
-const modalState = new ModalState()
+const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
 
 export const DeliveryDetailScreen: FC<
@@ -218,7 +205,7 @@ export const DeliveryDetailScreen: FC<
           style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
         ></Text>
         <FormProvider {...methods}>
-          <TouchableOpacity activeOpacity={1} onPress={() => modalState.setVisibleLocation(true)}>
+          <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
             <InputText
               name="address"
               preset="card"
@@ -267,7 +254,7 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
-          <View style={[utilFlex.flexRow]}>
+          <View style={utilFlex.flexRow}>
             <Text
               preset="bold"
               caption
@@ -324,7 +311,7 @@ export const DeliveryDetailScreen: FC<
         )}`}
       ></ButtonFooter>
 
-      <ModalLocation screenToReturn={"deliveryDetail"} modal={modalState}></ModalLocation>
+      <ModalLocation screenToReturn={"deliveryDetail"} modal={modalStateLocation}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
     </Screen>
   )

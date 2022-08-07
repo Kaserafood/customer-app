@@ -46,7 +46,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   return (
     <Modal
       onBackdropPress={() => modal.setVisible(false)}
-      style={[styles.container]}
+      style={styles.container}
       isVisible={modal.isVisible}
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}
@@ -94,7 +94,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                   style={[utilSpacing.p2, styles.containerIconRemove]}
                   onPress={() => cartStore.removeItem(index)}
                 >
-                  <Image style={[styles.iconRemove]} source={images.close}></Image>
+                  <Image style={styles.iconRemove} source={images.close}></Image>
                 </Ripple>
               </Card>
             ))}
@@ -127,7 +127,7 @@ export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
   const { metaDataCart } = props
 
   return (
-    <View style={[utilSpacing.mt2]}>
+    <View style={utilSpacing.mt2}>
       {metaDataCart.map((item) => (
         <View key={item.key} style={utilFlex.flexRow}>
           {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}

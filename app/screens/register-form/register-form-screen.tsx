@@ -120,7 +120,7 @@ export const RegisterFormScreen: FC<
                   <TouchableOpacity
                     onPress={() => setTerms(!terms)}
                     activeOpacity={1}
-                    style={[utilSpacing.p4]}
+                    style={utilSpacing.p4}
                   >
                     <Checkbox value={terms}></Checkbox>
                   </TouchableOpacity>

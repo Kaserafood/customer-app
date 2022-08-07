@@ -19,7 +19,7 @@ export const PrivacyPolicyScreen: FC<
   const textList = []
 
   for (let i = 1; i <= 44; i++) {
-    const text1 = "privacyPolicy.text" + i
+    const text1 = `privacyPolicy.text${i}`
     const styles: TextStyle = { ...utilSpacing.mb4 }
     if (i === 1) {
       styles.marginTop = spacing[4]

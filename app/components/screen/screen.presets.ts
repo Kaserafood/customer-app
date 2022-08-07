@@ -30,7 +30,7 @@ export const presets = {
     inner: {
       justifyContent: "flex-start",
       alignItems: "stretch",
-     flex: 1
+      flex: 1,
     } as ViewStyle,
   },
 

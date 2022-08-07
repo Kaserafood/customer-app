@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react-native/no-color-literals */
 import { storiesOf } from "@storybook/react-native"
 import React from "react"
 import { View, ViewStyle } from "react-native"

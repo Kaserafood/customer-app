@@ -25,8 +25,6 @@ const TITLE: TextStyle = {
   fontFamily: typography.primaryBold,
   marginBottom: -spacing[1],
   fontSize: 22,
-
-  
 }
 const TITLE_MIDDLE: ViewStyle = { flex: 1, justifyContent: "center" }
 const LEFT: ViewStyle = { width: 32 }

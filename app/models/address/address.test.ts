@@ -1,7 +1,7 @@
-import { AddressModel } from "./address"
+import { AddressModelStore } from "./address"
 
 test("can be created", () => {
-  const instance = AddressModel.create({})
+  const instance = AddressModelStore.create({})
 
   expect(instance).toBeTruthy()
 })

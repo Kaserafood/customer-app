@@ -203,6 +203,12 @@ const ListDishes = observer(function ListDishes(props: {
 })
 
 const styles = StyleSheet.create({
+  chip: {
+    borderRadius: spacing[3],
+    marginRight: spacing[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
+  },
   container: {
     backgroundColor: color.background,
     flex: 1,
@@ -212,11 +218,5 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: spacing[4],
     width: 24,
-  },
-  chip: {
-    borderRadius: spacing[3],
-    marginRight: spacing[2],
-    paddingHorizontal: spacing[3],
-    paddingVertical: spacing[1],
   },
 })

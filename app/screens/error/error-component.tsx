@@ -1,5 +1,5 @@
 import React, { ErrorInfo } from "react"
-import { ImageStyle, ScrollView, TextStyle, View, ViewStyle } from "react-native"
+import { ScrollView, TextStyle, View, ViewStyle } from "react-native"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Button, Text } from "../../components"
 import { color } from "../../theme"
@@ -45,18 +45,6 @@ const CONTENT_ERROR: TextStyle = {
   color: color.error,
   fontWeight: "bold",
   paddingVertical: 15,
-}
-
-// Uncomment this and the Text component in the ErrorComponent if
-// you want to see a backtrace in your error reporting screen.
-// const CONTENT_BACKTRACE: TextStyle = {
-//   color: color.dim,
-// }
-
-const ICON: ImageStyle = {
-  marginTop: 30,
-  width: 64,
-  height: 64,
 }
 
 export interface ErrorComponentProps {
