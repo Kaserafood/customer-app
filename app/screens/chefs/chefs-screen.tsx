@@ -80,7 +80,7 @@ class ModalState {
 }
 const modalState = new ModalState()
 const modalDeliveryDate = new ModalStateHandler()
-type Screen = "dishDetail" | "menuChef"
+type ScreenType = "dishDetail" | "menuChef"
 /**
  * Chef screen for show all chefs with dishes
  */
@@ -116,7 +116,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       })
     }
 
-    const toScreen = (screen: Screen, dish: Dish, userChef: ChefItemModel) => {
+    const toScreen = (screen: ScreenType, dish: Dish, userChef: ChefItemModel) => {
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
@@ -229,7 +229,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 )
 
 const ListChef = observer(function ListChef(props: {
-  toScreen: (screen: Screen, dish: Dish, userChef: ChefItemModel) => void
+  toScreen: (screen: ScreenType, dish: Dish, userChef: ChefItemModel) => void
 }) {
   return (
     <View>
@@ -250,15 +250,15 @@ const ListChef = observer(function ListChef(props: {
 })
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: color.background,
-    flex: 1,
-    paddingTop: spacing[2],
-  },
   chip: {
     borderRadius: spacing[3],
     marginRight: spacing[2],
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[1],
+  },
+  container: {
+    backgroundColor: color.background,
+    flex: 1,
+    paddingTop: spacing[2],
   },
 })

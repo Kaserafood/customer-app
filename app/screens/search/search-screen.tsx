@@ -42,7 +42,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
           titleStyle={[utilSpacing.pt2, utilSpacing.mb2]}
           onLeftPress={goBack}
         />
-        <ScrollView style={[styles.body]}>
+        <ScrollView style={styles.body}>
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}
@@ -130,9 +130,9 @@ function FocusAwareStatusBar(props) {
 const styles = StyleSheet.create({
   body: {
     alignSelf: "center",
+    flex: 1,
     minWidth: 300,
     width: "88%",
-    flex: 1,
   },
   card: {
     alignItems: "center",

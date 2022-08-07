@@ -14,7 +14,7 @@ EwIDAQAB
 }
 
 export function encrypt(toEncrypt: string): string {
-  let crypt = new JSEncrypt()
+  const crypt = new JSEncrypt()
   crypt.setKey(getPublicKey())
   return crypt.encrypt(toEncrypt) || ""
 }

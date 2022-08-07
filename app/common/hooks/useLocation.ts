@@ -1,3 +1,5 @@
+/* eslint-disable node/no-callback-literal */
+// eslint-disable-next-line react-native/split-platform-components
 import { PermissionsAndroid, Platform } from "react-native"
 import Geolocation from "react-native-geolocation-service"
 import { showMessageError } from "../../utils/messages"

@@ -57,7 +57,7 @@ export interface ChefItemProps {
  * Chef item Pager
  */
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
-  const { style, item, onPrevious, onNext, onChangePosition, onDishPress, onChefPress } = props
+  const { style, item, onPrevious, onNext, onChangePosition, onChefPress } = props
 
   return (
     <View style={style} key={item.id}>
@@ -208,8 +208,8 @@ const styles = StyleSheet.create({
     width: "75%",
   },
   textContainer: {
-    justifyContent: "space-between",
     height: 70,
+    justifyContent: "space-between",
   },
   textDescription: {
     lineHeight: 23,

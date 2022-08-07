@@ -44,11 +44,6 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
 })
 
 const styles = StyleSheet.create({
-  modal: {
-    width: "88%",
-    minWidth: 300,
-    alignSelf: "center",
-  },
   chip: {
     marginBottom: spacing[2],
     marginRight: spacing[2],
@@ -67,11 +62,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
   },
+
   imgClose: {
     height: 20,
     width: 20,
@@ -79,6 +74,11 @@ const styles = StyleSheet.create({
   imgModalWhy: {
     height: 150,
     width: 150,
+  },
+  modal: {
+    alignSelf: "center",
+    minWidth: 300,
+    width: "88%",
   },
 
   why: {

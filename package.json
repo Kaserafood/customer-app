@@ -178,6 +178,7 @@
       "prettier/@typescript-eslint"
     ],
     "plugins": [
+      "prettier",
       "@typescript-eslint",
       "react",
       "react-native",
