@@ -134,9 +134,9 @@ export const useLocation = () => {
           locationAvailable: false,
         })
 
-        __DEV__ && console.log("erro getPosition ->" , error.message, error.code)
+        __DEV__ && console.log("erro getPosition ->", error.message, error.code)
       },
-      {  timeout: 50000, maximumAge: 10000 },
+      { timeout: 50000, maximumAge: 10000 },
     )
   }
 

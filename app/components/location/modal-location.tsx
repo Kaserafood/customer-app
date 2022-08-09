@@ -95,16 +95,15 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
   useEffect(() => {
     if (modal.isVisible && addressText.length === 0) {
       getCurrentPosition((position) => {
-        if(position.locationAvailable){
+        if (position.locationAvailable) {
           const { latitude, longitude } = position
           __DEV__ && console.log("position", position)
           fetchAddressText(latitude, longitude).then((address) => {
             address && setAddressText(address.formatted)
           })
-        }else {
+        } else {
           showMessageError("No se ha logrado obtener tu ubiación")
         }
-       
       })
     }
   }, [modal.isVisible])

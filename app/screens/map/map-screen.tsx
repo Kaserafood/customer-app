@@ -56,7 +56,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               address && setAddress(address)
             })
             .finally(() => loadingState.setLoading(false))
-        }else {
+        } else {
           showMessageError("No se ha logrado obtener tu ubiación")
         }
       })

@@ -123,4 +123,3 @@ For Visual Studio Code users, there is a handy extension that makes it easy to l
 ## Running e2e tests
 
 Read [e2e setup instructions](./e2e/README.md).
-
