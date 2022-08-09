@@ -17,6 +17,7 @@ import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 
 class ModalPersistent {
@@ -94,11 +95,16 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
   useEffect(() => {
     if (modal.isVisible && addressText.length === 0) {
       getCurrentPosition((position) => {
-        const { latitude, longitude } = position
-        __DEV__ && console.log("position", position)
-        fetchAddressText(latitude, longitude).then((address) => {
-          address && setAddressText(address.formatted)
-        })
+        if(position.locationAvailable){
+          const { latitude, longitude } = position
+          __DEV__ && console.log("position", position)
+          fetchAddressText(latitude, longitude).then((address) => {
+            address && setAddressText(address.formatted)
+          })
+        }else {
+          showMessageError("No se ha logrado obtener tu ubiación")
+        }
+       
       })
     }
   }, [modal.isVisible])

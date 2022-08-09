@@ -117,9 +117,10 @@ export const useLocation = () => {
       __DEV__ && console.log("Can not obtain location permission")
       return
     }
-
+    console.log("before getCurrentPosition")
     Geolocation.getCurrentPosition(
       (position) => {
+        console.log("success position")
         callback({
           locationAvailable: true,
           longitude: position.coords.longitude,
@@ -133,9 +134,9 @@ export const useLocation = () => {
           locationAvailable: false,
         })
 
-        __DEV__ && console.log(error.message, error.code)
+        __DEV__ && console.log("erro getPosition ->" , error.message, error.code)
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 },
+      {  timeout: 50000, maximumAge: 10000 },
     )
   }
 
