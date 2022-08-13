@@ -42,8 +42,10 @@ export const showMessageInfo = (message: string) => {
  *
  * @param message message to show
  */
-export const showMessageError = (message?: string) => {
-  const msg = message ?? getI18nText("common.someError")
+export const showMessageError = (message?: string, isI18n = false) => {
+  let msg = ""
+  if (isI18n) msg = getI18nText(message)
+  else msg = message ?? getI18nText("common.someError")
   showMessage({
     ...options,
     style: { backgroundColor: color.primaryDarker },

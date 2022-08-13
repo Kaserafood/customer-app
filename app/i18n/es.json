@@ -512,5 +512,12 @@
     "option": "opción",
     "each": "c/u",
     "obligatory": "Obligatorio"
+  },
+  "location": {
+    "canNotOpenSettings": "No se ha logrado abrir la configuración",
+    "necessaryAcceptPermission": "Es necesario aceptar el permiso para poder usar Kasera",
+    "enableServices": "Habilita los servicios de localización para permitir a Kasera determinar tu ubicación.",
+    "goToSettings": "Ir a configuración",
+    "dontUseLocation": "No usar localización"
   }
 }
