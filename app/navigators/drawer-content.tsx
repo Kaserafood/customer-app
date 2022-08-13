@@ -7,10 +7,9 @@ import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
-import { clear } from "../utils/storage"
 
 export default function DrawerContent(props) {
-  const { commonStore, userStore, addressStore, cartStore } = useStores()
+  const { userStore } = useStores()
   const navigation = useNavigation()
 
   const order = () => {
