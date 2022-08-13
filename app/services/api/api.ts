@@ -287,4 +287,11 @@ export class Api {
   async getPriceDelivery(): Promise<CommonResponse> {
     return await this.request({}, `/orders/price-delivery`, "GET")
   }
+
+  /**
+   * @description Remove account from user
+   */
+  async removeAccount(userId: number): Promise<CommonResponse> {
+    return await this.request({}, `/users/account/${userId}`, "DELETE")
+  }
 }

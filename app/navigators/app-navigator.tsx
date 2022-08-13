@@ -29,6 +29,7 @@ import {
   RecoverPasswordScreen,
   RecoverPasswordTokenScreen,
   NewPasswordScreen,
+  AccountScreen,
 } from "../screens"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
@@ -85,6 +86,7 @@ const AppStack = observer(() => {
           <Stack.Screen name="map" component={MapScreen} />
           <Stack.Screen name="address" component={AddressScreen} />
           <Stack.Screen name="orders" component={OrdersScreen} />
+          <Stack.Screen name="account" component={AccountScreen} />
         </>
       )}
     </Stack.Navigator>

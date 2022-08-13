@@ -394,7 +394,9 @@
   },
   "drawerContent": {
     "closeSession": "Cerrar sesión",
-    "myOrdres": "Mis Pedidos"
+    "myOrdres": "Mis Pedidos",
+    "removeAccount": "Eliminar cuenta",
+    "myAccount": "Mi cuenta"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -519,5 +521,16 @@
     "enableServices": "Habilita los servicios de localización para permitir a Kasera determinar tu ubicación.",
     "goToSettings": "Ir a configuración",
     "dontUseLocation": "No usar localización"
+  },
+  "accountScreen": {
+    "title": "Mi cuenta",
+    "removeAccount": "Eliminar cuenta",
+    "removeAccountConfirmation": "¿Estás seguro de eliminar tu cuenta?",
+    "removeAccountConfirmationInfo": "Si eliminas tu cuenta, no podrás volver a acceder",
+    "removeAccountConfirmationYes": "Sí, eliminar",
+    "removeAccountConfirmationNo": "No, cancelar",
+    "removeAccountSuccess": "Se ha eliminado tu cuenta",
+    "removeAccountError": "No se ha logrado eliminar tu cuenta",
+    "logout": "Cerrar sesión"
   }
 }

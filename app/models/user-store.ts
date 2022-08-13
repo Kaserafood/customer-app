@@ -77,7 +77,7 @@ export const UserRegisterModel = userRegister
       const result = await userApi.register(user)
 
       if (result && result.kind === "ok") {
-        self.saveData(result)
+        await self.saveData(result)
         return true
       }
       return false
@@ -128,6 +128,15 @@ export const UserRegisterModel = userRegister
       const api = new Api()
 
       const result = yield api.changePassword(email, password)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
+    removeAccount: flow(function* removeAccount(userId: number) {
+      const api = new Api()
+
+      const result = yield api.removeAccount(userId)
       if (result && result.kind === "ok") {
         return true
       }

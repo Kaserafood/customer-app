@@ -12,20 +12,13 @@ import { clear } from "../utils/storage"
 export default function DrawerContent(props) {
   const { commonStore, userStore, addressStore, cartStore } = useStores()
   const navigation = useNavigation()
-  const closeSession = async () => {
-    await clear()
-    userStore.setUserId(undefined)
-    userStore.setDisplayName(undefined)
-    userStore.setAddressId(undefined)
-    userStore.setEmail(undefined)
-    addressStore.setCurrent(undefined)
-    addressStore.setAddresses([])
-    cartStore.cleanItems()
-    commonStore.setIsSignedIn(false)
-  }
 
   const order = () => {
     navigation.navigate("orders" as never)
+  }
+
+  const toAccount = () => {
+    navigation.navigate("account" as never)
   }
 
   return (
@@ -41,6 +34,19 @@ export default function DrawerContent(props) {
         text={userStore.displayName}
         style={[utilFlex.selfCenter, utilSpacing.px3, utilSpacing.my5, utilSpacing.mb6]}
       ></Text>
+      <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={toAccount}>
+        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+            <Icon
+              name="circle-user"
+              style={utilSpacing.mr4}
+              size={30}
+              color={color.palette.grayDark}
+            />
+            <Text tx="drawerContent.myAccount" preset="semiBold" size="md"></Text>
+          </View>
+        </Card>
+      </Ripple>
       <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={order}>
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
@@ -51,24 +57,6 @@ export default function DrawerContent(props) {
               color={color.palette.grayDark}
             />
             <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
-          </View>
-        </Card>
-      </Ripple>
-      <Ripple
-        rippleOpacity={0.2}
-        rippleDuration={400}
-        style={utilSpacing.m3}
-        onPressIn={closeSession}
-      >
-        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon
-              name="arrow-right-from-bracket"
-              style={utilSpacing.mr4}
-              size={30}
-              color={color.palette.grayDark}
-            />
-            <Text tx="drawerContent.closeSession" preset="semiBold" size="md"></Text>
           </View>
         </Card>
       </Ripple>
