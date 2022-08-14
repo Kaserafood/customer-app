@@ -20,6 +20,10 @@ export default function DrawerContent(props) {
     navigation.navigate("account" as never)
   }
 
+  const toTermsConditions = () => {
+    navigation.navigate("termsConditions" as never)
+  }
+
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -33,29 +37,56 @@ export default function DrawerContent(props) {
         text={userStore.displayName}
         style={[utilFlex.selfCenter, utilSpacing.px3, utilSpacing.my5, utilSpacing.mb6]}
       ></Text>
-      <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={toAccount}>
+      {userStore.userId > 0 && (
+        <View>
+          <Ripple
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            style={utilSpacing.m3}
+            onPressIn={toAccount}
+          >
+            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                <Icon
+                  name="circle-user"
+                  style={utilSpacing.mr4}
+                  size={30}
+                  color={color.palette.grayDark}
+                />
+                <Text tx="drawerContent.myAccount" preset="semiBold" size="md"></Text>
+              </View>
+            </Card>
+          </Ripple>
+          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={order}>
+            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                <Icon
+                  name="pot-food"
+                  style={utilSpacing.mr4}
+                  size={30}
+                  color={color.palette.grayDark}
+                />
+                <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
+              </View>
+            </Card>
+          </Ripple>
+        </View>
+      )}
+      <Ripple
+        rippleOpacity={0.2}
+        rippleDuration={400}
+        style={utilSpacing.m3}
+        onPressIn={toTermsConditions}
+      >
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Icon
-              name="circle-user"
+              name="memo-pad"
               style={utilSpacing.mr4}
               size={30}
               color={color.palette.grayDark}
             />
-            <Text tx="drawerContent.myAccount" preset="semiBold" size="md"></Text>
-          </View>
-        </Card>
-      </Ripple>
-      <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={order}>
-        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon
-              name="pot-food"
-              style={utilSpacing.mr4}
-              size={30}
-              color={color.palette.grayDark}
-            />
-            <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
+            <Text tx="drawerContent.termsConditions" preset="semiBold" size="md"></Text>
           </View>
         </Card>
       </Ripple>

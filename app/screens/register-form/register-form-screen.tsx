@@ -5,21 +5,23 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
-import { useStores } from "../../models"
+import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
-import { color, spacing } from "../../theme"
+import { spacing } from "../../theme"
+import { color } from "../../theme/color"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageInfo } from "../../utils/messages"
+import { loadString } from "../../utils/storage"
 
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, addressStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
@@ -31,11 +33,17 @@ export const RegisterFormScreen: FC<
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
       __DEV__ && console.log(data)
+      const currentUserId = userStore.userId
       userStore
         .register(data)
-        .then((userValid: boolean) => {
+        .then(async (userId) => {
+          if (userId > 0) {
+            // Si el usuario habia entrado como "Explorar el app"
+            if (currentUserId === -1) {
+              await saveAddress(userId)
+            } else commonStore.setIsSignedIn(true)
+          }
           commonStore.setVisibleLoading(false)
-          if (userValid) commonStore.setIsSignedIn(true)
         })
         .finally(() => commonStore.setVisibleLoading(false))
     }
@@ -43,6 +51,28 @@ export const RegisterFormScreen: FC<
 
   const onError: SubmitErrorHandler<UserRegister> = (errors) => {
     __DEV__ && console.log({ errors })
+  }
+
+  const saveAddress = async (userId: number) => {
+    const currentAddress = await loadString("address")
+    if (currentAddress.length > 0) {
+      const address: Address = JSON.parse(currentAddress)
+      await addressStore
+        .add(address)
+        .then((res) => {
+          if (res) {
+            address.id = Number(res.data)
+            address.userId = userId
+            addressStore.setCurrent({ ...address })
+            userStore.setAddressId(address.id)
+            userStore.updateAddresId(userId, address.id)
+            commonStore.setIsSignedIn(true)
+            addressStore.setAddresses([address])
+            navigation.navigate("deliveryDetail")
+          }
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
+    }
   }
 
   return (
