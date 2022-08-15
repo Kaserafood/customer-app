@@ -83,11 +83,15 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
         }
     }
 
+    if (userStore.userId === -1) modalPersistent.setPersistent(true)
+
     fetch()
   }, [userStore.userId])
 
   useEffect(() => {
-    if (userStore.addressId > 0) {
+    // El id de la direccion va ser -1 cuando el usaurio registra su dirección
+    // pero ha ingresado como "Exolorar la app"
+    if (userStore.addressId > 0 || userStore.addressId === -1) {
       modalPersistent.setPersistent(false)
     }
   }, [userStore.addressId])

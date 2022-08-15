@@ -72,15 +72,15 @@ export const UserRegisterModel = userRegister
     },
   }))
   .actions((self) => ({
-    register: async (user: UserRegister): Promise<boolean> => {
+    register: async (user: UserRegister): Promise<number> => {
       const userApi = new Api()
       const result = await userApi.register(user)
 
       if (result && result.kind === "ok") {
-        self.saveData(result)
-        return true
+        await self.saveData(result)
+        return result.data.id
       }
-      return false
+      return 0
     },
 
     login: async (user: UserLogin): Promise<boolean> => {
@@ -128,6 +128,15 @@ export const UserRegisterModel = userRegister
       const api = new Api()
 
       const result = yield api.changePassword(email, password)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
+    removeAccount: flow(function* removeAccount(userId: number) {
+      const api = new Api()
+
+      const result = yield api.removeAccount(userId)
       if (result && result.kind === "ok") {
         return true
       }

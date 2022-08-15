@@ -8,6 +8,7 @@ import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import images from "../../assets/images"
 import { Card, Header, Image, ModalRequestDish, Screen, Text } from "../../components"
+import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -17,7 +18,8 @@ import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
-const modalState = new ModalStateHandler()
+const modalStateRequest = new ModalStateHandler()
+const modalStateLocation = new ModalStateHandler()
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
   ({ navigation }) => {
     useLayoutEffect(() => {
@@ -26,6 +28,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
 
     const {
       categoryStore: { categories },
+      userStore,
     } = useStores()
 
     const toCategory = (category: Category) => {
@@ -43,24 +46,28 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
           onLeftPress={goBack}
         />
         <ScrollView style={styles.body}>
-          <Ripple
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            style={[utilSpacing.mb5, utilSpacing.mt7]}
-            onPress={() => modalState.setVisible(true)}
-          >
-            <Card style={styles.card}>
-              <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
-                <Image style={[utilSpacing.mr2, styles.image]} source={images.step1}></Image>
-                <Text
-                  style={utilSpacing.mt4}
-                  preset="semiBold"
-                  numberOfLines={1}
-                  tx="searchScreen.somethingDiferent"
-                ></Text>
-              </View>
-            </Card>
-          </Ripple>
+          <View style={utilSpacing.mb5}>
+            {userStore.userId > 0 && (
+              <Ripple
+                rippleOpacity={0.2}
+                rippleDuration={400}
+                style={utilSpacing.mt7}
+                onPress={() => modalStateRequest.setVisible(true)}
+              >
+                <Card style={styles.card}>
+                  <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
+                    <Image style={[utilSpacing.mr2, styles.image]} source={images.step1}></Image>
+                    <Text
+                      style={utilSpacing.mt4}
+                      preset="semiBold"
+                      numberOfLines={1}
+                      tx="searchScreen.somethingDiferent"
+                    ></Text>
+                  </View>
+                </Card>
+              </Ripple>
+            )}
+          </View>
 
           {categories.map(
             (category: Category, index: number) =>
@@ -115,7 +122,8 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
               ),
           )}
         </ScrollView>
-        <ModalRequestDish modalState={modalState}></ModalRequestDish>
+        <ModalRequestDish modalState={modalStateRequest}></ModalRequestDish>
+        <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
       </Screen>
     )
   },

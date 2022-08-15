@@ -12,7 +12,9 @@ import { useColorScheme } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
 import { useStores } from "../models/root-store/root-store-context"
 import {
+  AccountScreen,
   AddressScreen,
+  CategoryScreen,
   DeliveryDetailScreen,
   DishDetailScreen,
   EndOrderScreen,
@@ -20,15 +22,14 @@ import {
   LoginFormScreen,
   MapScreen,
   MenuChefScreen,
+  NewPasswordScreen,
+  OrdersScreen,
   PrivacyPolicyScreen,
+  RecoverPasswordScreen,
+  RecoverPasswordTokenScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
   TermsConditionsScreen,
-  CategoryScreen,
-  OrdersScreen,
-  RecoverPasswordScreen,
-  RecoverPasswordTokenScreen,
-  NewPasswordScreen,
 } from "../screens"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
@@ -63,9 +64,6 @@ const AppStack = observer(() => {
       {!commonStore.isSignedIn ? (
         <>
           <Stack.Screen name="init" component={InitScreen} />
-          <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-          <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-          <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
           <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
           <Stack.Screen name="loginForm" component={LoginFormScreen} />
           <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
@@ -85,8 +83,12 @@ const AppStack = observer(() => {
           <Stack.Screen name="map" component={MapScreen} />
           <Stack.Screen name="address" component={AddressScreen} />
           <Stack.Screen name="orders" component={OrdersScreen} />
+          <Stack.Screen name="account" component={AccountScreen} />
         </>
       )}
+      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
     </Stack.Navigator>
   )
 })
