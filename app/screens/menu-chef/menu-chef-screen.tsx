@@ -15,7 +15,7 @@ import {
   Price,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DayDelivery } from "../../components/day-delivery/day-delivery"
 import { useStores } from "../../models"
@@ -174,6 +174,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                   dish={dish}
                   currencyCode={currencyCode}
                   onPress={() => toDishDetail(dish)}
+                  sizeTextDescription="md"
                 ></Dish>
                 {index !== dishStore.dishesChef.length - 1 && (
                   <Separator style={utilSpacing.mb3}></Separator>

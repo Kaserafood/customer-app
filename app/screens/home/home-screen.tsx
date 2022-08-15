@@ -158,7 +158,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
               <Chip
                 onPress={() => modalDeliveryDate.setVisible(true)}
-                text={currentDay.dayNameLong}
+                text={currentDay.dayName}
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
