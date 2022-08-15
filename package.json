@@ -236,8 +236,9 @@
       "react-hooks/exhaustive-deps": "off",
       "react-native/no-inline-styles": 1,
       "prettier/prettier": ["error", {
-        "no-inline-styles": true
-      }] 
+        "no-inline-styles": true,
+        "endOfLine":"auto"
+      }]
     }
   }
 }

@@ -535,5 +535,12 @@
     "removeAccountSuccess": "Se ha eliminado tu cuenta",
     "removeAccountError": "No se ha logrado eliminar tu cuenta",
     "logout": "Cerrar sesión"
+  },
+  "banner": {
+    "whatIsKasera": "¿Qué es Kasera?",
+    "whatIsKaseraDescription1": "Kasera es un marketplace donde podrás reservar los mejores platillos de chefs caseros talentosos de tu comunidad.",
+    "whatIsKaseraDescription2": "Encuentra recetas tradicionales auténticas, paquetes de almuerzos para la semana, comida para festividades y para eventos.",
+    "whatIsKaseraDescription3": "Reserva con anticipación para darle tiempo al chef de buscar ingredientes frescos y cocinar artesanalmente.",
+    "whatIsKaseraDescription4": "La cocina artesanal es elaborada y con amor, por esa razón el platillo no llegará de inmediato sino a partir del día siguiente. Llegará 100% a domicilio y listo para calentar."
   }
 }
