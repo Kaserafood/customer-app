@@ -40,6 +40,7 @@ export const RegisterFormScreen: FC<
           if (userId > 0) {
             // Si el usuario habia entrado como "Explorar el app"
             if (currentUserId === -1) {
+              console.log("user register", userId)
               await saveAddress(userId)
             } else commonStore.setIsSignedIn(true)
           }
@@ -57,17 +58,16 @@ export const RegisterFormScreen: FC<
     const currentAddress = await loadString("address")
     if (currentAddress.length > 0) {
       const address: Address = JSON.parse(currentAddress)
+      address.userId = userId
       await addressStore
         .add(address)
         .then((res) => {
           if (res) {
             address.id = Number(res.data)
-            address.userId = userId
             addressStore.setCurrent({ ...address })
             userStore.setAddressId(address.id)
             userStore.updateAddresId(userId, address.id)
             commonStore.setIsSignedIn(true)
-            addressStore.setAddresses([address])
             navigation.navigate("deliveryDetail")
           }
         })
