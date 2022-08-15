@@ -40,6 +40,11 @@ export interface DishProps {
    * Currency code from chef
    */
   currencyCode?: string
+
+  /**
+   * Size text description from
+   */
+  sizeTextDescription?: "sm" | "md"
 }
 
 /**
@@ -53,6 +58,7 @@ export const Dish = observer(function Dish(props: DishProps) {
     visibleChefImage = true,
     visiblePriceDelivery = true,
     currencyCode,
+    sizeTextDescription = "sm",
   } = props
   const { orderStore } = useStores()
 
@@ -74,7 +80,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             ></Text>
             <Text
               text={dish.description}
-              size="sm"
+              size={sizeTextDescription}
               style={utilFlex.flex1}
               caption
               numberOfLines={2}
