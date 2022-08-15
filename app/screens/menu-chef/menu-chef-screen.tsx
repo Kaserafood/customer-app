@@ -39,7 +39,7 @@ const modalStateLeave = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const { dayStore, commonStore, dishStore, cartStore, orderStore } = useStores()
+    const { dayStore, commonStore, dishStore, cartStore, orderStore, userStore } = useStores()
     const [currentAction, setCurrentAction] = useState<any>()
     const { currencyCode, name, image, description, categories, id } = params.chef
     const [dishes, setDishes] = useState<DishChef[]>([])
@@ -66,9 +66,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         navigation.addListener("beforeRemove", (e) => {
           e.preventDefault()
           setCurrentAction(e.data.action)
+          const payload: any = e.data.action.payload
 
-          if (cartStore.hasItems) modalStateLeave.setVisible(true)
-          else navigation.dispatch(e.data.action)
+          if (payload.name === "registerForm" || !cartStore.hasItems) {
+            navigation.dispatch(e.data.action)
+          } else modalStateLeave.setVisible(true)
         }),
       [navigation],
     )
@@ -98,7 +100,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     }
 
     const toDeliveryDetail = () => {
-      navigation.navigate("deliveryDetail")
+      // Id de usuario a ser -1 cuando entra como "Explora la app"
+      if (userStore.userId === -1) {
+        //  commonStore.setIsSignedIn(false)
+        navigation.navigate("registerForm")
+      } else navigation.navigate("deliveryDetail")
     }
 
     const getCategoriesName = (categories: Category[]) => {
@@ -168,6 +174,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                   dish={dish}
                   currencyCode={currencyCode}
                   onPress={() => toDishDetail(dish)}
+                  sizeTextDescription="md"
                 ></Dish>
                 {index !== dishStore.dishesChef.length - 1 && (
                   <Separator style={utilSpacing.mb3}></Separator>

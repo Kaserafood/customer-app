@@ -17,6 +17,7 @@ import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 
 class ModalPersistent {
@@ -82,11 +83,15 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
         }
     }
 
+    if (userStore.userId === -1) modalPersistent.setPersistent(true)
+
     fetch()
   }, [userStore.userId])
 
   useEffect(() => {
-    if (userStore.addressId > 0) {
+    // El id de la direccion va ser -1 cuando el usaurio registra su dirección
+    // pero ha ingresado como "Exolorar la app"
+    if (userStore.addressId > 0 || userStore.addressId === -1) {
       modalPersistent.setPersistent(false)
     }
   }, [userStore.addressId])
@@ -94,11 +99,15 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
   useEffect(() => {
     if (modal.isVisible && addressText.length === 0) {
       getCurrentPosition((position) => {
-        const { latitude, longitude } = position
-        __DEV__ && console.log("position", position)
-        fetchAddressText(latitude, longitude).then((address) => {
-          address && setAddressText(address.formatted)
-        })
+        if (position.locationAvailable) {
+          const { latitude, longitude } = position
+          __DEV__ && console.log("position", position)
+          fetchAddressText(latitude, longitude).then((address) => {
+            address && setAddressText(address.formatted)
+          })
+        } else {
+          showMessageError("No se ha logrado obtener tu ubiación")
+        }
       })
     }
   }, [modal.isVisible])

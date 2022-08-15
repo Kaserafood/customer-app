@@ -12,6 +12,7 @@ import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { showMessageSucess } from "../../utils/messages"
+import { saveString } from "../../utils/storage"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
@@ -28,20 +29,30 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         ...params,
         userId: userStore.userId,
       }
-      commonStore.setVisibleLoading(true)
-      addressStore
-        .add(address)
-        .then((res) => {
-          if (res) {
-            address.id = res.data
-            addressStore.setCurrent({ ...address })
-            userStore.setAddressId(address.id)
-            showMessageSucess(res.message)
-            // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
-            navigation.navigate(params.screenToReturn)
-          }
-        })
-        .finally(() => commonStore.setVisibleLoading(false))
+      // Si el usuario entró como "Explorar el app"
+      if (userStore.userId === -1) {
+        // Guardamos de forma local su dirección porque aun no se ha registrado
+        addressStore.setCurrent({ ...address })
+        userStore.setAddressId(-1)
+        saveString("address", JSON.stringify(address))
+        showMessageSucess("addressScreen.addressSaved", true)
+        navigation.navigate(params.screenToReturn)
+      } else {
+        commonStore.setVisibleLoading(true)
+        addressStore
+          .add(address)
+          .then((res) => {
+            if (res) {
+              address.id = res.data
+              addressStore.setCurrent({ ...address })
+              userStore.setAddressId(address.id)
+              showMessageSucess(res.message)
+              // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
+              navigation.navigate(params.screenToReturn)
+            }
+          })
+          .finally(() => commonStore.setVisibleLoading(false))
+      }
     }
 
     return (

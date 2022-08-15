@@ -1,6 +1,6 @@
 /* eslint-disable node/no-callback-literal */
 // eslint-disable-next-line react-native/split-platform-components
-import { PermissionsAndroid, Platform } from "react-native"
+import { Alert, Linking, PermissionsAndroid, Platform } from "react-native"
 import Geolocation from "react-native-geolocation-service"
 import { showMessageError } from "../../utils/messages"
 
@@ -81,42 +81,66 @@ export const useLocation = () => {
       })
   }
 
-  const requestLocationPermission = async () => {
-    if (Platform.OS === "ios") {
-      Geolocation.requestAuthorization("whenInUse")
-      // IOS permission request does not offer a callback
-      return null
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        showMessageError("location.canNotOpenSettings", true)
+      })
     }
-    if (Platform.OS === "android") {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        )
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) return true
+    const status = await Geolocation.requestAuthorization("whenInUse")
 
-        return false
-      } catch (err) {
-        console.warn(err.message)
-        return false
-      }
+    if (status === "granted") return true
+
+    if (status === "denied") showMessageError("location.necessaryAcceptPermission")
+
+    if (status === "disabled") {
+      Alert.alert(`location.enableServices`, "", [
+        { text: "location.goToSettings", onPress: openSetting },
+        {
+          text: "location.dontUseLocation",
+          onPress: () => {
+            showMessageError("location.necessaryAcceptPermission")
+            console.log("Dont use press")
+          },
+        },
+      ])
     }
+
+    return false
+  }
+
+  const hasLocationPermission = async () => {
+    if (Platform.OS === "ios") {
+      const hasPermission = await hasPermissionIOS()
+      return hasPermission
+    }
+
+    if (Platform.OS === "android" && Platform.Version < 23) return true
+
+    const hasPermission = await PermissionsAndroid.check(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    )
+
+    if (hasPermission) return true
+
+    const status = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+    )
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) return true
+
+    if (status === PermissionsAndroid.RESULTS.DENIED)
+      showMessageError("location.necessaryAcceptPermission")
+    else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN)
+      showMessageError("location.necessaryAcceptPermission")
+
     return false
   }
 
   async function getCurrentPosition(callback: (location: Location) => void) {
-    const hasLocationPermission = await requestLocationPermission()
-    /* This will only be fired on Android. On Apple we can not detect when/if a
-     * location permission has been granted or denied. For that reason after a
-     * predefined period we just timeout.
-     */
+    const hasPermission = await hasLocationPermission()
 
-    if (hasLocationPermission === false) {
-      callback({
-        locationAvailable: false,
-      })
-      __DEV__ && console.log("Can not obtain location permission")
-      return
-    }
+    if (!hasPermission) return
 
     Geolocation.getCurrentPosition(
       (position) => {
@@ -133,9 +157,9 @@ export const useLocation = () => {
           locationAvailable: false,
         })
 
-        __DEV__ && console.log(error.message, error.code)
+        __DEV__ && console.log("error getPosition ->", error.message, error.code)
       },
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 10000 },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     )
   }
 

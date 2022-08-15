@@ -23,7 +23,8 @@
     "homemadeFood": "Comida Kasera",
     "byChefIndependently": "Por chefs independientes",
     "register": "Regístrate",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "exploreApp": "Explora la app"
   },
   "registerFormScreen": {
     "title": "Regístrate",
@@ -367,7 +368,8 @@
     "phoneDelivery": "Teléfono de entrega",
     "phoneDeliveryPlaceholder": "1234-5678",
     "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
-    "phoneFormatIncorrect": "El formato del teléfono es incorrecto"
+    "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
+    "addressSaved": "Se ha guardado tu dirección"
   },
   "modalDeliveryDate": {
     "deliveryDate": "Fecha de entrega",
@@ -394,7 +396,10 @@
   },
   "drawerContent": {
     "closeSession": "Cerrar sesión",
-    "myOrdres": "Mis Pedidos"
+    "myOrdres": "Mis Pedidos",
+    "removeAccount": "Eliminar cuenta",
+    "myAccount": "Mi cuenta",
+    "termsConditions": "Términos y condiciones"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -512,5 +517,23 @@
     "option": "opción",
     "each": "c/u",
     "obligatory": "Obligatorio"
+  },
+  "location": {
+    "canNotOpenSettings": "No se ha logrado abrir la configuración",
+    "necessaryAcceptPermission": "Es necesario aceptar el permiso para poder usar Kasera",
+    "enableServices": "Habilita los servicios de localización para permitir a Kasera determinar tu ubicación.",
+    "goToSettings": "Ir a configuración",
+    "dontUseLocation": "No usar localización"
+  },
+  "accountScreen": {
+    "title": "Mi cuenta",
+    "removeAccount": "Eliminar cuenta",
+    "removeAccountConfirmation": "¿Estás seguro de eliminar tu cuenta?",
+    "removeAccountConfirmationInfo": "Si eliminas tu cuenta, no podrás volver a acceder",
+    "removeAccountConfirmationYes": "Sí, eliminar",
+    "removeAccountConfirmationNo": "No, cancelar",
+    "removeAccountSuccess": "Se ha eliminado tu cuenta",
+    "removeAccountError": "No se ha logrado eliminar tu cuenta",
+    "logout": "Cerrar sesión"
   }
 }

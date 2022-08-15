@@ -207,6 +207,7 @@ export const DeliveryDetailScreen: FC<
         <FormProvider {...methods}>
           <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
             <InputText
+              onPressIn={() => modalStateLocation.setVisible(true)}
               name="address"
               preset="card"
               labelTx="deliveryDetailScreen.address"
@@ -228,6 +229,7 @@ export const DeliveryDetailScreen: FC<
 
           <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
             <InputText
+              onPressIn={() => modalDelivery.setVisible(true)}
               name="diveryDate"
               preset="card"
               labelTx="deliveryDetailScreen.deliveryDate"
