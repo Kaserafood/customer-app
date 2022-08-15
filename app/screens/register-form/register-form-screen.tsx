@@ -27,9 +27,8 @@ export const RegisterFormScreen: FC<
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
   const onSubmit = (data: UserRegister) => {
-    if (!terms) {
-      showMessageInfo("registerFormScreen.acceptsTerms")
-    } else {
+    if (!terms) showMessageInfo("registerFormScreen.acceptsTerms")
+    else {
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
       __DEV__ && console.log(data)
@@ -40,7 +39,6 @@ export const RegisterFormScreen: FC<
           if (userId > 0) {
             // Si el usuario habia entrado como "Explorar el app"
             if (currentUserId === -1) {
-              console.log("user register", userId)
               await saveAddress(userId)
             } else commonStore.setIsSignedIn(true)
           }
@@ -59,19 +57,16 @@ export const RegisterFormScreen: FC<
     if (currentAddress.length > 0) {
       const address: Address = JSON.parse(currentAddress)
       address.userId = userId
-      await addressStore
-        .add(address)
-        .then((res) => {
-          if (res) {
-            address.id = Number(res.data)
-            addressStore.setCurrent({ ...address })
-            userStore.setAddressId(address.id)
-            userStore.updateAddresId(userId, address.id)
-            commonStore.setIsSignedIn(true)
-            navigation.navigate("deliveryDetail")
-          }
-        })
-        .finally(() => commonStore.setVisibleLoading(false))
+      await addressStore.add(address).then((res) => {
+        if (res) {
+          address.id = Number(res.data)
+          addressStore.setCurrent({ ...address })
+          userStore.setAddressId(address.id)
+          userStore.updateAddresId(userId, address.id)
+          commonStore.setIsSignedIn(true)
+          navigation.navigate("deliveryDetail")
+        }
+      })
     }
   }
 
