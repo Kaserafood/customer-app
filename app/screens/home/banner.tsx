@@ -7,10 +7,13 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 
 interface PropsBanner {
   onPressWelcome: () => void
+  onPressSeasonal: () => void
+  onPressNewChefs: () => void
+  onPressFavorites: () => void
 }
 
 export const Banner = (props: PropsBanner) => {
-  const { onPressWelcome } = props
+  const { onPressWelcome, onPressSeasonal, onPressFavorites, onPressNewChefs } = props
   return (
     <View>
       <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
@@ -22,9 +25,29 @@ export const Banner = (props: PropsBanner) => {
           <Image style={[styles.image, utilSpacing.mr3]} source={images.banner1}></Image>
         </TouchableOpacity>
 
-        <Image style={[styles.image, utilSpacing.mr3]} source={images.banner2}></Image>
-        <Image style={[styles.image, utilSpacing.mr3]} source={images.banner3}></Image>
-        <Image style={[styles.image, utilSpacing.mr3]} source={images.banner4}></Image>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[styles.image, utilSpacing.mr3]}
+          onPress={() => onPressSeasonal()}
+        >
+          <Image style={[styles.image, utilSpacing.mr3]} source={images.banner2}></Image>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[styles.image, utilSpacing.mr3]}
+          onPress={() => onPressNewChefs()}
+        >
+          <Image style={[styles.image, utilSpacing.mr3]} source={images.banner3}></Image>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[styles.image, utilSpacing.mr3]}
+          onPress={() => onPressFavorites()}
+        >
+          <Image style={[styles.image, utilSpacing.mr3]} source={images.banner4}></Image>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   )

@@ -141,6 +141,21 @@ export class Api {
 
   /**
    *
+   * @description Get dishes favorites by Kasera
+   */
+  async getFavoritesDishes(date: string, timeZone: string): Promise<DishResponse> {
+    return await this.request(
+      {
+        date,
+        timeZone,
+      },
+      "/dishes/favorites",
+      "GET",
+    )
+  }
+
+  /**
+   *
    * @description Get dishes from specific chef
    */
   async getDishesByChef(chefId: number): Promise<DishResponse> {
@@ -157,6 +172,14 @@ export class Api {
     categoryId?: number,
   ): Promise<ChefResponse> {
     return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+  }
+
+  /**
+   *
+   * @description Get dishes grouped by latest chef
+   */
+  async getDishesGroupedByLatestChef(date: string, timeZone: string): Promise<ChefResponse> {
+    return await this.request({ date, timeZone }, "/dishes/chefs-latest", "GET")
   }
 
   /**
@@ -181,6 +204,14 @@ export class Api {
    */
   async getAllCategories(): Promise<CategoryResponse> {
     return await this.request({}, "/categories", "GET")
+  }
+
+  /**
+   *
+   * @description Get category seasonal
+   */
+  async getCategorySeasonal(): Promise<CategoryResponse> {
+    return await this.request({}, "/categories/seasonal", "GET")
   }
 
   /**

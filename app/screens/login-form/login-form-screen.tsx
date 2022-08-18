@@ -20,6 +20,13 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     const { ...methods } = useForm({ mode: "onBlur" })
 
     useEffect(() => {
+      if (__DEV__) {
+        methods.setValue("email", "cunquero.carlos@gmail.com")
+        methods.setValue("password", "1111")
+      }
+    }, [])
+
+    useEffect(() => {
       const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBack)
 
       return () => backHandler.remove()

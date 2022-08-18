@@ -67,8 +67,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           e.preventDefault()
           setCurrentAction(e.data.action)
           const payload: any = e.data.action.payload
-
-          if (payload.name === "registerForm" || !cartStore.hasItems) {
+          if (!payload || payload.name === "registerForm" || !cartStore.hasItems) {
             navigation.dispatch(e.data.action)
           } else modalStateLeave.setVisible(true)
         }),

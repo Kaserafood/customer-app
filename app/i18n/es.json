@@ -542,5 +542,11 @@
     "whatIsKaseraDescription2": "Encuentra recetas tradicionales auténticas, paquetes de almuerzos para la semana, comida para festividades y para eventos.",
     "whatIsKaseraDescription3": "Reserva con anticipación para darle tiempo al chef de buscar ingredientes frescos y cocinar artesanalmente.",
     "whatIsKaseraDescription4": "La cocina artesanal es elaborada y con amor, por esa razón el platillo no llegará de inmediato sino a partir del día siguiente. Llegará 100% a domicilio y listo para calentar."
+  },
+  "newChefsScreen": {
+    "title": "Nuevos chefs"
+  },
+  "favoriteScreen": {
+    "title": "Favoritos Kasera"
   }
 }

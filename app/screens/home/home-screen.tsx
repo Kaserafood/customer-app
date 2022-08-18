@@ -91,6 +91,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         await Promise.all([
           dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
           categoryStore.getAll(),
+          categoryStore.getSeasonal(),
           orderStore.getPriceDelivery(),
           dayStore.getDays(RNLocalize.getTimeZone()),
         ])
@@ -150,7 +151,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               onPress={(category) => toCategory(category)}
             ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
-            <Banner onPressWelcome={() => modalStateWelcome.setVisible(true)}></Banner>
+            <Banner
+              onPressWelcome={() => modalStateWelcome.setVisible(true)}
+              onPressSeasonal={() => toCategory(categoryStore.seasonal)}
+              onPressNewChefs={() => navigation.navigate("newChefs")}
+              onPressFavorites={() => navigation.navigate("favorite")}
+            ></Banner>
             <View
               style={[
                 utilFlex.flexRow,
