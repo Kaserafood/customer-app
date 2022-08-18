@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite"
-import * as React from "react"
+import React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
@@ -59,6 +59,10 @@ export interface ChefItemProps {
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
   const { style, item, onPrevious, onNext, onChangePosition, onChefPress } = props
 
+  // useEffect(() => {
+  //   console.log("item changed", item)
+  // }, [item])
+
   return (
     <View style={style} key={item.id}>
       <View style={styles.imageCarousel}>
@@ -115,7 +119,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
       </View>
       <View style={[styles.flex, styles.footer]}>
         <View style={[utilFlex.flex1, styles.textContainer, utilSpacing.pt3]}>
-          <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
+          {/* <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text> */}
           <Text style={styles.textDescription} numberOfLines={1} text={item.currentDishName}></Text>
           <View style={styles.flex}>
             <Text

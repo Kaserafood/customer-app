@@ -38,7 +38,7 @@ export type DayResponse = {
 } & kind
 
 export type CategoryResponse = {
-  data: Category[]
+  data: Category[] | Category
 } & kind
 
 export type DishResponse = {

@@ -60,4 +60,6 @@ export type NavigatorParamList = {
   recoverPasswordToken: tokenScreenParams
   newPassword: newPasswordScreenParams
   account: undefined
+  favorite: undefined
+  newChefs: undefined
 }

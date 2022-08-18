@@ -29,11 +29,14 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
+import { Banner } from "./banner"
+import { ModalWelcome } from "./modal-welcome"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
+const modalStateWelcome = new ModalStateHandler()
 
 /**
  * Home Screen to show main dishes
@@ -88,6 +91,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         await Promise.all([
           dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
           categoryStore.getAll(),
+          categoryStore.getSeasonal(),
           orderStore.getPriceDelivery(),
           dayStore.getDays(RNLocalize.getTimeZone()),
         ])
@@ -147,6 +151,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               onPress={(category) => toCategory(category)}
             ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
+            <Banner
+              onPressWelcome={() => modalStateWelcome.setVisible(true)}
+              onPressSeasonal={() => toCategory(categoryStore.seasonal)}
+              onPressNewChefs={() => navigation.navigate("newChefs")}
+              onPressFavorites={() => navigation.navigate("favorite")}
+            ></Banner>
             <View
               style={[
                 utilFlex.flexRow,
@@ -180,6 +190,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           onSelectDay={(day) => onChangeDay(day)}
           isVisibleContinue={false}
         ></ModalDeliveryDate>
+        <ModalWelcome modalState={modalStateWelcome}></ModalWelcome>
       </Screen>
     )
   },

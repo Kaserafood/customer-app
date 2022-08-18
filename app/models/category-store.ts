@@ -13,6 +13,7 @@ export const CategoryStoreModel = types
   .model("CategoryStoreModel")
   .props({
     categories: types.optional(types.array(categoryStore), []),
+    seasonal: types.optional(categoryStore, {}),
   })
   .extend(withEnvironment)
   .actions((self) => ({
@@ -22,12 +23,19 @@ export const CategoryStoreModel = types
   }))
   .actions((self) => ({
     getAll: flow(function* getAll() {
-      // if (self.categories.length > 0) return
       const api = new Api()
       const result = yield api.getAllCategories()
 
       if (result && result.kind === "ok") {
         self.setCategories(result.data)
+      }
+    }),
+    getSeasonal: flow(function* getAll() {
+      const api = new Api()
+      const result = yield api.getCategorySeasonal()
+
+      if (result && result.kind === "ok") {
+        self.seasonal = result.data
       }
     }),
   }))

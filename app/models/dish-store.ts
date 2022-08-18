@@ -16,10 +16,15 @@ export const DishStoreModel = types
     dishesCategory: types.optional(types.array(dishChef), []), // Dishes filtered by category
     dishesChef: types.optional(types.array(dishChef), []), // Dishes filtered by chef
     dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
+    dishesGroupedByLatestChef: types.optional(types.array(userChef), []), // Dishes grouped by latest chef
+    dishesFavorites: types.optional(types.array(dishChef), []), // Dishes favorites by Kasera
   })
   .views((self) => ({
     get totalDishes() {
       return self.dishes.length
+    },
+    get totalDishesFavorites() {
+      return self.dishesFavorites.length
     },
   }))
   .actions((self) => ({
@@ -57,6 +62,16 @@ export const DishStoreModel = types
         self.dishesGroupedByChef.replace(result.data)
       }
     }),
+    getGroupedByLatestChef: flow(function* getGroupedByLatestChef(date: string, timeZone: string) {
+      self.dishesGroupedByChef.clear()
+      const api = new Api()
+      const result = yield api.getDishesGroupedByLatestChef(date, timeZone)
+
+      if (result.kind === "ok") {
+        self.dishesGroupedByLatestChef.replace(result.data)
+      }
+    }),
+
     clearDishes() {
       self.dishes.clear()
     },
@@ -77,5 +92,13 @@ export const DishStoreModel = types
         return result.data
       }
       return {}
+    }),
+    getFavorites: flow(function* getFavorites(date: string, timeZone: string) {
+      const api = new Api()
+      const result = yield api.getFavoritesDishes(date, timeZone)
+
+      if (result && result.kind === "ok") {
+        self.dishesFavorites.replace(result.data)
+      }
     }),
   }))
