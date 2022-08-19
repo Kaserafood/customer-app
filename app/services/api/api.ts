@@ -13,6 +13,7 @@ import {
   DayResponse,
   DishResponse,
   GeneralApiResponse,
+  OrderDetailResponse,
   OrderOverviewResponse,
   UserLoginResponse,
 } from "./api.types"
@@ -268,6 +269,14 @@ export class Api {
    */
   async getOrdersOverview(userId: number): Promise<OrderOverviewResponse> {
     return await this.request({}, `/orders/user/${userId}`, "GET")
+  }
+
+  /**
+   *
+   * @description Get detail of order
+   */
+  async getOrderDetail(orderId: number): Promise<OrderDetailResponse> {
+    return await this.request({}, `/orders/${orderId}`, "GET")
   }
 
   /**

@@ -548,5 +548,15 @@
   },
   "favoriteScreen": {
     "title": "Favoritos Kasera"
+  },
+  "orderDetailScreen": {
+    "title": "Detalle del pedido",
+    "pending": "Pendiente",
+    "paymentMethod": "Método de pago",
+    "orderStatus": "Estado del pedido",
+    "waiting": "En espera",
+    "processing": "Procesando",
+    "completed": "Completado",
+    "order": "Pedidio"
   }
 }

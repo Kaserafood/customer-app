@@ -1,3 +1,4 @@
+import { OrderOverview } from "../models"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 
@@ -62,4 +63,5 @@ export type NavigatorParamList = {
   account: undefined
   favorite: undefined
   newChefs: undefined
+  orderDetail: OrderOverview
 }

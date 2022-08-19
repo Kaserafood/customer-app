@@ -32,6 +32,7 @@ import {
   TermsConditionsScreen,
   NewChefsScreen,
   FavoriteScreen,
+  OrderDetailScreen,
 } from "../screens"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
@@ -88,6 +89,7 @@ const AppStack = observer(() => {
           <Stack.Screen name="account" component={AccountScreen} />
           <Stack.Screen name="newChefs" component={NewChefsScreen} />
           <Stack.Screen name="favorite" component={FavoriteScreen} />
+          <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
         </>
       )}
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
