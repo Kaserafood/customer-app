@@ -5,10 +5,10 @@ import Geolocation from "react-native-geolocation-service"
 import { showMessageError } from "../../utils/messages"
 
 export interface Location {
-  latitude?: number
-  longitude?: number
-  longitudeDelta?: number
-  latitudeDelta?: number
+  latitude: number
+  longitude: number
+  longitudeDelta: number
+  latitudeDelta: number
   locationAvailable?: boolean
 }
 
@@ -31,7 +31,7 @@ export const useLocation = () => {
       requestOptions,
     )
       .then((response) => response.json())
-      .then((mapResponse) => {
+      .then(async (mapResponse) => {
         const results = mapResponse.results
         let index = 0
         for (let j = 0; j < results.length; j++) {
@@ -155,6 +155,10 @@ export const useLocation = () => {
       (error) => {
         callback({
           locationAvailable: false,
+          longitude: 0,
+          latitude: 0,
+          latitudeDelta: 0,
+          longitudeDelta: 0,
         })
 
         __DEV__ && console.log("error getPosition ->", error.message, error.code)
