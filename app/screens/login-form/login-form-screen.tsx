@@ -15,7 +15,7 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { commonStore, userStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
 
@@ -43,7 +43,10 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
         .login(data)
         .then((userValid: boolean) => {
           commonStore.setVisibleLoading(false)
-          if (userValid) commonStore.setIsSignedIn(true)
+          if (userValid) {
+            commonStore.setIsSignedIn(true)
+            navigation.navigate(params.screenRedirect)
+          }
         })
         .catch(() => commonStore.setVisibleLoading(false))
     }

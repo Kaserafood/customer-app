@@ -18,11 +18,14 @@ import {
   DeliveryDetailScreen,
   DishDetailScreen,
   EndOrderScreen,
+  FavoriteScreen,
   InitScreen,
   LoginFormScreen,
   MapScreen,
   MenuChefScreen,
+  NewChefsScreen,
   NewPasswordScreen,
+  OrderDetailScreen,
   OrdersScreen,
   PrivacyPolicyScreen,
   RecoverPasswordScreen,
@@ -30,9 +33,6 @@ import {
   RegisterFormScreen,
   RegisterPagerScreen,
   TermsConditionsScreen,
-  NewChefsScreen,
-  FavoriteScreen,
-  OrderDetailScreen,
 } from "../screens"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
@@ -67,11 +67,6 @@ const AppStack = observer(() => {
       {!commonStore.isSignedIn ? (
         <>
           <Stack.Screen name="init" component={InitScreen} />
-          <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-          <Stack.Screen name="loginForm" component={LoginFormScreen} />
-          <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
-          <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
-          <Stack.Screen name="newPassword" component={NewPasswordScreen} />
         </>
       ) : (
         <>
@@ -92,6 +87,11 @@ const AppStack = observer(() => {
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
         </>
       )}
+      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+      <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
+      <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
+      <Stack.Screen name="newPassword" component={NewPasswordScreen} />
+      <Stack.Screen name="loginForm" component={LoginFormScreen} />
       <Stack.Screen name="registerForm" component={RegisterFormScreen} />
       <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
       <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />

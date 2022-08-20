@@ -38,13 +38,16 @@ interface MenuChef extends DishChef {
   isGetMenu?: boolean
 }
 
+interface loginFormParams {
+  screenRedirect: "main" | "deliveryDetail"
+}
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
   termsConditions: undefined
   privacyPolicy: undefined
   registerPager: registerPageParams
-  loginForm: undefined
+  loginForm: loginFormParams
   main: undefined
   dishDetail: DishChef
   menuChef: MenuChef

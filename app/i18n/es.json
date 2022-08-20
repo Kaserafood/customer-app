@@ -47,7 +47,8 @@
     "emailFormat": "Debes ingresar un correo electrónico válido",
     "acceptsTerms": "Debes aceptar los términos y condiciones",
     "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
-    "passwordMinLength": "La contraseña debe tener al menos 4 caracteres"
+    "passwordMinLength": "La contraseña debe tener al menos 4 caracteres",
+    "logIn": "Iniciar sesión"
   },
   "errorScreen": {
     "title": "Error",
