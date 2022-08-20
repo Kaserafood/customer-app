@@ -128,8 +128,8 @@ export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
 
   return (
     <View style={utilSpacing.mt2}>
-      {metaDataCart.map((item) => (
-        <View key={item.key} style={utilFlex.flexRow}>
+      {metaDataCart.map((item, index) => (
+        <View key={item.key ?? index} style={utilFlex.flexRow}>
           {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
           <Text
             numberOfLines={1}

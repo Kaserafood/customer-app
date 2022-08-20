@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
-import { Card, CartItemAddon, Header, Icon, Price, Screen, Separator, Text } from "../../components"
+import { Card, Header, Icon, Price, Screen, Separator, Text } from "../../components"
 import { goBack, NavigatorParamList } from "../../navigators"
 
 import { ScrollView } from "react-native-gesture-handler"
@@ -15,6 +15,7 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
   function OrderDetailScreen({ route: { params } }) {
     const { orderStore, commonStore } = useStores()
     useEffect(() => {
+      console.log("order detail screen: useEffect", params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
         await orderStore.getDetail(params.id).finally(() => commonStore.setVisibleLoading(false))
@@ -28,19 +29,20 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
         <ScrollView>
           <View style={utilSpacing.px5}>
             <Card style={[utilSpacing.my5, utilSpacing.px4, utilSpacing.py6]}>
-              <View style={utilFlex.flexRow}>
+              <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
                 <Text tx="orderDetailScreen.order" size="lg" preset="bold"></Text>
                 <Text text={` #${params.id}`} size="lg" preset="bold"></Text>
               </View>
 
               <Text tx="endOrderScreen.deliveryOn" caption preset="semiBold"></Text>
-              <Text text={orderStore.orderDetail.deliveryAddress} style={utilSpacing.mb4}></Text>
+              <Text text={orderStore.orderDetail?.deliveryAddress} style={utilSpacing.mb4}></Text>
 
               <Text tx="endOrderScreen.deliveryDate" caption preset="semiBold"></Text>
-              <Text
-                text={`${params.deliveryDate} ${params.deliverySlotTime}`}
-                style={utilSpacing.mb4}
-              ></Text>
+
+              <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
+                <Text text={params.deliveryDate} style={utilSpacing.mr4}></Text>
+                <Text text={params.deliverySlotTime}></Text>
+              </View>
 
               <Text tx="orderDetailScreen.paymentMethod" caption preset="semiBold"></Text>
               <Text text={orderStore.orderDetail.paymentMethod}></Text>
@@ -55,25 +57,50 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
             <Card style={[utilSpacing.mb5, utilSpacing.px4, utilSpacing.py6]}>
               <Text tx="orderDetailScreen.orderStatus" caption preset="semiBold"></Text>
               <Text style={utilSpacing.pb5} text={params.status}></Text>
-              <StateItem status="orderDetailScreen.waiting"></StateItem>
-              <StateItem status="orderDetailScreen.processing" isActive={true}></StateItem>
-              <StateItem status="orderDetailScreen.completed" isHideLine></StateItem>
+              <StateItem
+                status="orderDetailScreen.waiting"
+                isActive={params.woocommerceStatus === "wc-on-hold"}
+              ></StateItem>
+              <StateItem
+                status="orderDetailScreen.processing"
+                isActive={params.woocommerceStatus === "wc-processing"}
+              ></StateItem>
+              <StateItem
+                status="orderDetailScreen.completed"
+                isActive={
+                  params.woocommerceStatus === "wc-completed" ||
+                  params.woocommerceStatus === "wc-billing"
+                }
+                isHideLine
+              ></StateItem>
             </Card>
 
-            <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
-              {orderStore.orderDetail.products.map((product, index) => (
+            <Card style={[utilSpacing.mb5, utilSpacing.px4, utilSpacing.py6]}>
+              {orderStore.orderDetail?.products.map((product, index) => (
                 <View style={[utilFlex.flexRow, utilSpacing.mb5]} key={index}>
                   <View style={utilSpacing.mr3}>
                     <Text text={`X ${product.quantity}`} numberOfLines={1} preset="semiBold"></Text>
                   </View>
                   <View style={utilFlex.flex1}>
                     <Text preset="bold" numberOfLines={2} text={product.name}></Text>
-                    <CartItemAddon metaDataCart={product.metaData}></CartItemAddon>
+                    {product.metaData.map((item) => (
+                      <View key={item.key} style={utilFlex.flexRow}>
+                        <Text caption size="sm" text={`${item.key}:`}></Text>
+
+                        <Text
+                          numberOfLines={1}
+                          style={utilSpacing.ml2}
+                          caption
+                          size="sm"
+                          text={`${item.value}`}
+                        ></Text>
+                      </View>
+                    ))}
                   </View>
                   <View style={utilSpacing.ml3}>
                     <Price
                       preset="simple"
-                      amount={params.total}
+                      amount={product.price}
                       currencyCode={params.currencyCode}
                     ></Price>
                   </View>
@@ -90,7 +117,7 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
                   ></Text>
                   <Price
                     preset="simple"
-                    amount={params.total - orderStore.orderDetail.deliveryPrice}
+                    amount={params.total - orderStore.orderDetail?.deliveryPrice ?? 0}
                     currencyCode={params.currencyCode}
                   ></Price>
                 </View>
@@ -104,7 +131,7 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
                   ></Text>
                   <Price
                     preset="simple"
-                    amount={orderStore.orderDetail.deliveryPrice}
+                    amount={orderStore.orderDetail?.deliveryPrice ?? 0}
                     currencyCode={params.currencyCode}
                   ></Price>
                 </View>

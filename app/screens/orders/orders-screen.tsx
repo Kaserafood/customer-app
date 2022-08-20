@@ -2,8 +2,9 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
 import { Card, Header, Image, Price, Screen, Text } from "../../components"
 import { OrderOverview, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -45,7 +46,7 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
           backgroundColor={color.palette.segmentedControl}
           tintColor={color.palette.white}
           activeFontStyle={{ color: color.text, fontFamily: typography.primarySemiBold }}
-          fontStyle={{ color: color.text, fontFamily: typography.primarySemiBold }}
+          fontStyle={{ color: color.palette.grayDark, fontFamily: typography.primarySemiBold }}
         />
         <ScrollView>
           {selectedIndex === 0 ? (
@@ -88,8 +89,12 @@ const ListOrders = observer(
 
 const Order = (props: { order: OrderOverview; onPress: () => void }) => {
   const { order, onPress } = props
+  let articles = ""
+  if (order.productCount > 1) articles = getI18nText("ordersScreen.articlesPlural")
+  else articles = getI18nText("ordersScreen.articlesSingular")
+
   return (
-    <TouchableOpacity onPress={onPress}>
+    <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPress}>
       <Card style={[utilSpacing.mx4, utilSpacing.mt4, utilSpacing.p4]}>
         <View style={utilFlex.flexRow}>
           <View>
@@ -101,41 +106,52 @@ const Order = (props: { order: OrderOverview; onPress: () => void }) => {
             ></Text>
           </View>
           <View style={utilSpacing.ml3}>
-            <Text style={utilSpacing.mb3} preset="bold" text={order.chefName}></Text>
+            <Text style={utilSpacing.mb3} preset="bold" size="lg" text={order.chefName}></Text>
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb3]}>
-              <Text
-                caption
-                text={`${order.productCount} ${getI18nText("ordersScreen.articles")} - `}
-              ></Text>
+              <Text caption text={`${order.productCount} ${articles} - `}></Text>
               <Price
-                style={styles.price}
+                preset="simple"
                 currencyCode={order.currencyCode}
                 textStyle={utilText.textGray}
                 amount={order.total}
               ></Price>
             </View>
 
-            <Text caption text={order.status}></Text>
-            <Text caption text={`${order.deliveryDate} ${order.deliverySlotTime}`}></Text>
+            <Text
+              caption
+              text={order.status}
+              style={
+                order.woocommerceStatus === "wc-completed" ||
+                order.woocommerceStatus === "wc-billing"
+                  ? styles.colorGreen
+                  : styles.colorOrange
+              }
+            ></Text>
+            <View style={utilFlex.flexRow}>
+              <Text caption text={order.deliveryDate} preset="bold" style={utilSpacing.mr4}></Text>
+              <Text caption text={order.deliverySlotTime}></Text>
+            </View>
           </View>
         </View>
       </Card>
-    </TouchableOpacity>
+    </Ripple>
   )
 }
 
 const styles = StyleSheet.create({
   chefImage: {
     borderRadius: spacing[2],
-    height: 100,
-    width: 100,
+    height: 85,
+    width: 85,
+  },
+  colorGreen: {
+    color: color.palette.green,
+  },
+  colorOrange: {
+    color: color.palette.orange,
   },
   container: {
     backgroundColor: color.background,
-  },
-  price: {
-    backgroundColor: color.background,
-    paddingHorizontal: 0,
   },
   segmentedControl: {
     height: 40,

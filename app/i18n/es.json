@@ -411,7 +411,8 @@
     "title": "Mis pedidios",
     "inProgress": "En curso",
     "previous": "Anteriores",
-    "articles": "Artículos"
+    "articlesPlural": "Artículos",
+    "articlesSingular": "Artículo"
   },
   "recoverPasswordScreen": {
     "title": "Recuperar contraseña",
