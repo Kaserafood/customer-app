@@ -350,8 +350,9 @@
     "whereReciveFood": "¿Dónde deseas recibir tu comida?",
     "addressRequired": "Debes ingresar una dirección",
     "addressPlaceholder": "Ingresa una dirección",
-    "noLocation": "Debe ajustear el pin",
-    "errorToGetLocation": "Lo sentimos, no se ha logrado obtener la ubicación"
+    "noLocation": "Debe ajustar el pin",
+    "errorToGetLocation": "Lo sentimos, no se ha logrado obtener la ubicación",
+    "canNotGetLocation": "No se ha logrado obtener tu ubicación"
   },
   "addressScreen": {
     "title": "Dirección",

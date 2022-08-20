@@ -32,6 +32,7 @@ const loadingState = new LoadingState()
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
     const { fetchAddressText, getCurrentPosition } = useLocation()
+
     const [address, setAddress] = useState<Address>({
       city: "",
       country: "",
@@ -44,20 +45,28 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       latitudeDelta: 0,
       longitudeDelta: 0,
     })
-    let timeOut: NodeJS.Timeout
+
+    const [initLocation, setInitLocation] = useState<Location>({
+      latitude: 0,
+      longitude: 0,
+      latitudeDelta: 0,
+      longitudeDelta: 0,
+    })
 
     useEffect(() => {
+      loadingState.setLoading(true)
       // Request permision to access the location and then enable the location from the device
       getCurrentPosition((location) => {
         if (location.locationAvailable) {
-          setLocation(location)
+          setInitLocation(location)
           fetchAddressText(location.latitude, location.longitude)
             .then((address) => {
               address && setAddress(address)
             })
             .finally(() => loadingState.setLoading(false))
         } else {
-          showMessageError("No se ha logrado obtener tu ubiación")
+          loadingState.setLoading(false)
+          showMessageError("mapScreen.canNotGetLocation", true)
         }
       })
     }, [])
@@ -76,42 +85,36 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           screenToReturn: params.screenToReturn,
         })
       } else {
-        showMessageError(getI18nText("mapScreen.noLocation"))
+        showMessageError("mapScreen.noLocation", true)
       }
     }
 
-    const onRegionChange = (region: Region) => {
-      clearTimeout(timeOut)
-      timeOut = setTimeout(() => {
-        if (location.latitude !== region.latitude && location.longitude !== region.longitude) {
-          __DEV__ && console.log(`Change region2: ${JSON.stringify(region)}`)
-          setLocation({ ...region })
-          loadingState.setLoading(true)
-          fetchAddressText(region.latitude, region.longitude)
-            .then((address) => {
-              if (address) {
-                setAddress(address)
-              }
-            })
-            .finally(() => loadingState.setLoading(false))
-        }
-      }, 1000)
+    const onRegionChangeComplete = (region: Region) => {
+      if (location.latitude !== region.latitude && location.longitude !== region.longitude) {
+        loadingState.setLoading(true)
+        __DEV__ && console.log(`Change region2: ${JSON.stringify(region)}`)
+        setLocation({ ...region })
+        fetchAddressText(region.latitude, region.longitude)
+          .then((address) => {
+            if (address) {
+              setAddress(address)
+            }
+          })
+          .finally(() => loadingState.setLoading(false))
+      }
     }
     return (
       <Screen preset="scroll">
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
         <View style={styles.container}>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            region={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: location.latitudeDelta,
-              longitudeDelta: location.longitudeDelta,
-            }}
-            onRegionChange={onRegionChange}
-          ></MapView>
+          {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+            <MapView
+              provider={PROVIDER_GOOGLE}
+              style={styles.map}
+              initialRegion={initLocation}
+              onRegionChangeComplete={onRegionChangeComplete}
+            ></MapView>
+          )}
 
           <View pointerEvents="none" style={styles.containerMarker}>
             <IconRN name="place" size={50} color={color.primary}></IconRN>
