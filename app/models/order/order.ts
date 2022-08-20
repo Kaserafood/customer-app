@@ -1,5 +1,5 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { Api, CommonResponse, OrderOverviewResponse } from "../../services/api"
+import { Api, CommonResponse, OrderDetailResponse, OrderOverviewResponse } from "../../services/api"
 
 export const metaData = types.model("metaData").props({
   key: types.maybe(types.string),
@@ -51,10 +51,19 @@ const orderOverviewModel = types.model("OrderOverview").props({
   currencyCode: types.maybe(types.string),
 })
 
+const orderDetail = orderOverviewModel.props({
+  products: types.optional(types.maybe(types.array(product)), []),
+  deliveryAddress: types.maybe(types.string),
+  paymentMethod: types.maybe(types.string),
+  deliveryPrice: types.maybe(types.number),
+  paymentPending: types.maybe(types.number),
+})
+
 export interface Order extends SnapshotOut<typeof orderModel> {}
 export interface OrderOverview extends SnapshotOut<typeof orderOverviewModel> {}
 export interface MetaData extends Instance<typeof metaData> {}
 export interface Products extends Instance<typeof product> {}
+export interface OrderDetail extends Instance<typeof orderDetail> {}
 
 /**
  * Model for orders.
@@ -63,6 +72,7 @@ export const OrderModel = types
   .model("Order")
   .props({
     ordersOverview: types.optional(types.array(orderOverviewModel), []),
+    orderDetail: types.optional(orderDetail, {}),
     priceDelivery: types.optional(types.number, 0),
   })
   .views((self) => ({
@@ -104,6 +114,13 @@ export const OrderModel = types
       const result: CommonResponse = yield api.getPriceDelivery()
       if (result && result.kind === "ok") {
         self.priceDelivery = Number(result.data.data)
+      }
+    }),
+    getDetail: flow(function* getDetail(orderId: number) {
+      const api = new Api()
+      const result: OrderDetailResponse = yield api.getOrderDetail(orderId)
+      if (result && result.kind === "ok") {
+        self.orderDetail = result.data
       }
     }),
   }))

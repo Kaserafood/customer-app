@@ -1,4 +1,4 @@
-import { Address, OrderOverview } from "../../models"
+import { Address, OrderDetail, OrderOverview } from "../../models"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
@@ -62,4 +62,8 @@ export type CommonResponse = {
 
 export type OrderOverviewResponse = {
   data: OrderOverview[]
+} & kind
+
+export type OrderDetailResponse = {
+  data: OrderDetail
 } & kind

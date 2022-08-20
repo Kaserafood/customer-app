@@ -70,6 +70,9 @@ export const RegisterFormScreen: FC<
     }
   }
 
+  const toLogin = () => {
+    navigation.navigate("loginForm", { screenRedirect: "deliveryDetail" })
+  }
   return (
     <>
       <Screen preset="scroll" bottomBar="dark-content">
@@ -151,18 +154,22 @@ export const RegisterFormScreen: FC<
                   </TouchableOpacity>
 
                   <View style={styles.containerTermsText}>
-                    <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
+                    <Text
+                      size="sm"
+                      tx="registerFormScreen.acceptThe"
+                      style={styles.lineHeight}
+                    ></Text>
                     <Text
                       size="sm"
                       onPress={goTerms}
-                      style={styles.textPrimary}
+                      style={[styles.textPrimary, styles.lineHeight]}
                       tx="registerFormScreen.termsAndConditions"
                     ></Text>
-                    <Text size="sm" tx="registerFormScreen.andThe"></Text>
+                    <Text size="sm" tx="registerFormScreen.andThe" style={styles.lineHeight}></Text>
                     <Text
                       size="sm"
                       onPress={goPrivacy}
-                      style={styles.textPrimary}
+                      style={[styles.textPrimary, styles.lineHeight]}
                       tx="registerFormScreen.privacyPolicy"
                     ></Text>
                   </View>
@@ -172,8 +179,16 @@ export const RegisterFormScreen: FC<
                   tx="registerFormScreen.register"
                   onPress={methods.handleSubmit(onSubmit, onError)}
                   block
-                  style={[styles.btn, utilSpacing.mt5]}
+                  style={[styles.btn, utilSpacing.my5]}
                 ></Button>
+                <TouchableOpacity style={[utilFlex.selfCenter, utilSpacing.p4]} onPress={toLogin}>
+                  <Text
+                    size="lg"
+                    preset="bold"
+                    style={styles.textPrimary}
+                    tx="registerFormScreen.logIn"
+                  ></Text>
+                </TouchableOpacity>
               </View>
             </FormProvider>
           </View>
@@ -214,6 +229,9 @@ const styles = StyleSheet.create({
   input: {
     color: color.palette.black,
     marginBottom: spacing[5],
+  },
+  lineHeight: {
+    lineHeight: 25,
   },
   lottie: {
     height: 100,

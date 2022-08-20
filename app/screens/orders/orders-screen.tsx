@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
 import { Card, Header, Image, Price, Screen, Text } from "../../components"
 import { OrderOverview, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -13,7 +14,7 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 
 export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = observer(
-  function OrdersScreen() {
+  function OrdersScreen({ navigation }) {
     const { orderStore, userStore, commonStore } = useStores()
     useEffect(() => {
       __DEV__ && console.log("orders screen: useEffect")
@@ -27,6 +28,10 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
     }, [])
 
     const [selectedIndex, setSelectedIndex] = useState(0)
+
+    const toDetail = (order: OrderOverview) => {
+      navigation.navigate("orderDetail", { ...order })
+    }
     return (
       <Screen style={styles.container} preset="fixed">
         <Header headerTx="ordersScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -41,17 +46,21 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
           backgroundColor={color.palette.segmentedControl}
           tintColor={color.palette.white}
           activeFontStyle={{ color: color.text, fontFamily: typography.primarySemiBold }}
-          fontStyle={{ color: color.text, fontFamily: typography.primarySemiBold }}
+          fontStyle={{ color: color.palette.grayDark, fontFamily: typography.primarySemiBold }}
         />
         <ScrollView>
           {selectedIndex === 0 ? (
-            <ListOrders viewToGetOrders="ordersOverviewInProgress"></ListOrders>
+            <ListOrders
+              viewToGetOrders="ordersOverviewInProgress"
+              onPress={(order) => toDetail(order)}
+            ></ListOrders>
           ) : (
-            <ListOrders viewToGetOrders="ordersOverviewCompleted"></ListOrders>
+            <ListOrders
+              viewToGetOrders="ordersOverviewCompleted"
+              onPress={(order) => toDetail(order)}
+            ></ListOrders>
           )}
         </ScrollView>
-
-        {/* <Loader></Loader> */}
       </Screen>
     )
   },
@@ -64,62 +73,85 @@ type ViewToGetOrders = "ordersOverviewInProgress" | "ordersOverviewCompleted"
  *
  * @description return the order overview filter by status, the prop 'viewToGetOrders' is used to know which orders to get and render
  */
-const ListOrders = observer((props: { viewToGetOrders: ViewToGetOrders }) => {
-  const { orderStore } = useStores()
+const ListOrders = observer(
+  (props: { viewToGetOrders: ViewToGetOrders; onPress: (order: OrderOverview) => void }) => {
+    const { orderStore } = useStores()
+
+    return (
+      <View style={utilSpacing.mb5}>
+        {orderStore[props.viewToGetOrders].map((order: OrderOverview) => (
+          <Order key={order.id} order={order} onPress={() => props.onPress(order)}></Order>
+        ))}
+      </View>
+    )
+  },
+)
+
+const Order = (props: { order: OrderOverview; onPress: () => void }) => {
+  const { order, onPress } = props
+  let articles = ""
+  if (order.productCount > 1) articles = getI18nText("ordersScreen.articlesPlural")
+  else articles = getI18nText("ordersScreen.articlesSingular")
 
   return (
-    <View style={utilSpacing.mb5}>
-      {orderStore[props.viewToGetOrders].map((order: OrderOverview) => (
-        <Order key={order.id} order={order}></Order>
-      ))}
-    </View>
-  )
-})
-
-const Order = (props: { order: OrderOverview }) => {
-  const { order } = props
-  return (
-    <Card style={[utilSpacing.mx4, utilSpacing.mt4, utilSpacing.p4]}>
-      <View style={utilFlex.flexRow}>
-        <View>
-          <Image source={{ uri: order.chefImage }} style={styles.chefImage}></Image>
-          <Text caption style={[utilFlex.selfCenter, utilSpacing.mt3]} text={`#${order.id}`}></Text>
-        </View>
-        <View style={utilSpacing.ml3}>
-          <Text style={utilSpacing.mb3} preset="bold" text={order.chefName}></Text>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb3]}>
+    <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPress}>
+      <Card style={[utilSpacing.mx4, utilSpacing.mt4, utilSpacing.p4]}>
+        <View style={utilFlex.flexRow}>
+          <View>
+            <Image source={{ uri: order.chefImage }} style={styles.chefImage}></Image>
             <Text
               caption
-              text={`${order.productCount} ${getI18nText("ordersScreen.articles")} - `}
+              style={[utilFlex.selfCenter, utilSpacing.mt3]}
+              text={`#${order.id}`}
             ></Text>
-            <Price
-              style={styles.price}
-              currencyCode={order.currencyCode}
-              textStyle={utilText.textGray}
-              amount={order.total}
-            ></Price>
           </View>
+          <View style={utilSpacing.ml3}>
+            <Text style={utilSpacing.mb3} preset="bold" size="lg" text={order.chefName}></Text>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb3]}>
+              <Text caption text={`${order.productCount} ${articles} - `}></Text>
+              <Price
+                preset="simple"
+                currencyCode={order.currencyCode}
+                textStyle={utilText.textGray}
+                amount={order.total}
+              ></Price>
+            </View>
 
-          <Text caption text={order.status}></Text>
-          <Text caption text={`${order.deliveryDate} ${order.deliverySlotTime}`}></Text>
+            <Text
+              caption
+              text={order.status}
+              style={
+                order.woocommerceStatus === "wc-completed" ||
+                order.woocommerceStatus === "wc-billing"
+                  ? styles.colorGreen
+                  : styles.colorOrange
+              }
+            ></Text>
+            <View style={utilFlex.flexRow}>
+              <Text caption text={order.deliveryDate} preset="bold" style={utilSpacing.mr4}></Text>
+              <Text caption text={order.deliverySlotTime}></Text>
+            </View>
+          </View>
         </View>
-      </View>
-    </Card>
+      </Card>
+    </Ripple>
   )
 }
 
 const styles = StyleSheet.create({
   chefImage: {
     borderRadius: spacing[2],
-    height: 100,
-    width: 100,
+    height: 85,
+    width: 85,
+  },
+  colorGreen: {
+    color: color.palette.green,
+  },
+  colorOrange: {
+    color: color.palette.orange,
   },
   container: {
     backgroundColor: color.background,
-  },
-  price: {
-    backgroundColor: color.background,
-    paddingHorizontal: 0,
   },
   segmentedControl: {
     height: 40,

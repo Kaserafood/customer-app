@@ -1,3 +1,4 @@
+import { OrderOverview } from "../models"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
 
@@ -37,13 +38,16 @@ interface MenuChef extends DishChef {
   isGetMenu?: boolean
 }
 
+interface loginFormParams {
+  screenRedirect: "main" | "deliveryDetail"
+}
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
   termsConditions: undefined
   privacyPolicy: undefined
   registerPager: registerPageParams
-  loginForm: undefined
+  loginForm: loginFormParams
   main: undefined
   dishDetail: DishChef
   menuChef: MenuChef
@@ -62,4 +66,5 @@ export type NavigatorParamList = {
   account: undefined
   favorite: undefined
   newChefs: undefined
+  orderDetail: OrderOverview
 }

@@ -47,7 +47,8 @@
     "emailFormat": "Debes ingresar un correo electrónico válido",
     "acceptsTerms": "Debes aceptar los términos y condiciones",
     "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
-    "passwordMinLength": "La contraseña debe tener al menos 4 caracteres"
+    "passwordMinLength": "La contraseña debe tener al menos 4 caracteres",
+    "logIn": "Iniciar sesión"
   },
   "errorScreen": {
     "title": "Error",
@@ -408,10 +409,11 @@
     "more": "Más"
   },
   "ordersScreen": {
-    "title": "Mis pedidios",
+    "title": "Mis pedidos",
     "inProgress": "En curso",
     "previous": "Anteriores",
-    "articles": "Artículos"
+    "articlesPlural": "Artículos",
+    "articlesSingular": "Artículo"
   },
   "recoverPasswordScreen": {
     "title": "Recuperar contraseña",
@@ -548,5 +550,15 @@
   },
   "favoriteScreen": {
     "title": "Favoritos Kasera"
+  },
+  "orderDetailScreen": {
+    "title": "Detalle del pedido",
+    "pending": "Pendiente",
+    "paymentMethod": "Método de pago",
+    "orderStatus": "Estado del pedido",
+    "waiting": "En espera",
+    "processing": "Procesando",
+    "completed": "Completado",
+    "order": "Pedidio"
   }
 }
