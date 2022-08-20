@@ -27,7 +27,7 @@
 		55031C84237F48EDB5B9B6A4 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3674C209B8D24A619232E00C /* SimpleLineIcons.ttf */; };
 		566F80C1685020AB2B9D9743 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CD00143C8AA5EF71C17FFB /* ExpoModulesProvider.swift */; };
 		57077F94288F8D34009E68C7 /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57077F93288F8D34009E68C7 /* BootSplash.storyboard */; };
-		573DFCEE288CFFAE00E3BA79 /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 573DFCED288CFFAE00E3BA79 /* icomoon.ttf */; };
+		5708E99F28B045E7009C7B5F /* icomoon.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5708E99E28B045E7009C7B5F /* icomoon.ttf */; };
 		62010014DD06470BAB8DA616 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7A821C24896B4C349C4C5009 /* EvilIcons.ttf */; };
 		62735319C7584C9A8E418119 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 43AE25D2DDCF4291AB9CB6CF /* Foundation.ttf */; };
 		638E77C4F0D64F0EB0190B41 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC24CCAA75B64C8F90178606 /* FontAwesome5_Solid.ttf */; };
@@ -90,9 +90,9 @@
 		4D40708BE521DBE7DC6E68C8 /* Pods-ClientApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApp.release.xcconfig"; path = "Target Support Files/Pods-ClientApp/Pods-ClientApp.release.xcconfig"; sourceTree = "<group>"; };
 		53F2B6CBAF3646AFADDD9BA3 /* fontello.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = fontello.ttf; path = ../assets/fonts/fontello.ttf; sourceTree = "<group>"; };
 		57077F93288F8D34009E68C7 /* BootSplash.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = BootSplash.storyboard; path = ClientApp/BootSplash.storyboard; sourceTree = "<group>"; };
+		5708E99E28B045E7009C7B5F /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../android/app/src/main/assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
 		5726B526288BA57C00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icomoon.ttf; path = ../assets/fonts/icomoon.ttf; sourceTree = "<group>"; };
 		5726B528288BAF8F00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
-		573DFCED288CFFAE00E3BA79 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
 		671EA18E537547558040C4DF /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		7A821C24896B4C349C4C5009 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
 		815BCD5292094B8DA162656E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
@@ -204,7 +204,7 @@
 		5726B52C288BBF5800DD0AE9 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				573DFCED288CFFAE00E3BA79 /* icomoon.ttf */,
+				5708E99E28B045E7009C7B5F /* icomoon.ttf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -446,10 +446,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5708E99F28B045E7009C7B5F /* icomoon.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				53D5E61B42264F3CB1DFE1A3 /* Poppins-Regular.ttf in Resources */,
-				573DFCEE288CFFAE00E3BA79 /* icomoon.ttf in Resources */,
 				10C098831F2B40419912313D /* Poppins-Bold.ttf in Resources */,
 				09EB39C9F5AA45559FD33A75 /* Poppins-SemiBold.ttf in Resources */,
 				50C94AB0A5A14B42ACEAC7CA /* Poppins-ExtraBold.ttf in Resources */,
@@ -826,12 +826,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ClientApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.5;
+				MARKETING_VERSION = 0.8.13;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -855,11 +856,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				INFOPLIST_FILE = ClientApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.5;
+				MARKETING_VERSION = 0.8.13;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
