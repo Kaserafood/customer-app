@@ -4,7 +4,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
-import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps"
+import MapView, { Region } from "react-native-maps"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Screen, Text } from "../../components"
@@ -59,6 +59,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       getCurrentPosition((location) => {
         if (location.locationAvailable) {
           setInitLocation(location)
+          setLocation(location)
           fetchAddressText(location.latitude, location.longitude)
             .then((address) => {
               address && setAddress(address)
@@ -109,7 +110,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         <View style={styles.container}>
           {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
             <MapView
-              provider={PROVIDER_GOOGLE}
+              provider={null}
               style={styles.map}
               initialRegion={initLocation}
               onRegionChangeComplete={onRegionChangeComplete}
