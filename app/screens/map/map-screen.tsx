@@ -109,7 +109,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         <View style={styles.container}>
           {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
             <MapView
-              provider={PROVIDER_GOOGLE}
+              provider={null}
               style={styles.map}
               initialRegion={initLocation}
               onRegionChangeComplete={onRegionChangeComplete}
