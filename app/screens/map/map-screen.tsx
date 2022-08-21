@@ -59,6 +59,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       getCurrentPosition((location) => {
         if (location.locationAvailable) {
           setInitLocation(location)
+          setLocation(location)
           fetchAddressText(location.latitude, location.longitude)
             .then((address) => {
               address && setAddress(address)
