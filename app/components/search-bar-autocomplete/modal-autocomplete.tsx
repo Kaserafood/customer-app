@@ -1,9 +1,7 @@
-import { useIsFocused } from "@react-navigation/native"
 import axios from "axios"
 import React, { useState } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -23,10 +21,6 @@ type Address = {
 interface ModalAutocompleteProps {
   modalState: ModalStateHandler
   onPressAddress: (address: Address) => void
-}
-const FocusAwareStatusBar = (props) => {
-  const isFocused = useIsFocused()
-  return isFocused ? <StatusBar {...props} /> : null
 }
 
 export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
@@ -118,7 +112,6 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       showMessageError()
     }
   }
-  const insets = useSafeAreaInsets() 
 
   return (
     <Modal
