@@ -43,7 +43,6 @@
     "apisauce": "2.0.0",
     "axios": "^0.27.2",
     "expo": "~44.0.6",
-    "expo-linear-gradient": "^11.0.3",
     "expo-localization": "12.0.1",
     "expo-modules-core": "^0.6.5",
     "i18n-js": "3.8.0",
@@ -236,14 +235,11 @@
       "prefer-template": "error",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
-      "react-native/no-inline-styles": 1,
-      "prettier/prettier": [
-        "error",
-        {
-          "no-inline-styles": true,
-          "endOfLine": "auto"
-        }
-      ]
+      "react-native/no-inline-styles": 1
+     
     }
+  },
+  "resolutions": {
+    "@types/react": "17.0.40"
   }
 }

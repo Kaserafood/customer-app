@@ -125,7 +125,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               style={styles.map}
               initialRegion={initLocation}
               onRegionChangeComplete={onRegionChangeComplete}
-            ></MapView>
+            />
           )}
 
           <View pointerEvents="none" style={styles.containerMarker}>
