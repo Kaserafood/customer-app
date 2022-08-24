@@ -3,6 +3,7 @@ import axios from "axios"
 import React, { useState } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -117,6 +118,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       showMessageError()
     }
   }
+  const insets = useSafeAreaInsets() 
 
   return (
     <Modal
@@ -125,8 +127,9 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       styleBody={styles.noRadius}
       position="bottom"
       isVisibleIconClose={false}
+     
     >
-      <FocusAwareStatusBar barStyle="dark-content" backgroundColor={color.palette.white} />
+        
       <View style={styles.modal}>
         <TouchableOpacity onPress={() => modalState.setVisible(false)}>
           <Icon name="xmark" size={30} color={color.text}></Icon>
@@ -135,7 +138,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
         <Text
           size="lg"
           tx="modalAutocomplete.title"
-          style={[styles.title, utilSpacing.pb4]}
+          style={[styles.title, utilSpacing.pb4 ,utilSpacing.mt4]}
           preset="bold"
         ></Text>
 

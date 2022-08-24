@@ -77,7 +77,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (props) => 
   return (
     <View style={[styles.container, { ...passedStyles }]}>
       <TextInput
-        style={[styles.inputStyle, utilSpacing.px5, utilSpacing.mb3]}
+        style={[styles.inputStyle, utilSpacing.px5, utilSpacing.py5, utilSpacing.mb3]}
         placeholder={getI18nText("modalAutocomplete.placeholderSearch")}
         placeholderTextColor={color.palette.grayDark}
         value={value}
