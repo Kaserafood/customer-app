@@ -153,7 +153,8 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       mapRef.current.animateToRegion({ ...location, latitude, longitude })
     }
     return (
-      <Screen preset="scroll">
+      <Screen preset="scroll"  statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
+      statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}>
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
         <View style={styles.container}>
           {initLocation.latitude !== 0 &&

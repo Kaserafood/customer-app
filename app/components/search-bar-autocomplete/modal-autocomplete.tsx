@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native"
 import axios from "axios"
 import React, { useState } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
@@ -22,10 +21,6 @@ type Address = {
 interface ModalAutocompleteProps {
   modalState: ModalStateHandler
   onPressAddress: (address: Address) => void
-}
-const FocusAwareStatusBar = (props) => {
-  const isFocused = useIsFocused()
-  return isFocused ? <StatusBar {...props} /> : null
 }
 
 export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
@@ -125,8 +120,9 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       styleBody={styles.noRadius}
       position="bottom"
       isVisibleIconClose={false}
+     
     >
-      <FocusAwareStatusBar barStyle="dark-content" backgroundColor={color.palette.white} />
+        
       <View style={styles.modal}>
         <TouchableOpacity onPress={() => modalState.setVisible(false)}>
           <Icon name="xmark" size={30} color={color.text}></Icon>
@@ -135,7 +131,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
         <Text
           size="lg"
           tx="modalAutocomplete.title"
-          style={[styles.title, utilSpacing.pb4]}
+          style={[styles.title, utilSpacing.pb4 ,utilSpacing.mt4]}
           preset="bold"
         ></Text>
 
