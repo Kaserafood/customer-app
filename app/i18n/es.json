@@ -565,5 +565,9 @@
   "modalAutocomplete": {
     "title": "Ingresa una dirección",
     "placeholderSearch": "Escribe la dirección"
+  },
+  "modalWithoutCoverage": {
+    "title": "Sin cobertura",
+    "info": "Lo sentimos, no tenemos cobertura en la ubicación seleccionada"
   }
 }

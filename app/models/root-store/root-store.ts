@@ -7,6 +7,7 @@ import { DayStoreModel } from "../day-store"
 import { DishStoreModel } from "../dish-store"
 import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
+import { CoverageModel } from "../coverage/coverage"
 
 /**
  * A RootStore model.
@@ -21,6 +22,7 @@ export const RootStoreModel = types.model("RootStore").props({
   cartStore: types.optional(CartStoreModel, {} as any),
   addressStore: types.optional(AddressModelStore, {} as any),
   orderStore: types.optional(OrderModel, {} as any),
+  coverageStore: types.optional(CoverageModel, {} as any),
 })
 
 /**

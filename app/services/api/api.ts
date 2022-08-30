@@ -10,6 +10,7 @@ import {
   CategoryResponse,
   ChefResponse,
   CommonResponse,
+  CoverageResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -333,5 +334,12 @@ export class Api {
    */
   async removeAccount(userId: number): Promise<CommonResponse> {
     return await this.request({}, `/users/account/${userId}`, "DELETE")
+  }
+
+  /**
+   * @description Get all coordiantes of the coverage.
+   */
+  async getCoverage(): Promise<CoverageResponse> {
+    return await this.request({}, `/deliveries/coverage`, "GET")
   }
 }
