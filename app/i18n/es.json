@@ -52,8 +52,8 @@
   },
   "errorScreen": {
     "title": "Error",
-    "friendlySubtitle": "Lo sentimos, se ha producido un error inesperado.",
-    "reset": "Reiniciar"
+    "friendlySubtitle": "Lo sentimos, algo no ha funcionado como se esperaba",
+    "reset": "Restablecer"
   },
   "termsConditionsScreen": {
     "title": "Términos y condiciones",

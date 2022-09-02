@@ -119,7 +119,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
       </View>
       <View style={[styles.flex, styles.footer]}>
         <View style={[utilFlex.flex1, styles.textContainer, utilSpacing.pt3]}>
-          {/* <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text> */}
+          <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
           <Text style={styles.textDescription} numberOfLines={1} text={item.currentDishName}></Text>
           <View style={styles.flex}>
             <Text
