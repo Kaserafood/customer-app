@@ -112,6 +112,12 @@ const ModalSendedEmail = (props: {
           preset="semiBold"
           style={utilSpacing.my4}
         ></Text>
+        <Button
+          tx="common.continue"
+          style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
+          onPress={() => toTokenScreen()}
+        ></Button>
+
         <Ripple
           onPressIn={props.sendAgain}
           rippleOpacity={0.2}
@@ -119,17 +125,12 @@ const ModalSendedEmail = (props: {
           style={[styles.btnAddressAdd, utilSpacing.mx5, utilSpacing.mb5]}
         >
           <Text
-            preset="semiBold"
-            style={utilFlex.selfCenter}
+            size="md"
+            preset="bold"
+            style={[utilFlex.selfCenter, styles.textSendAgain]}
             tx="recoverPasswordScreen.sendAgain"
           ></Text>
         </Ripple>
-
-        <Button
-          tx="common.continue"
-          style={[styles.btn, utilSpacing.py5, utilSpacing.my4, utilFlex.selfCenter]}
-          onPress={() => toTokenScreen()}
-        ></Button>
       </View>
     </Modal>
   )
@@ -140,11 +141,13 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   btnAddressAdd: {
-    borderColor: color.palette.grayLigth,
     borderRadius: 8,
-    borderWidth: 1,
     marginVertical: spacing[4],
     padding: spacing[3],
+  },
+  textSendAgain: {
+    color: color.primary,
+    fontSize: 13,
   },
   container: {
     alignItems: "center",

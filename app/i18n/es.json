@@ -273,7 +273,8 @@
   "modalLocation": {
     "title": "Elige una dirección",
     "addAddress": "Ingresa un dirección",
-    "useCurrentLocation": "Usar ubicación actual"
+    "useCurrentLocation": "Usar ubicación actual",
+    "cannotGetLocation" : "No se pudo obtener tu ubicación"
   },
 
   "modalDeliveryDay": {
@@ -562,5 +563,9 @@
     "processing": "Procesando",
     "completed": "Completado",
     "order": "Pedido"
+  },
+  "modalNecessaryLocation": {
+    "title": "Ubicación necesaria",
+    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti."
   }
 }
