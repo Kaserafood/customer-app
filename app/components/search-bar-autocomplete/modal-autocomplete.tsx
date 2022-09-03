@@ -1,6 +1,6 @@
 import axios from "axios"
 import React, { useState } from "react"
-import { StatusBar, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { useStores } from "../../models"
 import { color } from "../../theme"
@@ -120,9 +120,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       styleBody={styles.noRadius}
       position="bottom"
       isVisibleIconClose={false}
-     
     >
-        
       <View style={styles.modal}>
         <TouchableOpacity onPress={() => modalState.setVisible(false)}>
           <Icon name="xmark" size={30} color={color.text}></Icon>
@@ -131,7 +129,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
         <Text
           size="lg"
           tx="modalAutocomplete.title"
-          style={[styles.title, utilSpacing.pb4 ,utilSpacing.mt4]}
+          style={[styles.title, utilSpacing.pb4, utilSpacing.mt4]}
           preset="bold"
         ></Text>
 
