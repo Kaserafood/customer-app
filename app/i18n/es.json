@@ -401,7 +401,8 @@
     "myOrdres": "Mis Pedidos",
     "removeAccount": "Eliminar cuenta",
     "myAccount": "Mi cuenta",
-    "termsConditions": "Términos y condiciones"
+    "termsConditions": "Términos y condiciones",
+    "loginRegister": "Iniciar sesión / Registrarse"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -560,6 +561,6 @@
     "waiting": "En espera",
     "processing": "Procesando",
     "completed": "Completado",
-    "order": "Pedidio"
+    "order": "Pedido"
   }
 }

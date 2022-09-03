@@ -15,7 +15,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
   ({ navigation }) => {
     const { userStore, commonStore } = useStores()
     const toRegister = () => navigation.navigate("registerPager")
-    const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
+    const toLogin = () => navigation.navigate("loginForm", {screenRedirect: "main"})
 
     const setDataStore = () => {
       userStore.setUserId(-1)

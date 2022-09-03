@@ -45,7 +45,10 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           commonStore.setVisibleLoading(false)
           if (userValid) {
             commonStore.setIsSignedIn(true)
-            navigation.navigate(params.screenRedirect ?? "main")
+
+            if (params.screenRedirect && params.screenRedirect.length > 0)
+              navigation.navigate(params.screenRedirect)
+            else navigation.navigate("main")
           }
         })
         .catch(() => commonStore.setVisibleLoading(false))

@@ -5,6 +5,7 @@ import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
 import { Price, Text } from "../../components"
+import { useStores } from "../../models"
 import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
@@ -63,6 +64,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
   //   console.log("item changed", item)
   // }, [item])
 
+  const { orderStore } = useStores()
   return (
     <View style={style} key={item.id}>
       <View style={styles.imageCarousel}>
@@ -130,7 +132,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
             ></Text>
             <Price
               preset="delivery"
-              amount={30}
+              amount={orderStore.priceDelivery}
               style={utilSpacing.mr3}
               currencyCode={item.currencyCode}
             ></Price>
