@@ -67,7 +67,6 @@
     "react-native-keychain": "6.2.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-localize": "^2.2.1",
-    "react-native-location": "^2.5.0",
     "react-native-maps": "^0.31.1",
     "react-native-material-ripple": "^0.9.1",
     "react-native-modal": "^13.0.1",
@@ -235,8 +234,14 @@
       "prefer-template": "error",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
-      "react-native/no-inline-styles": 1
-     
+      "react-native/no-inline-styles": 1,
+      "prettier/prettier": [
+        "error",
+        {
+          "no-inline-styles": true,
+          "endOfLine": "auto"
+        }
+      ]
     }
   },
   "resolutions": {

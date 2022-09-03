@@ -10,7 +10,7 @@ export const DishesList = () => {
   return (
     <View>
       {cartStore.cart.map((item) => (
-        <View style={[utilFlex.flexRow, utilSpacing.mb5]} key={item.dish.id}>
+        <View style={[utilFlex.flexRow, utilSpacing.mb5]} key={item.tempId}>
           <View style={utilSpacing.mr3}>
             <Text text={`X ${item.quantity}`} numberOfLines={1} preset="semiBold"></Text>
           </View>

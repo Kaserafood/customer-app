@@ -1,4 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode } from "react"
+import { StatusBar } from "react-native"
+import { color } from "../../theme"
 import { ErrorComponent } from "./error-component"
 
 interface Props {
@@ -59,11 +61,14 @@ export class ErrorBoundary extends Component<Props, State> {
   // Render an error UI if there's an error; otherwise, render children
   render() {
     return this.isEnabled() && this.state.error ? (
-      <ErrorComponent
-        onReset={this.resetError}
-        error={this.state.error}
-        errorInfo={this.state.errorInfo}
-      />
+      <>
+        <StatusBar backgroundColor={color.palette.white} barStyle={"light-content"} />
+        <ErrorComponent
+          onReset={this.resetError}
+          error={this.state.error}
+          errorInfo={this.state.errorInfo}
+        />
+      </>
     ) : (
       this.props.children
     )

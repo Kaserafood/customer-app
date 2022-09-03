@@ -40,7 +40,10 @@ export const RegisterFormScreen: FC<
             // Si el usuario habia entrado como "Explorar el app"
             if (currentUserId === -1) {
               await saveAddress(userId)
-            } else commonStore.setIsSignedIn(true)
+            } else {
+              commonStore.setIsSignedIn(true)
+              navigation.navigate("main")
+            }
           }
           commonStore.setVisibleLoading(false)
         })

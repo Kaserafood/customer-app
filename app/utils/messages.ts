@@ -66,7 +66,7 @@ export const showMessageError = (message?: string, isI18n = false) => {
 export const showMessageSucess = (message?: string, isI18n = false) => {
   let msg = ""
   if (isI18n) msg = getI18nText(message)
-  else message ?? getI18nText("common.operationSuccess")
+  else msg = message ?? getI18nText("common.operationSuccess")
   showMessage({
     ...options,
     style: { backgroundColor: color.palette.green },

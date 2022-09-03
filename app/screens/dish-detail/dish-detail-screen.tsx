@@ -48,7 +48,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const [loadingDishes, setLoadingDishes] = useState(true)
 
     useEffect(() => {
-      setAddonsAvailable(currentDish.addons.filter((addon) => addon.hide_in_app !== "yes"))
       setQuantity(1)
       setTotal(params.price)
       cartStore.setSubmited(false)
@@ -66,6 +65,10 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
       fetch()
     }, [])
+
+    useEffect(() => {
+      setAddonsAvailable(params.addons.filter((addon) => addon.hide_in_app !== "yes"))
+    }, [params.addons])
 
     useEffect(() => {
       setTotal((currentDish.price + totalAddon) * quantity)
@@ -88,7 +91,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         dish: currentDish,
         quantity: quantity,
         noteChef: data.note,
-        metaData: getMetaData(),
+        metaData: addonsAvailable.length > 0 ? getMetaData() : [],
         total: total,
       }
       __DEV__ && console.log(itemCart)

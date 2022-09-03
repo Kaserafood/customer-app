@@ -9,7 +9,7 @@ import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
 
 export default function DrawerContent(props) {
-  const { userStore } = useStores()
+  const { userStore, commonStore } = useStores()
   const navigation = useNavigation()
 
   const order = () => {
@@ -22,6 +22,10 @@ export default function DrawerContent(props) {
 
   const toTermsConditions = () => {
     navigation.navigate("termsConditions" as never)
+  }
+
+  const toInit = () => {
+    commonStore.setIsSignedIn(false)
   }
 
   return (
@@ -90,6 +94,29 @@ export default function DrawerContent(props) {
           </View>
         </Card>
       </Ripple>
+      {
+        // Usuario que ha ingresado como "Explora la app"
+        userStore.userId == -1 && (
+          <Ripple
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            style={utilSpacing.m3}
+            onPressIn={toInit}
+          >
+            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                <Icon
+                  name="user-lock"
+                  style={utilSpacing.mr4}
+                  size={30}
+                  color={color.palette.grayDark}
+                />
+                <Text tx="drawerContent.loginRegister" preset="semiBold" size="md"></Text>
+              </View>
+            </Card>
+          </Ripple>
+        )
+      }
     </DrawerContentScrollView>
   )
 }

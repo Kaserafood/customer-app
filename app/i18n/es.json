@@ -52,8 +52,8 @@
   },
   "errorScreen": {
     "title": "Error",
-    "friendlySubtitle": "Lo sentimos, se ha producido un error inesperado.",
-    "reset": "Reiniciar"
+    "friendlySubtitle": "Lo sentimos, algo no ha funcionado como se esperaba",
+    "reset": "Restablecer"
   },
   "termsConditionsScreen": {
     "title": "Términos y condiciones",
@@ -273,7 +273,8 @@
   "modalLocation": {
     "title": "Elige una dirección",
     "addAddress": "Ingresa un dirección",
-    "useCurrentLocation": "Usar ubicación actual"
+    "useCurrentLocation": "Usar ubicación actual",
+    "cannotGetLocation" : "No se pudo obtener tu ubicación"
   },
 
   "modalDeliveryDay": {
@@ -401,7 +402,8 @@
     "myOrdres": "Mis Pedidos",
     "removeAccount": "Eliminar cuenta",
     "myAccount": "Mi cuenta",
-    "termsConditions": "Términos y condiciones"
+    "termsConditions": "Términos y condiciones",
+    "loginRegister": "Iniciar sesión / Registrarse"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -560,6 +562,11 @@
     "waiting": "En espera",
     "processing": "Procesando",
     "completed": "Completado",
+    "order": "Pedido"
+  },
+  "modalNecessaryLocation": {
+    "title": "Ubicación necesaria",
+    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
     "order": "Pedidio"
   },
   "modalAutocomplete": {

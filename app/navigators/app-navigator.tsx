@@ -65,11 +65,11 @@ const AppStack = observer(() => {
       }}
     >
       {!commonStore.isSignedIn ? (
-        <>
+        <Stack.Group>
           <Stack.Screen name="init" component={InitScreen} />
-        </>
+        </Stack.Group>
       ) : (
-        <>
+        <Stack.Group>
           <Stack.Screen name="main">
             {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
           </Stack.Screen>
@@ -85,16 +85,18 @@ const AppStack = observer(() => {
           <Stack.Screen name="newChefs" component={NewChefsScreen} />
           <Stack.Screen name="favorite" component={FavoriteScreen} />
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
-        </>
+        </Stack.Group>
       )}
-      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-      <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
-      <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
-      <Stack.Screen name="newPassword" component={NewPasswordScreen} />
-      <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Group navigationKey={commonStore.isSignedIn + ""}>
+        <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+        <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
+        <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
+        <Stack.Screen name="newPassword" component={NewPasswordScreen} />
+        <Stack.Screen name="loginForm" component={LoginFormScreen} />
+        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+        <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+        <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   )
 })
