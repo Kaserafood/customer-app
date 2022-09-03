@@ -566,6 +566,11 @@
   },
   "modalNecessaryLocation": {
     "title": "Ubicación necesaria",
-    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti."
+    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
+    "order": "Pedidio"
+  },
+  "modalAutocomplete": {
+    "title": "Ingresa una dirección",
+    "placeholderSearch": "Escribe la dirección"
   }
 }

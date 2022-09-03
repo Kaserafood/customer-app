@@ -1,18 +1,21 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import MapView, { Region } from "react-native-maps"
+import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Screen, Text } from "../../components"
+import { ModalAutocomplete } from "../../components/search-bar-autocomplete/modal-autocomplete"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError } from "../../utils/messages"
+import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 
 class LoadingState {
@@ -28,10 +31,12 @@ class LoadingState {
 }
 
 const loadingState = new LoadingState()
+const modalAddressState = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
     const { fetchAddressText, getCurrentPosition } = useLocation()
+    const mapRef = useRef<MapView>(null)
 
     const [address, setAddress] = useState<Address>({
       city: "",
@@ -104,17 +109,24 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           .finally(() => loadingState.setLoading(false))
       }
     }
+    const onPressAddress = ({ latitude, longitude, address }) => {
+      setLocation({ ...location, latitude, longitude })
+      setAddress(address)
+      mapRef.current.animateToRegion({ ...location, latitude, longitude })
+    }
     return (
-      <Screen preset="scroll">
+      <Screen preset="scroll"  statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
+      statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}>
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
         <View style={styles.container}>
           {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
             <MapView
+              ref={mapRef}
               provider={null}
               style={styles.map}
               initialRegion={initLocation}
               onRegionChangeComplete={onRegionChangeComplete}
-            ></MapView>
+            />
           )}
 
           <View pointerEvents="none" style={styles.containerMarker}>
@@ -123,7 +135,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         </View>
         {loadingState.loading ? (
           <ProgressBar
-            height={7}
+            height={5}
             indeterminate
             backgroundColor={color.primary}
             trackColor={color.palette.grayLigth}
@@ -141,9 +153,14 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               style={utilSpacing.my4}
             ></Text>
 
-            <View style={styles.containerAddress}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              style={styles.containerAddress}
+              onPress={() => modalAddressState.setVisible(true)}
+            >
               <Text text={address.formatted} style={styles.textAddrres}></Text>
-            </View>
+            </Ripple>
           </View>
 
           <Button
@@ -154,6 +171,10 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             tx="common.next"
           ></Button>
         </View>
+        <ModalAutocomplete
+          modalState={modalAddressState}
+          onPressAddress={onPressAddress}
+        ></ModalAutocomplete>
       </Screen>
     )
   },
@@ -187,7 +208,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   heightProgress: {
-    height: 7,
+    height: 5,
   },
   map: {
     flex: 1,
