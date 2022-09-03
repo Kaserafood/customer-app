@@ -561,5 +561,9 @@
     "processing": "Procesando",
     "completed": "Completado",
     "order": "Pedidio"
+  },
+  "modalAutocomplete": {
+    "title": "Ingresa una dirección",
+    "placeholderSearch": "Escribe la dirección"
   }
 }
