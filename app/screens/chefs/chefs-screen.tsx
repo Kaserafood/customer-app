@@ -94,7 +94,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         .getGroupedByChef(day.date, RNLocalize.getTimeZone())
         .then(() => {
           if (dishStore.dishesGroupedByChef.length > 0) {
-            // setState(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
             __DEV__ && console.log("formatData changed")
           }
         })
