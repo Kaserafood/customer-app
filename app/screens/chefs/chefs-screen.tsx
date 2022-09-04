@@ -138,7 +138,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
               <Chip
                 onPress={() => modalDeliveryDate.setVisible(true)}
-                text={dayStore.currentDay.dayNameLong}
+                text={dayStore.currentDay.dayName}
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
