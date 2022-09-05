@@ -27,16 +27,16 @@ export const Categories = function Categories(props: CategoriesProps) {
 
   return (
     <View>
-      <Text size="lg" tx="categories.title" preset="bold"></Text>
+      <Text size="lg" tx="categories.title" style={utilSpacing.ml4} preset="bold"></Text>
       <ScrollView horizontal style={[styles.flex, utilSpacing.mt3]}>
-        {categories.map((category) => (
+        {categories.map((category, index) => (
           <Ripple
             onPress={() => onPress(category)}
             rippleOpacity={0.2}
             rippleDuration={400}
             rippleContainerBorderRadius={16}
             key={category.id}
-            style={[utilSpacing.p4, styles.containerCategoryItem]}
+            style={[utilSpacing.p4, styles.containerCategoryItem, index == 0 && utilSpacing.ml4]}
           >
             <Image
               defaultSource={images.category}

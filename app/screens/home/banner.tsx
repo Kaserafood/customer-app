@@ -21,7 +21,7 @@ export const Banner = (props: PropsBanner) => {
       <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
         <TouchableOpacity
           activeOpacity={0.7}
-          style={[styles.containerImage, utilSpacing.mr3]}
+          style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml4]}
           onPress={() => onPressWelcome()}
         >
           <Image style={[styles.image, utilSpacing.mr3]} source={images.banner1}></Image>
