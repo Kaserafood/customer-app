@@ -13,7 +13,7 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
@@ -121,7 +121,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
 
-          <Separator style={utilSpacing.my4}></Separator>
+          <Separator style={utilSpacing.m4}></Separator>
           <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}

@@ -150,7 +150,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
           ></Categories>
-          <Separator style={utilSpacing.my4}></Separator>
+          <Separator style={utilSpacing.m4}></Separator>
           <Banner
             onPressWelcome={() => modalStateWelcome.setVisible(true)}
             onPressSeasonal={() => toCategory(categoryStore.seasonal)}

@@ -24,7 +24,10 @@ export const Banner = (props: PropsBanner) => {
           style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml4]}
           onPress={() => onPressWelcome()}
         >
-          <Image style={[styles.image, utilSpacing.mr3]} source={images.banner1}></Image>
+          <Image
+            style={[styles.image, utilSpacing.mr3, { left: -33 }]}
+            source={images.banner1}
+          ></Image>
           <View style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter]}>
             <Text
               preset="semiBold"
@@ -134,7 +137,7 @@ const Button = ({ onPress, tx }) => {
         styles.button,
         utilSpacing.px6,
         utilSpacing.py3,
-        utilSpacing.mt3,
+        utilSpacing.mt4,
       ]}
       onPress={onPress}
     >
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
   containerImage: {
     borderRadius: 16,
     height: 165,
-    width: windowWidth - 50,
+    width: windowWidth - 75,
     overflow: "hidden",
   },
   image: {
