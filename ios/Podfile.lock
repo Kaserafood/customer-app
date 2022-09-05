@@ -343,8 +343,6 @@ PODS:
     - Google-Maps-iOS-Utils (= 4.1.0)
     - GoogleMaps (= 6.1.1)
     - React-Core
-  - react-native-location (2.5.0):
-    - React
   - react-native-maps (0.31.1):
     - React-Core
   - react-native-pager-view (5.4.25):
@@ -542,7 +540,6 @@ DEPENDENCIES:
   - react-native-device-country (from `../node_modules/react-native-device-country`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
-  - react-native-location (from `../node_modules/react-native-location`)
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -665,8 +662,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
     :path: "../node_modules/react-native-maps"
-  react-native-location:
-    :path: "../node_modules/react-native-location"
   react-native-maps:
     :path: "../node_modules/react-native-maps"
   react-native-pager-view:
@@ -780,7 +775,6 @@ SPEC CHECKSUMS:
   react-native-device-country: 86affc8758023ca82e2f461eb30d11da31415c95
   react-native-geolocation-service: f32ef48fa665bd710207a3ac39bc127cac9cb993
   react-native-google-maps: 8231ffa015bf8b222c2e2661fa9163cdb609a224
-  react-native-location: 5a40ec1cc6abf2f6d94df979f98ec76c3a415681
   react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa
   react-native-pager-view: da490aa1f902c9a5aeecf0909cc975ad0e92e53e
   react-native-safe-area-context: 79fea126c6830c85f65947c223a5e3058a666937
@@ -815,6 +809,6 @@ SPEC CHECKSUMS:
   Yoga: 9b6696970c3289e8dea34b3eda93f23e61fb8121
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 1c284a0deb6b8379e8684c3390a55fb244c96586
+PODFILE CHECKSUM: 3767e78a3e7523dc139372e24d0c3cea4e546e90
 
 COCOAPODS: 1.11.3
