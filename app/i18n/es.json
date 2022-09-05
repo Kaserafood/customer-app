@@ -279,7 +279,7 @@
 
   "modalDeliveryDay": {
     "title": "Pide con anticipación",
-    "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tiene un pedido.",
+    "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tienen un pedido.",
     "continue": "Continuar"
   },
   "categories": {
