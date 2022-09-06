@@ -3,20 +3,20 @@ import { useController, useFormContext } from "react-hook-form"
 import { Platform, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import TextInputMask from "react-native-text-input-mask"
-import { translate } from "../../i18n"
+import { translate, TxKeyPath } from "../../i18n"
 import { color, spacing, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Card } from "../card/card"
 import { Text } from "../text/text"
 import { InputTextProps } from "./input-text.props"
-
 const TEXT_STYLES: TextStyle = {
   paddingVertical: spacing[3],
   fontFamily: typography.primary,
   marginBottom: -3,
   fontSize: typographySize.md,
   color: color.text,
+  minHeight: 50,
 }
 const BORDER_BOTTOM = {
   borderBottomWidth: 1,
@@ -164,7 +164,7 @@ const ErrorMessage = (props: { name: string }) => {
   if (hasError && formState.errors[name].message) {
     return (
       <Animatable.Text style={CONTAINER_ERROR} animation="shake">
-        <Text style={TEXT_ERROR} tx={formState.errors[name].message}></Text>
+        <Text style={TEXT_ERROR} tx={formState.errors[name].message as TxKeyPath}></Text>
       </Animatable.Text>
     )
   }

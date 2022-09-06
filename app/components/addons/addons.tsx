@@ -268,7 +268,7 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
                 )} ${getI18nText(
                   Number(addon.num_option_selectables) === 1 ? "addons.option" : "addons.options",
                 )}`}
-                style={utilSpacing.mb3}
+                style={[utilSpacing.mb3, utilSpacing.mt2]}
               ></Text>
 
               {addon.required === 1 && cartStore.isSubmited && (

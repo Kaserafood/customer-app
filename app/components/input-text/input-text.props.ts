@@ -37,7 +37,7 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
   /**
    * An optional label to display when preset is "card"
    */
-  labelTx?: string
+  labelTx?: TxKeyPath
 
   /**
    * Name of the input
