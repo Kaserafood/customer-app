@@ -4,20 +4,20 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import MapView, { Region } from "react-native-maps"
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
-import { Button, Header, Screen, Text } from "../../components"
+import { Button, Header, Icon, Screen, Text } from "../../components"
 import { ModalAutocomplete } from "../../components/search-bar-autocomplete/modal-autocomplete"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-
 class LoadingState {
   loading = true
 
@@ -114,9 +114,16 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       setAddress(address)
       mapRef.current.animateToRegion({ ...location, latitude, longitude })
     }
+
+    const onCurrentLocation = () => {
+      mapRef.current.animateToRegion({ ...initLocation })
+    }
     return (
-      <Screen preset="scroll"  statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
-      statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}>
+      <Screen
+        preset="scroll"
+        statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
+        statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}
+      >
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
         <View style={styles.container}>
           {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
@@ -131,6 +138,16 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 
           <View pointerEvents="none" style={styles.containerMarker}>
             <IconRN name="place" size={50} color={color.primary}></IconRN>
+          </View>
+
+          <View style={styles.containerCurrentLocation}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={onCurrentLocation}
+              style={[styles.buttonLocation, utilFlex.flexCenter]}
+            >
+              <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
+            </TouchableOpacity>
           </View>
         </View>
         {loadingState.loading ? (
@@ -207,6 +224,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
   },
+  containerCurrentLocation: {
+    right: 30,
+    position: "absolute",
+    top: 30,
+  },
   heightProgress: {
     height: 5,
   },
@@ -217,5 +239,12 @@ const styles = StyleSheet.create({
   },
   textAddrres: {
     textAlignVertical: "top",
+  },
+  buttonLocation: {
+    borderRadius: 100,
+    height: 55,
+    width: 55,
+    backgroundColor: color.palette.white,
+    ...SHADOW,
   },
 })
