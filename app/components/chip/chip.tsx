@@ -17,6 +17,7 @@ const CONTAINER: ViewStyle = {
   paddingVertical: spacing[0],
   borderRadius: 100,
   alignSelf: "flex-start",
+  minHeight: 25,
   ...SHADOW,
 }
 

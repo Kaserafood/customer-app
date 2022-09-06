@@ -1,5 +1,5 @@
 import React from "react"
-import { Dimensions, Image, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Dimensions, Image, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
@@ -141,9 +141,14 @@ const Button = ({ onPress, tx }) => {
       ]}
       onPress={onPress}
     >
-      <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+       <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
         <Text tx={tx} preset="bold" style={utilSpacing.mr3}></Text>
-        <Icon name="caret-right" size={17} color={color.text}></Icon>
+        <Icon
+          name="caret-right"
+          size={17}
+          color={color.text}
+          style={Platform.OS === "ios" && { paddingTop: 3 }}
+        ></Icon>
       </View>
     </TouchableOpacity>
   )
