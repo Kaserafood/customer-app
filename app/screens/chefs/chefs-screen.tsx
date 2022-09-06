@@ -13,7 +13,7 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
@@ -88,7 +88,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
-      // setState([])
+      state.setData([])
       dayStore.setCurrentDay(day)
       await dishStore
         .getGroupedByChef(day.date, RNLocalize.getTimeZone())
@@ -120,12 +120,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             onWhyPress={(state) => modalStateDay.setVisible(state)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
+
+          <Separator style={utilSpacing.m4}></Separator>
+          <Categories
+            categories={categoryStore.categories}
+            onPress={(category) => toCategory(category)}
+          ></Categories>
           <View style={utilSpacing.px4}>
-            <Separator style={utilSpacing.my4}></Separator>
-            <Categories
-              categories={categoryStore.categories}
-              onPress={(category) => toCategory(category)}
-            ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
             <View
               style={[
@@ -143,10 +144,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               ></Chip>
             </View>
 
-            <ListChef
-              state={state}
-              toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}
-            ></ListChef>
+            {state.data.length > 0 && (
+              <ListChef
+                state={state}
+                toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}
+              ></ListChef>
+            )}
           </View>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>

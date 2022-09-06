@@ -59,11 +59,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
           style={[styles.dayShipping, utilSpacing.ml4]}
         ></Text>
         {!hideWhyButton && (
-          <Chip
-            tx="mainScreen.why"
-            style={utilSpacing.pb2}
-            onPressIn={() => onWhyPress(true)}
-          ></Chip>
+          <Chip tx="mainScreen.why" style={styles.chip} onPressIn={() => onWhyPress(true)}></Chip>
         )}
       </View>
       <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
@@ -71,7 +67,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
           <Chip
             active={day.date === dayStore.currentDay.date}
             text={day.dayName}
-            style={[styles.chip, index === 0 && utilSpacing.ml4]}
+            style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
             onPress={() => {
               onPress(day)
               dayStore.setCurrentDay(day)
@@ -95,9 +91,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     borderRadius: spacing[3],
-    marginBottom: spacing[2],
     marginRight: spacing[2],
-    marginTop: spacing[2],
     paddingHorizontal: spacing[3],
     paddingVertical: spacing[1],
   },

@@ -144,19 +144,20 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               onChangeDay(day)
             }}
           ></DayDelivery>
+
+          <Separator style={utilSpacing.m4}></Separator>
+          <Categories
+            categories={categoryStore.categories}
+            onPress={(category) => toCategory(category)}
+          ></Categories>
+          <Separator style={utilSpacing.m4}></Separator>
+          <Banner
+            onPressWelcome={() => modalStateWelcome.setVisible(true)}
+            onPressSeasonal={() => toCategory(categoryStore.seasonal)}
+            onPressNewChefs={() => navigation.navigate("newChefs")}
+            onPressFavorites={() => navigation.navigate("favorite")}
+          ></Banner>
           <View style={utilSpacing.px4}>
-            <Separator style={utilSpacing.my4}></Separator>
-            <Categories
-              categories={categoryStore.categories}
-              onPress={(category) => toCategory(category)}
-            ></Categories>
-            <Separator style={utilSpacing.my4}></Separator>
-            <Banner
-              onPressWelcome={() => modalStateWelcome.setVisible(true)}
-              onPressSeasonal={() => toCategory(categoryStore.seasonal)}
-              onPressNewChefs={() => navigation.navigate("newChefs")}
-              onPressFavorites={() => navigation.navigate("favorite")}
-            ></Banner>
             <View
               style={[
                 utilFlex.flexRow,
