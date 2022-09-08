@@ -1,11 +1,10 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect, useState } from "react"
+import React, { FC, useEffect, useLayoutEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { useDay } from "../../common/hooks/useDay"
 import {
   Categories,
   Chip,
@@ -23,6 +22,7 @@ import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-mod
 import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
@@ -43,8 +43,7 @@ const modalStateWelcome = new ModalStateHandler()
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
-    const { onChangeDay } = useDay()
-    const [dishes, setDishes] = useState<DishChef[]>([])
+    // const [dishes, setDishes] = useState<DishChef[]>([])
     const {
       dishStore,
       dayStore,
@@ -78,6 +77,19 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       changeNavigationBarColor(color.palette.white, true, true)
     }, [])
 
+    const onChangeDay = async (day: Day) => {
+      commonStore.setVisibleLoading(true)
+      dayStore.setCurrentDay(day)
+      await dishStore
+        .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId)
+        // .then(() => {
+        //   setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
+        // })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+        })
+    }
+
     useEffect(() => {
       __DEV__ && console.log("Home  useEffect")
 
@@ -97,7 +109,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         ])
           .then(() => {
             setCurrentDay(days[0])
-            setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
+            // setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
@@ -173,7 +185,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
-            <ListDishes dishes={dishes} toDetail={(dish) => toDetail(dish)}></ListDishes>
+            {dishStore.dishes.length > 0 && (
+              <ListDishes
+                dishes={dishStore.dishes}
+                toDetail={(dish) => toDetail(dish)}
+              ></ListDishes>
+            )}
           </View>
           <View style={utilSpacing.mb8}>
             <EmptyData

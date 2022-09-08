@@ -44,18 +44,18 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           RNLocalize.getTimeZone(),
           userStore.userId,
           params.id,
-        )
+        ).finally(() => {
+          commonStore.setVisibleLoading(false)
+        })
       }
 
-      fetch().finally(() => {
-        commonStore.setVisibleLoading(false)
-      })
+      fetch()
     }, [])
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await getAll(day.date, RNLocalize.getTimeZone(), params.id).finally(() => {
+      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, params.id).finally(() => {
         commonStore.setVisibleLoading(false)
       })
     }
