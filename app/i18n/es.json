@@ -329,7 +329,8 @@
     "errorOrder": "Lo sentimos, no se la logrado realizar tu pedido",
     "errorOrderPayment": "Lo sentimos, no se ha logrado procesar el pago",
     "nitPlaceholder": "Ingresa tu NIT o DPI para la factura",
-    "nit": "Ingresa tu NIT (Opcional)"
+    "nit": "Ingresa tu NIT (Opcional)",
+    "uponDelivery": "Pago contra-entrega"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",

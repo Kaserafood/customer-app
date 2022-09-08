@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
+import { TxKeyPath } from "../../i18n"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"
 import { InputText } from "../input-text/input-text"
@@ -9,13 +10,18 @@ export interface PaymentCardProps {
    * Methods from FormProvider
    */
   methods: any
+
+  /**
+   * Disable inputs, used when the user check upon delivery
+   */
+  disabledInputs?: boolean
 }
 
 /**
  * Inputs for payment card
  */
 export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
-  const { methods } = props
+  const { methods, disabledInputs } = props
   const [maskCard, setMaskCard] = useState("")
   const [maskCVV, setMaskCVV] = useState("")
   const [placeholderCVV, setPlaceholderCVV] = useState("paymentCard.cvvPlaceholder3")
@@ -83,7 +89,7 @@ export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
         <InputText
           name="cvv"
           preset="card"
-          placeholderTx={placeholderCVV}
+          placeholderTx={placeholderCVV as TxKeyPath}
           rules={{
             required: "paymentCard.cvvRequired",
           }}

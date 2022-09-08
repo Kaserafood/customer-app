@@ -8,6 +8,7 @@ import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
+  Checkbox,
   Header,
   Icon,
   Image,
@@ -45,6 +46,7 @@ export const DeliveryDetailScreen: FC<
   const { ...methods } = useForm({ mode: "onBlur" })
   const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
+  const [uponDelivery, setUponDelivery] = useState(false)
   const refDeliveryTimeList = useRef(null)
 
   useEffect(() => {
@@ -112,6 +114,7 @@ export const DeliveryDetailScreen: FC<
         name: data.name,
         type: getCardType(data.number).toLocaleLowerCase(),
       },
+      paymentMethod: uponDelivery ? "cod" : "qpaypro", //Contra entrega o pago con tarjeta
     }
 
     orderStore
@@ -256,21 +259,33 @@ export const DeliveryDetailScreen: FC<
             tx="deliveryDetailScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
-          <View style={utilFlex.flexRow}>
-            <Text
-              preset="bold"
-              caption
-              tx="deliveryDetailScreen.paymentCard"
-              style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
-            ></Text>
-            <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-              <Image style={styles.imageCard} source={images.cardVisa}></Image>
-              <Image style={styles.imageCard} source={images.cardMastercard}></Image>
-              <Image style={styles.imageCard} source={images.cardAmex}></Image>
-            </View>
-          </View>
 
-          <PaymentCard methods={methods}></PaymentCard>
+          {!uponDelivery && (
+            <>
+              <View style={utilFlex.flexRow}>
+                <Text
+                  preset="bold"
+                  caption
+                  tx="deliveryDetailScreen.paymentCard"
+                  style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
+                ></Text>
+                <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
+                  <Image style={styles.imageCard} source={images.cardVisa}></Image>
+                  <Image style={styles.imageCard} source={images.cardMastercard}></Image>
+                  <Image style={styles.imageCard} source={images.cardAmex}></Image>
+                </View>
+              </View>
+              <PaymentCard methods={methods} disabledInputs={uponDelivery}></PaymentCard>
+            </>
+          )}
+
+          <Checkbox
+            tx="deliveryDetailScreen.uponDelivery"
+            onToggle={(value) => setUponDelivery(value)}
+            value={uponDelivery}
+            preset="medium"
+            style={utilSpacing.my4}
+          ></Checkbox>
           <InputText
             name="taxId"
             preset="card"
