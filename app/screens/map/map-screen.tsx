@@ -140,15 +140,17 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             <IconRN name="place" size={50} color={color.primary}></IconRN>
           </View>
 
-          <View style={styles.containerCurrentLocation}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={onCurrentLocation}
-              style={[styles.buttonLocation, utilFlex.flexCenter]}
-            >
-              <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
-            </TouchableOpacity>
-          </View>
+          {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+            <View style={styles.containerCurrentLocation}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={onCurrentLocation}
+                style={[styles.buttonLocation, utilFlex.flexCenter]}
+              >
+                <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         {loadingState.loading ? (
           <ProgressBar
