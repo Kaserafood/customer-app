@@ -59,6 +59,11 @@ interface ModalProperties {
    * Visible icon close
    */
   isVisibleIconClose?: boolean
+
+  /**
+   * Event when modal is hide
+   */
+  onModalHide?: () => void
 }
 
 /**
@@ -75,6 +80,7 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     position = "center",
     hideOnBackdropPress = true,
     isVisibleIconClose = true,
+    onModalHide,
     ...rest
   } = props
 
@@ -124,6 +130,7 @@ export const Modal = observer(function Modal(props: ModalProperties) {
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}
       onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
+      onModalHide={onModalHide}
       {...rest}
     >
       <View style={[styles.content, styleContainer]}>

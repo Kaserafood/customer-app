@@ -4,6 +4,7 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
+import Ripple from "react-native-material-ripple"
 import images from "../../assets/images"
 import {
   ButtonFooter,
@@ -14,7 +15,6 @@ import {
   Image,
   InputText,
   ModalDeliveryDate,
-  PaymentCard,
   Screen,
   Separator,
   Text,
@@ -35,10 +35,12 @@ import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
+import { Card as CardModel, ModalPaymentCard } from "./modal-payment-card"
 import { Totals } from "./totals"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
+const modalStatePaymentCard = new ModalStateHandler()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
@@ -46,8 +48,11 @@ export const DeliveryDetailScreen: FC<
   const { ...methods } = useForm({ mode: "onBlur" })
   const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
-  const [uponDelivery, setUponDelivery] = useState(false)
+  const [isPaymentCash, setIsPaymentCash] = useState(false)
+  const [isPaymentCard, setIsPaymentCard] = useState(false)
+  const [card, setCard] = useState<CardModel>()
   const refDeliveryTimeList = useRef(null)
+  const refModalPaymentCard = useRef(null)
 
   useEffect(() => {
     const loadSavedStrings = async () => {
@@ -73,6 +78,14 @@ export const DeliveryDetailScreen: FC<
     }
   }, [navigation])
 
+  useEffect(() => {
+    if (!modalStatePaymentCard.isVisible) {
+      if (!isCardDataValid()) setIsPaymentCard(false)
+
+      setCard(undefined)
+    }
+  }, [modalStatePaymentCard.isVisible])
+
   const onError: SubmitErrorHandler<any> = (errors) => {
     __DEV__ && console.log({ errors })
   }
@@ -80,13 +93,29 @@ export const DeliveryDetailScreen: FC<
   const onSubmit = async (data) => {
     Keyboard.dismiss()
     if (!dayStore.currentDay) {
-      showMessageError(getI18nText("deliveryDetailScreen.errorDayDelivery"))
+      showMessageError("deliveryDetailScreen.errorDayDelivery", true)
       return
     }
 
     if (labelDeliveryTime.length === 0) {
-      showMessageError(getI18nText("deliveryDetailScreen.errorTimeDelivery"))
+      showMessageError("deliveryDetailScreen.errorTimeDelivery", true)
       return
+    }
+
+    if (isPaymentCard) {
+      if (!isCardDataValid()) {
+        showMessageError("deliveryDetailScreen.errorCard", true)
+        return
+      }
+    }
+
+    if (!isPaymentCard && !isPaymentCash) {
+      showMessageError("deliveryDetailScreen.errorPayment", true)
+      return
+    }
+
+    if (isPaymentCash) {
+      setCard(undefined)
     }
 
     commonStore.setVisibleLoading(true)
@@ -108,13 +137,13 @@ export const DeliveryDetailScreen: FC<
       taxId: taxId,
       uuid: getUniqueId(),
       card: {
-        cardNumber: encrypt(data.number.split(" ").join("")),
-        dateExpiry: encrypt(data.expirationDate),
-        cvv: encrypt(data.cvv),
-        name: data.name,
-        type: getCardType(data.number).toLocaleLowerCase(),
+        cardNumber: encrypt(card.number.split(" ").join("")),
+        dateExpiry: encrypt(card.expirationDate),
+        cvv: encrypt(card.cvv),
+        name: card.name,
+        type: getCardType(card.number).toLocaleLowerCase(),
       },
-      paymentMethod: uponDelivery ? "cod" : "qpaypro", //Contra entrega o pago con tarjeta
+      paymentMethod: isPaymentCash ? "cod" : "qpaypro", //Contra entrega o pago con tarjeta
     }
 
     orderStore
@@ -155,6 +184,23 @@ export const DeliveryDetailScreen: FC<
         metaData: item.metaData,
       }
     })
+  }
+
+  const isCardDataValid = () => {
+    if (
+      !card ||
+      !card.cvv ||
+      !card.expirationDate ||
+      !card.number ||
+      !card.name ||
+      card.cvv.trim().length == 0 ||
+      card.expirationDate.trim().length == 0 ||
+      card.number.trim().length == 0 ||
+      card.name.trim().length == 0
+    )
+      return false
+
+    return true
   }
 
   const getMetaData = (taxId: string): MetaData[] => {
@@ -204,6 +250,7 @@ export const DeliveryDetailScreen: FC<
       <ScrollView style={styles.containerForm}>
         <Text
           preset="bold"
+          size="lg"
           tx="deliveryDetailScreen.info"
           style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
         ></Text>
@@ -260,32 +307,53 @@ export const DeliveryDetailScreen: FC<
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
 
-          {!uponDelivery && (
-            <>
-              <View style={utilFlex.flexRow}>
-                <Text
-                  preset="bold"
-                  caption
-                  tx="deliveryDetailScreen.paymentCard"
-                  style={[utilSpacing.mb4, utilSpacing.ml4, utilFlex.flex1]}
-                ></Text>
-                <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-                  <Image style={styles.imageCard} source={images.cardVisa}></Image>
-                  <Image style={styles.imageCard} source={images.cardMastercard}></Image>
-                  <Image style={styles.imageCard} source={images.cardAmex}></Image>
-                </View>
+          <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => {
+                modalStatePaymentCard.setVisible(true)
+                setIsPaymentCard(!isPaymentCard)
+                setIsPaymentCash(false)
+              }}
+              style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+            >
+              <Checkbox
+                rounded
+                style={[utilSpacing.px3, utilFlex.flex1]}
+                value={isPaymentCard}
+                preset="medium"
+                tx="deliveryDetailScreen.paymentCard"
+              ></Checkbox>
+              <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
+                <Image style={styles.imageCard} source={images.cardVisa}></Image>
+                <Image style={styles.imageCard} source={images.cardMastercard}></Image>
+                <Image style={styles.imageCard} source={images.cardAmex}></Image>
               </View>
-              <PaymentCard methods={methods} disabledInputs={uponDelivery}></PaymentCard>
-            </>
-          )}
+            </Ripple>
+          </Card>
 
-          <Checkbox
-            tx="deliveryDetailScreen.uponDelivery"
-            onToggle={(value) => setUponDelivery(value)}
-            value={uponDelivery}
-            preset="medium"
-            style={utilSpacing.my4}
-          ></Checkbox>
+          <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => {
+                setIsPaymentCash(!isPaymentCash)
+                setIsPaymentCard(false)
+                refModalPaymentCard.current?.cleanInputs()
+              }}
+              style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+            >
+              <Checkbox
+                rounded
+                style={[utilSpacing.px3, utilFlex.flex1]}
+                value={isPaymentCash}
+                preset="medium"
+                tx="deliveryDetailScreen.paymentCash"
+              ></Checkbox>
+            </Ripple>
+          </Card>
+
           <InputText
             name="taxId"
             preset="card"
@@ -330,6 +398,14 @@ export const DeliveryDetailScreen: FC<
 
       <ModalLocation screenToReturn={"deliveryDetail"} modal={modalStateLocation}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
+      <ModalPaymentCard
+        ref={refModalPaymentCard}
+        modalState={modalStatePaymentCard}
+        onSubmit={(values) => {
+          setCard(values)
+          setIsPaymentCard(true)
+        }}
+      ></ModalPaymentCard>
     </Screen>
   )
 })

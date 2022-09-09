@@ -10,18 +10,13 @@ export interface PaymentCardProps {
    * Methods from FormProvider
    */
   methods: any
-
-  /**
-   * Disable inputs, used when the user check upon delivery
-   */
-  disabledInputs?: boolean
 }
 
 /**
  * Inputs for payment card
  */
 export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
-  const { methods, disabledInputs } = props
+  const { methods } = props
   const [maskCard, setMaskCard] = useState("")
   const [maskCVV, setMaskCVV] = useState("")
   const [placeholderCVV, setPlaceholderCVV] = useState("paymentCard.cvvPlaceholder3")
