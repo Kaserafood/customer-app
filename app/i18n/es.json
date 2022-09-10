@@ -333,8 +333,9 @@
     "uponDelivery": "Pago contra-entrega",
     "errorCard": "No has ingresado todos los datos de tu tarjeta",
     "errorPayment": "Selecciona un método de pago",
-    "paymentCash": "Pago contra entrega"
-  },
+    "paymentCash": "Efectivo",
+    "makeOrder" : "Hacer pedido"
+   },
   "endOrderScreen": {
     "title": "Pedido realizado",
     "deliveryOn": "Entregar en:",

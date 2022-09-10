@@ -66,7 +66,7 @@ export const DeliveryDetailScreen: FC<
       const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
 
       if (slotTime)
-        refDeliveryTimeList.current.changeValue(true, deliverySlotTime.indexOf(slotTime))
+        refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
     }
     loadSavedStrings()
   }, [])
@@ -80,9 +80,10 @@ export const DeliveryDetailScreen: FC<
 
   useEffect(() => {
     if (!modalStatePaymentCard.isVisible) {
-      if (!isCardDataValid()) setIsPaymentCard(false)
-
-      setCard(undefined)
+      if (!isCardDataValid()) {
+        setIsPaymentCard(false)
+        setCard(undefined)
+      }
     }
   }, [modalStatePaymentCard.isVisible])
 
@@ -119,8 +120,7 @@ export const DeliveryDetailScreen: FC<
     }
 
     commonStore.setVisibleLoading(true)
-    console.log("Submitted")
-    const taxId = data.taxId?.length === 0 ? "CF" : data.taxId.toUpperCase()
+    const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
 
     const order: Order = {
       id: 0,
@@ -136,13 +136,15 @@ export const DeliveryDetailScreen: FC<
       currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
       taxId: taxId,
       uuid: getUniqueId(),
-      card: {
-        cardNumber: encrypt(card.number.split(" ").join("")),
-        dateExpiry: encrypt(card.expirationDate),
-        cvv: encrypt(card.cvv),
-        name: card.name,
-        type: getCardType(card.number).toLocaleLowerCase(),
-      },
+      ...(isPaymentCard && {
+        card: {
+          cardNumber: encrypt(card.number.split(" ").join("")),
+          dateExpiry: encrypt(card.expirationDate),
+          cvv: encrypt(card.cvv),
+          name: card.name,
+          type: getCardType(card.number).toLocaleLowerCase(),
+        },
+      }),
       paymentMethod: isPaymentCash ? "cod" : "qpaypro", //Contra entrega o pago con tarjeta
     }
 
@@ -244,6 +246,15 @@ export const DeliveryDetailScreen: FC<
     return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
   }
 
+  const getTextButtonFooter = (): string => {
+    return `${getI18nText(
+      isPaymentCard ? "dishDetailScreen.pay" : "deliveryDetailScreen.makeOrder",
+    )} ${getFormat(
+      cartStore.subtotal + orderStore.priceDelivery,
+      cartStore.cart[0]?.dish.chef.currencyCode,
+    )}`
+  }
+
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -341,6 +352,7 @@ export const DeliveryDetailScreen: FC<
                 setIsPaymentCash(!isPaymentCash)
                 setIsPaymentCard(false)
                 refModalPaymentCard.current?.cleanInputs()
+                modalStatePaymentCard.setVisible(false)
               }}
               style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
             >
@@ -351,6 +363,7 @@ export const DeliveryDetailScreen: FC<
                 preset="medium"
                 tx="deliveryDetailScreen.paymentCash"
               ></Checkbox>
+              <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
             </Ripple>
           </Card>
 
@@ -390,14 +403,12 @@ export const DeliveryDetailScreen: FC<
       </ScrollView>
       <ButtonFooter
         onPress={methods.handleSubmit(onSubmit, onError)}
-        text={`${getI18nText("dishDetailScreen.pay")} ${getFormat(
-          cartStore.subtotal + orderStore.priceDelivery,
-          cartStore.cart[0]?.dish.chef.currencyCode,
-        )}`}
+        text={getTextButtonFooter()}
       ></ButtonFooter>
 
       <ModalLocation screenToReturn={"deliveryDetail"} modal={modalStateLocation}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
+
       <ModalPaymentCard
         ref={refModalPaymentCard}
         modalState={modalStatePaymentCard}

@@ -1,4 +1,4 @@
-import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
+import React, { BaseSyntheticEvent, forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, View } from "react-native"
 import { Button, Modal, PaymentCard, Text } from "../../components"
@@ -28,7 +28,7 @@ export const ModalPaymentCard = forwardRef(
       },
     }))
 
-    const onSubmit = async (data: Card) => {
+    const onSubmit = async (data: Card, e: BaseSyntheticEvent<object, any, any>) => {
       Keyboard.dismiss()
       props.onSubmit(data)
       modalState.setVisible(false)
@@ -39,34 +39,38 @@ export const ModalPaymentCard = forwardRef(
     }
 
     return (
-      <Modal modal={modalState}>
-        <View style={[]}>
-          <Text
-            preset="bold"
-            size="lg"
-            tx="deliveryDetailScreen.paymentCard"
-            style={[utilSpacing.mb2, utilSpacing.ml4]}
-          ></Text>
-          <FormProvider {...methods}>
-            <PaymentCard methods={methods}></PaymentCard>
-          </FormProvider>
+      <>
+        <Modal modal={modalState} position="bottom">
+          <View style={[]}>
+            <Text
+              preset="bold"
+              size="lg"
+              tx="deliveryDetailScreen.paymentCard"
+              style={[utilSpacing.mb2, utilSpacing.ml4]}
+            ></Text>
+            {modalState.isVisible && (
+              <FormProvider {...methods}>
+                <PaymentCard methods={methods}></PaymentCard>
+              </FormProvider>
+            )}
 
-          <View style={[utilFlex.flexRow, utilSpacing.mx4, utilSpacing.mt5]}>
-            <Button
-              tx="common.cancel"
-              preset="white"
-              style={[utilFlex.flex1, utilSpacing.mr2]}
-              onPress={() => modalState.setVisible(false)}
-            ></Button>
+            <View style={[utilFlex.flexRow, utilSpacing.mx4, utilSpacing.mt5]}>
+              <Button
+                tx="common.cancel"
+                preset="white"
+                style={[utilFlex.flex1, utilSpacing.mr2]}
+                onPress={() => modalState.setVisible(false)}
+              ></Button>
 
-            <Button
-              tx="common.ok"
-              style={[utilFlex.flex1, utilSpacing.ml2]}
-              onPress={methods.handleSubmit(onSubmit, onError)}
-            ></Button>
+              <Button
+                tx="common.ok"
+                style={[utilFlex.flex1, utilSpacing.ml2]}
+                onPress={methods.handleSubmit(onSubmit, onError)}
+              ></Button>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      </>
     )
   },
 )
