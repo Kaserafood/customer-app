@@ -334,14 +334,14 @@
     "errorCard": "No has ingresado todos los datos de tu tarjeta",
     "errorPayment": "Selecciona un método de pago",
     "paymentCash": "Efectivo",
-    "makeOrder" : "Hacer pedido"
-   },
+    "makeOrder": "Hacer pedido"
+  },
   "endOrderScreen": {
     "title": "Pedido realizado",
     "deliveryOn": "Entregar en:",
     "deliveryDate": "Fecha de entrega:",
     "info": "Te enviaremos una confirmación a tu correo electrónico",
-    "order": "Pedidio",
+    "order": "Pedido",
     "thankYou": "Gracias por tu apoyo",
     "cookWithLove": "Cocinaré tu platillo con mucho amor.",
     "continueExplore": "Seguir explorando"

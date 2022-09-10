@@ -153,6 +153,12 @@ export const DeliveryDetailScreen: FC<
       .then(async (res) => {
         commonStore.setVisibleLoading(false)
         __DEV__ && console.log("Code order reponse", res)
+
+        if (!res) {
+          showMessageError("deliveryDetailScreen.errorOrder", true)
+          return
+        }
+
         if (Number(res.data) > 0) {
           await saveString("taxId", data.taxId)
           await saveString("customerNote", data.customerNote)
@@ -167,8 +173,8 @@ export const DeliveryDetailScreen: FC<
             imageChef: commonStore.currentChefImage,
           })
         } else if (Number(res.data) === -1)
-          showMessageError(getI18nText("deliveryDetailScreen.errorOrderPayment"))
-        else showMessageError(getI18nText("deliveryDetailScreen.errorOrder"))
+          showMessageError("deliveryDetailScreen.errorOrderPayment", true)
+        else showMessageError("deliveryDetailScreen.errorOrder", true)
       })
       .finally(() => commonStore.setVisibleLoading(false))
 
