@@ -46,6 +46,7 @@ const images = {
   bannerImage1: require("./images/banner-image-01.jpg"),
   bannerImage2: require("./images/banner-image-02.jpg"),
   cash: require("./images/money.png"),
+  bug: require("./images/bug.png"),
 }
 
 export default images

@@ -17,7 +17,8 @@
     "next": "Siguiente",
     "save": "Guardar",
     "cannotConnect": "Lo sentimos, no se puede conectar con el servidor",
-    "add": "Agregar"
+    "add": "Agregar",
+    "send": "Enviar"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -408,7 +409,10 @@
     "removeAccount": "Eliminar cuenta",
     "myAccount": "Mi cuenta",
     "termsConditions": "Términos y condiciones",
-    "loginRegister": "Iniciar sesión / Registrarse"
+    "loginRegister": "Iniciar sesión / Registrarse",
+    "bugReport": "Reportar un error",
+    "support": "Soporte",
+    "whatsAppMessage": "Hola, tengo un consulta"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -589,5 +593,21 @@
   "modalAutocomplete": {
     "title": "Ingresa una dirección",
     "placeholderSearch": "Escribe la dirección"
+  },
+  "reportBugScreen": {
+    "title": "Reportar un error",
+    "description": "Si encuentras algún error en la aplicación, por favor, repórtalo y lo solucionaremos lo antes posible.",
+    "titlePlaceholder": "Ingresa un título",
+    "descriptionPlaceholder": "Describe a detalle el error",
+    "titleRequired": "Debes ingresar el título",
+    "descriptionRequired": "Debes ingresar la descripción",
+    "minLength": "Debes ingresar al menos 3 caracteres",
+    "titleError": "Título",
+    "descriptionError": "Descripción",
+    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos"
+  },
+  "modalReportBug": {
+    "title": "Error reportado",
+    "info": "Gracias por enviar la información, lo revisaremos lo antes posible."
   }
 }

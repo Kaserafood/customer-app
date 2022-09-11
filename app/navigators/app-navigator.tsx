@@ -32,6 +32,7 @@ import {
   RecoverPasswordTokenScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
+  ReportBugScreen,
   TermsConditionsScreen,
 } from "../screens"
 import DrawerNavigation from "./drawer-navigation"
@@ -96,6 +97,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="registerForm" component={RegisterFormScreen} />
         <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+        <Stack.Screen name="reportBug" component={ReportBugScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )

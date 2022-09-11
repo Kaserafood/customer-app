@@ -1,12 +1,13 @@
 import { DrawerContentScrollView } from "@react-navigation/drawer"
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { StyleSheet, View } from "react-native"
+import { Linking, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
+import { getI18nText } from "../utils/translate"
 
 export default function DrawerContent(props) {
   const { userStore, commonStore } = useStores()
@@ -26,6 +27,15 @@ export default function DrawerContent(props) {
 
   const toInit = () => {
     commonStore.setIsSignedIn(false)
+  }
+
+  const openWhatsApp = () => {
+    const message = getI18nText("drawerContent.whatsAppMessage")
+    Linking.openURL("whatsapp://send?text=" + message + "&phone=+50245680417")
+  }
+
+  const toReportBug = () => {
+    navigation.navigate("reportBug" as never)
   }
 
   return (
@@ -94,6 +104,40 @@ export default function DrawerContent(props) {
           </View>
         </Card>
       </Ripple>
+
+      <Ripple
+        rippleOpacity={0.2}
+        rippleDuration={400}
+        style={utilSpacing.m3}
+        onPressIn={toReportBug}
+      >
+        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+            <Icon name="bug" style={utilSpacing.mr4} size={30} color={color.palette.grayDark} />
+            <Text tx="drawerContent.bugReport" preset="semiBold" size="md"></Text>
+          </View>
+        </Card>
+      </Ripple>
+
+      <Ripple
+        rippleOpacity={0.2}
+        rippleDuration={400}
+        style={utilSpacing.m3}
+        onPressIn={openWhatsApp}
+      >
+        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+            <Icon
+              name="whatsapp"
+              style={utilSpacing.mr4}
+              size={30}
+              color={color.palette.grayDark}
+            />
+            <Text tx="drawerContent.support" preset="semiBold" size="md"></Text>
+          </View>
+        </Card>
+      </Ripple>
+
       {
         // Usuario que ha ingresado como "Explora la app"
         userStore.userId == -1 && (

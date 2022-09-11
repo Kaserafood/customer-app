@@ -67,4 +67,5 @@ export type NavigatorParamList = {
   favorite: undefined
   newChefs: undefined
   orderDetail: OrderOverview
+  reportBug: undefined
 }

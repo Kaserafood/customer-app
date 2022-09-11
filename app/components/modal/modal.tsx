@@ -63,7 +63,12 @@ interface ModalProperties {
   /**
    * Event when modal is hide
    */
-  onModalHide?: () => void
+  onHide?: () => void
+
+  /**
+   * Size with of the modal
+   */
+  size?: "md" | "lg"
 }
 
 /**
@@ -80,7 +85,8 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     position = "center",
     hideOnBackdropPress = true,
     isVisibleIconClose = true,
-    onModalHide,
+    onHide,
+    size,
     ...rest
   } = props
 
@@ -130,11 +136,13 @@ export const Modal = observer(function Modal(props: ModalProperties) {
       backdropColor={color.palette.grayTransparent}
       coverScreen={false}
       onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
-      onModalHide={onModalHide}
+      onModalHide={onHide}
       {...rest}
     >
       <View style={[styles.content, styleContainer]}>
-        <View style={[styles.body, getStyleBodyByPosition(), styleBody]}>
+        <View
+          style={[styles.body, getStyleBodyByPosition(), size === "md" && styles.w80, styleBody]}
+        >
           {isVisibleIconClose && (
             <View style={styles.containerImgClose}>
               <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
@@ -196,5 +204,8 @@ const styles = StyleSheet.create({
   },
   top: {
     justifyContent: "flex-start",
+  },
+  w80: {
+    width: "80%",
   },
 })
