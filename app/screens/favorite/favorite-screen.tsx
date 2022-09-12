@@ -7,7 +7,8 @@ import * as RNLocalize from "react-native-localize"
 import { Dish, Header, Screen, Separator } from "../../components"
 import { useStores } from "../../models"
 import { DishChef } from "../../models/dish-store"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(

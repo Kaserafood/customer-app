@@ -142,4 +142,13 @@ export const UserRegisterModel = userRegister
       }
       return false
     }),
+    reportBug: flow(function* reportBug(data: any) {
+      const api = new Api()
+
+      const result = yield api.reportBug(data)
+      if (result && result.kind === "ok") {
+        return true
+      }
+      return false
+    }),
   }))
