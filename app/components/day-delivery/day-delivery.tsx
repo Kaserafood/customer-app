@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
@@ -40,13 +41,27 @@ export interface DayDeliveryProps {
    * Function for onPress button why?
    */
   onWhyPress?: (state: boolean) => void
+
+  /**
+   *
+   * Visible loading when data is not loaded
+   */
+  visibleLoading?: boolean
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style, hideWhyButton, titleTx, onPress, onWhyPress, days = [] } = props
+  const {
+    style,
+    hideWhyButton,
+    titleTx,
+    onPress,
+    onWhyPress,
+    days = [],
+    visibleLoading = false,
+  } = props
 
   const { dayStore } = useStores()
 
@@ -63,20 +78,63 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
         )}
       </View>
       <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
-        {days.map((day, index) => (
-          <Chip
-            active={day.date === dayStore.currentDay.date}
-            text={day.dayName}
-            style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
-            onPress={() => {
-              onPress(day)
-              dayStore.setCurrentDay(day)
-            }}
-            key={day.date}
-            activeOpacity={0.5}
-            disabled={day.date === dayStore.currentDay.date}
-          ></Chip>
-        ))}
+        {days.length == 0 && visibleLoading ? (
+          <SkeletonPlaceholder>
+            <SkeletonPlaceholder.Item flexDirection="row">
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+            </SkeletonPlaceholder.Item>
+          </SkeletonPlaceholder>
+        ) : (
+          days.map((day, index) => (
+            <Chip
+              active={day.date === dayStore.currentDay.date}
+              text={day.dayName}
+              style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
+              onPress={() => {
+                onPress(day)
+                dayStore.setCurrentDay(day)
+              }}
+              key={day.date}
+              activeOpacity={0.5}
+              disabled={day.date === dayStore.currentDay.date}
+            ></Chip>
+          ))
+        )}
       </ScrollView>
     </View>
   )
