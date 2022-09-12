@@ -32,6 +32,7 @@
 		62735319C7584C9A8E418119 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 43AE25D2DDCF4291AB9CB6CF /* Foundation.ttf */; };
 		638E77C4F0D64F0EB0190B41 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC24CCAA75B64C8F90178606 /* FontAwesome5_Solid.ttf */; };
 		7F3F15461F18454DBCBABA12 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27B8BED1E40E428C86AC76E1 /* Feather.ttf */; };
+		80C2248428CEFDE9005184EA /* Chaloops-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80C2248328CEFDE9005184EA /* Chaloops-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		87A11D99EBF645CC9B3C6E0D /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D306CBD2DFCF483BBB0F671F /* Zocial.ttf */; };
 		9A460CF069F24479902DA019 /* FontAwesome5_Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2749DA702FD34378B50EB4C3 /* FontAwesome5_Regular.ttf */; };
@@ -95,6 +96,7 @@
 		5726B528288BAF8F00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
 		671EA18E537547558040C4DF /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		7A821C24896B4C349C4C5009 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
+		80C2248328CEFDE9005184EA /* Chaloops-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Chaloops-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Chaloops-Bold.ttf"; sourceTree = "<group>"; };
 		815BCD5292094B8DA162656E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ClientApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8D3D2E99D3814D73E5353ACB /* Pods-ClientApp-ClientAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ClientApp-ClientAppTests.debug.xcconfig"; path = "Target Support Files/Pods-ClientApp-ClientAppTests/Pods-ClientApp-ClientAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -204,6 +206,7 @@
 		5726B52C288BBF5800DD0AE9 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				80C2248328CEFDE9005184EA /* Chaloops-Bold.ttf */,
 				5708E99E28B045E7009C7B5F /* icomoon.ttf */,
 			);
 			name = Fonts;
@@ -446,6 +449,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80C2248428CEFDE9005184EA /* Chaloops-Bold.ttf in Resources */,
 				5708E99F28B045E7009C7B5F /* icomoon.ttf in Resources */,
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
@@ -826,13 +830,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.25;
+				MARKETING_VERSION = 0.8.26;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -856,12 +860,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.25;
+				MARKETING_VERSION = 0.8.26;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
