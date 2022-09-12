@@ -334,4 +334,11 @@ export class Api {
   async removeAccount(userId: number): Promise<CommonResponse> {
     return await this.request({}, `/users/account/${userId}`, "DELETE")
   }
+
+  /**
+   * @description Send report bug to admin
+   */
+  async reportBug(data: any): Promise<CommonResponse> {
+    return await this.request(data, `/users/report-bug`, "POST")
+  }
 }

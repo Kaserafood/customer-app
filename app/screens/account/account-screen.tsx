@@ -6,12 +6,13 @@ import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import { Button, Card, Header, Icon, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError, showMessageSucess } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { clear } from "../../utils/storage"
+import { goBack } from "../../navigators/navigation-utilities"
 
 const modalState = new ModalStateHandler()
 export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> = observer(

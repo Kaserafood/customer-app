@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
+import { TxKeyPath } from "../../i18n"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"
 import { InputText } from "../input-text/input-text"
@@ -37,6 +38,7 @@ export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
   return (
     <View>
       <InputText
+        autoComplete="off"
         name="name"
         preset="card"
         placeholderTx="paymentCard.namePlaceholder"
@@ -49,6 +51,7 @@ export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
       ></InputText>
 
       <InputText
+        autoComplete="off"
         name="number"
         preset="card"
         placeholderTx="paymentCard.numberPlaceholder"
@@ -68,6 +71,7 @@ export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
 
       <View style={utilFlex.flexRow}>
         <InputText
+          autoComplete="off"
           name="expirationDate"
           preset="card"
           placeholderTx="paymentCard.expirationDatePlaceholder"
@@ -81,9 +85,10 @@ export const PaymentCard = function PaymentCard(props: PaymentCardProps) {
         ></InputText>
 
         <InputText
+          autoComplete="off"
           name="cvv"
           preset="card"
-          placeholderTx={placeholderCVV}
+          placeholderTx={placeholderCVV as TxKeyPath}
           rules={{
             required: "paymentCard.cvvRequired",
           }}

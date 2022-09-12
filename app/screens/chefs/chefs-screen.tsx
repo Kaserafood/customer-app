@@ -13,7 +13,7 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
@@ -39,7 +39,7 @@ const state = new DataState()
  */
 export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = observer(
   function ChefsScreen({ navigation }) {
-    const { categoryStore, dayStore, dishStore, commonStore } = useStores()
+    const { categoryStore, dayStore, dishStore, commonStore, cartStore } = useStores()
     const { formatDishesGropuedByChef } = useChef()
 
     useLayoutEffect(() => {
@@ -74,8 +74,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
+
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
+
+      if (cartStore.hasItems) cartStore.cleanItems()
       const chef = {
         ...userChef,
       }

@@ -4,7 +4,7 @@
 
 let API_URL = ""
 if (__DEV__) {
-//API_URL = "http://192.168.0.9:3000"
+  //API_URL = "http://192.168.0.6:3000"
   API_URL = "https://kasera-customer-api-test.azurewebsites.net"
 } else {
   API_URL = "https://kasera-customer-api.azurewebsites.net"

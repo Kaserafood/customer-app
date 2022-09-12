@@ -133,6 +133,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             onPress={(day) => {
               onChangeDay(day)
             }}
+            visibleLoading
           ></DayDelivery>
 
           <View style={[styles.card, { ...SHADOW }]}>

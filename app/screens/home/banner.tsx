@@ -1,9 +1,9 @@
 import React from "react"
-import { Dimensions, Image, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
+import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
-import { color, spacing } from "../../theme"
+import { color, spacing, typography } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
 interface PropsBanner {
@@ -36,7 +36,7 @@ export const Banner = (props: PropsBanner) => {
             ></Text>
             <Text
               preset="bold"
-              style={[styles.name, styles.textWhite, { lineHeight: 55 }]}
+              style={[styles.name, styles.textWhite, { lineHeight: 60 }]}
               tx="banner.kasera"
             ></Text>
             <Button onPress={onPressWelcome} tx="banner.whatIsIt"></Button>
@@ -141,7 +141,7 @@ const Button = ({ onPress, tx }) => {
       ]}
       onPress={onPress}
     >
-       <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
+      <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
         <Text tx={tx} preset="bold" style={utilSpacing.mr3}></Text>
         <Icon
           name="caret-right"
@@ -179,6 +179,7 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 45,
+    fontFamily: typography.brand,
   },
   textWhite: {
     color: color.palette.white,

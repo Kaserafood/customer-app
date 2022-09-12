@@ -36,6 +36,7 @@ const orderModel = types.model("Order").props({
   taxId: types.union(types.maybe(types.string), types.null),
   uuid: types.union(types.maybe(types.string), types.null),
   card: types.union(types.maybe(card), types.null),
+  paymentMethod: types.maybe(types.string),
 })
 
 const orderOverviewModel = types.model("OrderOverview").props({
