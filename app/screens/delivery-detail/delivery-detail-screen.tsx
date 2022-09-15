@@ -145,7 +145,7 @@ export const DeliveryDetailScreen: FC<
           type: getCardType(card.number).toLocaleLowerCase(),
         },
       }),
-      paymentMethod: isPaymentCash ? "cod" : "qpaypro", //Contra entrega o pago con tarjeta
+      paymentMethod: isPaymentCash ? "cod" : "qpaypro", // Contra entrega o pago con tarjeta
     }
 
     orderStore
@@ -201,10 +201,10 @@ export const DeliveryDetailScreen: FC<
       !card.expirationDate ||
       !card.number ||
       !card.name ||
-      card.cvv.trim().length == 0 ||
-      card.expirationDate.trim().length == 0 ||
-      card.number.trim().length == 0 ||
-      card.name.trim().length == 0
+      card.cvv.trim().length === 0 ||
+      card.expirationDate.trim().length === 0 ||
+      card.number.trim().length === 0 ||
+      card.name.trim().length === 0
     )
       return false
 
@@ -246,7 +246,7 @@ export const DeliveryDetailScreen: FC<
 
     data.push({
       key: "customer_address_id",
-      value: userStore.addressId + " ",
+      value: `${userStore.addressId} `,
     })
 
     return data

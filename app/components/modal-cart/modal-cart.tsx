@@ -148,48 +148,28 @@ const styles = StyleSheet.create({
     borderRadius: spacing[2],
     padding: spacing[4],
   },
-  container: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
   containerDishes: {
     maxHeight: 320,
   },
   containerIconRemove: {
+    height: 45,
     paddingBottom: 16,
     paddingLeft: 16,
     position: "absolute",
     right: 4,
     top: 4,
     width: 45,
-    height: 45,
-  },
-  containerImgClose: {
-    alignItems: "flex-end",
-    display: "flex",
-  },
-  content: {
-    backgroundColor: color.background,
-    borderTopEndRadius: spacing[2],
-    borderTopStartRadius: spacing[2],
-    display: "flex",
-    justifyContent: "flex-start",
-    padding: spacing[3],
   },
   iconRemove: {
+    alignSelf: "flex-end",
     height: 10,
     width: 10,
-    alignSelf: "flex-end",
   },
   imageChef: {
     borderRadius: spacing[2],
     height: 50,
     marginRight: spacing[3],
     width: 50,
-  },
-  imgClose: {
-    height: 20,
-    width: 20,
   },
   price: {
     backgroundColor: color.background,

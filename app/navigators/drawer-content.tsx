@@ -31,7 +31,7 @@ export default function DrawerContent(props) {
 
   const openWhatsApp = () => {
     const message = getI18nText("drawerContent.whatsAppMessage")
-    Linking.openURL("whatsapp://send?text=" + message + "&phone=+50245680417")
+    Linking.openURL(`whatsapp://send?text=${message}&phone=+50245680417`)
   }
 
   const toReportBug = () => {
@@ -140,7 +140,7 @@ export default function DrawerContent(props) {
 
       {
         // Usuario que ha ingresado como "Explora la app"
-        userStore.userId == -1 && (
+        userStore.userId === -1 && (
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}

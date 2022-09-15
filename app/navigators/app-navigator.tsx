@@ -88,7 +88,7 @@ const AppStack = observer(() => {
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
         </Stack.Group>
       )}
-      <Stack.Group navigationKey={commonStore.isSignedIn + ""}>
+      <Stack.Group navigationKey={`${commonStore.isSignedIn}`}>
         <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
         <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
         <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />

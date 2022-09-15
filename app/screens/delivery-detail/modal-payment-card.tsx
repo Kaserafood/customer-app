@@ -1,4 +1,4 @@
-import React, { BaseSyntheticEvent, forwardRef, MutableRefObject, useImperativeHandle } from "react"
+import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, View } from "react-native"
 import { Button, Modal, PaymentCard, Text } from "../../components"
@@ -28,7 +28,7 @@ export const ModalPaymentCard = forwardRef(
       },
     }))
 
-    const onSubmit = async (data: Card, e: BaseSyntheticEvent<object, any, any>) => {
+    const onSubmit = async (data: Card) => {
       Keyboard.dismiss()
       props.onSubmit(data)
       modalState.setVisible(false)

@@ -22,7 +22,7 @@ export const ModalReportBug = (props: { modalState: ModalState }) => {
           style={[utilFlex.selfCenter, utilSpacing.p4]}
           tx="modalReportBug.title"
         ></Text>
-        <Text tx="modalReportBug.info" style={[utilSpacing.pb5]}></Text>
+        <Text tx="modalReportBug.info" style={utilSpacing.pb5}></Text>
         <Button
           tx="common.ok"
           style={[utilFlex.selfCenter, utilSpacing.mt5]}

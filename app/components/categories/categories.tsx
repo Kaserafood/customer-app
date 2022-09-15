@@ -36,7 +36,7 @@ export const Categories = function Categories(props: CategoriesProps) {
             rippleDuration={400}
             rippleContainerBorderRadius={16}
             key={category.id}
-            style={[utilSpacing.p4, styles.containerCategoryItem, index == 0 && utilSpacing.ml4]}
+            style={[utilSpacing.p4, styles.containerCategoryItem, index === 0 && utilSpacing.ml4]}
           >
             <Image
               defaultSource={images.category}

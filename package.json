@@ -141,7 +141,8 @@
     "printWidth": 100,
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "endOfLine": "auto"
   },
   "detox": {
     "test-runner": "jest",
@@ -234,14 +235,7 @@
       "prefer-template": "error",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
-      "react-native/no-inline-styles": 1,
-      "prettier/prettier": [
-        "error",
-        {
-          "no-inline-styles": true,
-          "endOfLine": "auto"
-        }
-      ]
+      "react-native/no-inline-styles": 1
     }
   },
   "resolutions": {
