@@ -244,6 +244,11 @@ export const DeliveryDetailScreen: FC<
       value: taxId,
     })
 
+    data.push({
+      key: "customer_address_id",
+      value: userStore.addressId + " ",
+    })
+
     return data
   }
 
