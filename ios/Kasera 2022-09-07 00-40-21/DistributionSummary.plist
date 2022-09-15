@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.kasera.client.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>buildNumber</key>
+			<string>20</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>BBED89B499BA18176D3A3189C2CD68CCDBA0E636</string>
+				<key>dateExpires</key>
+				<string>8/3/23</string>
+				<key>type</key>
+				<string>Cloud Managed Apple Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>7XA49Z6FU4.com.kasera.client</string>
+				<key>com.apple.developer.team-identifier</key>
+				<string>7XA49Z6FU4</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>ClientApp.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>1571b58f-d7df-470e-96a2-3a8b9b997579</string>
+				<key>dateExpires</key>
+				<string>8/3/23</string>
+				<key>name</key>
+				<string>iOS Team Ad Hoc Provisioning Profile: com.kasera.client</string>
+			</dict>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>7XA49Z6FU4</string>
+				<key>name</key>
+				<string>Aiuda, S.A.</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>0.8.23</string>
+		</dict>
+	</array>
+</dict>
+</plist>

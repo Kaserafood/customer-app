@@ -4,25 +4,40 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { useColorScheme } from "react-native"
-import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
-import { createNativeStackNavigator } from "@react-navigation/native-stack"
-
+import RNBootSplash from "react-native-bootsplash"
+import { useStores } from "../models/root-store/root-store-context"
 import {
-  InitScreen,
-  RegisterFormScreen,
-  TermsConditionsScreen,
-  PrivacyPolicyScreen,
-  RegisterPagerScreen,
-  LoginFormScreen,
-  MainScreen,
-  DishDetailScreen,
-  MenuChefScreen,
+  AccountScreen,
+  AddressScreen,
+  CategoryScreen,
   DeliveryDetailScreen,
+  DishDetailScreen,
   EndOrderScreen,
+  FavoriteScreen,
+  InitScreen,
+  LoginFormScreen,
+  MapScreen,
+  MenuChefScreen,
+  NewChefsScreen,
+  NewPasswordScreen,
+  OrderDetailScreen,
+  OrdersScreen,
+  PrivacyPolicyScreen,
+  RecoverPasswordScreen,
+  RecoverPasswordTokenScreen,
+  RegisterFormScreen,
+  RegisterPagerScreen,
+  ReportBugScreen,
+  TermsConditionsScreen,
 } from "../screens"
+import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
+import { NavigatorParamList } from "./navigator-param-list"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -37,48 +52,56 @@ import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 
-interface registerPageParams {
-  init: boolean
-}
-export type NavigatorParamList = {
-  init: undefined
-  registerForm: undefined
-  termsConditions: undefined
-  privacyPolicy: undefined
-  registerPager: registerPageParams
-  loginForm: undefined
-  main: undefined
-  dishDetail: undefined
-  menuChef: undefined
-  deliveryDetail: undefined
-  endOrder: undefined
-}
-
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
-const AppStack = () => {
+const AppStack = observer(() => {
+  const { commonStore } = useStores()
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        animation: "fade_from_bottom",
       }}
-      initialRouteName="init"
     >
-      <Stack.Screen name="init" component={InitScreen} />
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
-      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-      <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="main" component={MainScreen} />
-      <Stack.Screen name="dishDetail" component={DishDetailScreen} />
-      <Stack.Screen name="menuChef" component={MenuChefScreen} />
-      <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
-      <Stack.Screen name="endOrder" component={EndOrderScreen} />
+      {!commonStore.isSignedIn ? (
+        <Stack.Group>
+          <Stack.Screen name="init" component={InitScreen} />
+        </Stack.Group>
+      ) : (
+        <Stack.Group>
+          <Stack.Screen name="main">
+            {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
+          </Stack.Screen>
+          <Stack.Screen name="dishDetail" component={DishDetailScreen} />
+          <Stack.Screen name="menuChef" component={MenuChefScreen} />
+          <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+          <Stack.Screen name="endOrder" component={EndOrderScreen} />
+          <Stack.Screen name="category" component={CategoryScreen} />
+          <Stack.Screen name="map" component={MapScreen} />
+          <Stack.Screen name="address" component={AddressScreen} />
+          <Stack.Screen name="orders" component={OrdersScreen} />
+          <Stack.Screen name="account" component={AccountScreen} />
+          <Stack.Screen name="newChefs" component={NewChefsScreen} />
+          <Stack.Screen name="favorite" component={FavoriteScreen} />
+          <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
+        </Stack.Group>
+      )}
+      <Stack.Group navigationKey={commonStore.isSignedIn + ""}>
+        <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+        <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
+        <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
+        <Stack.Screen name="newPassword" component={NewPasswordScreen} />
+        <Stack.Screen name="loginForm" component={LoginFormScreen} />
+        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+        <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+        <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+        <Stack.Screen name="reportBug" component={ReportBugScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   )
-}
+})
 
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
@@ -87,6 +110,7 @@ export const AppNavigator = (props: NavigationProps) => {
   useBackButtonHandler(canExit)
   return (
     <NavigationContainer
+      onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
@@ -109,6 +133,3 @@ AppNavigator.displayName = "AppNavigator"
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
-function createDrawerNavigator() {
-  throw new Error("Function not implemented.")
-}

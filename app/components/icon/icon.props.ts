@@ -1,5 +1,4 @@
-import { ImageStyle, StyleProp, ViewStyle } from "react-native"
-import { IconTypes } from "./icons"
+import { ImageStyle, StyleProp } from "react-native"
 
 export interface IconProps {
   /**
@@ -8,14 +7,18 @@ export interface IconProps {
   style?: StyleProp<ImageStyle>
 
   /**
-   * Style overrides for the icon container
+   * What icon to show, see Icon Explorer app or one of the links above
    */
 
-  containerStyle?: StyleProp<ViewStyle>
+  name?: string
 
   /**
-   * The name of the icon
+   * The color of the icon
    */
+  color?: string
 
-  icon?: IconTypes
+  /**
+   * Size of the icon, can also be passed as fontSize in the style object.
+   */
+  size?: number
 }

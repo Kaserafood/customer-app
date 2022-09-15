@@ -40,7 +40,7 @@ export interface CheckboxProps {
   /**
    * Preset checkbox, tiny is samall an black, default is big and green
    */
-  preset?: "tiny" | "default"
+  preset?: "default" | "medium"
 
   /**
    * If the box of the checkbox is rounded

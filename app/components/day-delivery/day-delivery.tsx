@@ -1,13 +1,14 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, ScrollView, StyleSheet } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
-import { Chip } from "../chip/chip"
-import { translate, TxKeyPath } from "../../i18n"
-import { Text } from "../text/text"
+import React from "react"
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
+import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
-import i18n from "i18n-js"
+import { Day } from "../../models/day-store"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { Chip } from "../chip/chip"
+import { Text } from "../text/text"
 
 export interface DayDeliveryProps {
   /**
@@ -26,41 +27,114 @@ export interface DayDeliveryProps {
   titleTx?: TxKeyPath
 
   /**
-   * Optional options to pass to i18n. Useful for interpolation
-   * as well as explicitly setting locale or translation fallbacks.
+   * Function to set the date selected
    */
-  txOptions?: i18n.TranslateOptions
+
+  onPress: (day: Day) => void
+
+  /**
+   * Days
+   */
+  days: Day[]
+
+  /**
+   * Function for onPress button why?
+   */
+  onWhyPress?: (state: boolean) => void
+
+  /**
+   *
+   * Visible loading when data is not loaded
+   */
+  visibleLoading?: boolean
 }
 
 /**
  * Component for delivery days on the home and chef components
  */
 export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style, hideWhyButton, titleTx, txOptions } = props
-  const { modalStore } = useStores()
+  const {
+    style,
+    hideWhyButton,
+    titleTx,
+    onPress,
+    onWhyPress,
+    days = [],
+    visibleLoading = false,
+  } = props
 
-  const i18nText = titleTx && translate(titleTx, txOptions)
-
-  const actualTitle = i18nText || "mainScreen.dayShipping"
+  const { dayStore } = useStores()
 
   return (
     <View>
-      <View style={[styles.flex, utilSpacing.mt6, styles.why]}>
-        <Text tx={actualTitle} preset="semiBold" style={styles.dayShipping}></Text>
+      <View style={[utilFlex.flexCenterVertical, utilSpacing.mt6, styles.why]}>
+        <Text
+          tx={titleTx || "mainScreen.dayShipping"}
+          preset="semiBold"
+          style={[styles.dayShipping, utilSpacing.ml4]}
+        ></Text>
         {!hideWhyButton && (
-          <Chip
-            tx="mainScreen.why"
-            onPress={() => modalStore.setVisibleModalDayDelivery(true)}
-            active={modalStore.isVisibleModalDayDelivery}
-          ></Chip>
+          <Chip tx="mainScreen.why" style={styles.chip} onPressIn={() => onWhyPress(true)}></Chip>
         )}
       </View>
-      <ScrollView horizontal style={[styles.flex, utilSpacing.mt5, utilSpacing.pb3, style]}>
-        <Chip tx="mainScreen.tomorrow" style={styles.chip}></Chip>
-        <Chip active text="Jue. May 16" style={utilSpacing.mr3}></Chip>
-        <Chip text="Vier. May 17" style={utilSpacing.mr3}></Chip>
-        <Chip text="Sab. May 18" style={utilSpacing.mr3}></Chip>
-        <Chip text="Dom. May 19" style={utilSpacing.mr3}></Chip>
+      <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
+        {days.length == 0 && visibleLoading ? (
+          <SkeletonPlaceholder>
+            <SkeletonPlaceholder.Item flexDirection="row">
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+              <SkeletonPlaceholder.Item
+                width={65}
+                marginTop={4}
+                height={25}
+                marginLeft={12}
+                borderRadius={16}
+              />
+            </SkeletonPlaceholder.Item>
+          </SkeletonPlaceholder>
+        ) : (
+          days.map((day, index) => (
+            <Chip
+              active={day.date === dayStore.currentDay.date}
+              text={day.dayName}
+              style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
+              onPress={() => {
+                onPress(day)
+                dayStore.setCurrentDay(day)
+              }}
+              key={day.date}
+              activeOpacity={0.5}
+              disabled={day.date === dayStore.currentDay.date}
+            ></Chip>
+          ))
+        )}
       </ScrollView>
     </View>
   )
@@ -74,8 +148,10 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   chip: {
-    marginBottom: spacing[2],
+    borderRadius: spacing[3],
     marginRight: spacing[2],
+    paddingHorizontal: spacing[3],
+    paddingVertical: spacing[1],
   },
   containerImgClose: {
     alignItems: "flex-end",
@@ -91,10 +167,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
+
   dayShipping: {
+    borderRadius: spacing[3],
     marginRight: spacing[2],
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
@@ -103,11 +180,11 @@ const styles = StyleSheet.create({
     height: 20,
     width: 20,
   },
+
   imgModalWhy: {
     height: 150,
     width: 150,
   },
-
   why: {
     alignItems: "center",
   },

@@ -1,6 +1,6 @@
 import { StyleProp, TextStyle, ViewStyle } from "react-native"
-
 import { TxKeyPath } from "../../i18n"
+
 type IconTypes = "back"
 export interface HeaderProps {
   /**
@@ -22,16 +22,6 @@ export interface HeaderProps {
    * What happens when you press the left icon
    */
   onLeftPress?(): void
-
-  /**
-   * Icon that should appear on the right
-   */
-  rightIcon?: IconTypes
-
-  /**
-   * What happens when you press the right icon
-   */
-  onRightPress?(): void
 
   /**
    * Container style overrides.

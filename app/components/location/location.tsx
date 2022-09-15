@@ -1,36 +1,40 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
-import Images from "assets/images"
-import SvgUri from "react-native-svg-uri"
-
+import React from "react"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { useStores } from "../../models"
+import { color, spacing } from "../../theme"
+import { Icon } from "../icon/icon"
+import { Text } from "../text/text"
 
 export interface LocationProps {
   /**
    * An optional style override useful for padding & margin.
    */
   style?: StyleProp<ViewStyle>
+
+  /**
+   * Callback on click location
+   */
+  onPress?: () => void
 }
 
 /**
- * Componet for location on the home and chef  components
+ * Component for location on the home and chef screen
  */
 export const Location = observer(function Location(props: LocationProps) {
-  const { style } = props
-  const { modalStore } = useStores()
+  const { style, onPress } = props
+  const { addressStore } = useStores()
+
   return (
     <View style={[styles.containerAddress, style]}>
-      <TouchableOpacity
-        onPress={() => modalStore.setVisibleModalLocaton(true)}
-        style={styles.btnAddress}
-        activeOpacity={0.7}
-      >
-        <SvgUri width="24" height="24" source={Images.location} />
-        <Text numberOfLines={1} style={styles.textAddress} tx="mainScreen.address"></Text>
-        <SvgUri width="24" height="24" source={Images.caretDown} />
+      <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
+        <Icon name="location-dot" size={24} color={color.palette.white} />
+        <Text
+          numberOfLines={1}
+          style={styles.textAddress}
+          text={addressStore.current.address}
+        ></Text>
+        <Icon name="angle-down" size={24} color={color.palette.white} />
       </TouchableOpacity>
     </View>
   )
@@ -45,6 +49,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: spacing[4],
     paddingVertical: spacing[3],
+    alignItems: "center",
   },
 
   containerAddress: {
@@ -52,10 +57,12 @@ const styles = StyleSheet.create({
   },
 
   textAddress: {
-    bottom: -4,
     color: color.palette.white,
     flex: 1,
+    marginBottom: 0,
     marginLeft: spacing[2],
+    marginRight: spacing[2],
     position: "relative",
+    top: 2,
   },
 })

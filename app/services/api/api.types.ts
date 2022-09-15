@@ -1,5 +1,15 @@
+import { Address, OrderDetail, OrderOverview } from "../../models"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { DishChef } from "../../models/dish-store"
+import { UserChef } from "../../models/user-store"
 import { GeneralApiProblem } from "./api-problem"
-import { Character } from "../../models/character/character"
+
+type typeKind = "ok" | "bad-data"
+export interface GeneralApiResponse {
+  kind: typeKind
+  data: any
+}
 
 export interface User {
   id: number
@@ -9,24 +19,51 @@ export interface User {
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
 export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem
 
-export type GetCharactersResult = { kind: "ok"; characters: Character[] } | GeneralApiProblem
-export type GetCharacterResult = { kind: "ok"; character: Character } | GeneralApiProblem
-
-
-export interface Customer {
-  id : number,
-  name: string,
-  username: string,
-  email: string,
-  address: {
-    street: string,
-    suite: string,
-    city: string,
-    zipcode: string
-  },
-  phone: string,
-  website: string,
-
+type kind = {
+  kind: typeKind
 }
-export type GetCustomersResult = { kind: "ok"; customers: Customer[] } | GeneralApiProblem
-export type GetCustomerResult = { kind: "ok"; customer: Customer } | GeneralApiProblem
+export type UserLoginResponse = {
+  kind: typeKind
+  data: {
+    id: number
+    username: string
+    email: string
+    displayName: string
+    addressId: number
+  }
+}
+
+export type DayResponse = {
+  data: Day[]
+} & kind
+
+export type CategoryResponse = {
+  data: Category[] | Category
+} & kind
+
+export type DishResponse = {
+  data: DishChef[]
+} & kind
+
+export type ChefResponse = {
+  data: UserChef[]
+} & kind
+
+export type AddressResponse = {
+  data: Address[]
+} & kind
+
+export type CommonResponse = {
+  data: {
+    message: string
+    data: number | string // Usually contains the id inserted on the table
+  }
+} & kind
+
+export type OrderOverviewResponse = {
+  data: OrderOverview[]
+} & kind
+
+export type OrderDetailResponse = {
+  data: OrderDetail
+} & kind

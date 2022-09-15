@@ -1,18 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-native/no-color-literals */
-
+import { storiesOf } from "@storybook/react-native"
 import React from "react"
 import { View, ViewStyle } from "react-native"
-import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
-import { Checkbox } from "./checkbox"
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { Toggle } from "../../utils/react-powerplug"
+import { Checkbox } from "./checkbox"
 
 declare let module
 
 const arrayStyle: ViewStyle[] = [{ paddingVertical: 40 }, { alignSelf: "flex-end" }]
 const arrayOutlineStyle: ViewStyle[] = [{ borderColor: "#b443c9" }, { borderWidth: 25 }]
-const arrayFillStyle: ViewStyle[] = [{ backgroundColor: "#55e0ff" }]
 
 storiesOf("Checkbox", module)
   .addDecorator((fn) => <StoryScreen>{fn()}</StoryScreen>)
@@ -90,18 +88,13 @@ storiesOf("Checkbox", module)
         <Toggle initial={false}>
           {({ on, toggle }) => (
             <View>
-              <Checkbox
-                text="Fill er up"
-                value={on}
-                fillStyle={{ backgroundColor: "red", borderRadius: 8 }}
-                onToggle={toggle}
-              />
+              <Checkbox text="Fill er up" value={on} onToggle={toggle} />
             </View>
           )}
         </Toggle>
       </UseCase>
 
-      <UseCase text="Array style" usage="Use array styles">
+      <UseCase text="Medium preset" usage="Tiny size">
         <Toggle initial={false}>
           {({ on, toggle }) => (
             <View>
@@ -111,7 +104,7 @@ storiesOf("Checkbox", module)
                 onToggle={toggle}
                 style={arrayStyle}
                 outlineStyle={arrayOutlineStyle}
-                fillStyle={arrayFillStyle}
+                preset="medium"
               />
             </View>
           )}

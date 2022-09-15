@@ -12,7 +12,7 @@ export type GeneralApiProblem =
   /**
    * The server experienced a problem. Any 5xx error.
    */
-  | { kind: "server" }
+  | { kind: "server"; message: any }
   /**
    * We're not allowed because we haven't identified ourself. This is 401.
    */
@@ -28,7 +28,7 @@ export type GeneralApiProblem =
   /**
    * All other 4xx series errors.
    */
-  | { kind: "rejected" }
+  | { kind: "rejected"; data: any }
   /**
    * Something truly unexpected happened. Most likely can try again. This is a catch all.
    */
@@ -43,7 +43,7 @@ export type GeneralApiProblem =
  *
  * @param response The api response.
  */
-export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProblem | void {
+export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProblem {
   switch (response.problem) {
     case "CONNECTION_ERROR":
       return { kind: "cannot-connect", temporary: true }
@@ -52,7 +52,7 @@ export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProb
     case "TIMEOUT_ERROR":
       return { kind: "timeout", temporary: true }
     case "SERVER_ERROR":
-      return { kind: "server" }
+      return { kind: "server", message: response.originalError }
     case "UNKNOWN_ERROR":
       return { kind: "unknown", temporary: true }
     case "CLIENT_ERROR":
@@ -64,11 +64,9 @@ export function getGeneralApiProblem(response: ApiResponse<any>): GeneralApiProb
         case 404:
           return { kind: "not-found" }
         default:
-          return { kind: "rejected" }
+          return { kind: "rejected", data: response.data }
       }
     case "CANCEL_ERROR":
       return null
   }
-
-  return null
 }

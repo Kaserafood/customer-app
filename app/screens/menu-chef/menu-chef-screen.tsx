@@ -1,156 +1,214 @@
-import React, { FC } from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, View, StyleSheet, TouchableOpacity } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
-import { AutoImage, Header, ModalCart, Price, Screen, Separator, Text } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-import { useStores } from "../../models"
-import { color } from "../../theme"
-import { DayDelivery } from "../../components/day-delivery/day-delivery"
-import SvgUri from "react-native-svg-uri"
-import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { create } from "apisauce"
-import { spacing } from "../../theme/spacing"
-import images from "assets/images"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useState } from "react"
+import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { makeAutoObservable } from "mobx"
+import * as RNLocalize from "react-native-localize"
+import {
+  ButtonFooter,
+  Dish,
+  EmptyData,
+  Header,
+  Image,
+  ModalCart,
+  ModalRequestDish,
+  Price,
+  Screen,
+  Separator,
+  Text,
+} from "../../components"
+import { DayDelivery } from "../../components/day-delivery/day-delivery"
+import { useStores } from "../../models"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { Dish as DishModel } from "../../models/dish"
+import { DishChef } from "../../models/dish-store"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
+import { color } from "../../theme"
+import { spacing } from "../../theme/spacing"
+import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
+import { getFormat } from "../../utils/price"
+import { getI18nText } from "../../utils/translate"
+import { ModalLeave } from "./modal-clean-cart"
 
-class ModalState {
-  isVisible = false
-  setVisible(state: boolean) {
-    this.isVisible = state
-  }
+const modalStateCart = new ModalStateHandler()
+const modalStateRequestDish = new ModalStateHandler()
+const modalStateLeave = new ModalStateHandler()
 
-  constructor() {
-    makeAutoObservable(this)
-  }
-}
-const modalState = new ModalState()
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
+  ({ navigation, route: { params } }) => {
+    const { dayStore, commonStore, dishStore, cartStore, orderStore, userStore } = useStores()
+    const [currentAction, setCurrentAction] = useState<any>()
+    const { currencyCode, name, image, description, categories, id } = params.chef
+    const [dishes, setDishes] = useState<DishChef[]>([])
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+    useEffect(() => {
+      if (__DEV__) {
+        console.log("MenuChefScreen: useEffect")
+        console.log(params)
+      }
+
+      ;(async () => {
+        dayStore.getDaysByChef(RNLocalize.getTimeZone(), id)
+        if (params.isGetMenu) {
+          await getDishByChef()
+          setDishes(dishStore.dishesChef)
+        } else {
+          setDishes(dishStore.dishesChef)
+        }
+      })()
+    }, [])
+
+    useEffect(
+      () =>
+        navigation.addListener("beforeRemove", (e) => {
+          e.preventDefault()
+          setCurrentAction(e.data.action)
+          const payload: any = e.data.action.payload
+          console.log(e)
+          if (
+            !cartStore.hasItems ||
+            e.data.action.type !== "GO_BACK" ||
+            payload?.name === "registerForm"
+          ) {
+            navigation.dispatch(e.data.action)
+          } else modalStateLeave.setVisible(true)
+        }),
+      [navigation],
+    )
+
+    const onPressLeave = () => {
+      if (currentAction) {
+        cartStore.cleanItems()
+        navigation.dispatch(currentAction)
+        modalStateLeave.setVisible(false)
+      }
+    }
+
+    const onChangeDay = async (day: Day) => {
+      dayStore.setCurrentDay(day)
+      await getDishByChef()
+    }
+
+    const getDishByChef = async () => {
+      commonStore.setVisibleLoading(true)
+      await dishStore.getByChef(params.chef.id).finally(() => {
+        commonStore.setVisibleLoading(false)
+      })
+    }
+
+    const toDishDetail = (dish: DishModel) => {
+      navigation.push("dishDetail", { ...dish, chef: params.chef })
+    }
 
     const toDeliveryDetail = () => {
-      navigation.navigate("deliveryDetail")
+      // Id de usuario a ser -1 cuando entra como "Explora la app"
+      if (userStore.userId === -1) {
+        //  commonStore.setIsSignedIn(false)
+        navigation.navigate("registerForm")
+      } else navigation.navigate("deliveryDetail")
+    }
+
+    const getCategoriesName = (categories: Category[]) => {
+      let categoriesStr = ""
+      if (categories && Array.isArray(categories)) {
+        categories.forEach((category) => {
+          categoriesStr += `${category.name} - `
+        })
+        return categoriesStr.substring(0, categoriesStr.length - 2)
+      }
+
+      return ""
     }
     return (
-      <Screen preset="fixed" style={[utilSpacing.pb6, styles.container]}>
+      <Screen preset="fixed" style={styles.container}>
         <Header headerTx="menuChefScreen.title" leftIcon="back" onLeftPress={goBack} />
-        <ScrollView style={styles.container}>
-          <View style={utilSpacing.pl4}>
-            <DayDelivery hideWhyButton></DayDelivery>
-          </View>
+        <ScrollView style={[styles.container, utilSpacing.pb6]}>
+          <DayDelivery
+            titleTx="menuChefScreen.dayDelivery"
+            days={dayStore.daysByChef}
+            hideWhyButton
+            onPress={(day) => {
+              onChangeDay(day)
+            }}
+            visibleLoading
+          ></DayDelivery>
 
-          <View style={styles.card}>
+          <View style={[styles.card, { ...SHADOW }]}>
             <View style={utilFlex.flexRow}>
               <View>
-                <AutoImage style={styles.imageChef} source={images.chef2}></AutoImage>
-                <Text style={utilSpacing.mt2} preset="bold" text="Rebeca A"></Text>
+                <Image style={styles.imageChef} source={{ uri: image }}></Image>
+                <Text size="lg" style={utilSpacing.mt4} preset="bold" text={name}></Text>
               </View>
               <View style={utilFlex.flex1}>
-                <Text
-                  style={utilSpacing.mx3}
-                  numberOfLines={5}
-                  text="Me encatanca coincar, condiao desqeu tento 12 ños, aprndei aprndi acocicandf lroadslorem  lorem aprecio a ociandr cdesce que ten o123 ñaos"
-                ></Text>
+                <Text numberOfLines={5} style={utilSpacing.mx3} text={description}></Text>
               </View>
             </View>
-            <Text
-              preset="semiBold"
-              style={utilText.textGray}
-              text="Guatemalteca - Almuerzo  - Postes"
-            ></Text>
-            <Price amount={30} preset="delivery"></Price>
+            <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>
+              <Text
+                numberOfLines={3}
+                preset="semiBold"
+                style={[utilText.textGray, utilFlex.flex1]}
+                text={getCategoriesName(categories)}
+              ></Text>
+              <Price
+                amount={orderStore.priceDelivery}
+                style={utilSpacing.ml3}
+                preset="delivery"
+                currencyCode={currencyCode}
+              ></Price>
+            </View>
           </View>
           <View style={utilSpacing.m4}>
             <Text
               preset="bold"
               size="lg"
-              tx="menuChefScreen.all"
+              tx="menuChefScreen.chefMenu"
               style={styles.textSeparator}
             ></Text>
             <Separator style={utilSpacing.mt4}></Separator>
           </View>
-
-          <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb1]}>
-            <View style={utilFlex.flex1}>
-              <Text text="Enchiladas veres" preset="bold"></Text>
-              <Text
-                numberOfLines={3}
-                size="sm"
-                text="Cuatro enchiladas con sadla vede,queisoy cebool por arriba"
-                style={utilText.textGray}
-              ></Text>
-              <Price style={styles.price} amount={30}></Price>
-            </View>
-            <View>
-              <AutoImage source={images.dish2} style={styles.imageDish}></AutoImage>
-            </View>
-          </View>
-          <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb2]}>
-            <View style={utilFlex.flex1}>
-              <Text text="Enchiladas veres" preset="bold"></Text>
-              <Text
-                numberOfLines={3}
-                size="sm"
-                text="Cuatro enchiladas con sadla vede,queisoy cebool por arriba"
-                style={utilText.textGray}
-              ></Text>
-              <Price style={styles.price} amount={30}></Price>
-            </View>
-            <View>
-              <AutoImage source={images.dish2} style={styles.imageDish}></AutoImage>
-            </View>
-          </View>
-          <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb2]}>
-            <View style={utilFlex.flex1}>
-              <Text text="Enchiladas veres" preset="bold"></Text>
-              <Text
-                numberOfLines={3}
-                size="sm"
-                text="Cuatro enchiladas con sadla vede,queisoy cebool por arriba"
-                style={utilText.textGray}
-              ></Text>
-              <Price style={styles.price} amount={30}></Price>
-            </View>
-            <View>
-              <AutoImage source={images.dish2} style={styles.imageDish}></AutoImage>
-            </View>
-          </View>
-          <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb2]}>
-            <View style={utilFlex.flex1}>
-              <Text text="Enchiladas veres" preset="bold"></Text>
-              <Text
-                numberOfLines={3}
-                size="sm"
-                text="Cuatro enchiladas con sadla vede,queisoy cebool por arriba"
-                style={utilText.textGray}
-              ></Text>
-              <Price style={styles.price} amount={30}></Price>
-            </View>
-            <View>
-              <AutoImage source={images.dish2} style={styles.imageDish}></AutoImage>
-            </View>
+          <View style={[utilSpacing.mb6, utilSpacing.mx5]}>
+            {dishes.map((dish, index) => (
+              <View key={dish.id}>
+                <Dish
+                  visibleChefImage={false}
+                  visiblePriceDelivery={false}
+                  dish={dish}
+                  currencyCode={currencyCode}
+                  onPress={() => toDishDetail(dish)}
+                  sizeTextDescription="md"
+                ></Dish>
+                {index !== dishStore.dishesChef.length - 1 && (
+                  <Separator style={utilSpacing.mb3}></Separator>
+                )}
+              </View>
+            ))}
+            <EmptyData
+              lengthData={dishStore.dishesChef.length}
+              onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+            ></EmptyData>
           </View>
         </ScrollView>
-        <TouchableOpacity
-          onPress={() => modalState.setVisible(true)}
-          activeOpacity={0.7}
-          style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
-        >
-          <SvgUri height={35} width={35} source={images.cart}></SvgUri>
-          <Text
-            preset="bold"
-            style={[styles.textAddToOrder, utilSpacing.mx3]}
-            tx="menuChefScreen.watchCart"
-          ></Text>
-          <Text preset="bold" style={styles.textAddToOrder} text="Q34"></Text>
-        </TouchableOpacity>
-        <ModalCart onContinue={toDeliveryDetail} modal={modalState}></ModalCart>
+        {cartStore.hasItems && (
+          <ButtonFooter
+            onPress={() => modalStateCart.setVisible(true)}
+            text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(
+              cartStore.subtotal,
+              currencyCode,
+            )}`}
+          ></ButtonFooter>
+        )}
+
+        <ModalCart
+          chef={params.chef}
+          onContinue={toDeliveryDetail}
+          modal={modalStateCart}
+        ></ModalCart>
+        <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
+        <ModalLeave modalState={modalStateLeave} onPressLeave={() => onPressLeave()}></ModalLeave>
       </Screen>
     )
   },
@@ -165,14 +223,13 @@ const styles = StyleSheet.create({
     ...SHADOW,
   },
   card: {
-    backgroundColor: color.palette.white,
+    backgroundColor: color.background,
     borderRadius: spacing[2],
     margin: spacing[3],
     padding: spacing[3],
-    ...SHADOW,
   },
   container: {
-    backgroundColor: color.palette.white,
+    backgroundColor: color.background,
   },
   containerSeparator: {
     alignItems: "center",
@@ -182,16 +239,6 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
   },
-  imageDish: {
-    borderRadius: spacing[2],
-    height: 100,
-    width: 150,
-  },
-  price: {
-    bottom: 0,
-    position: "absolute",
-  },
-
   textAddToOrder: {
     color: color.palette.white,
     fontSize: 20,

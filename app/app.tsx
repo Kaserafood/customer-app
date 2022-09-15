@@ -9,21 +9,26 @@
  * The app navigation resides in ./app/navigators, so head over there
  * if you're interested in adding screens and navigators.
  */
-import "./i18n"
-import "./utils/ignore-warnings"
-import React, { useState, useEffect } from "react"
-import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
-import { initFonts } from "./theme/fonts" // expo
-import * as storage from "./utils/storage"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import React, { useEffect, useState } from "react"
+import FlashMessage from "react-native-flash-message"
+import { GestureHandlerRootView } from "react-native-gesture-handler"
+import { enableLatestRenderer } from "react-native-maps"
+import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
+import { Loader } from "./components"
+import "./i18n"
+import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/error/error-boundary"
+import { utilFlex } from "./theme/Util"
+import "./utils/ignore-warnings"
+import * as storage from "./utils/storage"
+import { loadString } from "./utils/storage"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
-
+enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 /**
@@ -40,8 +45,11 @@ function App() {
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
     ;(async () => {
-      await initFonts() // expo
-      setupRootStore().then(setRootStore)
+      setupRootStore()
+        .then(setRootStore)
+        .catch((error) => {
+          __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
+        })
     })()
   }, [])
 
@@ -51,7 +59,23 @@ function App() {
   // In iOS: application:didFinishLaunchingWithOptions:
   // In Android: https://stackoverflow.com/a/45838109/204044
   // You can replace with your own loading component if you wish.
-  if (!rootStore || !isNavigationStateRestored) return null
+  if (!rootStore || !isNavigationStateRestored) {
+    return null
+  } else {
+    if (rootStore) {
+      async function verifyUser() {
+        const userId = await loadString("userId")
+        if (userId && userId.length > 0) {
+          if (!rootStore.commonStore.isSignedIn) {
+            console.log("USER LOGIN")
+            rootStore.commonStore.setIsSignedIn(true)
+          }
+          rootStore.dishStore.clearDishes()
+        }
+      }
+      verifyUser()
+    }
+  }
 
   // otherwise, we're ready to render the app
   return (
@@ -59,10 +83,15 @@ function App() {
       <RootStoreProvider value={rootStore}>
         <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <ErrorBoundary catchErrors={"always"}>
-            <AppNavigator
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
+            <GestureHandlerRootView style={utilFlex.flex1}>
+              <AppNavigator
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+              <Loader></Loader>
+            </GestureHandlerRootView>
+
+            <FlashMessage position="top" />
           </ErrorBoundary>
         </SafeAreaProvider>
       </RootStoreProvider>

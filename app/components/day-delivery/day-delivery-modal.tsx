@@ -1,80 +1,49 @@
-import React from "react"
-import { StyleProp, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import React from "react"
+import { StyleSheet, View } from "react-native"
 
-import Modal from "react-native-modal"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+import images from "../../assets/images"
+import { spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
 import { Button } from "../button/button"
-import { AutoImage } from "../auto-image/auto-image"
-import Images from "assets/images"
+import { Image } from "../image/image"
+import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
-import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
-   * An optional style override useful for padding & margin.
+   * Modal state to handle visibility
    */
-  style?: StyleProp<ViewStyle>
+  modal?: ModalState
 }
 
 /**
- * Component for delivery days on the home and chef components
+ * Modal to explain why the user need to select a delivery date
  */
 export const DayDeliveryModal = observer(function DayDelivery(props: DayDeliveryProps) {
-  const { style } = props
-  const { modalStore } = useStores()
-
+  const { modal } = props
   return (
-    <Modal
-      isVisible={modalStore.isVisibleModalDayDelivery}
-      backdropColor={color.palette.grayTransparent}
-      backdropOpacity={1}
-      animationIn="zoomIn"
-      animationOut="zoomOut"
-      style={style}
-      coverScreen={false}
-      onModalShow={() => changeNavigationBarColor(color.palette.whiteGray, true, true)}
-    >
-      <View style={styles.containerModal}>
-        <View style={styles.bodyModal}>
-          <View style={styles.containerImgClose}>
-            <TouchableOpacity
-              onPress={() => modalStore.setVisibleModalDayDelivery(false)}
-              activeOpacity={0.7}
-            >
-              <AutoImage style={styles.imgClose} source={Images.close}></AutoImage>
-            </TouchableOpacity>
-          </View>
-          <View style={utilSpacing.p4}>
-            <Text preset="bold" tx="modalDeliveryDay.title" style={utilSpacing.mb5}></Text>
-            <Text size="sm" tx="modalDeliveryDay.description"></Text>
-            <View style={[styles.containerImgModalWhy, utilSpacing.my5]}>
-              <AutoImage style={styles.imgModalWhy} source={Images.step2}></AutoImage>
-            </View>
-
-            <Button
-              tx="modalDeliveryDay.continue"
-              block
-              rounded
-              style={utilSpacing.mb5}
-              onPress={() => modalStore.setVisibleModalDayDelivery(false)}
-            ></Button>
-          </View>
+    <Modal modal={modal} style={styles.modal}>
+      <View style={utilSpacing.p4}>
+        <Text preset="bold" size="lg" tx="modalDeliveryDay.title" style={utilSpacing.mb5}></Text>
+        <Text tx="modalDeliveryDay.description"></Text>
+        <View style={[styles.containerImgModalWhy, utilSpacing.my5]}>
+          <Image style={styles.imgModalWhy} source={images.step2}></Image>
         </View>
+
+        <Button
+          tx="common.continue"
+          block
+          style={utilSpacing.mb5}
+          onPress={() => modal.setVisible(false)}
+        ></Button>
       </View>
     </Modal>
   )
 })
 
 const styles = StyleSheet.create({
-  bodyModal: {
-    backgroundColor: color.palette.white,
-    borderRadius: 20,
-    padding: spacing[3],
-    width: "90%",
-  },
   chip: {
     marginBottom: spacing[2],
     marginRight: spacing[2],
@@ -93,11 +62,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
   },
-
   flex: {
     display: "flex",
     flexDirection: "row",
   },
+
   imgClose: {
     height: 20,
     width: 20,
@@ -105,6 +74,11 @@ const styles = StyleSheet.create({
   imgModalWhy: {
     height: 150,
     width: 150,
+  },
+  modal: {
+    alignSelf: "center",
+    minWidth: 300,
+    width: "88%",
   },
 
   why: {

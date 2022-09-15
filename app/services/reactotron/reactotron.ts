@@ -1,13 +1,13 @@
-import { Tron } from "./tron"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import { ArgType } from "reactotron-core-client"
-import { RootStore } from "../../models/root-store/root-store"
 import { onSnapshot } from "mobx-state-tree"
-import { ReactotronConfig, DEFAULT_REACTOTRON_CONFIG } from "./reactotron-config"
-import { mst } from "reactotron-mst"
-import { clear } from "../../utils/storage"
-import { goBack, resetRoot, navigate } from "../../navigators/navigation-utilities"
 import { Platform } from "react-native"
+import { ArgType } from "reactotron-core-client"
+import { mst } from "reactotron-mst"
+import { RootStore } from "../../models/root-store/root-store"
+import { goBack, navigate, resetRoot } from "../../navigators/navigation-utilities"
+import { clear } from "../../utils/storage"
+import { DEFAULT_REACTOTRON_CONFIG, ReactotronConfig } from "./reactotron-config"
+import { Tron } from "./tron"
 
 // Teach TypeScript about the bad things we want to do.
 declare global {
@@ -124,6 +124,7 @@ export class Reactotron {
         if (this.config.useAsyncStorage) {
           Tron.setAsyncStorageHandler(AsyncStorage)
         }
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         Tron.useReactNative({
           asyncStorage: this.config.useAsyncStorage ? undefined : false,
         })

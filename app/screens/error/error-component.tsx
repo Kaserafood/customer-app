@@ -1,7 +1,9 @@
 import React, { ErrorInfo } from "react"
-import { TextStyle, View, ViewStyle, ScrollView, ImageStyle } from "react-native"
-import { color } from "../../theme"
+import { TextStyle, View, ViewStyle } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 import { Button, Icon, Text } from "../../components"
+import { color } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 
 const CONTAINER: ViewStyle = {
   alignItems: "center",
@@ -27,12 +29,6 @@ const BTN_RESET: ViewStyle = {
   backgroundColor: color.primary,
 }
 
-const TITLE_ERROR: TextStyle = {
-  color: color.error,
-  fontWeight: "bold",
-  paddingVertical: 15,
-}
-
 const FRIENDLY_SUBTITLE: TextStyle = {
   color: color.palette.black,
   fontWeight: "normal",
@@ -45,18 +41,6 @@ const CONTENT_ERROR: TextStyle = {
   paddingVertical: 15,
 }
 
-// Uncomment this and the Text component in the ErrorComponent if
-// you want to see a backtrace in your error reporting screen.
-// const CONTENT_BACKTRACE: TextStyle = {
-//   color: color.dim,
-// }
-
-const ICON: ImageStyle = {
-  marginTop: 30,
-  width: 64,
-  height: 64,
-}
-
 export interface ErrorComponentProps {
   error: Error
   errorInfo: ErrorInfo
@@ -64,21 +48,33 @@ export interface ErrorComponentProps {
 }
 
 /**
- * Describe your component here
+ * Show the error message
  */
 export const ErrorComponent = (props: ErrorComponentProps) => {
   return (
-    <View style={CONTAINER}>
-      <Icon style={ICON} icon="bug" />
-      <Text style={TITLE_ERROR} tx={"errorScreen.title"} />
-      <Text style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
-      <View style={ERROR_DETAILS_CONTAINER}>
-        <ScrollView>
-          <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
-          {/* <Text selectable style={CONTENT_BACKTRACE} text={`${props.errorInfo.componentStack}`} /> */}
-        </ScrollView>
-      </View>
-      <Button block rounded style={BTN_RESET} onPress={props.onReset} tx="errorScreen.reset" />
+    <View style={[CONTAINER, utilFlex.flexCenter, utilSpacing.p7]}>
+      <Icon
+        name="plug-circle-xmark"
+        size={70}
+        color={color.text}
+        style={[utilFlex.selfCenter, utilSpacing.mb7]}
+      ></Icon>
+      <Text preset="bold" size="lg" style={FRIENDLY_SUBTITLE} tx={"errorScreen.friendlySubtitle"} />
+      {__DEV__ && (
+        <View style={ERROR_DETAILS_CONTAINER}>
+          <ScrollView>
+            <Text selectable style={CONTENT_ERROR} text={`${props.error}`} />
+            <Text selectable text={`${props.errorInfo.componentStack}`} />
+          </ScrollView>
+        </View>
+      )}
+
+      <Button
+        block
+        style={[BTN_RESET, utilSpacing.mt5]}
+        onPress={props.onReset}
+        tx="errorScreen.reset"
+      />
     </View>
   )
 }

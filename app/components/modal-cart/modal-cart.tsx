@@ -1,29 +1,24 @@
-import * as React from "react"
-import { StyleProp, TextStyle, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native"
 import { observer } from "mobx-react-lite"
-import { color, spacing, typography } from "../../theme"
-import { Text } from "../text/text"
-import Modal from "react-native-modal"
+import * as React from "react"
+import { ScrollView, StyleSheet, View } from "react-native"
+import Ripple from "react-native-material-ripple"
+
+import images from "../../assets/images"
 import { useStores } from "../../models"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { AutoImage } from "../auto-image/auto-image"
-import images from "assets/images"
-import { utilFlex, utilText, utilSpacing, SHADOW } from "../../theme/Util"
+import { MetaDataCart } from "../../models/cart-store"
+import { UserChef } from "../../models/user-store"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
+import { Button } from "../button/button"
+import { Card } from "../card/card"
+import { Image } from "../image/image"
+import { Modal } from "../modal/modal"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
-import { Button } from "../button/button"
-
-interface ModalState {
-  isVisible: boolean
-  setVisible: (state: boolean) => void
-}
+import { Text } from "../text/text"
 
 export interface ModalCartProps {
-  /**
-   * An optional style override useful for padding & margin.
-   */
-  style?: StyleProp<ViewStyle>
-
   /**
    * Mutable class for managing component visivility.
    */
@@ -33,74 +28,80 @@ export interface ModalCartProps {
    * onContinue
    */
   onContinue: () => void
+
+  /**
+   * Current Chef
+   */
+  chef: UserChef
 }
 
 /**
  * Describe your component here
  */
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
-  const { style, modal, onContinue } = props
+  const { modal, onContinue, chef } = props
 
-  const showModal = (state) => {
-    modal.setVisible(state)
-  }
+  const { cartStore } = useStores()
 
   return (
-    <Modal
-      swipeDirection={["up", "left", "right", "down"]}
-      onBackdropPress={() => modal.setVisible(false)}
-      style={[style, styles.container]}
-      isVisible={modal.isVisible}
-      backdropColor={color.palette.grayTransparent}
-      coverScreen={false}
-      onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
-    >
-      <View style={styles.content}>
-        <View style={styles.containerImgClose}>
-          <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-            <AutoImage style={styles.imgClose} source={images.close}></AutoImage>
-          </TouchableOpacity>
+    <Modal modal={modal} position="bottom">
+      <View style={styles.body}>
+        <View style={[utilFlex.flexRow, utilSpacing.mb4, utilSpacing.ml4]}>
+          <Image source={{ uri: chef.image }} style={styles.imageChef}></Image>
+          <Text preset="bold" style={utilFlex.flex1} text={chef.name}></Text>
         </View>
-        <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
-          <AutoImage source={images.chef1} style={styles.imageChef}></AutoImage>
-          <Text preset="bold" style={utilFlex.flex1} text="eChef junita"></Text>
+
+        <ScrollView style={styles.containerDishes}>
+          {cartStore.cart.map((item, index) => (
+            <Card key={item.tempId} style={[styles.card, utilFlex.flexRow, utilSpacing.m4]}>
+              <View style={[utilFlex.flexRow, utilFlex.flex1]}>
+                <View style={utilSpacing.mr3}>
+                  <Text preset="semiBold" text={`X ${item.quantity.toString()}`}></Text>
+                </View>
+                <View style={utilFlex.flex1}>
+                  <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
+                  {item.metaData.length > 0 && (
+                    <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
+                  )}
+                </View>
+              </View>
+
+              <View>
+                <Price
+                  style={styles.price}
+                  textStyle={utilText.bold}
+                  amount={item.total}
+                  currencyCode={chef.currencyCode}
+                ></Price>
+              </View>
+              <Ripple
+                rippleContainerBorderRadius={100}
+                rippleOpacity={0.07}
+                rippleDuration={400}
+                style={[utilSpacing.p2, styles.containerIconRemove]}
+                onPress={() => cartStore.removeItem(index)}
+              >
+                <Image style={styles.iconRemove} source={images.close}></Image>
+              </Ripple>
+            </Card>
+          ))}
+        </ScrollView>
+        <View style={utilSpacing.mx4}>
+          <Separator style={utilSpacing.my4}></Separator>
         </View>
-        <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb3]}>
-          <View style={utilSpacing.mr3}>
-            <Text preset="semiBold" size="sm" text="x1"></Text>
-          </View>
-          <View style={utilFlex.flex1}>
-            <Text preset="semiBold" text="Enchiladas verdes"></Text>
-            <Text size="sm" text="Horchta as fasd s" style={utilText.textGray}></Text>
-          </View>
-          <View>
-            <Price style={styles.price} textStyle={utilText.bold} amount={40}></Price>
-          </View>
-          {/* AGREGAR ICONO DE QUITAR, ACTUALMENTE ESTA PEQUEÑO, VERFIICAR QUE SE PUEDE HACER */}
-        </View>
-        <View style={[styles.card, utilFlex.flexRow, utilSpacing.mb3]}>
-          <View style={utilSpacing.mr3}>
-            <Text preset="semiBold" size="sm" text="x1"></Text>
-          </View>
-          <View style={utilFlex.flex1}>
-            <Text preset="semiBold" text="Enchiladas verdes"></Text>
-            <Text size="sm" text="Horchta as fasd s" style={utilText.textGray}></Text>
-          </View>
-          <View>
-            <Price style={styles.price} textStyle={utilText.bold} amount={40}></Price>
-          </View>
-          {/* AGREGAR ICONO DE QUITAR, ACTUALMENTE ESTA PEQUEÑO, VERFIICAR QUE SE PUEDE HACER */}
-        </View>
-        <Separator style={utilSpacing.my4}></Separator>
-        <View style={utilFlex.flexRow}>
+        <View style={[utilFlex.flexRow, utilSpacing.mx6]}>
           <Text preset="bold" style={utilFlex.flex1} tx="common.subtotal"></Text>
-          <Price style={styles.price} amount={20}></Price>
+          <Price
+            style={styles.price}
+            amount={cartStore.subtotal}
+            currencyCode={chef.currencyCode}
+          ></Price>
         </View>
         <Button
+          disabled={!cartStore.hasItems}
           onPress={onContinue}
           style={[utilSpacing.mt6, styles.button]}
           block
-          rounded
           tx="common.continue"
         ></Button>
       </View>
@@ -108,21 +109,60 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   )
 })
 
+export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
+  const { metaDataCart } = props
+
+  return (
+    <View style={utilSpacing.mt2}>
+      {metaDataCart.map((item, index) => (
+        <View key={item.key ?? index} style={utilFlex.flexRow}>
+          {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
+          <Text
+            numberOfLines={1}
+            style={utilSpacing.ml2}
+            caption
+            size="sm"
+            text={`${item.label}`}
+          ></Text>
+        </View>
+      ))}
+    </View>
+  )
+}
+
 const styles = StyleSheet.create({
+  body: {
+    alignSelf: "center",
+    bottom: 0,
+    position: "relative",
+    width: "97%",
+  },
   button: {
     alignSelf: "center",
     display: "flex",
-    width: "75%",
+    width: "80%",
   },
   card: {
+    alignItems: "center",
     backgroundColor: color.background,
     borderRadius: spacing[2],
-    padding: spacing[3],
-    ...SHADOW,
+    padding: spacing[4],
   },
   container: {
     justifyContent: "flex-end",
     margin: 0,
+  },
+  containerDishes: {
+    maxHeight: 320,
+  },
+  containerIconRemove: {
+    paddingBottom: 16,
+    paddingLeft: 16,
+    position: "absolute",
+    right: 4,
+    top: 4,
+    width: 45,
+    height: 45,
   },
   containerImgClose: {
     alignItems: "flex-end",
@@ -133,7 +173,13 @@ const styles = StyleSheet.create({
     borderTopEndRadius: spacing[2],
     borderTopStartRadius: spacing[2],
     display: "flex",
+    justifyContent: "flex-start",
     padding: spacing[3],
+  },
+  iconRemove: {
+    height: 10,
+    width: 10,
+    alignSelf: "flex-end",
   },
   imageChef: {
     borderRadius: spacing[2],
@@ -147,5 +193,6 @@ const styles = StyleSheet.create({
   },
   price: {
     backgroundColor: color.background,
+    paddingRight: 0,
   },
 })

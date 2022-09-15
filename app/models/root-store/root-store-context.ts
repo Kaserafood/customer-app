@@ -20,3 +20,4 @@ export const RootStoreProvider = RootStoreContext.Provider
  * or less likely: `const rootStore = useStores()`
  */
 export const useStores = () => useContext(RootStoreContext)
+export const stores = useStores

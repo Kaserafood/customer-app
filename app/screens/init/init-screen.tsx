@@ -1,61 +1,83 @@
-import React, { FC, useEffect } from "react"
-import { observer } from "mobx-react-lite"
-import { Image, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import React, { FC, useLayoutEffect } from "react"
+import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { Button, Text } from "../../components"
+import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
-import { Button, Screen, Text } from "../../components"
 import { color } from "../../theme/color"
-import { useBackHandler } from "@react-native-community/hooks"
+import { typographySize } from "../../theme/typography"
 import { utilSpacing, utilText } from "../../theme/Util"
-import { typography, typographySize } from "../../theme/typography"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
+    const { userStore, commonStore } = useStores()
     const toRegister = () => navigation.navigate("registerPager")
-    const toLogin = () => navigation.navigate("loginForm")
+    const toLogin = () => navigation.navigate("loginForm", {screenRedirect: "main"})
 
-    useEffect(() => {
-      console.log("in init screen")
+    const setDataStore = () => {
+      userStore.setUserId(-1)
+      commonStore.setIsSignedIn(true)
+    }
+
+    useLayoutEffect(() => {
+      __DEV__ && console.log("in init screen")
+      changeNavigationBarColor(color.primary, false, true)
     }, [])
 
     return (
-      <Screen
-        statusBarBackgroundColor={color.primary}
-        bottomBarBackgroundColor={color.primary}
-        bottomBar="light-content"
-        backgroundColor={color.primary}
-        preset="fixed"
-        statusBar="light-content"
-        style={styles.root}
-      >
+      <ScrollView contentContainerStyle={styles.root}>
+        <StatusBar backgroundColor={color.primary} barStyle="light-content" />
+
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
-        <Text style={styles.textTitle} tx="initScreen.homemadeFood"></Text>
-        <Text style={styles.textSecondary} tx="initScreen.byChefIndependently"></Text>
+        <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>
+        <Text
+          style={[styles.textSecondary, utilSpacing.mt5]}
+          tx="initScreen.byChefIndependently"
+        ></Text>
         <View style={styles.containerButtons}>
           <Button
             preset="white"
-            style={utilSpacing.mb6}
+            style={utilSpacing.mb5}
             block
             tx="initScreen.register"
             onPress={toRegister}
-            textStyle={[styles.button]}
+            textStyle={styles.button}
           ></Button>
           <Button
             preset="white"
-            textStyle={[styles.button]}
+            textStyle={styles.button}
             block
             tx="initScreen.login"
             onPress={toLogin}
           ></Button>
+
+          <TouchableOpacity
+            onPress={() => setDataStore()}
+            style={[styles.btnExplore, utilSpacing.p4]}
+          >
+            <Text
+              style={[styles.button, utilText.bold, styles.txtExplore]}
+              tx="initScreen.exploreApp"
+            ></Text>
+          </TouchableOpacity>
         </View>
-      </Screen>
+      </ScrollView>
     )
   },
 )
 
 const styles = StyleSheet.create({
+  btnExplore: {
+    alignSelf: "center",
+    lineHeight: 35,
+    marginTop: 30,
+  },
   button: {
     fontSize: typographySize.xl,
+    lineHeight: 35,
   },
   containerButtons: {
     width: "60%",
@@ -66,6 +88,8 @@ const styles = StyleSheet.create({
   },
   root: {
     alignItems: "center",
+    backgroundColor: color.primary,
+    flexGrow: 1,
     justifyContent: "center",
   },
   textSecondary: {
@@ -76,5 +100,10 @@ const styles = StyleSheet.create({
   textTitle: {
     color: color.palette.white,
     fontSize: 35,
+    lineHeight: 45,
+  },
+  txtExplore: {
+    color: color.palette.white,
+    fontSize: typographySize.xl,
   },
 })

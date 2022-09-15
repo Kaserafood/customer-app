@@ -1,15 +1,26 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { CharacterStoreModel } from "../character-store/character-store"
-import { ModalStoreModel } from "../modal-store/modal-store"
+import { AddressModelStore } from "../address/address"
+import { CartStoreModel } from "../cart-store"
+import { CategoryStoreModel } from "../category-store"
+import { CommonStoreModel } from "../common-store"
+import { DayStoreModel } from "../day-store"
+import { DishStoreModel } from "../dish-store"
+import { OrderModel } from "../order/order"
+import { UserRegisterModel } from "../user-store"
 
 /**
  * A RootStore model.
  */
 // prettier-ignore
 export const RootStoreModel = types.model("RootStore").props({
-  characterStore: types.optional(CharacterStoreModel, {} as any),
-  modalStore: types.optional(ModalStoreModel, {} as any),
-  
+  commonStore: types.optional(CommonStoreModel, {} as any),
+  userStore: types.optional(UserRegisterModel, {} as any),
+  dayStore: types.optional(DayStoreModel, {} as any),
+  categoryStore: types.optional(CategoryStoreModel, {} as any),
+  dishStore: types.optional(DishStoreModel, {} as any),
+  cartStore: types.optional(CartStoreModel, {} as any),
+  addressStore: types.optional(AddressModelStore, {} as any),
+  orderStore: types.optional(OrderModel, {} as any),
 })
 
 /**

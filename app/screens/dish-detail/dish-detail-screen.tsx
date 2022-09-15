@@ -1,113 +1,316 @@
-import React, { FC, useState } from "react"
-import { observer } from "mobx-react-lite"
-import { ViewStyle, ScrollView, StyleSheet, View, StyleProp } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { observer } from "mobx-react-lite"
+import React, { createContext, FC, useEffect, useRef, useState } from "react"
+import { FormProvider, useForm } from "react-hook-form"
+import { ScrollView, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
+import IconRN from "react-native-vector-icons/FontAwesome"
 import {
-  AutoImage,
-  Button,
-  Complements,
+  Addons,
+  ButtonFooter,
   DishChef,
+  getMetaData,
   Header,
-  InputTextCard,
+  Image,
+  InputText,
+  isValidAddons,
   Price,
   Screen,
   Text,
 } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
-import { color } from "../../theme"
-import images from "assets/images"
-import { spacing } from "../../theme/spacing"
 import { Separator } from "../../components/separator/separator"
-import { utilSpacing, utilFlex, utilText, SHADOW } from "../../theme/Util"
-import { TouchableHighlight, TouchableOpacity } from "react-native-gesture-handler"
-import SvgUri from "react-native-svg-uri"
-import Ripple from "react-native-material-ripple"
-import { typographySize } from "../../theme/typography"
+import { ItemCart } from "../../models/cart-store"
+import { Addon } from "../../models/dish"
+import { DishChef as DishChefModel } from "../../models/dish-store"
+import { useStores } from "../../models/root-store/root-store-context"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
+import { color } from "../../theme"
+import { spacing } from "../../theme/spacing"
+import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getFormat } from "../../utils/price"
+import { getI18nText } from "../../utils/translate"
 
+export const CurrencyContext = createContext({ currencyCode: "" })
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
-  ({ navigation }) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+  ({ navigation, route: { params } }) => {
+    const [quantity, setQuantity] = useState(1)
+    const [total, setTotal] = useState(0)
+    const [totalAddon, setTotalAddon] = useState(0)
+    const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
+    const [addonsAvailable, setAddonsAvailable] = useState<Addon[]>([])
+    const scrollRef = useRef<ScrollView>()
+    const { ...methods } = useForm({ mode: "onBlur" })
+    const { dishStore, commonStore, cartStore } = useStores()
+    const [loading, setLoading] = useState(false)
+    const [loadingDishes, setLoadingDishes] = useState(true)
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+    useEffect(() => {
+      setQuantity(1)
+      setTotal(params.price)
+      cartStore.setSubmited(false)
 
-    const [price, setPrice] = useState("Q50.4")
-    const [counter, setCounter] = useState(1)
+      async function fetch() {
+        if (commonStore.currentChefId !== params.chef.id) {
+          commonStore.setCurrentChefId(params.chef.id)
+          commonStore.setCurrentChefImage(params.chef.image)
+          setLoadingDishes(true)
+          await dishStore.getByChef(params.chef.id).finally(() => {
+            setLoadingDishes(false)
+          })
+        } else setLoadingDishes(false)
+      }
 
-    const toMenuChef = () => navigation.navigate("menuChef")
+      fetch()
+    }, [])
+
+    useEffect(() => {
+      setAddonsAvailable(params.addons.filter((addon) => addon.hide_in_app !== "yes"))
+    }, [params.addons])
+
+    useEffect(() => {
+      setTotal((currentDish.price + totalAddon) * quantity)
+    }, [quantity, totalAddon])
+
+    const minusQuantity = (number: number) => {
+      if (quantity > 1) {
+        setQuantity(quantity - number)
+      }
+    }
+
+    const onSubmit = (data) => {
+      if (!cartStore.isSubmited) cartStore.setSubmited(true)
+
+      if (!isValidAddons(currentDish.addons)) return
+
+      cartStore.setSubmited(false)
+
+      const itemCart: ItemCart = {
+        dish: currentDish,
+        quantity: quantity,
+        noteChef: data.note,
+        metaData: addonsAvailable.length > 0 ? getMetaData() : [],
+        total: total,
+      }
+      __DEV__ && console.log(itemCart)
+      cartStore.addItem(itemCart)
+      methods.setValue("comment", "")
+      setQuantity(1)
+      navigation.navigate("menuChef", { ...params })
+    }
+
+    const changeDish = (dish: DishChefModel) => {
+      setLoading(true)
+      if (currentDish.id !== dish.id) {
+        setCurrentDish({ ...dish, chef: params.chef })
+        setQuantity(1)
+        setTotal(dish.price)
+        setAddonsAvailable(dish.addons.filter((addon) => addon.hide_in_app !== "yes"))
+        methods.setValue("comment", "")
+        scrollRef.current?.scrollTo({
+          y: 0,
+          animated: true,
+        })
+      }
+      setTimeout(() => {
+        setLoading(false)
+      }, 300)
+    }
 
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView style={utilSpacing.p4}>
-          <AutoImage style={styles.image} source={images.dish3}></AutoImage>
-          <View style={[utilFlex.flexRow, utilSpacing.my3, utilSpacing.mx4]}>
-            <Text style={utilSpacing.mr3} text="Enchiladas verdes" preset="bold"></Text>
-            <Price amount={40}></Price>
+        <ScrollView ref={scrollRef}>
+          <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
+            {loading ? (
+              <SkeletonPlaceholder>
+                <SkeletonPlaceholder.Item width={"100%"}>
+                  <SkeletonPlaceholder.Item width={"100%"} height={230} borderRadius={8} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={12}
+                    width={"100%"}
+                    height={20}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    marginTop={6}
+                    width={"100%"}
+                    height={40}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    marginTop={12}
+                    width={50}
+                    height={20}
+                    borderRadius={8}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder>
+            ) : (
+              <>
+                <Image style={styles.image} source={{ uri: currentDish.image }}></Image>
+                <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+                  <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+                </View>
+                <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
+                <Price
+                  style={styles.price}
+                  amount={currentDish.price}
+                  currencyCode={currentDish.chef.currencyCode}
+                ></Price>
+              </>
+            )}
           </View>
-          <Text
-            style={[utilSpacing.mb2, utilSpacing.mx4]}
-            text="Cuatro enchiladas con salsa verde, queso y ceboola de arriba 1/2 kg"
-          ></Text>
-          <Separator style={utilSpacing.my3}></Separator>
-          <Complements></Complements>
-          <View style={utilFlex.flexCenter}>
+
+          {addonsAvailable.length > 0 ? (
+            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef.currencyCode }}>
+              <Addons
+                addons={addonsAvailable}
+                onTotalPriceChange={(total) => setTotalAddon(total)}
+              ></Addons>
+            </CurrencyContext.Provider>
+          ) : (
+            <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>
+          )}
+
+          <View style={[utilFlex.flexCenter, utilSpacing.mt5]}>
             <View style={styles.containerUnities}>
               <Text
-                style={[styles.textUnities, utilSpacing.p3]}
+                style={[styles.textUnities, utilSpacing.px3, utilSpacing.py4]}
                 tx="dishDetailScreen.unities"
                 preset="bold"
               ></Text>
 
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setCounter(counter - 1)}>
-                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py2]}>
-                  <AutoImage style={styles.iconUnities} source={images.minus}></AutoImage>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => minusQuantity(1)}>
+                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
+                  <IconRN name="minus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
               <Text
                 style={[styles.textUnities, styles.textCounter, utilText.textCenter]}
-                text={`${counter}`}
+                text={`${quantity}`}
                 preset="bold"
               ></Text>
-              <TouchableOpacity activeOpacity={0.7} onPress={() => setCounter(counter + 1)}>
-                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py2]}>
-                  <AutoImage style={styles.iconUnities} source={images.add}></AutoImage>
+              <TouchableOpacity activeOpacity={0.7} onPress={() => setQuantity(quantity + 1)}>
+                <Ripple rippleCentered style={[utilSpacing.px4, utilSpacing.py4]}>
+                  <IconRN name="plus" size={16} color={color.palette.white}></IconRN>
                 </Ripple>
               </TouchableOpacity>
             </View>
           </View>
 
-          <InputTextCard
-            style={utilSpacing.m4}
-            titleTx="dishDetailScreen.commentChef"
-            placeholderTx="dishDetailScreen.placeHolderCommetChef"
-            counter={100}
-          ></InputTextCard>
-          <Text tx="dishDetailScreen.moreProductsChef" preset="bold" style={utilSpacing.my5}></Text>
-          <ScrollView horizontal style={utilSpacing.mb4}>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-            <DishChef></DishChef>
-          </ScrollView>
+          <View style={utilSpacing.mt4}>
+            <FormProvider {...methods}>
+              <InputText
+                name="note"
+                preset="card"
+                labelTx="dishDetailScreen.commentChef"
+                placeholderTx="dishDetailScreen.placeHolderCommetChef"
+                counter={100}
+              ></InputText>
+            </FormProvider>
+          </View>
+
+          <View style={[utilSpacing.mt5, utilSpacing.mb3, utilSpacing.ml5, utilFlex.flexRow]}>
+            <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
+            <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
+          </View>
+          {loadingDishes ? (
+            <SkeletonPlaceholder>
+              <SkeletonPlaceholder.Item width={"100%"} flexDirection="row" marginLeft={spacing[4]}>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
+                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
+                  <SkeletonPlaceholder.Item
+                    marginTop={10}
+                    width={150}
+                    height={16}
+                    borderRadius={8}
+                  />
+                  <SkeletonPlaceholder.Item
+                    alignSelf="flex-end"
+                    marginTop={6}
+                    width={50}
+                    height={16}
+                    borderRadius={24}
+                  />
+                </SkeletonPlaceholder.Item>
+              </SkeletonPlaceholder.Item>
+            </SkeletonPlaceholder>
+          ) : (
+            <ListDish
+              currencyCode={currentDish.chef.currencyCode}
+              onChangeDish={(dish) => changeDish(dish)}
+              dishId={currentDish.id}
+            ></ListDish>
+          )}
         </ScrollView>
-        <TouchableOpacity
-          onPress={toMenuChef}
-          activeOpacity={0.7}
-          style={[styles.addToOrder, utilFlex.flexCenter, utilFlex.flexRow]}
-        >
-          <SvgUri height={35} width={35} source={images.cart}></SvgUri>
-          <Text
-            preset="bold"
-            style={[styles.textAddToOrder, utilSpacing.mx3]}
-            tx="dishDetailScreen.addToOrder"
-          ></Text>
-          <Text preset="bold" style={styles.textAddToOrder} text={price}></Text>
-        </TouchableOpacity>
+        <ButtonFooter
+          onPress={methods.handleSubmit(onSubmit)}
+          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(
+            total,
+            currentDish.chef.currencyCode,
+          )}`}
+        ></ButtonFooter>
       </Screen>
+    )
+  },
+)
+
+const ListDish = observer(
+  (props: {
+    onChangeDish: (dish: DishChefModel) => void
+    dishId: number
+    currencyCode: string
+  }) => {
+    const { dishStore } = useStores()
+    return (
+      <ScrollView horizontal style={[utilSpacing.mb4, utilSpacing.ml5]}>
+        {dishStore.dishesChef.map(
+          (dish) =>
+            props.dishId !== dish.id && (
+              <DishChef
+                onPress={() => props.onChangeDish(dish)}
+                dish={dish}
+                key={dish.id}
+                currencyCode={props.currencyCode}
+              ></DishChef>
+            ),
+        )}
+      </ScrollView>
     )
   },
 )
@@ -115,7 +318,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 const styles = StyleSheet.create({
   addToOrder: {
     backgroundColor: color.primary,
-
     padding: spacing[3],
     textAlign: "center",
     ...SHADOW,
@@ -148,8 +350,11 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: spacing[2],
-    height: 200,
+    height: 230,
     width: "100%",
+  },
+  price: {
+    alignSelf: "flex-start",
   },
   textAddToOrder: {
     color: color.palette.white,

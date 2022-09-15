@@ -1,7 +1,7 @@
 import * as React from "react"
 import { TouchableOpacity } from "react-native"
 import { Text } from "../text/text"
-import { viewPresets, textPresets } from "./button.presets"
+import { textPresets, viewPresets } from "./button.presets"
 import { ButtonProps } from "./button.props"
 
 export function Button(props: ButtonProps) {
@@ -39,7 +39,7 @@ export function Button(props: ButtonProps) {
 
   const content = children || <Text tx={tx} text={text} style={textStyles} />
 
-  console.log("Button", preset, viewStyle.width)
+  __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
     <TouchableOpacity style={viewStyles} {...rest} activeOpacity={0.8}>
       {content}

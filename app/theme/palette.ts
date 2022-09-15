@@ -17,4 +17,10 @@ export const palette = {
   orange: "#FF9831",
   redDark: "#d5392e",
   blackTransparent: "#00000066",
+  shadow: "#2D0000",
+  segmentedControl: "#efeff0",
+  grayDisabled: "#ffffffb3",
+  grayLoader: "#ffffff66",
+  redLight: "#ffebee",
+  redRequired: "#f44336",
 }

@@ -2,22 +2,22 @@ import * as React from "react"
 import {
   StyleProp,
   TextStyle,
-  ViewStyle,
-  TouchableOpacityProps,
   TouchableOpacity,
+  TouchableOpacityProps,
+  ViewStyle,
 } from "react-native"
-import { observer } from "mobx-react-lite"
-import { color, spacing } from "../../theme"
-import { Text } from "../text/text"
 import { TxKeyPath } from "../../i18n/i18n"
-import { SHADOW } from "../../theme/Util"
+import { color, spacing } from "../../theme"
 import { typographySize } from "../../theme/typography"
+import { SHADOW } from "../../theme/Util"
+import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
   paddingHorizontal: spacing[2],
   paddingVertical: spacing[0],
   borderRadius: 100,
   alignSelf: "flex-start",
+  minHeight: 25,
   ...SHADOW,
 }
 
@@ -55,20 +55,21 @@ export interface ChipProps extends TouchableOpacityProps {
 /**
  * Component Chip
  */
-export const Chip = observer(function Chip(props: ChipProps) {
+export const Chip = function Chip(props: ChipProps) {
   const { style, tx, text, textstyle, active, ...rest } = props
   if (active) {
     CONTAINER.backgroundColor = color.palette.grayLigth
   } else {
     CONTAINER.backgroundColor = color.palette.white
-    CONTAINER.shadowColor = color.palette.grayDark
+    CONTAINER.shadowColor = color.palette.black
   }
-  const styles = Object.assign({}, CONTAINER, style)
-  const styleText = Object.assign({}, TEXT, textstyle)
+  // const styles = Object.assign({}, CONTAINER, style)
+  const styleText = [TEXT, textstyle]
+  const styleBtn = [CONTAINER, style]
   const content = <Text tx={tx} text={text} style={styleText} />
   return (
-    <TouchableOpacity activeOpacity={0.5} style={styles} {...rest}>
+    <TouchableOpacity activeOpacity={0.5} style={styleBtn} {...rest}>
       {content}
     </TouchableOpacity>
   )
-})
+}

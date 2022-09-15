@@ -1,19 +1,17 @@
 import * as React from "react"
-import { View, ImageStyle } from "react-native"
-import { AutoImage as Image } from "../auto-image/auto-image"
+import { View } from "react-native"
+import { createIconSetFromIcoMoon } from "react-native-vector-icons"
 import { IconProps } from "./icon.props"
-import { icons } from "./icons"
+import icoMoonConfig from "./selection.json"
 
-const ROOT: ImageStyle = {
-  resizeMode: "contain",
-}
+const IcoMoon = createIconSetFromIcoMoon(icoMoonConfig)
 
 export function Icon(props: IconProps) {
-  const { style: styleOverride, icon, containerStyle } = props
+  const { ...rest } = props
 
   return (
-    <View style={containerStyle}>
-      <Image style={[ROOT, styleOverride]} source={icons[icon]} />
+    <View>
+      <IcoMoon {...rest} />
     </View>
   )
 }

@@ -1,85 +1,211 @@
-import React, { FC, useEffect, useState } from "react"
-import { observer } from "mobx-react-lite"
-import { View, StyleSheet, BackHandler } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
-import { NavigatorParamList } from "../../navigators"
-import { Screen, Text, Header, InputText, Button, Checkbox } from "../../components"
-// import { useNavigation } from "@react-navigation/native"
-// import { useStores } from "../../models"
-import { color, spacing } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { observer } from "mobx-react-lite"
+import React, { FC, useState } from "react"
+import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
+import { Address, useStores } from "../../models"
+import { UserRegister } from "../../models/user-store"
+import { goBack } from "../../navigators/navigation-utilities"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
+import { spacing } from "../../theme"
+import { color } from "../../theme/color"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
+import { showMessageInfo } from "../../utils/messages"
+import { loadString } from "../../utils/storage"
 
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
-  const goBack = () => navigation.navigate("init")
-  const goMain = () => navigation.navigate("main")
+  const [terms, setTerms] = useState(false)
+  const { ...methods } = useForm({ mode: "onBlur" })
+  const { userStore, commonStore, addressStore } = useStores()
+
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
-  const [terms, setTerms] = useState(false)
-  return (
-    <Screen preset="scroll" style={styles.container} bottomBar="dark-content">
-      <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
+  const onSubmit = (data: UserRegister) => {
+    if (!terms) showMessageInfo("registerFormScreen.acceptsTerms")
+    else {
+      Keyboard.dismiss()
+      commonStore.setVisibleLoading(true)
+      __DEV__ && console.log(data)
+      const currentUserId = userStore.userId
+      userStore
+        .register(data)
+        .then(async (userId) => {
+          if (userId > 0) {
+            // Si el usuario habia entrado como "Explorar el app"
+            if (currentUserId === -1) {
+              await saveAddress(userId)
+            } else {
+              commonStore.setIsSignedIn(true)
+              navigation.navigate("main")
+            }
+          }
+          commonStore.setVisibleLoading(false)
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
+    }
+  }
 
-      <View style={styles.containerForm}>
-        <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
-        <InputText
-          placeholderTx="registerFormScreen.name"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          placeholderTx="registerFormScreen.lastName"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          keyboardType="phone-pad"
-          placeholderTx="registerFormScreen.phone"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          keyboardType="email-address"
-          placeholderTx="registerFormScreen.email"
-          styleContainer={styles.input}
-        ></InputText>
-        <InputText
-          placeholderTx="registerFormScreen.password"
-          styleContainer={styles.input}
-          secureTextEntry
-        ></InputText>
-        <View style={styles.containerTerms}>
-          <Checkbox onToggle={() => setTerms(!terms)} value={terms}></Checkbox>
-          <View style={styles.containerTermsText}>
-            <Text size="sm" tx="registerFormScreen.acceptThe"></Text>
-            <Text
-              size="sm"
-              onPress={goTerms}
-              style={styles.textPrimary}
-              tx="registerFormScreen.termsAndConditions"
-            ></Text>
-            <Text size="sm" tx="registerFormScreen.andThe"></Text>
-            <Text
-              size="sm"
-              onPress={goPrivacy}
-              style={styles.textPrimary}
-              tx="registerFormScreen.privacyPolicy"
-            ></Text>
+  const onError: SubmitErrorHandler<UserRegister> = (errors) => {
+    __DEV__ && console.log({ errors })
+  }
+
+  const saveAddress = async (userId: number) => {
+    const currentAddress = await loadString("address")
+    if (currentAddress.length > 0) {
+      const address: Address = JSON.parse(currentAddress)
+      address.userId = userId
+      await addressStore.add(address).then((res) => {
+        if (res) {
+          address.id = Number(res.data)
+          addressStore.setCurrent({ ...address })
+          userStore.setAddressId(address.id)
+          userStore.updateAddresId(userId, address.id)
+          commonStore.setIsSignedIn(true)
+          navigation.navigate("deliveryDetail")
+        }
+      })
+    }
+  }
+
+  const toLogin = () => {
+    navigation.navigate("loginForm", { screenRedirect: "deliveryDetail" })
+  }
+  return (
+    <>
+      <Screen preset="scroll" bottomBar="dark-content">
+        <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
+
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.containerForm}>
+            <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
+
+            <FormProvider {...methods}>
+              <InputText
+                name="name"
+                placeholderTx="registerFormScreen.firstName"
+                styleContainer={styles.input}
+                rules={{
+                  required: "registerFormScreen.firstNameRequired",
+                }}
+                maxLength={100}
+              ></InputText>
+              <InputText
+                name="lastName"
+                placeholderTx="registerFormScreen.lastName"
+                styleContainer={styles.input}
+                rules={{
+                  required: "registerFormScreen.lastNameRequired",
+                }}
+                maxLength={100}
+              ></InputText>
+              <InputText
+                name="phone"
+                keyboardType="phone-pad"
+                placeholderTx="registerFormScreen.phone"
+                styleContainer={styles.input}
+                rules={{
+                  required: "registerFormScreen.phoneRequired",
+                  minLength: {
+                    value: getMaskLength(getFormatMaskPhone()),
+                    message: "registerFormScreen.phoneFormatIncorrect",
+                  },
+                }}
+                mask={getFormatMaskPhone()}
+              ></InputText>
+              <InputText
+                name="email"
+                keyboardType="email-address"
+                placeholderTx="registerFormScreen.email"
+                styleContainer={styles.input}
+                rules={{
+                  required: "registerFormScreen.emailRequired",
+                  pattern: {
+                    value: /\b[\w\\.+-]+@[\w\\.-]+\.\w{2,4}\b/,
+                    message: "registerFormScreen.emailFormat",
+                  },
+                }}
+                maxLength={200}
+              ></InputText>
+              <InputText
+                name="password"
+                placeholderTx="registerFormScreen.password"
+                styleContainer={styles.input}
+                secureTextEntry
+                rules={{
+                  required: "registerFormScreen.passwordRequired",
+                  minLength: {
+                    value: 4,
+                    message: "registerFormScreen.passwordMinLength",
+                  },
+                }}
+                maxLength={100}
+              ></InputText>
+              <View style={styles.containerTermsBtn}>
+                <View style={[utilFlex.flexRow, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
+                  <TouchableOpacity
+                    onPress={() => setTerms(!terms)}
+                    activeOpacity={1}
+                    style={utilSpacing.p4}
+                  >
+                    <Checkbox value={terms}></Checkbox>
+                  </TouchableOpacity>
+
+                  <View style={styles.containerTermsText}>
+                    <Text
+                      size="sm"
+                      tx="registerFormScreen.acceptThe"
+                      style={styles.lineHeight}
+                    ></Text>
+                    <Text
+                      size="sm"
+                      onPress={goTerms}
+                      style={[styles.textPrimary, styles.lineHeight]}
+                      tx="registerFormScreen.termsAndConditions"
+                    ></Text>
+                    <Text size="sm" tx="registerFormScreen.andThe" style={styles.lineHeight}></Text>
+                    <Text
+                      size="sm"
+                      onPress={goPrivacy}
+                      style={[styles.textPrimary, styles.lineHeight]}
+                      tx="registerFormScreen.privacyPolicy"
+                    ></Text>
+                  </View>
+                </View>
+
+                <Button
+                  tx="registerFormScreen.register"
+                  onPress={methods.handleSubmit(onSubmit, onError)}
+                  block
+                  style={[styles.btn, utilSpacing.my5]}
+                ></Button>
+                <TouchableOpacity style={[utilFlex.selfCenter, utilSpacing.p4]} onPress={toLogin}>
+                  <Text
+                    size="lg"
+                    preset="bold"
+                    style={styles.textPrimary}
+                    tx="registerFormScreen.logIn"
+                  ></Text>
+                </TouchableOpacity>
+              </View>
+            </FormProvider>
           </View>
-        </View>
-      </View>
-      <Button
-        tx="registerFormScreen.register"
-        onPress={goMain}
-        block
-        style={[styles.btn, utilSpacing.mt5]}
-      ></Button>
-    </Screen>
+        </ScrollView>
+      </Screen>
+    </>
   )
 })
 const styles = StyleSheet.create({
   btn: {
-    width: "65%",
+    alignSelf: "center",
+    display: "flex",
   },
+
   container: {
     alignItems: "center",
     backgroundColor: color.palette.white,
@@ -89,14 +215,13 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingTop: spacing[6],
-    width: "75%",
+    width: "80%",
   },
-  containerTerms: {
-    alignItems: "flex-start",
+
+  containerTermsBtn: {
+    alignSelf: "center",
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginBottom: spacing[3],
+    width: "100%",
   },
   containerTermsText: {
     display: "flex",
@@ -105,7 +230,15 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   input: {
+    color: color.palette.black,
     marginBottom: spacing[5],
+  },
+  lineHeight: {
+    lineHeight: 25,
+  },
+  lottie: {
+    height: 100,
+    width: 100,
   },
   textPrimary: {
     color: color.primary,
