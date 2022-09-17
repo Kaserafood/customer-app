@@ -1,7 +1,7 @@
 import { DrawerContentScrollView } from "@react-navigation/drawer"
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { Linking, StyleSheet, View } from "react-native"
+import { Linking, Platform, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
@@ -30,8 +30,13 @@ export default function DrawerContent(props) {
   }
 
   const openWhatsApp = () => {
+    const phoneWithCountryCode = "50245680417"
+
+    const mobile = Platform.OS === "ios" ? phoneWithCountryCode : `+${phoneWithCountryCode}`
     const message = getI18nText("drawerContent.whatsAppMessage")
-    Linking.openURL(`whatsapp://send?text=${message}&phone=+50245680417`)
+    Linking.openURL(`whatsapp://send?text=${message}&phone=${mobile}`).catch(() => {
+      alert("Asegúrese de que WhatsApp esté instalado en su dispositivo")
+    })
   }
 
   const toReportBug = () => {
