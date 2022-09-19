@@ -619,7 +619,7 @@
     "couponRequired": "Debes ingresar el cupón",
     "labelCoupon": "Cupón",
     "couponInvalid": "El cupón no es válido",
-    "use": "Usar",
+    "use": "Aplicar",
     "discountApply": "Descuento de un {{percent}} aplicado"
   }
 }
