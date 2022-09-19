@@ -620,6 +620,6 @@
     "labelCoupon": "Cupón",
     "couponInvalid": "El cupón no es válido",
     "use": "Aplicar",
-    "discountApply": "Descuento de un {{percent}} aplicado"
+    "discountApply": "Descuento del {{percent}} aplicado"
   }
 }

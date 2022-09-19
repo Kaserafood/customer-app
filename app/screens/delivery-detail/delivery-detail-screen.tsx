@@ -58,6 +58,7 @@ export const DeliveryDetailScreen: FC<
   const [coupon, setCoupon] = useState<Coupon>()
 
   useEffect(() => {
+    cartStore.setDiscount(0)
     const loadSavedStrings = async () => {
       const taxId = await loadString("taxId")
       const deliveryTime = await loadString("deliveryTime")
