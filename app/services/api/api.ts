@@ -10,6 +10,7 @@ import {
   CategoryResponse,
   ChefResponse,
   CommonResponse,
+  CuponResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -277,6 +278,14 @@ export class Api {
    */
   async getOrderDetail(orderId: number): Promise<OrderDetailResponse> {
     return await this.request({}, `/orders/${orderId}`, "GET")
+  }
+
+  /**
+   *
+   * @description Get detail of coupon code
+   */
+  async getCoupon(couponCode: string): Promise<CuponResponse> {
+    return await this.request({}, `/orders/coupon/${couponCode}`, "GET")
   }
 
   /**
