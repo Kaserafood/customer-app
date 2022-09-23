@@ -20,7 +20,7 @@ import {
   Text,
 } from "../../components"
 import { ModalLocation } from "../../components/location/modal-location"
-import { MetaData, Order, Products, useStores } from "../../models"
+import { Coupon, MetaData, Order, Products, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
@@ -35,12 +35,14 @@ import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
+import { ModalCoupon } from "./modal-coupon"
 import { Card as CardModel, ModalPaymentCard } from "./modal-payment-card"
 import { Totals } from "./totals"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
 const modalStatePaymentCard = new ModalStateHandler()
+const modalStateCoupon = new ModalStateHandler()
 
 export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
@@ -53,8 +55,10 @@ export const DeliveryDetailScreen: FC<
   const [card, setCard] = useState<CardModel>()
   const refDeliveryTimeList = useRef(null)
   const refModalPaymentCard = useRef(null)
+  const [coupon, setCoupon] = useState<Coupon>()
 
   useEffect(() => {
+    cartStore.setDiscount(0)
     const loadSavedStrings = async () => {
       const taxId = await loadString("taxId")
       const deliveryTime = await loadString("deliveryTime")
@@ -146,6 +150,7 @@ export const DeliveryDetailScreen: FC<
         },
       }),
       paymentMethod: isPaymentCash ? "cod" : "qpaypro", // Contra entrega o pago con tarjeta
+      couponCode: coupon?.code,
     }
 
     orderStore
@@ -163,7 +168,7 @@ export const DeliveryDetailScreen: FC<
           await saveString("taxId", data.taxId)
           await saveString("customerNote", data.customerNote)
           await saveString("deliveryTime", labelDeliveryTime)
-
+          cartStore.setDiscount(0)
           __DEV__ && console.log("order added", res.data)
           navigation.navigate("endOrder", {
             orderId: Number(res.data),
@@ -246,7 +251,7 @@ export const DeliveryDetailScreen: FC<
 
     data.push({
       key: "customer_address_id",
-      value: `${userStore.addressId} `,
+      value: `${userStore.addressId}`,
     })
 
     return data
@@ -254,16 +259,18 @@ export const DeliveryDetailScreen: FC<
 
   const getNameDayDelivery = (): string => {
     if (dayStore.currentDay.dayName.includes(" ")) return dayStore.currentDay.dayNameLong
+
     return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
   }
 
   const getTextButtonFooter = (): string => {
-    return `${getI18nText(
+    const text = getI18nText(
       isPaymentCard ? "dishDetailScreen.pay" : "deliveryDetailScreen.makeOrder",
-    )} ${getFormat(
-      cartStore.subtotal + orderStore.priceDelivery,
-      cartStore.cart[0]?.dish.chef.currencyCode,
-    )}`
+    )
+    const total = cartStore.subtotal + orderStore.priceDelivery - (cartStore.discount ?? 0)
+    const currency = cartStore.cart[0]?.dish.chef.currencyCode
+
+    return `${text} ${getFormat(total, currency)}`
   }
 
   return (
@@ -386,6 +393,20 @@ export const DeliveryDetailScreen: FC<
             styleContainer={[utilSpacing.my3]}
             maxLength={100}
           ></InputText>
+
+          <Ripple
+            style={[utilSpacing.my5, utilFlex.selfCenter]}
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            onPress={() => modalStateCoupon.setVisible(true)}
+          >
+            <Card style={[utilSpacing.px6, utilSpacing.p4]}>
+              <View style={[utilSpacing.p3, utilFlex.flexRow, utilFlex.flexCenter]}>
+                <Icon name="tag" size={26} color={color.text}></Icon>
+                <Text size="lg" style={utilSpacing.ml3} tx="deliveryDetailScreen.useCoupon"></Text>
+              </View>
+            </Card>
+          </Ripple>
         </FormProvider>
 
         <View style={utilSpacing.mx4}>
@@ -408,18 +429,20 @@ export const DeliveryDetailScreen: FC<
           <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
             <DishesList></DishesList>
             <Separator style={styles.separator}></Separator>
-            <Totals></Totals>
+            <Totals coupon={coupon}></Totals>
           </Card>
         </View>
       </ScrollView>
-      <ButtonFooter
-        onPress={methods.handleSubmit(onSubmit, onError)}
-        text={getTextButtonFooter()}
-      ></ButtonFooter>
+
+      {cartStore.hasItems && (
+        <ButtonFooter
+          onPress={methods.handleSubmit(onSubmit, onError)}
+          text={getTextButtonFooter()}
+        ></ButtonFooter>
+      )}
 
       <ModalLocation screenToReturn={"deliveryDetail"} modal={modalStateLocation}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
-
       <ModalPaymentCard
         ref={refModalPaymentCard}
         modalState={modalStatePaymentCard}
@@ -428,6 +451,7 @@ export const DeliveryDetailScreen: FC<
           setIsPaymentCard(true)
         }}
       ></ModalPaymentCard>
+      <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
     </Screen>
   )
 })
@@ -449,13 +473,16 @@ const styles = StyleSheet.create({
     minWidth: 300,
     width: "90%",
   },
+  coupon: {
+    maxWidth: 230,
+  },
+
   imageCard: {
     borderRadius: spacing[1],
     height: 24,
     marginLeft: spacing[1],
     width: 35,
   },
-
   price: {
     backgroundColor: color.transparent,
   },

@@ -1,5 +1,11 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
-import { Api, CommonResponse, OrderDetailResponse, OrderOverviewResponse } from "../../services/api"
+import {
+  Api,
+  CommonResponse,
+  CuponResponse,
+  OrderDetailResponse,
+  OrderOverviewResponse,
+} from "../../services/api"
 
 export const metaData = types.model("metaData").props({
   key: types.maybe(types.string),
@@ -37,6 +43,7 @@ const orderModel = types.model("Order").props({
   uuid: types.union(types.maybe(types.string), types.null),
   card: types.union(types.maybe(card), types.null),
   paymentMethod: types.maybe(types.string),
+  couponCode: types.union(types.maybe(types.string), types.null),
 })
 
 const orderOverviewModel = types.model("OrderOverview").props({
@@ -60,12 +67,23 @@ const orderDetail = orderOverviewModel.props({
   paymentPending: types.maybe(types.number),
 })
 
+const cuponCodeModel = types.model("CuponCode").props({
+  id: types.maybe(types.number),
+  code: types.maybe(types.string),
+  amount: types.maybe(types.number),
+  discountType: types.maybe(types.string),
+  minimumAmount: types.maybe(types.number),
+  useageLimitPerUser: types.maybe(types.number),
+  freeShipping: types.maybe(types.boolean),
+})
+
 export interface Order extends SnapshotOut<typeof orderModel> {}
 export interface OrderOverview extends SnapshotOut<typeof orderOverviewModel> {}
 export interface MetaData extends Instance<typeof metaData> {}
 export interface Products extends Instance<typeof product> {}
 export interface OrderDetail extends Instance<typeof orderDetail> {}
 
+export interface Coupon extends SnapshotOut<typeof cuponCodeModel> {}
 /**
  * Model for orders.
  */
@@ -123,5 +141,13 @@ export const OrderModel = types
       if (result && result.kind === "ok") {
         self.orderDetail = result.data
       }
+    }),
+    getCoupon: flow(function* getCoupon(couponCode: string) {
+      const api = new Api()
+      const result: CuponResponse = yield api.getCoupon(couponCode)
+      if (result && result.kind === "ok") {
+        return result.data
+      }
+      return null
     }),
   }))

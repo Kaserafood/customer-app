@@ -18,7 +18,9 @@
     "save": "Guardar",
     "cannotConnect": "Lo sentimos, no se puede conectar con el servidor",
     "add": "Agregar",
-    "send": "Enviar"
+    "send": "Enviar",
+    "discount": "Descuento",
+    "ready": "Listo"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -335,7 +337,8 @@
     "errorCard": "No has ingresado todos los datos de tu tarjeta",
     "errorPayment": "Selecciona un método de pago",
     "paymentCash": "Efectivo",
-    "makeOrder": "Hacer pedido"
+    "makeOrder": "Hacer pedido",
+    "useCoupon": "Usar cupón"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",
@@ -609,5 +612,14 @@
   "modalReportBug": {
     "title": "Error reportado",
     "info": "Gracias por enviar la información, lo revisaremos lo antes posible."
+  },
+  "modalCoupon": {
+    "title": "Usar cupón",
+    "placeholderCoupon": "Ingresa el código del cupón",
+    "couponRequired": "Debes ingresar el cupón",
+    "labelCoupon": "Cupón",
+    "couponInvalid": "El cupón no es válido",
+    "use": "Aplicar",
+    "discountApply": "Descuento del {{percent}} aplicado"
   }
 }
