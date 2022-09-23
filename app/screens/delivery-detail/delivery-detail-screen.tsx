@@ -17,7 +17,7 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { ModalLocation } from "../../components/location/modal-location"
 import { Coupon, MetaData, Order, Products, useStores } from "../../models"
