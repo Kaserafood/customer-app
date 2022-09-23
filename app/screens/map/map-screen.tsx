@@ -200,6 +200,13 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 )
 
 const styles = StyleSheet.create({
+  buttonLocation: {
+    backgroundColor: color.palette.white,
+    borderRadius: 100,
+    height: 55,
+    width: 55,
+    ...SHADOW,
+  },
   container: {
     alignItems: "center",
     height: "60%",
@@ -219,17 +226,17 @@ const styles = StyleSheet.create({
     minWidth: 300,
     width: "80%",
   },
+  containerCurrentLocation: {
+    position: "absolute",
+    right: 30,
+    top: 30,
+  },
   containerMarker: {
     alignItems: "center",
     bottom: 50,
     justifyContent: "center",
     position: "absolute",
     top: 0,
-  },
-  containerCurrentLocation: {
-    right: 30,
-    position: "absolute",
-    top: 30,
   },
   heightProgress: {
     height: 5,
@@ -241,12 +248,5 @@ const styles = StyleSheet.create({
   },
   textAddrres: {
     textAlignVertical: "top",
-  },
-  buttonLocation: {
-    borderRadius: 100,
-    height: 55,
-    width: 55,
-    backgroundColor: color.palette.white,
-    ...SHADOW,
   },
 })

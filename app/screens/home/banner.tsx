@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from "react"
 import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
@@ -67,7 +68,7 @@ export const Banner = (props: PropsBanner) => {
               <Button onPress={onPressSeasonal} tx="banner.explore"></Button>
             </View>
             <View style={styles.containerProduct}>
-              <Image style={[styles.product]} source={images.bannerImage1}></Image>
+              <Image style={styles.product} source={images.bannerImage1}></Image>
             </View>
           </View>
         </TouchableOpacity>
@@ -154,57 +155,57 @@ const Button = ({ onPress, tx }) => {
   )
 }
 const styles = StyleSheet.create({
+  button: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[5],
+  },
   containerImage: {
     borderRadius: 16,
     height: 165,
-    width: windowWidth - 75,
     overflow: "hidden",
+    width: windowWidth - 75,
   },
-  image: {
-    position: "absolute",
-    left: -20,
-    top: -3,
-    right: 0,
-    bottom: 0,
-    zIndex: 1,
-    borderRadius: 16,
+  containerProduct: {
+    height: "100%",
+    overflow: "hidden",
+    position: "relative",
+    width: "38%",
   },
   containerText: {
-    zIndex: 2,
     position: "relative",
-  },
-  title: {
-    fontSize: 22,
-    lineHeight: 29,
-  },
-  name: {
-    fontSize: 45,
-    fontFamily: typography.brand,
-  },
-  textWhite: {
-    color: color.palette.white,
+    zIndex: 2,
   },
   description: {
     fontSize: 14,
     lineHeight: 16,
   },
-  product: {
-    left: -35,
-    top: 0,
-    right: 0,
+  image: {
+    borderRadius: 16,
     bottom: 0,
-    width: 180,
-    height: "100%",
+    left: -20,
     position: "absolute",
+    right: 0,
+    top: -3,
+    zIndex: 1,
   },
-  containerProduct: {
-    width: "38%",
+  name: {
+    fontFamily: typography.brand,
+    fontSize: 45,
+  },
+  product: {
+    bottom: 0,
     height: "100%",
-    position: "relative",
-    overflow: "hidden",
+    left: -35,
+    position: "absolute",
+    right: 0,
+    top: 0,
+    width: 180,
   },
-  button: {
-    borderRadius: spacing[5],
-    backgroundColor: color.palette.white,
+  textWhite: {
+    color: color.palette.white,
+  },
+  title: {
+    fontSize: 22,
+    lineHeight: 29,
   },
 })

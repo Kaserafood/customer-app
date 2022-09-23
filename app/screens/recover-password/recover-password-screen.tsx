@@ -145,10 +145,6 @@ const styles = StyleSheet.create({
     marginVertical: spacing[4],
     padding: spacing[3],
   },
-  textSendAgain: {
-    color: color.primary,
-    fontSize: 13,
-  },
   container: {
     alignItems: "center",
     backgroundColor: color.background,
@@ -163,6 +159,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingTop: spacing[6],
     width: "75%",
+  },
+  textSendAgain: {
+    color: color.primary,
+    fontSize: 13,
   },
   w80: {
     width: "80%",

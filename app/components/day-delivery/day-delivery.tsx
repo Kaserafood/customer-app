@@ -78,7 +78,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
         )}
       </View>
       <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
-        {days.length == 0 && visibleLoading ? (
+        {days.length === 0 && visibleLoading ? (
           <SkeletonPlaceholder>
             <SkeletonPlaceholder.Item flexDirection="row">
               <SkeletonPlaceholder.Item

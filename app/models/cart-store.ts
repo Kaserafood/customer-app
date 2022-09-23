@@ -24,6 +24,7 @@ export const CartStoreModel = types
   .props({
     cart: types.array(itemCartStore),
     isSubmited: types.maybe(types.boolean),
+    discount: types.maybe(types.number),
   })
   .views((self) => ({
     get subtotal() {
@@ -54,5 +55,8 @@ export const CartStoreModel = types
     },
     setSubmited(isSubmited: boolean) {
       self.isSubmited = isSubmited
+    },
+    setDiscount(discount: number) {
+      self.discount = discount
     },
   }))

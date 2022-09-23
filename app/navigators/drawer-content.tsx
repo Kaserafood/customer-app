@@ -30,17 +30,13 @@ export default function DrawerContent(props) {
   }
 
   const openWhatsApp = () => {
-    let phoneWithCountryCode = "50245680417";
+    const phoneWithCountryCode = "50245680417"
 
-  let mobile =
-    Platform.OS == "ios" ? phoneWithCountryCode : "+" + phoneWithCountryCode;
+    const mobile = Platform.OS === "ios" ? phoneWithCountryCode : `+${phoneWithCountryCode}`
     const message = getI18nText("drawerContent.whatsAppMessage")
-    Linking.openURL("whatsapp://send?text=" + message + "&phone=" + mobile) .then(data => {
-      console.log("WhatsApp Opened");
+    Linking.openURL(`whatsapp://send?text=${message}&phone=${mobile}`).catch(() => {
+      alert("Asegúrese de que WhatsApp esté instalado en su dispositivo")
     })
-    .catch(() => {
-      alert("Asegúrese de que WhatsApp esté instalado en su dispositivo");
-    });
   }
 
   const toReportBug = () => {
@@ -149,7 +145,7 @@ export default function DrawerContent(props) {
 
       {
         // Usuario que ha ingresado como "Explora la app"
-        userStore.userId == -1 && (
+        userStore.userId === -1 && (
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}
