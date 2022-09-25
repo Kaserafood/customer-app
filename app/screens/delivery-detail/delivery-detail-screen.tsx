@@ -274,9 +274,9 @@ export const DeliveryDetailScreen: FC<
   }
 
   return (
-    <Screen style={styles.container} preset="fixed">
+    <Screen preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
-      <ScrollView style={styles.containerForm}>
+      <ScrollView style={[styles.containerForm, utilSpacing.px3]}>
         <Text
           preset="bold"
           size="lg"
@@ -286,7 +286,6 @@ export const DeliveryDetailScreen: FC<
         <FormProvider {...methods}>
           <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
             <InputText
-              onPressIn={() => modalStateLocation.setVisible(true)}
               name="address"
               preset="card"
               labelTx="deliveryDetailScreen.address"
@@ -308,7 +307,6 @@ export const DeliveryDetailScreen: FC<
 
           <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
             <InputText
-              onPressIn={() => modalDelivery.setVisible(true)}
               name="diveryDate"
               preset="card"
               labelTx="deliveryDetailScreen.deliveryDate"
@@ -464,14 +462,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...SHADOW,
   },
-  container: {
-    backgroundColor: color.palette.white,
-  },
   containerForm: {
-    alignSelf: "center",
-    flex: 1,
     minWidth: 300,
-    width: "90%",
+    // width: "95%",
   },
   coupon: {
     maxWidth: 230,

@@ -284,8 +284,8 @@ export class Api {
    *
    * @description Get detail of coupon code
    */
-  async getCoupon(couponCode: string): Promise<CuponResponse> {
-    return await this.request({}, `/orders/coupon/${couponCode}`, "GET")
+  async getCoupon(couponCode: string, userId: number, timeZone: string): Promise<CuponResponse> {
+    return await this.request({ userId, timeZone }, `/orders/coupon/${couponCode}`, "GET")
   }
 
   /**

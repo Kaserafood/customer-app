@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import * as Animatable from "react-native-animatable"
+import * as RNLocalize from "react-native-localize"
 import { Button, InputText, Modal, Text } from "../../components"
 import { Coupon, useStores } from "../../models"
 import { color } from "../../theme"
@@ -9,7 +10,6 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { showMessageError } from "../../utils/messages"
 import { ModalState } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-
 interface ModalCouponProps {
   stateModal: ModalState
   onUseCoupon(coupon: Coupon): void
@@ -17,7 +17,7 @@ interface ModalCouponProps {
 
 export const ModalCoupon = (props: ModalCouponProps) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { commonStore, orderStore } = useStores()
+  const { commonStore, orderStore, userStore } = useStores()
   const [isValidCoupon, setIsValidCoupon] = useState(false)
   const [isSubmited, setIsSubmited] = useState(false)
   const [textCoupon, setTextCoupon] = useState("")
@@ -27,7 +27,7 @@ export const ModalCoupon = (props: ModalCouponProps) => {
     setIsSubmited(false)
     commonStore.setVisibleLoading(true)
     orderStore
-      .getCoupon(data.coupon)
+      .getCoupon(data.coupon, userStore.userId, RNLocalize.getTimeZone())
       .then((response) => {
         setIsSubmited(true)
         if (response && response.id > 0) {
