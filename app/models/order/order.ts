@@ -142,9 +142,9 @@ export const OrderModel = types
         self.orderDetail = result.data
       }
     }),
-    getCoupon: flow(function* getCoupon(couponCode: string) {
+    getCoupon: flow(function* getCoupon(couponCode: string, userId: number, timeZone: string) {
       const api = new Api()
-      const result: CuponResponse = yield api.getCoupon(couponCode)
+      const result: CuponResponse = yield api.getCoupon(couponCode, userId, timeZone)
       if (result && result.kind === "ok") {
         return result.data
       }

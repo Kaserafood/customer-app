@@ -27,7 +27,6 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
@@ -48,7 +47,15 @@ export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
+  const {
+    addressStore,
+    dayStore,
+    cartStore,
+    userStore,
+    commonStore,
+    orderStore,
+    messagesStore,
+  } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
   const [isPaymentCash, setIsPaymentCash] = useState(false)
   const [isPaymentCard, setIsPaymentCard] = useState(false)
@@ -98,24 +105,24 @@ export const DeliveryDetailScreen: FC<
   const onSubmit = async (data) => {
     Keyboard.dismiss()
     if (!dayStore.currentDay) {
-      showMessageError("deliveryDetailScreen.errorDayDelivery", true)
+      messagesStore.showError("deliveryDetailScreen.errorDayDelivery", true)
       return
     }
 
     if (labelDeliveryTime.length === 0) {
-      showMessageError("deliveryDetailScreen.errorTimeDelivery", true)
+      messagesStore.showError("deliveryDetailScreen.errorTimeDelivery", true)
       return
     }
 
     if (isPaymentCard) {
       if (!isCardDataValid()) {
-        showMessageError("deliveryDetailScreen.errorCard", true)
+        messagesStore.showError("deliveryDetailScreen.errorCard", true)
         return
       }
     }
 
     if (!isPaymentCard && !isPaymentCash) {
-      showMessageError("deliveryDetailScreen.errorPayment", true)
+      messagesStore.showError("deliveryDetailScreen.errorPayment", true)
       return
     }
 
@@ -160,7 +167,7 @@ export const DeliveryDetailScreen: FC<
         __DEV__ && console.log("Code order reponse", res)
 
         if (!res) {
-          showMessageError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("deliveryDetailScreen.errorOrder", true)
           return
         }
 
@@ -178,8 +185,11 @@ export const DeliveryDetailScreen: FC<
             imageChef: commonStore.currentChefImage,
           })
         } else if (Number(res.data) === -1)
-          showMessageError("deliveryDetailScreen.errorOrderPayment", true)
-        else showMessageError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("deliveryDetailScreen.errorOrderPayment", true)
+        else messagesStore.showError("deliveryDetailScreen.errorOrder", true)
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
 
@@ -274,9 +284,9 @@ export const DeliveryDetailScreen: FC<
   }
 
   return (
-    <Screen style={styles.container} preset="fixed">
+    <Screen preset="fixed">
       <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
-      <ScrollView style={styles.containerForm}>
+      <ScrollView style={[styles.containerForm, utilSpacing.px3]}>
         <Text
           preset="bold"
           size="lg"
@@ -286,7 +296,6 @@ export const DeliveryDetailScreen: FC<
         <FormProvider {...methods}>
           <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
             <InputText
-              onPressIn={() => modalStateLocation.setVisible(true)}
               name="address"
               preset="card"
               labelTx="deliveryDetailScreen.address"
@@ -308,7 +317,6 @@ export const DeliveryDetailScreen: FC<
 
           <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
             <InputText
-              onPressIn={() => modalDelivery.setVisible(true)}
               name="diveryDate"
               preset="card"
               labelTx="deliveryDetailScreen.deliveryDate"
@@ -464,14 +472,9 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...SHADOW,
   },
-  container: {
-    backgroundColor: color.palette.white,
-  },
   containerForm: {
-    alignSelf: "center",
-    flex: 1,
     minWidth: 300,
-    width: "90%",
+    // width: "95%",
   },
   coupon: {
     maxWidth: 230,

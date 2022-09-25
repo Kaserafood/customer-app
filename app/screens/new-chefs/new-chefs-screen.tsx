@@ -16,7 +16,7 @@ import { DataState, ListChef } from "../chefs/chef-list"
 const state = new DataState()
 export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">> = observer(
   function NewChefsScreen({ navigation }) {
-    const { dayStore, dishStore, commonStore } = useStores()
+    const { dayStore, dishStore, commonStore, messagesStore } = useStores()
     const { formatDishesGropuedByChef } = useChef()
 
     useEffect(() => {
@@ -27,6 +27,9 @@ export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">
           .getGroupedByLatestChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
           .then(() => {
             state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByLatestChef))
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)

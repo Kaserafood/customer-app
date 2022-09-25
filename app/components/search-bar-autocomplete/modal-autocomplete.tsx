@@ -5,7 +5,6 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Icon } from "../icon/icon"
 import { Modal } from "../modal/modal"
@@ -28,7 +27,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
   const [search, setSearch] = useState({ term: "", fetchPredictions: false })
   const [isLoading, setIsLoading] = useState(false)
   const [predictions, setPredictions] = useState<PredictionType[]>([])
-  const { commonStore } = useStores()
+  const { commonStore, messagesStore } = useStores()
 
   const GOOGLE_PACES_API_BASE_URL = "https://maps.googleapis.com/maps/api/place"
 
@@ -70,7 +69,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
     } catch (e) {
       __DEV__ && console.log(e)
       setIsLoading(false)
-      showMessageError()
+      messagesStore.showError()
     }
   }
   useDebounce(onChangeText, 500, [search.term])
@@ -109,7 +108,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
     } catch (e) {
       __DEV__ && console.log(e)
       commonStore.setVisibleLoading(false)
-      showMessageError()
+      messagesStore.showError()
     }
   }
 

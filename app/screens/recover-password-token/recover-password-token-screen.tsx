@@ -15,7 +15,7 @@ export const RecoverPasswordTokenScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPasswordToken">
 > = observer(({ navigation, route: { params } }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, messagesStore } = useStores()
 
   // Refs inputs for focus
   const first = useRef(null)
@@ -83,6 +83,9 @@ export const RecoverPasswordTokenScreen: FC<
       .validTokenRecoverPassword(getInputValues().join(""), params.email)
       .then((isValid: boolean) => {
         isValid && navigation.navigate("newPassword", { email: params.email })
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
   }

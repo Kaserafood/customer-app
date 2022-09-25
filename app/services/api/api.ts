@@ -2,7 +2,7 @@ import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import { Address } from "../../models"
 import { Order } from "../../models/order/order"
 import { UserLogin } from "../../models/user-store"
-import { handleMessageProblem, showMessageError } from "../../utils/messages"
+import { handleMessageProblem } from "../../utils/messages"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
 import {
@@ -114,8 +114,9 @@ export class Api {
       return { kind: "ok", data }
     } catch (e) {
       __DEV__ && console.log(`Error : ${e.message}`)
-      showMessageError()
-      return { kind: "bad-data", data: [] }
+      //   showMessageError()
+      throw e
+      // return { kind: "bad-data", data: [] }
     }
   }
 
@@ -284,8 +285,8 @@ export class Api {
    *
    * @description Get detail of coupon code
    */
-  async getCoupon(couponCode: string): Promise<CuponResponse> {
-    return await this.request({}, `/orders/coupon/${couponCode}`, "GET")
+  async getCoupon(couponCode: string, userId: number, timeZone: string): Promise<CuponResponse> {
+    return await this.request({ userId, timeZone }, `/orders/coupon/${couponCode}`, "GET")
   }
 
   /**

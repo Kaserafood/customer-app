@@ -17,7 +17,6 @@ import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalNecessaryLocation } from "./modal-necessary-location"
 
@@ -60,10 +59,10 @@ const modalNecessaryLocation = new ModalStateHandler()
 export const ModalLocation = observer(function Location(props: LocationProps) {
   const { style, modal, screenToReturn } = props
 
-  const { addressStore, userStore } = useStores()
+  const { addressStore, userStore, messagesStore } = useStores()
   const [addressText, setAddressText] = useState("")
   const navigation = useNavigation<homeScreenProp>()
-  const { fetchAddressText, getCurrentPosition } = useLocation()
+  const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
 
   const toMap = () => {
     navigation.navigate("map", { screenToReturn: screenToReturn })
@@ -108,7 +107,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
             address && setAddressText(address.formatted)
           })
         } else {
-          showMessageError("modalLocation.cannotGetLocation", true)
+          messagesStore.showError("modalLocation.cannotGetLocation", true)
         }
       })
     }

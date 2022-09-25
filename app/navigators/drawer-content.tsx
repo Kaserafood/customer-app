@@ -62,7 +62,7 @@ export default function DrawerContent(props) {
             rippleOpacity={0.2}
             rippleDuration={400}
             style={utilSpacing.m3}
-            onPressIn={toAccount}
+            onPress={toAccount}
           >
             <Card style={[utilSpacing.px4, utilSpacing.py5]}>
               <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
@@ -76,7 +76,7 @@ export default function DrawerContent(props) {
               </View>
             </Card>
           </Ripple>
-          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPressIn={order}>
+          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={order}>
             <Card style={[utilSpacing.px4, utilSpacing.py5]}>
               <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                 <Icon
@@ -95,7 +95,7 @@ export default function DrawerContent(props) {
         rippleOpacity={0.2}
         rippleDuration={400}
         style={utilSpacing.m3}
-        onPressIn={toTermsConditions}
+        onPress={toTermsConditions}
       >
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
@@ -110,12 +110,7 @@ export default function DrawerContent(props) {
         </Card>
       </Ripple>
 
-      <Ripple
-        rippleOpacity={0.2}
-        rippleDuration={400}
-        style={utilSpacing.m3}
-        onPressIn={toReportBug}
-      >
+      <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={toReportBug}>
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Icon name="bug" style={utilSpacing.mr4} size={30} color={color.palette.grayDark} />
@@ -128,7 +123,7 @@ export default function DrawerContent(props) {
         rippleOpacity={0.2}
         rippleDuration={400}
         style={utilSpacing.m3}
-        onPressIn={openWhatsApp}
+        onPress={openWhatsApp}
       >
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
@@ -146,12 +141,7 @@ export default function DrawerContent(props) {
       {
         // Usuario que ha ingresado como "Explora la app"
         userStore.userId === -1 && (
-          <Ripple
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            style={utilSpacing.m3}
-            onPressIn={toInit}
-          >
+          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={toInit}>
             <Card style={[utilSpacing.px4, utilSpacing.py5]}>
               <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                 <Icon
