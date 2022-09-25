@@ -1,4 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { TxKeyPath } from "../../i18n"
+import { getI18nText } from "../../utils/translate"
 
 /**
  * Model for global messages
@@ -15,6 +17,12 @@ export const MessagesModel = types
     hideSuccess: () => {
       self.isVisibleSuccess = false
     },
+    hideError: () => {
+      self.isVisibleError = false
+    },
+    hideInfo: () => {
+      self.isVisibleInfo = false
+    },
   }))
   .actions((self) => ({
     setVisibleSuccess: (value: boolean) => {
@@ -22,25 +30,57 @@ export const MessagesModel = types
 
       if (value) {
         setTimeout(() => {
-          console.log("hide success")
+          __DEV__ && console.log("hide success")
           self.hideSuccess()
-        }, 3000)
+        }, 3500)
       }
     },
     setVisibleError: (value: boolean) => {
       self.isVisibleError = value
+      if (value) {
+        setTimeout(() => {
+          __DEV__ && console.log("hide error")
+          self.hideError()
+        }, 3500)
+      }
     },
     setVisibleInfo: (value: boolean) => {
       self.isVisibleInfo = value
+      if (value) {
+        setTimeout(() => {
+          __DEV__ && console.log("hide info")
+          self.hideInfo()
+        }, 3500)
+      }
     },
     setText: (value: string) => {
       self.text = value
     },
   }))
   .actions((self) => ({
-    showSuccess: (text: string) => {
-      self.setText(text)
+    showSuccess: (text: TxKeyPath | string, isI18n?: boolean) => {
+      let msg = ""
+      if (isI18n) msg = getI18nText(text as TxKeyPath)
+      else msg = text ?? getI18nText("common.operationSuccess")
+
+      self.setText(msg)
       self.setVisibleSuccess(true)
+    },
+    showError: (text?: TxKeyPath | string, isI18n?: boolean) => {
+      let msg = ""
+      if (isI18n) msg = getI18nText(text as TxKeyPath)
+      else msg = text ?? getI18nText("common.someError")
+
+      self.setText(msg)
+      self.setVisibleError(true)
+    },
+    showInfo: (text: TxKeyPath | string, isI18n?: boolean) => {
+      let msg = ""
+      if (isI18n) msg = getI18nText(text as TxKeyPath)
+      else msg = text ?? getI18nText("common.operationExecuted")
+
+      self.setText(msg)
+      self.setVisibleInfo(true)
     },
   }))
 

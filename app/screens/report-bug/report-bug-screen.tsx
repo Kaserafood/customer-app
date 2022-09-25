@@ -9,14 +9,13 @@ import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageSucess } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalReportBug } from "./modal-report-bug"
 
 const modalStateReportBug = new ModalStateHandler()
 export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug">> = observer(
   function ReportBugScreen() {
-    const { userStore, commonStore } = useStores()
+    const { userStore, commonStore, messagesStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
 
     const onSubmit = async (data) => {
@@ -43,16 +42,21 @@ export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug
       }
 
       commonStore.setVisibleLoading(true)
-      userStore.reportBug(dataReport).then((res) => {
-        if (res) {
-          showMessageSucess("Reporte enviado")
-          methods.reset()
-          modalStateReportBug.setVisible(true)
-        } else {
-          showMessageSucess("reportBugScreen.errorToSendBug")
-        }
-        commonStore.setVisibleLoading(false)
-      })
+      userStore
+        .reportBug(dataReport)
+        .then((res) => {
+          if (res) {
+            messagesStore.showSuccess("Reporte enviado")
+            methods.reset()
+            modalStateReportBug.setVisible(true)
+          } else {
+            messagesStore.showSuccess("reportBugScreen.errorToSendBug")
+          }
+          commonStore.setVisibleLoading(false)
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
     }
     const onError = (errors) => {
       console.log(errors)

@@ -2,7 +2,7 @@
 // eslint-disable-next-line react-native/split-platform-components
 import { Alert, Linking, PermissionsAndroid, Platform } from "react-native"
 import Geolocation from "react-native-geolocation-service"
-import { showMessageError } from "../../utils/messages"
+import { Messages } from "../../models"
 
 export interface Location {
   latitude: number
@@ -19,7 +19,7 @@ export interface Address {
   country: string
 }
 
-export const useLocation = () => {
+export const useLocation = (messagesStore: Messages) => {
   const fetchAddressText = async (latitude: number, longitude: number): Promise<Address> => {
     const requestOptions: RequestInit = {
       method: "GET",
@@ -71,7 +71,7 @@ export const useLocation = () => {
       .catch((error) => {
         console.log("error", error)
 
-        showMessageError()
+        messagesStore.showError()
         return {
           city: "",
           region: "",
@@ -84,14 +84,14 @@ export const useLocation = () => {
   const hasPermissionIOS = async () => {
     const openSetting = () => {
       Linking.openSettings().catch(() => {
-        showMessageError("location.canNotOpenSettings", true)
+        messagesStore.showError("location.canNotOpenSettings", true)
       })
     }
     const status = await Geolocation.requestAuthorization("whenInUse")
 
     if (status === "granted") return true
 
-    if (status === "denied") showMessageError("location.necessaryAcceptPermission")
+    if (status === "denied") messagesStore.showError("location.necessaryAcceptPermission", true)
 
     if (status === "disabled") {
       Alert.alert(`location.enableServices`, "", [
@@ -99,7 +99,7 @@ export const useLocation = () => {
         {
           text: "location.dontUseLocation",
           onPress: () => {
-            showMessageError("location.necessaryAcceptPermission")
+            messagesStore.showError("location.necessaryAcceptPermission", true)
             console.log("Dont use press")
           },
         },
@@ -130,9 +130,9 @@ export const useLocation = () => {
     if (status === PermissionsAndroid.RESULTS.GRANTED) return true
 
     if (status === PermissionsAndroid.RESULTS.DENIED)
-      showMessageError("location.necessaryAcceptPermission")
+      messagesStore.showError("location.necessaryAcceptPermission", true)
     else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN)
-      showMessageError("location.necessaryAcceptPermission")
+      messagesStore.showError("location.necessaryAcceptPermission", true)
 
     return false
   }

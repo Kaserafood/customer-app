@@ -39,7 +39,14 @@ const state = new DataState()
  */
 export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = observer(
   function ChefsScreen({ navigation }) {
-    const { categoryStore, dayStore, dishStore, commonStore, cartStore } = useStores()
+    const {
+      categoryStore,
+      dayStore,
+      dishStore,
+      commonStore,
+      cartStore,
+      messagesStore,
+    } = useStores()
     const { formatDishesGropuedByChef } = useChef()
 
     useLayoutEffect(() => {
@@ -54,6 +61,9 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
           .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
           .then(() => {
             state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
@@ -100,6 +110,9 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
             __DEV__ && console.log("formatData changed")
           }
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
         })
         .finally(() => commonStore.setVisibleLoading(false))
     }

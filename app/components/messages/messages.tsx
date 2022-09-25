@@ -1,12 +1,10 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
-import Animated, { FadeInDown, FadeInUp, FadeOutUp } from "react-native-reanimated"
-import { TxKeyPath } from "../../i18n"
+import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
 
@@ -46,7 +44,7 @@ export const Messages = observer(function Messages() {
       )}
 
       {messagesStore.isVisibleError && (
-        <Animated.View entering={FadeInDown} exiting={FadeOutUp}>
+        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
           <View
             style={[
               utilFlex.flexCenterVertical,
@@ -74,7 +72,7 @@ export const Messages = observer(function Messages() {
       )}
 
       {messagesStore.isVisibleInfo && (
-        <Animated.View entering={FadeInDown} exiting={FadeOutUp}>
+        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
           <View
             style={[
               utilFlex.flexCenterVertical,
@@ -83,7 +81,7 @@ export const Messages = observer(function Messages() {
               styles.message,
             ]}
           >
-            <Icon name="circle-info" size={24} color={color.palette.red}></Icon>
+            <Icon name="circle-info" size={24} color={color.palette.orange}></Icon>
             <Text
               size="lg"
               preset="semiBold"
@@ -115,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.black,
     borderRadius: spacing[2],
     minWidth: 300,
-    top: 100,
+    top: 60,
     width: "85%",
   },
   textWhite: {

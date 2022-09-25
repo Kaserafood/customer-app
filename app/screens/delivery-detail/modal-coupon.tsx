@@ -7,7 +7,6 @@ import { Button, InputText, Modal, Text } from "../../components"
 import { Coupon, useStores } from "../../models"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalState } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 interface ModalCouponProps {
@@ -17,7 +16,7 @@ interface ModalCouponProps {
 
 export const ModalCoupon = (props: ModalCouponProps) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { commonStore, orderStore, userStore } = useStores()
+  const { commonStore, orderStore, userStore, messagesStore } = useStores()
   const [isValidCoupon, setIsValidCoupon] = useState(false)
   const [isSubmited, setIsSubmited] = useState(false)
   const [textCoupon, setTextCoupon] = useState("")
@@ -43,9 +42,8 @@ export const ModalCoupon = (props: ModalCouponProps) => {
           }
         } else setIsValidCoupon(false)
       })
-      .catch((error) => {
-        __DEV__ && console.log(error)
-        showMessageError()
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => {
         commonStore.setVisibleLoading(false)

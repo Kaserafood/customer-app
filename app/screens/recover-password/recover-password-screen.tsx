@@ -18,7 +18,7 @@ export const RecoverPasswordScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPassword">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, messagesStore } = useStores()
 
   useEffect(() => {
     __DEV__ && console.log("recoverPasswordScreen : useEffect")
@@ -35,6 +35,9 @@ export const RecoverPasswordScreen: FC<
       .sendEmailRecoverPassword(data.email)
       .then((sended: boolean) => {
         sended && modalState.setVisible(true)
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
   }

@@ -27,7 +27,6 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
@@ -48,7 +47,15 @@ export const DeliveryDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "deliveryDetail">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { addressStore, dayStore, cartStore, userStore, commonStore, orderStore } = useStores()
+  const {
+    addressStore,
+    dayStore,
+    cartStore,
+    userStore,
+    commonStore,
+    orderStore,
+    messagesStore,
+  } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
   const [isPaymentCash, setIsPaymentCash] = useState(false)
   const [isPaymentCard, setIsPaymentCard] = useState(false)
@@ -98,24 +105,24 @@ export const DeliveryDetailScreen: FC<
   const onSubmit = async (data) => {
     Keyboard.dismiss()
     if (!dayStore.currentDay) {
-      showMessageError("deliveryDetailScreen.errorDayDelivery", true)
+      messagesStore.showError("deliveryDetailScreen.errorDayDelivery", true)
       return
     }
 
     if (labelDeliveryTime.length === 0) {
-      showMessageError("deliveryDetailScreen.errorTimeDelivery", true)
+      messagesStore.showError("deliveryDetailScreen.errorTimeDelivery", true)
       return
     }
 
     if (isPaymentCard) {
       if (!isCardDataValid()) {
-        showMessageError("deliveryDetailScreen.errorCard", true)
+        messagesStore.showError("deliveryDetailScreen.errorCard", true)
         return
       }
     }
 
     if (!isPaymentCard && !isPaymentCash) {
-      showMessageError("deliveryDetailScreen.errorPayment", true)
+      messagesStore.showError("deliveryDetailScreen.errorPayment", true)
       return
     }
 
@@ -160,7 +167,7 @@ export const DeliveryDetailScreen: FC<
         __DEV__ && console.log("Code order reponse", res)
 
         if (!res) {
-          showMessageError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("deliveryDetailScreen.errorOrder", true)
           return
         }
 
@@ -178,8 +185,11 @@ export const DeliveryDetailScreen: FC<
             imageChef: commonStore.currentChefImage,
           })
         } else if (Number(res.data) === -1)
-          showMessageError("deliveryDetailScreen.errorOrderPayment", true)
-        else showMessageError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("deliveryDetailScreen.errorOrderPayment", true)
+        else messagesStore.showError("deliveryDetailScreen.errorOrder", true)
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
 

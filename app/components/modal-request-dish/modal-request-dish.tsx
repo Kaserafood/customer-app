@@ -44,7 +44,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
   const [selectedDate, setSelectedDate] = useState("")
   const [isActiveWithoutDate, setIsActiveWithoutDate] = useState(true)
   const { calendarText } = useModalRequest()
-  const { dishStore, userStore, commonStore } = useStores()
+  const { dishStore, userStore, commonStore, messagesStore } = useStores()
 
   useEffect(() => {
     if (!modalStateCalendar.isVisible) {
@@ -68,6 +68,9 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
           methods.resetField("dishName")
           methods.resetField("peopleCount")
         }
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => {
         commonStore.setVisibleLoading(false)

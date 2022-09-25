@@ -10,7 +10,6 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import FlashMessage from "react-native-flash-message"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
@@ -90,8 +89,6 @@ function App() {
               />
               <Loader></Loader>
             </GestureHandlerRootView>
-
-            <FlashMessage position="top" />
             <Messages></Messages>
           </ErrorBoundary>
         </SafeAreaProvider>

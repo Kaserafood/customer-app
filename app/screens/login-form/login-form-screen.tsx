@@ -16,7 +16,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation, route: { params } }) => {
-    const { commonStore, userStore } = useStores()
+    const { commonStore, userStore, messagesStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
 
     useEffect(() => {
@@ -50,6 +50,9 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
               navigation.navigate(params.screenRedirect)
             else navigation.navigate("main")
           }
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
         })
         .catch(() => commonStore.setVisibleLoading(false))
     }
