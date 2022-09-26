@@ -5,6 +5,7 @@ import { getI18nText } from "../../utils/translate"
 /**
  * Model for global messages
  */
+const timeShow = 4000
 export const MessagesModel = types
   .model("Messages")
   .props({
@@ -32,7 +33,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide success")
           self.hideSuccess()
-        }, 3500)
+        }, timeShow)
       }
     },
     setVisibleError: (value: boolean) => {
@@ -41,7 +42,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide error")
           self.hideError()
-        }, 3500)
+        }, timeShow)
       }
     },
     setVisibleInfo: (value: boolean) => {
@@ -50,7 +51,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide info")
           self.hideInfo()
-        }, 3500)
+        }, timeShow)
       }
     },
     setText: (value: string) => {

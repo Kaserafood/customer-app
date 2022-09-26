@@ -39,7 +39,15 @@ const modalStateLeave = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const { dayStore, commonStore, dishStore, cartStore, orderStore, userStore } = useStores()
+    const {
+      dayStore,
+      commonStore,
+      dishStore,
+      cartStore,
+      orderStore,
+      userStore,
+      messagesStore,
+    } = useStores()
     const [currentAction, setCurrentAction] = useState<any>()
     const { currencyCode, name, image, description, categories, id } = params.chef
     const [dishes, setDishes] = useState<DishChef[]>([])
@@ -51,7 +59,9 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       }
 
       ;(async () => {
-        dayStore.getDaysByChef(RNLocalize.getTimeZone(), id)
+        dayStore.getDaysByChef(RNLocalize.getTimeZone(), id).catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         if (params.isGetMenu) {
           await getDishByChef()
           setDishes(dishStore.dishesChef)
@@ -94,9 +104,14 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
 
     const getDishByChef = async () => {
       commonStore.setVisibleLoading(true)
-      await dishStore.getByChef(params.chef.id).finally(() => {
-        commonStore.setVisibleLoading(false)
-      })
+      await dishStore
+        .getByChef(params.chef.id)
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+        })
     }
 
     const toDishDetail = (dish: DishModel) => {
