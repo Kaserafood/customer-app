@@ -1,3 +1,4 @@
+import analytics from "@react-native-firebase/analytics"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
@@ -131,6 +132,19 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                 <Text preset="bold" size="lg" tx="loginFormScreen.recoverPassword"></Text>
               </Ripple>
             </View>
+            <Button
+              text="Add To Basket"
+              onPress={async () =>
+                await analytics()
+                  .logEvent("Basket", {
+                    id: 3745092,
+                    item: "mens grey t-shirt",
+                    description: ["round neck", "long sleeved"],
+                    size: "L",
+                  })
+                  .then((res) => console.log("Basket logged", res))
+              }
+            />
           </ScrollView>
         </Screen>
       </>

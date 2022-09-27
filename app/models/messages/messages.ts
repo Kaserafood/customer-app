@@ -70,7 +70,10 @@ export const MessagesModel = types
     showError: (text?: TxKeyPath | string, isI18n?: boolean) => {
       let msg = ""
       if (isI18n) msg = getI18nText(text as TxKeyPath)
-      else msg = text ?? getI18nText("common.someError")
+      else {
+        if (text?.length > 0) msg = text
+        else msg = getI18nText("common.someError")
+      }
 
       self.setText(msg)
       self.setVisibleError(true)
