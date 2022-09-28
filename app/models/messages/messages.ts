@@ -5,6 +5,7 @@ import { getI18nText } from "../../utils/translate"
 /**
  * Model for global messages
  */
+const timeShow = 4000
 export const MessagesModel = types
   .model("Messages")
   .props({
@@ -32,7 +33,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide success")
           self.hideSuccess()
-        }, 3500)
+        }, timeShow)
       }
     },
     setVisibleError: (value: boolean) => {
@@ -41,7 +42,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide error")
           self.hideError()
-        }, 3500)
+        }, timeShow)
       }
     },
     setVisibleInfo: (value: boolean) => {
@@ -50,7 +51,7 @@ export const MessagesModel = types
         setTimeout(() => {
           __DEV__ && console.log("hide info")
           self.hideInfo()
-        }, 3500)
+        }, timeShow)
       }
     },
     setText: (value: string) => {
@@ -69,7 +70,10 @@ export const MessagesModel = types
     showError: (text?: TxKeyPath | string, isI18n?: boolean) => {
       let msg = ""
       if (isI18n) msg = getI18nText(text as TxKeyPath)
-      else msg = text ?? getI18nText("common.someError")
+      else {
+        if (text?.length > 0) msg = text
+        else msg = getI18nText("common.someError")
+      }
 
       self.setText(msg)
       self.setVisibleError(true)

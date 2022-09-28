@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.black,
     borderRadius: spacing[2],
     minWidth: 300,
-    top: 60,
+    top: 80,
     width: "85%",
   },
   textWhite: {

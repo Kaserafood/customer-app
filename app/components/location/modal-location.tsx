@@ -223,9 +223,11 @@ const AddressList = observer(() => {
 const AddressItem = observer((props: { address: Address }) => {
   const address = props.address
 
-  const { userStore, addressStore } = useStores()
+  const { userStore, addressStore, messagesStore } = useStores()
   const updateAddressId = (addressId: number) => {
-    userStore.updateAddresId(userStore.userId, addressId)
+    userStore.updateAddresId(userStore.userId, addressId).catch((error: Error) => {
+      messagesStore.showError(error.message)
+    })
     addressStore.setCurrent({ ...address })
     modalPersistent.setPersistent(false)
   }

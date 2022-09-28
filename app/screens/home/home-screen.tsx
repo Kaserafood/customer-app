@@ -150,7 +150,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             onPress={() => {
               modalStateLocation.setVisible(true)
             }}
-            style={[utilSpacing.px4, { marginTop: 300 }]}
+            style={utilSpacing.px4}
           ></Location>
           <DayDelivery
             days={dayStore.days}

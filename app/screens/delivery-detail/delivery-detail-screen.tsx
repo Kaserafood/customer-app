@@ -474,7 +474,6 @@ const styles = StyleSheet.create({
   },
   containerForm: {
     minWidth: 300,
-    // width: "95%",
   },
   coupon: {
     maxWidth: 230,
