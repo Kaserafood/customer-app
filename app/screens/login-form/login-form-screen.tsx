@@ -54,7 +54,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
-        .catch(() => commonStore.setVisibleLoading(false))
+        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     const handleBack = () => {

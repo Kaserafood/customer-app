@@ -77,6 +77,7 @@ export const RegisterFormScreen: FC<
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
+        .finally(() => commonStore.setVisibleLoading(false))
     }
   }
 
