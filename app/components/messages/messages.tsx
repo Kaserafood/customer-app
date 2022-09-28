@@ -14,91 +14,97 @@ import { Text } from "../text/text"
 export const Messages = observer(function Messages() {
   const { messagesStore } = useStores()
   return (
-    <View style={styles.container}>
+    <>
       {messagesStore.isVisibleSuccess && (
-        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
-          <View
-            style={[
-              utilFlex.flexCenterVertical,
-              utilSpacing.p4,
-              utilFlex.selfCenter,
-              styles.message,
-            ]}
-          >
-            <Icon name="circle-check-1" size={24} color={color.palette.green}></Icon>
-            <Text
-              size="lg"
-              preset="semiBold"
-              style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
-              text={messagesStore.text}
-            ></Text>
-            <TouchableOpacity
-              onPress={() => messagesStore.setVisibleSuccess(false)}
-              activeOpacity={1}
-              style={[utilSpacing.py2, utilSpacing.px3]}
+        <View style={styles.container}>
+          <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
+            <View
+              style={[
+                utilFlex.flexCenterVertical,
+                utilSpacing.p4,
+                utilFlex.selfCenter,
+                styles.message,
+              ]}
             >
-              <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+              <Icon name="circle-check-1" size={24} color={color.palette.green}></Icon>
+              <Text
+                size="lg"
+                preset="semiBold"
+                style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
+                text={messagesStore.text}
+              ></Text>
+              <TouchableOpacity
+                onPress={() => messagesStore.setVisibleSuccess(false)}
+                activeOpacity={1}
+                style={[utilSpacing.py2, utilSpacing.px3]}
+              >
+                <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
       )}
 
       {messagesStore.isVisibleError && (
-        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
-          <View
-            style={[
-              utilFlex.flexCenterVertical,
-              utilSpacing.p4,
-              utilFlex.selfCenter,
-              styles.message,
-            ]}
-          >
-            <Icon name="circle-exclamation" size={24} color={color.palette.red}></Icon>
-            <Text
-              size="lg"
-              preset="semiBold"
-              style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
-              text={messagesStore.text}
-            ></Text>
-            <TouchableOpacity
-              onPress={() => messagesStore.setVisibleError(false)}
-              activeOpacity={1}
-              style={[utilSpacing.py2, utilSpacing.px3]}
+        <View style={styles.container}>
+          <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
+            <View
+              style={[
+                utilFlex.flexCenterVertical,
+                utilSpacing.p4,
+                utilFlex.selfCenter,
+                styles.message,
+              ]}
             >
-              <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+              <Icon name="circle-exclamation" size={24} color={color.palette.red}></Icon>
+              <Text
+                size="lg"
+                preset="semiBold"
+                style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
+                text={messagesStore.text}
+              ></Text>
+              <TouchableOpacity
+                onPress={() => messagesStore.setVisibleError(false)}
+                activeOpacity={1}
+                style={[utilSpacing.py2, utilSpacing.px3]}
+              >
+                <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
       )}
 
       {messagesStore.isVisibleInfo && (
-        <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
-          <View
-            style={[
-              utilFlex.flexCenterVertical,
-              utilSpacing.p4,
-              utilFlex.selfCenter,
-              styles.message,
-            ]}
-          >
-            <Icon name="circle-info" size={24} color={color.palette.orange}></Icon>
-            <Text
-              size="lg"
-              preset="semiBold"
-              style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
-              text={messagesStore.text}
-            ></Text>
-            <TouchableOpacity
-              onPress={() => messagesStore.setVisibleInfo(false)}
-              activeOpacity={1}
-              style={[utilSpacing.py2, utilSpacing.px3]}
+        <View style={styles.container}>
+          <Animated.View entering={FadeInUp} exiting={FadeOutUp}>
+            <View
+              style={[
+                utilFlex.flexCenterVertical,
+                utilSpacing.p4,
+                utilFlex.selfCenter,
+                styles.message,
+              ]}
             >
-              <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
+              <Icon name="circle-info" size={24} color={color.palette.orange}></Icon>
+              <Text
+                size="lg"
+                preset="semiBold"
+                style={[styles.textWhite, utilFlex.flex1, utilSpacing.px4]}
+                text={messagesStore.text}
+              ></Text>
+              <TouchableOpacity
+                onPress={() => messagesStore.setVisibleInfo(false)}
+                activeOpacity={1}
+                style={[utilSpacing.py2, utilSpacing.px3]}
+              >
+                <Icon name="circle-xmark" size={24} color={color.palette.white}></Icon>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </View>
       )}
-    </View>
+    </>
   )
 })
 
