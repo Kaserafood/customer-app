@@ -11,13 +11,12 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
-import { showMessageSucess } from "../../utils/messages"
 import { saveString } from "../../utils/storage"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
-    const { addressStore, commonStore, userStore } = useStores()
+    const { addressStore, commonStore, userStore, messagesStore } = useStores()
 
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
@@ -35,7 +34,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         addressStore.setCurrent({ ...address })
         userStore.setAddressId(-1)
         saveString("address", JSON.stringify(address))
-        showMessageSucess("addressScreen.addressSaved", true)
+        messagesStore.showSuccess("addressScreen.addressSaved", true)
         navigation.navigate(params.screenToReturn)
       } else {
         commonStore.setVisibleLoading(true)
@@ -46,10 +45,13 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               address.id = res.data
               addressStore.setCurrent({ ...address })
               userStore.setAddressId(address.id)
-              showMessageSucess(res.message)
+              messagesStore.showSuccess(res.message)
               // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
               navigation.navigate(params.screenToReturn)
             }
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
           })
           .finally(() => commonStore.setVisibleLoading(false))
       }

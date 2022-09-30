@@ -13,7 +13,6 @@ import { spacing } from "../../theme"
 import { color } from "../../theme/color"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
-import { showMessageInfo } from "../../utils/messages"
 import { loadString } from "../../utils/storage"
 
 export const RegisterFormScreen: FC<
@@ -21,13 +20,13 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore, addressStore } = useStores()
+  const { userStore, commonStore, addressStore, messagesStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
   const onSubmit = (data: UserRegister) => {
-    if (!terms) showMessageInfo("registerFormScreen.acceptsTerms")
+    if (!terms) messagesStore.showInfo("registerFormScreen.acceptsTerms", true)
     else {
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
@@ -47,6 +46,9 @@ export const RegisterFormScreen: FC<
           }
           commonStore.setVisibleLoading(false)
         })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         .finally(() => commonStore.setVisibleLoading(false))
     }
   }
@@ -60,16 +62,21 @@ export const RegisterFormScreen: FC<
     if (currentAddress.length > 0) {
       const address: Address = JSON.parse(currentAddress)
       address.userId = userId
-      await addressStore.add(address).then((res) => {
-        if (res) {
-          address.id = Number(res.data)
-          addressStore.setCurrent({ ...address })
-          userStore.setAddressId(address.id)
-          userStore.updateAddresId(userId, address.id)
-          commonStore.setIsSignedIn(true)
-          navigation.navigate("deliveryDetail")
-        }
-      })
+      await addressStore
+        .add(address)
+        .then((res) => {
+          if (res) {
+            address.id = Number(res.data)
+            addressStore.setCurrent({ ...address })
+            userStore.setAddressId(address.id)
+            userStore.updateAddresId(userId, address.id)
+            commonStore.setIsSignedIn(true)
+            navigation.navigate("deliveryDetail")
+          }
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
     }
   }
 

@@ -17,7 +17,6 @@ import { Address, useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalNecessaryLocation } from "./modal-necessary-location"
 
@@ -60,10 +59,10 @@ const modalNecessaryLocation = new ModalStateHandler()
 export const ModalLocation = observer(function Location(props: LocationProps) {
   const { style, modal, screenToReturn } = props
 
-  const { addressStore, userStore } = useStores()
+  const { addressStore, userStore, messagesStore } = useStores()
   const [addressText, setAddressText] = useState("")
   const navigation = useNavigation<homeScreenProp>()
-  const { fetchAddressText, getCurrentPosition } = useLocation()
+  const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
 
   const toMap = () => {
     navigation.navigate("map", { screenToReturn: screenToReturn })
@@ -108,7 +107,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
             address && setAddressText(address.formatted)
           })
         } else {
-          showMessageError("modalLocation.cannotGetLocation", true)
+          messagesStore.showError("modalLocation.cannotGetLocation", true)
         }
       })
     }
@@ -224,9 +223,11 @@ const AddressList = observer(() => {
 const AddressItem = observer((props: { address: Address }) => {
   const address = props.address
 
-  const { userStore, addressStore } = useStores()
+  const { userStore, addressStore, messagesStore } = useStores()
   const updateAddressId = (addressId: number) => {
-    userStore.updateAddresId(userStore.userId, addressId)
+    userStore.updateAddresId(userStore.userId, addressId).catch((error: Error) => {
+      messagesStore.showError(error.message)
+    })
     addressStore.setCurrent({ ...address })
     modalPersistent.setPersistent(false)
   }

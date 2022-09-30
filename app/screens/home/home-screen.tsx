@@ -52,6 +52,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       userStore,
       orderStore,
       cartStore,
+      messagesStore,
     } = useStores()
     const { days, setCurrentDay, currentDay } = dayStore
 
@@ -82,9 +83,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       dayStore.setCurrentDay(day)
       await dishStore
         .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId)
-        // .then(() => {
-        //   setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
-        // })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         .finally(() => {
           commonStore.setVisibleLoading(false)
         })
@@ -109,11 +110,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         ])
           .then(() => {
             setCurrentDay(days[0])
-            // setDishes(JSON.parse(JSON.stringify(dishStore.dishes)))
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
-            __DEV__ && console.log("hide loaindg")
+            __DEV__ && console.log("hide loading")
           })
       }
       async function setUserStoreData() {

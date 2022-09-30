@@ -20,7 +20,8 @@
     "add": "Agregar",
     "send": "Enviar",
     "discount": "Descuento",
-    "ready": "Listo"
+    "ready": "Listo",
+    "understand": "Entendido"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -310,9 +311,12 @@
     "chefMenu": "Menú del chef",
     "watchCart": "Ver carrito",
     "leave": "¿Deseas salir?",
-    "leaveDescription": "Perderás los platillos que agregaste a tu orden",
+    "leaveDescription": "Perderás los platillos que agregaste de este chef",
     "yesLeave": "Sí, salir",
-    "noLeave": "Regresar"
+    "noLeave": "Regresar",
+    "why": "¿Por qué?",
+    "whyTitle": "¿Por qué?",
+    "whyDescription": "En Kasera, diferentes chefs de la ciudad tienen su propia tienda en el app. Cada chef está en diferente ubicación, tiene diferentes horarios y tarifa de envío. Por este motivo, es necesario que completes el pedido de un chef antes pedirle a otro."
   },
   "deliveryDetailScreen": {
     "title": "Detalles de entrega",

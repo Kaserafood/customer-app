@@ -11,11 +11,11 @@ import IconRN from "react-native-vector-icons/MaterialIcons"
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, Screen, Text } from "../../components"
 import { ModalAutocomplete } from "../../components/search-bar-autocomplete/modal-autocomplete"
+import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 class LoadingState {
@@ -35,7 +35,8 @@ const modalAddressState = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { fetchAddressText, getCurrentPosition } = useLocation()
+    const { messagesStore } = useStores()
+    const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
     const [address, setAddress] = useState<Address>({
@@ -69,10 +70,13 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             .then((address) => {
               address && setAddress(address)
             })
+            .catch((error: Error) => {
+              messagesStore.showError(error.message)
+            })
             .finally(() => loadingState.setLoading(false))
         } else {
           loadingState.setLoading(false)
-          showMessageError("mapScreen.canNotGetLocation", true)
+          messagesStore.showError("mapScreen.canNotGetLocation", true)
         }
       })
     }, [])
@@ -91,7 +95,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           screenToReturn: params.screenToReturn,
         })
       } else {
-        showMessageError("mapScreen.noLocation", true)
+        messagesStore.showError("mapScreen.noLocation", true)
       }
     }
 
@@ -105,6 +109,9 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             if (address) {
               setAddress(address)
             }
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
           })
           .finally(() => loadingState.setLoading(false))
       }
