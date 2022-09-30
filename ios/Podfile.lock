@@ -18,11 +18,17 @@ PODS:
     - ExpoModulesCore
   - Expo (44.0.6):
     - ExpoModulesCore
+  - ExpoAdapterFBSDKNext (10.1.0):
+    - ExpoModulesCore
+    - FBSDKCoreKit
+    - React-Core
   - ExpoLocalization (12.0.1):
     - ExpoModulesCore
   - ExpoModulesCore (0.6.5):
     - React-Core
     - ReactCommon/turbomodule/core
+  - FBAEMKit (14.1.0):
+    - FBSDKCoreKit_Basics (= 14.1.0)
   - FBLazyVector (0.67.2)
   - FBReactNativeSpec (0.67.2):
     - RCT-Folly (= 2021.06.28.00-v2)
@@ -31,6 +37,18 @@ PODS:
     - React-Core (= 0.67.2)
     - React-jsi (= 0.67.2)
     - ReactCommon/turbomodule/core (= 0.67.2)
+  - FBSDKCoreKit (14.1.0):
+    - FBAEMKit (= 14.1.0)
+    - FBSDKCoreKit_Basics (= 14.1.0)
+  - FBSDKCoreKit_Basics (14.1.0)
+  - FBSDKGamingServicesKit (14.1.0):
+    - FBSDKCoreKit (= 14.1.0)
+    - FBSDKCoreKit_Basics (= 14.1.0)
+    - FBSDKShareKit (= 14.1.0)
+  - FBSDKLoginKit (14.1.0):
+    - FBSDKCoreKit (= 14.1.0)
+  - FBSDKShareKit (14.1.0):
+    - FBSDKCoreKit (= 14.1.0)
   - Flipper (0.99.0):
     - Flipper-Folly (~> 2.6)
     - Flipper-RSocket (~> 1.4)
@@ -337,6 +355,21 @@ PODS:
     - glog
   - react-native-device-country (1.0.2):
     - React-Core
+  - react-native-fbsdk-next (10.1.0):
+    - React-Core
+    - react-native-fbsdk-next/Core (= 10.1.0)
+    - react-native-fbsdk-next/Login (= 10.1.0)
+    - react-native-fbsdk-next/Share (= 10.1.0)
+  - react-native-fbsdk-next/Core (10.1.0):
+    - FBSDKCoreKit (~> 14.1.0)
+    - React-Core
+  - react-native-fbsdk-next/Login (10.1.0):
+    - FBSDKLoginKit (~> 14.1.0)
+    - React-Core
+  - react-native-fbsdk-next/Share (10.1.0):
+    - FBSDKGamingServicesKit (~> 14.1.0)
+    - FBSDKShareKit (~> 14.1.0)
+    - React-Core
   - react-native-geolocation-service (5.3.0):
     - React
   - react-native-google-maps (0.31.1):
@@ -493,6 +526,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - Expo (from `../node_modules/expo/ios`)
+  - ExpoAdapterFBSDKNext (from `../node_modules/react-native-fbsdk-next/ios`)
   - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -538,6 +572,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-device-country (from `../node_modules/react-native-device-country`)
+  - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -574,6 +609,12 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
+    - FBAEMKit
+    - FBSDKCoreKit
+    - FBSDKCoreKit_Basics
+    - FBSDKGamingServicesKit
+    - FBSDKLoginKit
+    - FBSDKShareKit
     - Flipper
     - Flipper-Boost-iOSX
     - Flipper-DoubleConversion
@@ -616,6 +657,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   Expo:
     :path: "../node_modules/expo/ios"
+  ExpoAdapterFBSDKNext:
+    :path: "../node_modules/react-native-fbsdk-next/ios"
   ExpoLocalization:
     :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
@@ -658,6 +701,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-device-country:
     :path: "../node_modules/react-native-device-country"
+  react-native-fbsdk-next:
+    :path: "../node_modules/react-native-fbsdk-next"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
   react-native-google-maps:
@@ -735,10 +780,17 @@ SPEC CHECKSUMS:
   EXFont: 2597c10ac85a69d348d44d7873eccf5a7576ef5e
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
+  ExpoAdapterFBSDKNext: c1a7c66d65b9ce9fa17438eec523a5ec2444ff5d
   ExpoLocalization: 72b4524c167da6c4e2a0bbe09176ff8b2c4eddbe
   ExpoModulesCore: 32c0ccb47f477d330ee93db72505380adf0de09a
+  FBAEMKit: a899515e45476027f73aef377b5cffadcd56ca3a
   FBLazyVector: 244195e30d63d7f564c55da4410b9a24e8fbceaa
   FBReactNativeSpec: c94002c1d93da3658f4d5119c6994d19961e3d52
+  FBSDKCoreKit: 24f8bc8d3b5b2a8c5c656a1329492a12e8efa792
+  FBSDKCoreKit_Basics: 6e578c9bdc7aa1365dbbbde633c9ebb536bcaa98
+  FBSDKGamingServicesKit: 548f294d6c1cc91a1a1517ade872aaa36bf3a085
+  FBSDKLoginKit: 787de205d524c3a4b17d527916f1d066e4361660
+  FBSDKShareKit: b9c1cd1fa6a320a50f0f353cf30d589049c8db77
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 57ffbe81ef95306cc9e69c4aa3aeeeeb58a6a28c
@@ -773,6 +825,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 595f76eba2176ebd8817a1fffd47b84fbdab9383
   React-logger: 23de8ea0f44fa00ee77e96060273225607fd4d78
   react-native-device-country: 86affc8758023ca82e2f461eb30d11da31415c95
+  react-native-fbsdk-next: d6e1c6ad1693c891add104ab529d96906784ba9c
   react-native-geolocation-service: f32ef48fa665bd710207a3ac39bc127cac9cb993
   react-native-google-maps: 8231ffa015bf8b222c2e2661fa9163cdb609a224
   react-native-maps: 8b8bfada2c86205a7f5a07dd1f92f29b33ea83aa
