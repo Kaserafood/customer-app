@@ -1,5 +1,7 @@
 package com.kasera.client;
 import android.os.Bundle;
+
+import com.facebook.FacebookSdk;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
 import com.facebook.react.ReactRootView;
@@ -32,6 +34,7 @@ public class MainActivity extends ReactActivity {
       protected void loadApp(String appKey) {
         RNBootSplash.init(MainActivity.this); // <- initialize the splash screen
         super.loadApp(appKey);
+        FacebookSdk.sdkInitialize(getApplicationContext());
       }
     };
   }
