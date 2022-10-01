@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from "react"
 import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
@@ -17,13 +18,46 @@ const windowWidth = Dimensions.get("window").width
 
 export const Banner = (props: PropsBanner) => {
   const { onPressWelcome, onPressSeasonal, onPressFavorites, onPressNewChefs } = props
+
+  const onPressWelcomeBanner = () => {
+    AppEventsLogger.logEvent("BannerPress", 1, {
+      banner: "Welcome",
+      description: "El usuario presionó el banner de 'Bienvenido'",
+    })
+    onPressWelcome()
+  }
+
+  const onPressSeasonalBanner = () => {
+    AppEventsLogger.logEvent("BannerPress", 1, {
+      banner: "Seasonal",
+      description: "El usuario presionó el banner 'De temporada'",
+    })
+    onPressSeasonal()
+  }
+
+  const onPressFavoritesBanner = () => {
+    AppEventsLogger.logEvent("BannerPress", 1, {
+      banner: "Favorites",
+      description: "El usuario presionó el banner 'Favoritos'",
+    })
+    onPressFavorites()
+  }
+
+  const onPressNewChefsBanner = () => {
+    AppEventsLogger.logEvent("BannerPress", 1, {
+      banner: "New Chefs",
+      description: "El usuario presionó el banner 'Nuevos chefs'",
+    })
+    onPressNewChefs()
+  }
+
   return (
     <View>
       <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
         <TouchableOpacity
           activeOpacity={0.7}
           style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml4]}
-          onPress={() => onPressWelcome()}
+          onPress={onPressWelcomeBanner}
         >
           <Image
             style={[styles.image, utilSpacing.mr3, { left: -33 }]}
@@ -47,7 +81,7 @@ export const Banner = (props: PropsBanner) => {
         <TouchableOpacity
           activeOpacity={0.7}
           style={[styles.containerImage, utilSpacing.mr3]}
-          onPress={onPressSeasonal}
+          onPress={onPressSeasonalBanner}
         >
           <Image style={[styles.image, utilSpacing.mr3]} source={images.banner2}></Image>
 
@@ -76,7 +110,7 @@ export const Banner = (props: PropsBanner) => {
         <TouchableOpacity
           activeOpacity={0.7}
           style={[styles.containerImage, utilSpacing.mr3]}
-          onPress={onPressNewChefs}
+          onPress={onPressNewChefsBanner}
         >
           <Image style={[styles.image, { left: 0, top: -20 }]} source={images.banner3}></Image>
           <View style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter]}>
@@ -98,7 +132,7 @@ export const Banner = (props: PropsBanner) => {
         <TouchableOpacity
           activeOpacity={0.7}
           style={[styles.containerImage, utilSpacing.mr3]}
-          onPress={() => onPressFavorites()}
+          onPress={onPressFavoritesBanner}
         >
           <Image style={[styles.image, utilSpacing.mr3]} source={images.banner4}></Image>
 

@@ -2,6 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import {
@@ -115,13 +116,18 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     }
 
     const toDishDetail = (dish: DishModel) => {
+      AppEventsLogger.logEvent("MenuChefDishPress", 1, {
+        dish: dish.title,
+        dishId: dish.id,
+        description: "Se ha presionado un platillo en la pantalla menu del chef",
+      })
+
       navigation.push("dishDetail", { ...dish, chef: params.chef })
     }
 
     const toDeliveryDetail = () => {
-      // Id de usuario a ser -1 cuando entra como "Explora la app"
+      // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
-        //  commonStore.setIsSignedIn(false)
         navigation.navigate("registerForm")
       } else navigation.navigate("deliveryDetail")
     }
@@ -136,6 +142,17 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       }
 
       return ""
+    }
+
+    const openCart = () => {
+      AppEventsLogger.logEvent("ViewCart", 1, {
+        total: cartStore.subtotal,
+        chefId: params.chef?.id,
+        chefName: params.chef?.name,
+        description: "Se ha presionado el boton de ver carrito en la pantalla menu del chef",
+      })
+
+      modalStateCart.setVisible(true)
     }
     return (
       <Screen preset="fixed" style={styles.container}>
@@ -209,7 +226,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         </ScrollView>
         {cartStore.hasItems && (
           <ButtonFooter
-            onPress={() => modalStateCart.setVisible(true)}
+            onPress={openCart}
             text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(
               cartStore.subtotal,
               currencyCode,

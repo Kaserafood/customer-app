@@ -3,6 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useLayoutEffect } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -32,8 +33,21 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     } = useStores()
 
     const toCategory = (category: Category) => {
+      AppEventsLogger.logEvent("categoryPress", 1, {
+        id: category.id,
+        name: category.name,
+        description: "Se ha seleccionado una categoría en la ventana de 'Buscar'",
+      })
+
       navigation.navigate("category", {
         ...category,
+      })
+    }
+
+    const openRequestDish = () => {
+      modalStateRequest.setVisible(true)
+      AppEventsLogger.logEvent("openModalRequestDish", 1, {
+        description: "Se ha abierto la ventana de solicitar un platillo",
       })
     }
 
@@ -52,7 +66,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                 rippleOpacity={0.2}
                 rippleDuration={400}
                 style={utilSpacing.mt7}
-                onPress={() => modalStateRequest.setVisible(true)}
+                onPress={openRequestDish}
               >
                 <Card style={styles.card}>
                   <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>

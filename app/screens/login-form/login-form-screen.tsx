@@ -1,9 +1,9 @@
-import analytics from "@react-native-firebase/analytics"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -46,6 +46,12 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           commonStore.setVisibleLoading(false)
           if (userValid) {
             commonStore.setIsSignedIn(true)
+
+            AppEventsLogger.logEvent("login", {
+              method: "email",
+              description: "Se ha logueado con email",
+            })
+            AppEventsLogger.setUserID(userStore.userId.toString())
 
             if (params.screenRedirect && params.screenRedirect.length > 0)
               navigation.navigate(params.screenRedirect)
@@ -132,19 +138,6 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
                 <Text preset="bold" size="lg" tx="loginFormScreen.recoverPassword"></Text>
               </Ripple>
             </View>
-            <Button
-              text="Add To Basket"
-              onPress={async () =>
-                await analytics()
-                  .logEvent("Basket", {
-                    id: 3745092,
-                    item: "mens grey t-shirt",
-                    description: ["round neck", "long sleeved"],
-                    size: "L",
-                  })
-                  .then((res) => console.log("Basket logged", res))
-              }
-            />
           </ScrollView>
         </Screen>
       </>
