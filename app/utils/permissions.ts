@@ -1,4 +1,4 @@
-import { check, Permission, request, requestNotifications, RESULTS } from "react-native-permissions"
+import { check, Permission, request, requestNotifications,checkNotifications, RESULTS } from "react-native-permissions"
 
 export async function checkPermission(permision: Permission): Promise<boolean> {
   return await check(permision)
@@ -44,4 +44,11 @@ export async function requestNotificationPermission() {
       return false
     })
     .catch(console.log)
+}
+
+export function checkNotificationPermission() {
+  checkNotifications().then(({ status }) => {
+   
+    if (status === RESULTS.DENIED) requestNotificationPermission()
+  })
 }
