@@ -22,6 +22,8 @@ target 'ClientApp' do
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways/Permission-LocationAlways.podspec"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
 
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
   target 'ClientAppTests' do
     inherit! :complete
     # Pods for testing

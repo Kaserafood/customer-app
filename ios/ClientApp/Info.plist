@@ -39,6 +39,8 @@
 	<string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Tu ubicación se usa para mostrar los chefs que se encuentran cerca de ti</string>
+	<key>PermissionGroupNotification</key>
+	<string>Recibirás notificaiones de descuentos</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Regular.ttf</string>

@@ -7,6 +7,7 @@ export const CommonStoreModel = types
     currentChefId: types.optional(types.number, 0),
     currentChefImage: types.optional(types.string, ""),
     isSignedIn: types.optional(types.boolean, false),
+    hasRequestPermissionNotification: types.optional(types.boolean, false),
   })
   .actions((self) => ({
     setVisibleLoading(isLoading: boolean) {
@@ -20,5 +21,8 @@ export const CommonStoreModel = types
     },
     setCurrentChefImage(image: string) {
       self.currentChefImage = image
+    },
+    setHasRequestPermissionNotification(hasRequest: boolean) {
+      self.hasRequestPermissionNotification = hasRequest
     },
   }))

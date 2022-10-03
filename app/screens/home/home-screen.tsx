@@ -29,6 +29,7 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import { requestNotificationPermission } from "../../utils/permissions"
 import { loadString } from "../../utils/storage"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
@@ -133,6 +134,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           userStore.setAddressId(Number(addressId))
           userStore.setEmail(email)
         }
+      }
+
+      if (!commonStore.hasRequestPermissionNotification) {
+        requestNotificationPermission()
+        commonStore.setHasRequestPermissionNotification(true)
       }
       setUserStoreData()
 

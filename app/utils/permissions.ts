@@ -1,4 +1,4 @@
-import { check, Permission, request, RESULTS } from "react-native-permissions"
+import { check, Permission, request, requestNotifications, RESULTS } from "react-native-permissions"
 
 export async function checkPermission(permision: Permission): Promise<boolean> {
   return await check(permision)
@@ -33,4 +33,15 @@ export async function requestPermission(permission: Permission) {
   return await request(permission).then((result) => {
     return result
   })
+}
+
+export async function requestNotificationPermission() {
+  return await requestNotifications(["alert", "sound"])
+    .then(({ status, settings }) => {
+      __DEV__ && console.log(status, settings)
+      if (status === RESULTS.GRANTED) return true
+
+      return false
+    })
+    .catch(console.log)
 }
