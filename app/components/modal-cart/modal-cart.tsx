@@ -1,11 +1,13 @@
 import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { MetaDataCart } from "../../models/cart-store"
+import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -36,12 +38,22 @@ export interface ModalCartProps {
 }
 
 /**
- * Describe your component here
+ * Modal to show items in cart.
  */
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
   const { cartStore } = useStores()
+
+  const removeItemCart = (index: number, dish: Dish) => {
+    cartStore.removeItem(index)
+    AppEventsLogger.logEvent("RemoveDishInCart", 1, {
+      total: cartStore.subtotal,
+      dishId: dish.id,
+      dishName: dish.title,
+      description: "El usuario elimino un producto del carrito",
+    })
+  }
 
   return (
     <Modal modal={modal} position="bottom">
@@ -79,7 +91,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                 rippleOpacity={0.07}
                 rippleDuration={400}
                 style={[utilSpacing.p2, styles.containerIconRemove]}
-                onPress={() => cartStore.removeItem(index)}
+                onPress={() => removeItemCart(index, item.dish)}
               >
                 <Image style={styles.iconRemove} source={images.close}></Image>
               </Ripple>

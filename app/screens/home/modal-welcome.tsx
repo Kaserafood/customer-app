@@ -18,7 +18,7 @@ export const ModalWelcome = (props: PropsModalWelcome) => {
         <Text tx="banner.whatIsKaseraDescription4" style={utilSpacing.mb4}></Text>
         <Button
           onPress={() => props.modalState.setVisible(false)}
-          tx="common.next"
+          tx="common.understand"
           style={utilSpacing.my4}
           block
         ></Button>

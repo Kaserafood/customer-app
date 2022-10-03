@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
 import { Address, useStores } from "../../models"
@@ -71,6 +72,13 @@ export const RegisterFormScreen: FC<
             userStore.setAddressId(address.id)
             userStore.updateAddresId(userId, address.id)
             commonStore.setIsSignedIn(true)
+
+            AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
+              [AppEventsLogger.AppEventParams.RegistrationMethod]: "email",
+              Currency: "GTQ",
+              description: "Nuevo usuario registrado con email",
+            })
+            AppEventsLogger.setUserID(userId.toString())
             navigation.navigate("deliveryDetail")
           }
         })
