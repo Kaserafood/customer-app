@@ -4,6 +4,7 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 import images from "../../assets/images"
 import {
@@ -80,6 +81,10 @@ export const DeliveryDetailScreen: FC<
         refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
     }
     loadSavedStrings()
+
+    AppEventsLogger.logEvent("IntoCheckout", 1, {
+      description: "El usuario entró en la pantalla del checkout",
+    })
   }, [])
 
   useEffect(() => {
@@ -177,6 +182,11 @@ export const DeliveryDetailScreen: FC<
           await saveString("deliveryTime", labelDeliveryTime)
           cartStore.setDiscount(0)
           __DEV__ && console.log("order added", res.data)
+
+          AppEventsLogger.logPurchase(getCurrentTotal(), getCurrency(), {
+            description: "El usuario ha realizado un pedido",
+          })
+
           navigation.navigate("endOrder", {
             orderId: Number(res.data),
             deliveryDate: dayStore.currentDay.dayName,
@@ -277,10 +287,15 @@ export const DeliveryDetailScreen: FC<
     const text = getI18nText(
       isPaymentCard ? "dishDetailScreen.pay" : "deliveryDetailScreen.makeOrder",
     )
-    const total = cartStore.subtotal + orderStore.priceDelivery - (cartStore.discount ?? 0)
-    const currency = cartStore.cart[0]?.dish.chef.currencyCode
+    return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
+  }
 
-    return `${text} ${getFormat(total, currency)}`
+  const getCurrentTotal = (): number => {
+    return cartStore.subtotal + orderStore.priceDelivery - (cartStore.discount ?? 0)
+  }
+
+  const getCurrency = (): string => {
+    return cartStore.cart[0]?.dish.chef.currencyCode
   }
 
   return (

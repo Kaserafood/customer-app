@@ -2,6 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect } from "react"
 import { StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -222,11 +223,22 @@ const ListDishes = observer(function ListDishes(props: {
 }) {
   const { dishStore } = useStores()
 
+  const onPressDish = (dish: DishChef) => {
+    props.toDetail(dish)
+
+    AppEventsLogger.logEvent("HomeDishPress", {
+      dishId: dish.id,
+      dishName: dish.title,
+      chefName: dish.chef.name,
+      description: "El usuario seleccionó un plato en la pantalla principal (Home)",
+    })
+  }
+
   return (
     <View>
       {props.dishes.map((dish, index) => (
         <View key={dish.id}>
-          <Dish dish={dish} onPress={() => props.toDetail(dish)}></Dish>
+          <Dish dish={dish} onPress={() => onPressDish(dish)}></Dish>
           {index !== dishStore.totalDishes - 1 && <Separator style={utilSpacing.my3}></Separator>}
         </View>
       ))}

@@ -32,7 +32,6 @@
 		62735319C7584C9A8E418119 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 43AE25D2DDCF4291AB9CB6CF /* Foundation.ttf */; };
 		638E77C4F0D64F0EB0190B41 /* FontAwesome5_Solid.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BC24CCAA75B64C8F90178606 /* FontAwesome5_Solid.ttf */; };
 		7F3F15461F18454DBCBABA12 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 27B8BED1E40E428C86AC76E1 /* Feather.ttf */; };
-		8054DA6728E57D8800526321 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8054DA6628E57D8700526321 /* GoogleService-Info.plist */; };
 		80C2248428CEFDE9005184EA /* Chaloops-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 80C2248328CEFDE9005184EA /* Chaloops-Bold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		87A11D99EBF645CC9B3C6E0D /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D306CBD2DFCF483BBB0F671F /* Zocial.ttf */; };
@@ -97,7 +96,6 @@
 		5726B528288BAF8F00DD0AE9 /* icomoon.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = icomoon.ttf; sourceTree = "<group>"; };
 		671EA18E537547558040C4DF /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		7A821C24896B4C349C4C5009 /* EvilIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = EvilIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf"; sourceTree = "<group>"; };
-		8054DA6628E57D8700526321 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		80C2248328CEFDE9005184EA /* Chaloops-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Chaloops-Bold.ttf"; path = "../android/app/src/main/assets/fonts/Chaloops-Bold.ttf"; sourceTree = "<group>"; };
 		815BCD5292094B8DA162656E /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ClientApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -172,7 +170,6 @@
 		13B07FAE1A68108700A75B9A /* ClientApp */ = {
 			isa = PBXGroup;
 			children = (
-				8054DA6628E57D8700526321 /* GoogleService-Info.plist */,
 				5726B52C288BBF5800DD0AE9 /* Fonts */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -464,7 +461,6 @@
 				4B6B43A7D62F431A8EDEB0FC /* AntDesign.ttf in Resources */,
 				CD7AE3313BF142939DF0A58C /* Entypo.ttf in Resources */,
 				57077F94288F8D34009E68C7 /* BootSplash.storyboard in Resources */,
-				8054DA6728E57D8800526321 /* GoogleService-Info.plist in Resources */,
 				62010014DD06470BAB8DA616 /* EvilIcons.ttf in Resources */,
 				7F3F15461F18454DBCBABA12 /* Feather.ttf in Resources */,
 				1BDD5D7B942545329D59E6C8 /* FontAwesome.ttf in Resources */,
@@ -874,13 +870,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.31;
+				MARKETING_VERSION = 0.8.32;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -904,12 +900,12 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 28;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.8.31;
+				MARKETING_VERSION = 0.8.32;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

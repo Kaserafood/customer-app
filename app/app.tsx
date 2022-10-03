@@ -10,6 +10,7 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
+import { Settings } from "react-native-fbsdk-next"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
@@ -50,6 +51,8 @@ function App() {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
     })()
+    Settings.initializeSDK()
+    Settings.setAdvertiserTrackingEnabled(true)
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.

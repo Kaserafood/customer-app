@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -46,6 +47,12 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           if (userValid) {
             commonStore.setIsSignedIn(true)
 
+            AppEventsLogger.logEvent("login", {
+              method: "email",
+              description: "Se ha logueado con email",
+            })
+            AppEventsLogger.setUserID(userStore.userId.toString())
+
             if (params.screenRedirect && params.screenRedirect.length > 0)
               navigation.navigate(params.screenRedirect)
             else navigation.navigate("main")
@@ -54,7 +61,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
-        .catch(() => commonStore.setVisibleLoading(false))
+        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     const handleBack = () => {

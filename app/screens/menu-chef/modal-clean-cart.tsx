@@ -1,5 +1,6 @@
 import React from "react"
 import { StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 import { Button, Modal, Text } from "../../components"
 import { color, spacing } from "../../theme"
@@ -9,6 +10,28 @@ import { ModalStateHandler } from "../../utils/modalState"
 const modalStateWhy = new ModalStateHandler()
 export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave: () => void }) => {
   const { modalState, onPressLeave } = props
+
+  const onPressLeaveModal = () => {
+    onPressLeave()
+    AppEventsLogger.logEvent("PressCleanCart", 1, {
+      description: "El usuario presionó 'Sí, salir' en el menú del chef",
+    })
+  }
+
+  const onPressCancel = () => {
+    modalState.setVisible(false)
+    AppEventsLogger.logEvent("CancelCleanCart", 1, {
+      description: "El usuario presionó 'Regresar' en el menú del chef",
+    })
+  }
+
+  const onPressWhyCleanCart = () => {
+    modalStateWhy.setVisible(true)
+    AppEventsLogger.logEvent("PressWhyCleanCart", 1, {
+      description: "El usuario presionó '¿Por qué?' en el menú del chef",
+    })
+  }
+
   return (
     <>
       <Modal modal={modalState} style={styles.modal}>
@@ -27,7 +50,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
           <Button
             tx="menuChefScreen.yesLeave"
             style={[utilSpacing.mb5, utilFlex.selfCenter]}
-            onPress={() => onPressLeave()}
+            onPress={onPressLeaveModal}
             block
           ></Button>
           <Button
@@ -35,14 +58,14 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
             preset="white"
             style={utilFlex.selfCenter}
             tx="menuChefScreen.noLeave"
-            onPress={() => modalState.setVisible(false)}
+            onPress={onPressCancel}
           ></Button>
 
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}
             style={styles.btnInfo}
-            onPress={() => modalStateWhy.setVisible(true)}
+            onPress={onPressWhyCleanCart}
           >
             <Text preset="bold" style={utilFlex.selfCenter} tx="menuChefScreen.why"></Text>
           </Ripple>
