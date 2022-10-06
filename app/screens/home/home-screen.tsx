@@ -29,7 +29,7 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import { checkNotificationPermission, requestNotificationPermission } from "../../utils/permissions"
+import { checkNotificationPermission } from "../../utils/permissions"
 import { loadString } from "../../utils/storage"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
@@ -137,7 +137,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
 
       checkNotificationPermission()
-      
+
       setUserStoreData()
 
       fetch()
