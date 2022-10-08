@@ -55,7 +55,6 @@ function App() {
     Settings.initializeSDK()
     Settings.setAdvertiserTrackingEnabled(true)
     OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-
     AppEventsLogger.logEvent("login", {
       method: "email",
       description: "Se ha logueado con email",

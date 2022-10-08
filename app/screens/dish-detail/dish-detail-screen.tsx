@@ -3,6 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
@@ -83,7 +84,19 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const onSubmit = (data) => {
       if (!cartStore.isSubmited) cartStore.setSubmited(true)
 
-      if (!isValidAddons(currentDish.addons)) return
+      if (!isValidAddons(currentDish.addons)) {
+        AppEventsLogger.logEvent("IntentAddToCart", 1, {
+          content_type: "dish",
+          dish_id: currentDish.id,
+          quantity: quantity,
+          total: total,
+          dish: currentDish.title,
+          description:
+            "Se intentó agregar un producto al carrito pero algún complemento no fue seleccionado, por ende, no se agregó",
+        })
+
+        return
+      }
 
       cartStore.setSubmited(false)
 
@@ -98,11 +111,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       cartStore.addItem(itemCart)
       methods.setValue("comment", "")
       setQuantity(1)
+      AppEventsLogger.logEvent("AddToCart", 1, {
+        content_type: "dish",
+        dish_id: currentDish.id,
+        dish: currentDish.title,
+        quantity: quantity,
+        total: total,
+        description: "Se agregó un producto al carrito",
+      })
       navigation.navigate("menuChef", { ...params })
     }
 
     const changeDish = (dish: DishChefModel) => {
       setLoading(true)
+      AppEventsLogger.logEvent("ChangeDishInDishDetail", 1, {
+        content_type: "dish",
+        dish_id: dish.id,
+        dish_name: dish.title,
+        description:
+          "En el detalle del plato, donde se muestra 'Más productos del chef' se ha seleccionado otro producto",
+      })
       if (currentDish.id !== dish.id) {
         setCurrentDish({ ...dish, chef: params.chef })
         setQuantity(1)
