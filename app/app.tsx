@@ -10,9 +10,10 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import { Settings } from "react-native-fbsdk-next"
+import { AppEventsLogger, Settings } from "react-native-fbsdk-next"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
+import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { Loader, Messages } from "./components"
@@ -53,6 +54,11 @@ function App() {
     })()
     Settings.initializeSDK()
     Settings.setAdvertiserTrackingEnabled(true)
+    OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+    AppEventsLogger.logEvent("login", {
+      method: "email",
+      description: "Se ha logueado con email",
+    })
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
