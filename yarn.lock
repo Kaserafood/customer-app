@@ -1278,7 +1278,7 @@
     xcode "^3.0.1"
     xml2js "0.4.23"
 
-"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.2":
+"@expo/config-plugins@4.1.5", "@expo/config-plugins@^4.0.2", "@expo/config-plugins@^4.1.5":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@expo/config-plugins/-/config-plugins-4.1.5.tgz#9d357d2cda9c095e511b51583ede8a3b76174068"
   integrity sha512-RVvU40RtZt12HavuDAe+LDIq9lHj7sheOfMEHdmpJ/uTA8pgvkbc56XF6JHQD+yRr6+uhhb+JnAasGq49dsQbw==
@@ -12604,6 +12604,14 @@ react-native-fast-image@^8.5.11:
   resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
   integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
 
+react-native-fbsdk-next@^11.0.0:
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-fbsdk-next/-/react-native-fbsdk-next-11.0.0.tgz#8a9c126d92251f0e9fcf5ccd6dca648bc03ed236"
+  integrity sha512-F0rNqfSByO7MG0n2J8rDdqBsqu2P5+nFkEnBuOh+HN1UDnxpF6lbt4N38oWN1v32h+Gb0TL0wiJnperbGuu5tQ==
+  dependencies:
+    "@expo/config-plugins" "^4.1.5"
+    xml2js "^0.4.23"
+
 react-native-flash-message@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/react-native-flash-message/-/react-native-flash-message-0.2.1.tgz#2c956000d60569984b82bff1b6b7b3bff31b4eb6"
@@ -12680,6 +12688,13 @@ react-native-navigation-bar-color@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/react-native-navigation-bar-color/-/react-native-navigation-bar-color-2.0.1.tgz#ee2be25cc37105f7da355717b0a9a32c9c059ae6"
   integrity sha512-1kE/oxWt+HYjRxdZdvke9tJ365xaee5n3+euOQA1En8zQuSbOxiE4SYEGM7TeaWnmLJ0l37mRnPHaB2H4mGh0A==
+
+react-native-onesignal@^4.4.1:
+  version "4.4.1"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.4.1.tgz#c79c94ea8622012adcd3d1e36ba91be6fa126453"
+  integrity sha512-vbS0E2TO5KljT0l1nAce04aOZF6FLv9oUaliffhFQR92oTHAbwNmwwMpxZF6CIcNANDDKkYtKPw5h7baUxmQdw==
+  dependencies:
+    invariant "^2.2.2"
 
 react-native-pager-view@^5.4.15:
   version "5.4.25"
@@ -15504,7 +15519,7 @@ xml-parse-from-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/xml-parse-from-string/-/xml-parse-from-string-1.0.1.tgz#a9029e929d3dbcded169f3c6e28238d95a5d5a28"
   integrity sha512-ErcKwJTF54uRzzNMXq2X5sMIy88zJvfN2DmdoQvy7PAFJ+tPRU6ydWuOKNMyfmOjdyBQTFREi60s0Y0SyI0G0g==
 
-xml2js@0.4.23, xml2js@^0.4.5:
+xml2js@0.4.23, xml2js@^0.4.23, xml2js@^0.4.5:
   version "0.4.23"
   resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.23.tgz#a0c69516752421eb2ac758ee4d4ccf58843eac66"
   integrity sha512-ySPiMjM0+pLDftHgXY4By0uswI3SPKLDw/i3UXbnO8M/p28zqexCUoPmQFrYD+/1BzhGJSs2i1ERWKJAtiLrug==
