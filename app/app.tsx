@@ -10,7 +10,7 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import { Settings } from "react-native-fbsdk-next"
+import { AppEventsLogger, Settings } from "react-native-fbsdk-next"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
@@ -62,21 +62,7 @@ function App() {
           // console.log("OneSignal: notification will show in foreground:", notifReceivedEvent)
           const notif = notifReceivedEvent.getNotification()
 
-          // const button1 = {
-          //   text: "Cancel",
-          //   onPress: () => {
-          //     notifReceivedEvent.complete()
-          //   },
-          //   style: "cancel",
-          // }
-
-          // const button2 = {
-          //   text: "Complete",
-          //   onPress: () => {
-          //     notifReceivedEvent.complete(notif)
-          //   },
-          // }
-
+      
           console.log("NOTIFICATION: ", notif)
         })
         OneSignal.setNotificationOpenedHandler((notification) => {
@@ -84,6 +70,8 @@ function App() {
         })
       })
     })()
+    Settings.initializeSDK()
+    Settings.setAdvertiserTrackingEnabled(true)
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
