@@ -1,5 +1,6 @@
 // Use this import if you want to use "env.js" file
-// const { API_URL } = require("../../config/env")
+//import { API_URL } from "@env"
+
 // Or just specify it directly like this:
 
 let API_URL = ""

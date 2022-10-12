@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-native start",
     "ios": "react-native run-ios",
-    "android": "adb reverse tcp:9090 tcp:9090 && react-native run-android",
+    "android": "adb reverse tcp:9090 tcp:9090 && APP_ENV=development && react-native run-android",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",
     "ci:test:e2e": "detox test -c ios.sim.release -l verbose --cleanup",
@@ -27,7 +27,8 @@
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
     "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && ./gradlew assembleRelease && cd ..",
-    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi"
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi",
+    "release:android": "cd android && APP_ENV=production && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
     "@klarna/react-native-vector-drawable": "^0.3.0",
@@ -60,6 +61,7 @@
     "react-native-calendars": "^1.1284.0",
     "react-native-device-country": "^1.0.2",
     "react-native-device-info": "^8.7.1",
+    "react-native-dotenv": "^3.3.1",
     "react-native-fast-image": "^8.5.11",
     "react-native-fbsdk-next": "^11.0.0",
     "react-native-flash-message": "^0.2.1",
@@ -102,6 +104,7 @@
     "@types/react": "17.0.37",
     "@types/react-native": "0.66.9",
     "@types/react-native-animated-progress": "^1.0.0",
+    "@types/react-native-dotenv": "^0.2.0",
     "@types/react-native-material-ripple": "^0.9.2",
     "@types/react-test-renderer": "17.0.1",
     "@typescript-eslint/eslint-plugin": "4.10.0",

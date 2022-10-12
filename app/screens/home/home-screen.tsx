@@ -135,9 +135,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           userStore.setEmail(email)
         }
       }
-
-      checkNotificationPermission()
-
       setUserStoreData()
 
       fetch()

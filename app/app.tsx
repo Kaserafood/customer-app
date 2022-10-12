@@ -23,6 +23,7 @@ import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/error/error-boundary"
 import { utilFlex } from "./theme/Util"
 import "./utils/ignore-warnings"
+import { checkNotificationPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
 
@@ -51,11 +52,38 @@ function App() {
         .catch((error) => {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
-    })()
-    Settings.initializeSDK()
-    Settings.setAdvertiserTrackingEnabled(true)
-    OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+      Settings.initializeSDK()
+      Settings.setAdvertiserTrackingEnabled(true)
+      checkNotificationPermission().then((result) => {
+        if (result) OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
 
+        /* O N E S I G N A L  H A N D L E R S */
+        OneSignal.setNotificationWillShowInForegroundHandler((notifReceivedEvent) => {
+          // console.log("OneSignal: notification will show in foreground:", notifReceivedEvent)
+          const notif = notifReceivedEvent.getNotification()
+
+          // const button1 = {
+          //   text: "Cancel",
+          //   onPress: () => {
+          //     notifReceivedEvent.complete()
+          //   },
+          //   style: "cancel",
+          // }
+
+          // const button2 = {
+          //   text: "Complete",
+          //   onPress: () => {
+          //     notifReceivedEvent.complete(notif)
+          //   },
+          // }
+
+          console.log("NOTIFICATION: ", notif)
+        })
+        OneSignal.setNotificationOpenedHandler((notification) => {
+          console.log("OneSignal: notification opened:", notification)
+        })
+      })
+    })()
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
