@@ -50,9 +50,9 @@ function App() {
         .catch((error) => {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
+      Settings.initializeSDK()
+      Settings.setAdvertiserTrackingEnabled(true)
     })()
-    Settings.initializeSDK()
-    Settings.setAdvertiserTrackingEnabled(true)
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.

@@ -13,13 +13,16 @@ import { utilSpacing } from "../../theme/Util"
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(
   function FavoriteScreen({ navigation }) {
-    const { dishStore, cartStore, commonStore, dayStore } = useStores()
+    const { dishStore, cartStore, commonStore, dayStore, messagesStore } = useStores()
 
     useEffect(() => {
       async function fetch() {
         commonStore.setVisibleLoading(true)
         await dishStore
           .getFavorites(dayStore.currentDay.date, RNLocalize.getTimeZone())
+          .catch((error) => {
+            messagesStore.showError(error.message)
+          })
           .finally(() => commonStore.setVisibleLoading(false))
       }
       fetch()

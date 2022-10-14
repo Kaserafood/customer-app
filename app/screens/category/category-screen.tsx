@@ -33,6 +33,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       dishStore: { dishesCategory, getAll },
       commonStore,
       userStore,
+      messagesStore,
     } = useStores()
 
     useEffect(() => {
@@ -44,9 +45,13 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           RNLocalize.getTimeZone(),
           userStore.userId,
           params.id,
-        ).finally(() => {
-          commonStore.setVisibleLoading(false)
-        })
+        )
+          .catch((error) => {
+            messagesStore.showError(error.message)
+          })
+          .finally(() => {
+            commonStore.setVisibleLoading(false)
+          })
       }
 
       fetch()

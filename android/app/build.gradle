@@ -1,6 +1,5 @@
 apply plugin: 'kotlin-android'
 apply plugin: "com.android.application"
-apply plugin: 'com.google.gms.google-services' 
 import com.android.build.OutputFile
 
 /**
@@ -136,8 +135,8 @@ android {
         applicationId "com.kasera.client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 27
-        versionName "0.8.31"
+        versionCode 30
+        versionName "0.8.33"
     }
     splits {
         abi {
@@ -258,7 +257,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.core:core-splashscreen:1.0.0-beta01"
-    implementation "com.facebook.android:facebook-android-sdk:latest.release"
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
 
 }
 
