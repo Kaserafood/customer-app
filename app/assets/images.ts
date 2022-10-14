@@ -47,6 +47,9 @@ const images = {
   bannerImage2: require("./images/banner-image-02.jpg"),
   cash: require("./images/money.png"),
   bug: require("./images/bug.png"),
+  octubre: require("./images/octubre.png"),
+  calabaza: require("./images/calabaza.png"),
+  flowers: require("./images/flowers.png"),
 }
 
 export default images

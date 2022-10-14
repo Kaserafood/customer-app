@@ -1,10 +1,11 @@
 // Use this import if you want to use "env.js" file
-// const { API_URL } = require("../../config/env")
+//import { API_URL } from "@env"
+
 // Or just specify it directly like this:
 
 let API_URL = ""
 if (__DEV__) {
-//  API_URL = "http://192.168.0.2:3000"
+  //  API_URL = "http://192.168.0.2:3000"
   API_URL = "https://kasera-customer-api-test.azurewebsites.net"
 } else {
   API_URL = "https://kasera-customer-api.azurewebsites.net"

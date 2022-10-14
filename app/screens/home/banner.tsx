@@ -74,7 +74,7 @@ export const Banner = (props: PropsBanner) => {
               style={[styles.name, styles.textWhite, { lineHeight: 60 }]}
               tx="banner.kasera"
             ></Text>
-            <Button onPress={onPressWelcome} tx="banner.whatIsIt"></Button>
+            <Button onPress={onPressWelcomeBanner} tx="banner.whatIsIt"></Button>
           </View>
         </TouchableOpacity>
 
@@ -83,26 +83,26 @@ export const Banner = (props: PropsBanner) => {
           style={[styles.containerImage, utilSpacing.mr3]}
           onPress={onPressSeasonalBanner}
         >
-          <Image style={[styles.image, utilSpacing.mr3]} source={images.banner2}></Image>
+          <Image style={[styles.image, utilSpacing.mr3, {}]} source={images.banner2}></Image>
 
+          <Image style={styles.flower} source={images.flowers}></Image>
+
+          <Image source={images.calabaza} style={styles.calabaza}></Image>
           <View
             style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter, utilFlex.flexRow]}
           >
             <View style={[utilFlex.flex1, utilSpacing.mx4]}>
               <Text
                 preset="bold"
-                style={[styles.title, styles.textWhite]}
+                style={[styles.title, styles.textWhite, utilFlex.selfCenter, utilSpacing.mb1]}
                 tx="banner.seasonal"
               ></Text>
               <Text
                 preset="semiBold"
-                style={[styles.description, styles.textWhite, utilSpacing.mt2]}
+                style={[styles.description, styles.textWhite, utilSpacing.mt2, utilFlex.selfCenter]}
                 tx="banner.seasonalDescription"
               ></Text>
-              <Button onPress={onPressSeasonal} tx="banner.explore"></Button>
-            </View>
-            <View style={styles.containerProduct}>
-              <Image style={styles.product} source={images.bannerImage1}></Image>
+              <Button onPress={onPressSeasonalBanner} tx="banner.explore"></Button>
             </View>
           </View>
         </TouchableOpacity>
@@ -125,7 +125,7 @@ export const Banner = (props: PropsBanner) => {
               tx="banner.newChefs"
             ></Text>
 
-            <Button onPress={onPressNewChefs} tx="banner.toKnow"></Button>
+            <Button onPress={onPressNewChefsBanner} tx="banner.toKnow"></Button>
           </View>
         </TouchableOpacity>
 
@@ -150,7 +150,7 @@ export const Banner = (props: PropsBanner) => {
                 style={[styles.description, styles.textWhite, utilSpacing.mt3]}
                 tx="banner.kaseraFavoritesDescription"
               ></Text>
-              <Button onPress={onPressFavorites} tx="banner.discover"></Button>
+              <Button onPress={onPressFavoritesBanner} tx="banner.discover"></Button>
             </View>
 
             <View style={styles.containerProduct}>
@@ -193,6 +193,14 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.white,
     borderRadius: spacing[5],
   },
+  calabaza: {
+    bottom: 10,
+    height: 100,
+    left: 10,
+    position: "absolute",
+    width: 250,
+    zIndex: 3,
+  },
   containerImage: {
     borderRadius: 16,
     height: 165,
@@ -213,13 +221,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 16,
   },
-  image: {
-    borderRadius: 16,
-    bottom: 0,
-    left: -20,
+  flower: {
+    height: 45,
     position: "absolute",
-    right: 0,
-    top: -3,
+    right: 10,
+    top: 10,
+    width: 45,
+    zIndex: 3,
+  },
+  image: {
+    borderRadius: 24,
+    bottom: 0,
+    position: "absolute",
+    right: -50,
+    top: 0,
     zIndex: 1,
   },
   name: {

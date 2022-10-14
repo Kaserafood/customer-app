@@ -1,4 +1,12 @@
-import { check, Permission, request, RESULTS } from "react-native-permissions"
+import OneSignal from "react-native-onesignal"
+import {
+  check,
+  checkNotifications,
+  Permission,
+  request,
+  requestNotifications,
+  RESULTS,
+} from "react-native-permissions"
 
 export async function checkPermission(permision: Permission): Promise<boolean> {
   return await check(permision)
@@ -33,4 +41,30 @@ export async function requestPermission(permission: Permission) {
   return await request(permission).then((result) => {
     return result
   })
+}
+
+export async function requestNotificationPermission(): Promise<boolean> {
+  return await requestNotifications(["alert", "sound"])
+    .then(({ status, settings }) => {
+      __DEV__ && console.log(status, settings)
+      if (status === RESULTS.GRANTED) return true
+
+      return false
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    })
+}
+
+export async function checkNotificationPermission(): Promise<boolean> {
+  return checkNotifications()
+    .then(async ({ status }) => {
+      if (status === RESULTS.DENIED) return await requestNotificationPermission()
+      return false
+    })
+    .catch((error) => {
+      console.log(error)
+      return false
+    })
 }
