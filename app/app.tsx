@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react"
 import { Settings } from "react-native-fbsdk-next"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
+import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { Loader, Messages } from "./components"
@@ -22,6 +23,7 @@ import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/error/error-boundary"
 import { utilFlex } from "./theme/Util"
 import "./utils/ignore-warnings"
+import { checkNotificationPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
 
@@ -52,6 +54,10 @@ function App() {
         })
       Settings.initializeSDK()
       Settings.setAdvertiserTrackingEnabled(true)
+
+      checkNotificationPermission().then((result) => {
+        if (result) OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+      })
     })()
   }, [])
 
