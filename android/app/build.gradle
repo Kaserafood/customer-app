@@ -135,8 +135,8 @@ android {
         applicationId "com.kasera.client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 27
-        versionName "0.8.31"
+        versionCode 30
+        versionName "0.8.33"
     }
     splits {
         abi {
