@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+import { Settings } from "react-native-fbsdk-next";
 import OneSignal from "react-native-onesignal"
 import {
   check,
@@ -7,6 +9,7 @@ import {
   requestNotifications,
   RESULTS,
 } from "react-native-permissions"
+import { getTrackingStatus,requestTrackingPermission  } from 'react-native-tracking-transparency';
 
 export async function checkPermission(permision: Permission): Promise<boolean> {
   return await check(permision)
@@ -61,10 +64,29 @@ export async function checkNotificationPermission(): Promise<boolean> {
   return checkNotifications()
     .then(async ({ status }) => {
       if (status === RESULTS.DENIED) return await requestNotificationPermission()
+      else if (status === RESULTS.GRANTED ) return true
       return false
     })
     .catch((error) => {
       console.log(error)
       return false
     })
+}
+
+export async function trackingPermission(){
+  if(Platform.OS === `ios`){
+    const trackingStatus = await getTrackingStatus();
+
+    if(trackingStatus === `not-determined`){
+      const requestPermission = await requestTrackingPermission()
+      if (requestPermission === 'authorized' || requestPermission === 'unavailable') {
+        // enable tracking features
+        Settings.setAdvertiserTrackingEnabled(true)
+        Settings.initializeSDK()
+        
+      }
+    }
+
+  }
+  
 }
