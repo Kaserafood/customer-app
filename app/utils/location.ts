@@ -7,6 +7,7 @@ export async function getCountryCode(): Promise<string> {
       __DEV__ && console.log(result)
       return result.code.toUpperCase()
     })
+    
     .catch((e) => {
       __DEV__ && console.log(e)
       return ""
