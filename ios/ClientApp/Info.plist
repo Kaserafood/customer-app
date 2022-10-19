@@ -94,5 +94,7 @@
 	<string>22417b4269034abe760764ddb3aa7773</string>
 	<key>FacebookDisplayName</key>
 	<string>Kasera</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Para poder entregarte promociones especialmente para ti</string>
 </dict>
 </plist>
