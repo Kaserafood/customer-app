@@ -44,11 +44,16 @@ target 'ClientApp' do
       target.build_configurations.each do |config|
           config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
           config.build_settings['BUILD_LIBRARY_FOR_DISTRIBUTION'] = 'YES'
+          config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
       end
   end
+  end
+  target 'OneSignalNotificationServiceExtension' do
+    pod 'OneSignalXCFramework', '>= 3.0', '< 4.0'
   end
 end
 pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text', :modular_headers => true
 # React Native Maps dependencies
 rn_maps_path = '../node_modules/react-native-maps'
 pod 'react-native-google-maps', :path => rn_maps_path
+
