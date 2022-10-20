@@ -54,9 +54,9 @@ function App() {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
         checkNotificationPermission().then((result) => {
-          if(Platform.OS === `android`){
+         
             if (result) OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-          }   
+            
         })
       
    
