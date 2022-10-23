@@ -10,8 +10,8 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import { Platform } from "react-native"
-import { Settings } from "react-native-fbsdk-next"
+import { Linking } from "react-native"
+import Config from "react-native-config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
@@ -53,16 +53,21 @@ function App() {
         .catch((error) => {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
-        checkNotificationPermission().then((result) => {
-         
-            if (result) OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-            
-        })
-      
-   
+      checkNotificationPermission().then((result) => {
+        if (result) {
+          OneSignal.setAppId(Config.ONE_SIGNAL_APP_ID)
+          OneSignal.setNotificationOpenedHandler((openedEvent) => {
+            const { notification } = openedEvent
+            if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
+          })
+        }
+      })
 
       trackingPermission()
     })()
+    return () => {
+      OneSignal.clearHandlers()
+    }
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -82,7 +87,6 @@ function App() {
             console.log("USER LOGIN")
             rootStore.commonStore.setIsSignedIn(true)
           }
-          rootStore.dishStore.clearDishes()
         }
       }
       verifyUser()

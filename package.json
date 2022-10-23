@@ -5,7 +5,7 @@
   "scripts": {
     "start": "react-native start",
     "ios": "react-native run-ios",
-    "android": "adb reverse tcp:9090 tcp:9090 && set APP_ENV=development && react-native run-android",
+    "android": "adb reverse tcp:9090 tcp:9090 && SET ENVFILE=.env.development && react-native run-android",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",
     "ci:test:e2e": "detox test -c ios.sim.release -l verbose --cleanup",
@@ -28,7 +28,7 @@
     "clean-all": "npx react-native clean-project-auto",
     "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && ./gradlew assembleRelease && cd ..",
     "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi",
-    "release:android": "cd android && APP_ENV=production && ./gradlew assembleRelease && cd .."
+    "release:android": "cd android && set ENVFILE=.env.production && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
     "@klarna/react-native-vector-drawable": "^0.3.0",
@@ -59,9 +59,9 @@
     "react-native-animated-progress": "^1.0.2",
     "react-native-bootsplash": "^4.1.5",
     "react-native-calendars": "^1.1284.0",
+    "react-native-config": "^1.4.11",
     "react-native-device-country": "^1.0.2",
     "react-native-device-info": "^8.7.1",
-    "react-native-dotenv": "^3.3.1",
     "react-native-fast-image": "^8.5.11",
     "react-native-fbsdk-next": "^11.0.0",
     "react-native-flash-message": "^0.2.1",

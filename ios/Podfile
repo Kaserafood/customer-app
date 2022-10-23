@@ -24,6 +24,8 @@ target 'ClientApp' do
 
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications/Permission-Notifications.podspec"
 
+  pod 'react-native-config', :path => '../node_modules/react-native-config'
+
   target 'ClientAppTests' do
     inherit! :complete
     # Pods for testing
