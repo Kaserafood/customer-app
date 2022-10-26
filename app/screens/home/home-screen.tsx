@@ -6,7 +6,6 @@ import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import OneSignal from "react-native-onesignal"
 import {
   Categories,
   Chip,
@@ -30,7 +29,6 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import { checkNotificationPermission } from "../../utils/permissions"
 import { loadString } from "../../utils/storage"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
@@ -112,7 +110,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           dayStore.getDays(RNLocalize.getTimeZone()),
         ])
           .then(() => {
-            OneSignal.setExternalUserId(userStore.userId.toString())
             setCurrentDay(days[0])
           })
           .catch((error: Error) => {
