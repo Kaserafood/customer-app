@@ -28,7 +28,8 @@
     "clean-all": "npx react-native clean-project-auto",
     "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && ./gradlew assembleRelease && cd ..",
     "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi",
-    "release:android": "cd android && APP_ENV=production && ./gradlew assembleRelease && cd .."
+    "release:android": "cd android && set FILEENV=production && ./gradlew bundleRelease && cd ..",
+    "release:android:apk": "cd android && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
     "@klarna/react-native-vector-drawable": "^0.3.0",

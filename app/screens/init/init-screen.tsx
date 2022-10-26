@@ -5,6 +5,7 @@ import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-nati
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import OneSignal from "react-native-onesignal"
 import { Button, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
@@ -23,6 +24,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
         description: "Se ha presionado el boton de 'Explorar el app'",
       })
       userStore.setUserId(-1)
+      OneSignal.setExternalUserId("-1")
       commonStore.setIsSignedIn(true)
     }
 

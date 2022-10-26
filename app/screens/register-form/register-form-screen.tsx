@@ -5,6 +5,7 @@ import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import OneSignal from "react-native-onesignal"
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
 import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
@@ -37,6 +38,7 @@ export const RegisterFormScreen: FC<
         .register(data)
         .then(async (userId) => {
           if (userId > 0) {
+            OneSignal.setExternalUserId(userId.toString())
             // Si el usuario habia entrado como "Explorar el app"
             if (currentUserId === -1) {
               await saveAddress(userId)

@@ -7,6 +7,7 @@ import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import OneSignal from "react-native-onesignal"
 import { Button, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserLogin } from "../../models/user-store"
@@ -52,6 +53,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
               description: "Se ha logueado con email",
             })
             AppEventsLogger.setUserID(userStore.userId.toString())
+            OneSignal.setExternalUserId(userStore.userId.toString())
 
             if (params.screenRedirect && params.screenRedirect.length > 0)
               navigation.navigate(params.screenRedirect)
