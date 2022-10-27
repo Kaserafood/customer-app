@@ -56,7 +56,6 @@ export const ListChef = observer(function ListChef(props: {
       {state.data.map((chef, index) => (
         <View key={chef.id}>
           <ChefItem
-            onDishPress={(dish) => props.toScreen("dishDetail", dish, chef)}
             onChefPress={() => props.toScreen("menuChef", chef.dishes[0], chef)}
             onPrevious={() => state.previousDish(chef, index)}
             onNext={() => state.nextDish(chef, index)}

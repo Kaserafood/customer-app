@@ -179,6 +179,14 @@ export class Api {
 
   /**
    *
+   * @description Get information from a specific user chef
+   */
+  async getInfoChef(chefId: number): Promise<ChefResponse> {
+    return await this.request({}, `/users/chefs/${chefId}`, "GET")
+  }
+
+  /**
+   *
    * @description Get dishes grouped by latest chef
    */
   async getDishesGroupedByLatestChef(date: string, timeZone: string): Promise<ChefResponse> {

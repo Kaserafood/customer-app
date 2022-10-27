@@ -119,7 +119,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total: total,
         description: "Se agregó un producto al carrito",
       })
-      navigation.navigate("menuChef", { ...params })
+      navigation.navigate("menuChef", { ...params.chef })
     }
 
     const changeDish = (dish: DishChefModel) => {

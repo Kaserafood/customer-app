@@ -112,8 +112,17 @@ export const AppNavigator = (props: NavigationProps) => {
 
   const config = {
     screens: {
-      dishDetail: {
-        path: "product/:id",
+      category: {
+        path: "category/:id/:name",
+      },
+      favorite: {
+        path: "favorite",
+      },
+      menuChef: {
+        path: "chefs/:id",
+      },
+      newChefs: {
+        path: "chefs/new",
       },
     },
   }

@@ -16,6 +16,6 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  url: "http://192.168.0.2:3000" || Config.API_URL,
+  url: Config.API_URL,
   timeout: 50000,
 }
