@@ -53,6 +53,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
               description: "Se ha logueado con email",
             })
             AppEventsLogger.setUserID(userStore.userId.toString())
+            OneSignal.setExternalUserId(userStore.userId.toString())
 
             if (params.screenRedirect && params.screenRedirect.length > 0)
               navigation.navigate(params.screenRedirect)

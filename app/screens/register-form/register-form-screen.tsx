@@ -38,6 +38,7 @@ export const RegisterFormScreen: FC<
         .register(data)
         .then(async (userId) => {
           if (userId > 0) {
+            OneSignal.setExternalUserId(userId.toString())
             // Si el usuario habia entrado como "Explorar el app"
             OneSignal.setExternalUserId(userId.toString())
             if (currentUserId === -1) {
