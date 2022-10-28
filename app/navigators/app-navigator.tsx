@@ -116,7 +116,7 @@ export const AppNavigator = (props: NavigationProps) => {
         path: "categories/:id",
       },
       favorite: {
-        path: "favorite",
+        path: "favorites",
       },
       menuChef: {
         path: "chefs/:id",
