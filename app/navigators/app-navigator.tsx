@@ -124,6 +124,9 @@ export const AppNavigator = (props: NavigationProps) => {
       newChefs: {
         path: "chefs/new",
       },
+      dishDetail: {
+        path: "products/:id",
+      },
     },
   }
 

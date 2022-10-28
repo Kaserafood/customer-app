@@ -54,7 +54,7 @@ export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">
       delete chef.currentDishName
       delete chef.pageView
       delete chef.currentIndexPage
-      navigation.push(screen, { ...dish, chef: { ...chef }, isGetMenu: screen === "menuChef" })
+      navigation.push(screen, { ...chef, isGetMenu: screen === "menuChef" })
     }
 
     return (

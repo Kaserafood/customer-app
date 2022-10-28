@@ -1,5 +1,5 @@
 import { flow, Instance, types } from "mobx-state-tree"
-import { Api } from "../services/api"
+import { Api, DishResponse } from "../services/api"
 import { dish } from "./dish"
 import { userChef } from "./user-store"
 
@@ -100,5 +100,14 @@ export const DishStoreModel = types
       if (result && result.kind === "ok") {
         self.dishesFavorites.replace(result.data)
       }
+    }),
+    getDish: flow(function* getDish(dishId: number): Generator<any, DishChef, DishResponse> {
+      const api = new Api()
+      const result = yield api.getDish(dishId)
+
+      if (result && result.kind === "ok") {
+        return result.data as DishChef
+      }
+      return null
     }),
   }))

@@ -144,6 +144,14 @@ export class Api {
 
   /**
    *
+   * @description Get dish by id
+   */
+  async getDish(dishId: number): Promise<DishResponse> {
+    return await this.request({}, `/dishes/${dishId}`, "GET")
+  }
+
+  /**
+   *
    * @description Get dishes favorites by Kasera
    */
   async getFavoritesDishes(date: string, timeZone: string): Promise<DishResponse> {
