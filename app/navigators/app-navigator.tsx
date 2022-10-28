@@ -113,7 +113,7 @@ export const AppNavigator = (props: NavigationProps) => {
   const config = {
     screens: {
       category: {
-        path: "category/:id/:name",
+        path: "categories/:id",
       },
       favorite: {
         path: "favorite",
