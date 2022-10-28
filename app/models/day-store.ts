@@ -39,6 +39,7 @@ export const DayStoreModel = types
       }
     }),
     getDaysByChef: flow(function* getDaysByChef(timeZone: string, chefId: number) {
+      if (chefId === 0) return
       const api = new Api()
       self.daysByChef.clear()
       const result = yield api.getDaysByChefDelivery(timeZone, chefId)

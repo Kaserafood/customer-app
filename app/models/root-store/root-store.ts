@@ -6,6 +6,7 @@ import { CommonStoreModel } from "../common-store"
 import { DayStoreModel } from "../day-store"
 import { DishStoreModel } from "../dish-store"
 import { MessagesModel } from "../messages/messages"
+import { CouponModalStoreModel } from "../modal-coupon"
 import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
 
@@ -23,6 +24,7 @@ export const RootStoreModel = types.model("RootStore").props({
   addressStore: types.optional(AddressModelStore, {} as any),
   orderStore: types.optional(OrderModel, {} as any),
   messagesStore: types.optional(MessagesModel, {} as any),
+  couponModalStore: types.optional(CouponModalStoreModel, {} as any),
 })
 
 /**

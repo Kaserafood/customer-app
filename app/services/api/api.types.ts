@@ -42,11 +42,11 @@ export type CategoryResponse = {
 } & kind
 
 export type DishResponse = {
-  data: DishChef[]
+  data: DishChef[] | DishChef
 } & kind
 
 export type ChefResponse = {
-  data: UserChef[]
+  data: UserChef[] | UserChef
 } & kind
 
 export type AddressResponse = {

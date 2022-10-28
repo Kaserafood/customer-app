@@ -1,4 +1,5 @@
 import { flow, Instance, types } from "mobx-state-tree"
+import { ChefResponse } from "../services/api"
 import { Api } from "../services/api/api"
 import { saveString } from "../utils/storage"
 import { categoryStore } from "./category-store"
@@ -150,5 +151,14 @@ export const UserRegisterModel = userRegister
         return true
       }
       return false
+    }),
+    getInfoChef: flow(function* getInfoChefs(
+      chefId: number,
+    ): Generator<any, UserChef, ChefResponse> {
+      const api = new Api()
+      const result = yield api.getInfoChef(chefId)
+      if (result.kind === "ok") return result.data as UserChef
+
+      return null
     }),
   }))

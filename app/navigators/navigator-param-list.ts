@@ -1,6 +1,7 @@
 import { OrderOverview } from "../models"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
+import { UserChef } from "../models/user-store"
 
 interface registerPageParams {
   init: boolean
@@ -34,7 +35,7 @@ interface tokenScreenParams {
 }
 
 interface newPasswordScreenParams extends tokenScreenParams {}
-interface MenuChef extends DishChef {
+interface MenuChef extends UserChef {
   isGetMenu?: boolean
 }
 

@@ -1,4 +1,5 @@
 export function getFormat(amount: number, currencyCode: string): string {
+  if (!amount) return ""
   let currency = "$"
   if (currencyCode === "GTQ") currency = "Q"
 

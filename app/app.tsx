@@ -10,14 +10,14 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import { Platform } from "react-native"
-import { Settings } from "react-native-fbsdk-next"
+import { Linking } from "react-native"
+import Config from "react-native-config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { Loader, Messages } from "./components"
+import { Loader, Messages, ModalCoupon } from "./components"
 import "./i18n"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
@@ -34,9 +34,6 @@ import { loadString } from "./utils/storage"
 enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
-/**
- * This is the root component of our app.
- */
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   const {
@@ -53,16 +50,11 @@ function App() {
         .catch((error) => {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
-        checkNotificationPermission().then((result) => {
-         
-            if (result) OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-            
-        })
-      
-   
-
       trackingPermission()
     })()
+    return () => {
+      OneSignal.clearHandlers()
+    }
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -76,13 +68,40 @@ function App() {
   } else {
     if (rootStore) {
       async function verifyUser() {
+        checkNotificationPermission().then((result) => {
+          if (result) {
+            OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+            OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
+              const { notification } = openedEvent
+
+              if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
+
+              const data: any = notification.additionalData
+              if (data.type === "coupon") {
+                rootStore?.couponModalStore.setVisible(true)
+                if (data.title?.length > 0) rootStore?.couponModalStore.setTitle(data.title)
+                if (data.subtitle?.length > 0)
+                  rootStore?.couponModalStore.setSubtitle(data.subtitle)
+                if (data.image?.length > 0) rootStore?.couponModalStore.setImage(data.image)
+
+                console.log("Coupon Modal Opened", rootStore?.couponModalStore)
+              }
+            })
+          }
+        })
+
         const userId = await loadString("userId")
+        // rootStore.couponModalStore.setVisible(true)
+        // rootStore.couponModalStore.setTitle("Obtén un 20% de descuento usando el cupón EAT21")
+        // rootStore.couponModalStore.setSubtitle("Válido hasta el 31 de diciembre de 2021")
+        // rootStore.couponModalStore.setImage(
+        //   "https://cdn-icons-png.flaticon.com/512/2349/2349820.png",
+        // )
         if (userId && userId.length > 0) {
           if (!rootStore.commonStore.isSignedIn) {
             console.log("USER LOGIN")
             rootStore.commonStore.setIsSignedIn(true)
           }
-          rootStore.dishStore.clearDishes()
         }
       }
       verifyUser()
@@ -101,6 +120,7 @@ function App() {
                 onStateChange={onNavigationStateChange}
               />
               <Loader></Loader>
+              <ModalCoupon></ModalCoupon>
             </GestureHandlerRootView>
             <Messages></Messages>
           </ErrorBoundary>
