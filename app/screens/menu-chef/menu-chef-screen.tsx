@@ -59,7 +59,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         dayStore.getDaysByChef(RNLocalize.getTimeZone(), params.id).catch((error: Error) => {
           messagesStore.showError(error.message)
         })
-        if (params.isGetMenu || (!params.name || params.name?.length === 0)) {
+        if (params.isGetMenu || !params.name || params.name?.length === 0) {
           await getDishByChef()
           setDishes(dishStore.dishesChef)
         } else {
@@ -73,8 +73,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           userStore
             .getInfoChef(params.id)
             .then((chef) => {
-              console.log(chef)
-              if (chef) navigation.setParams({ ...chef })
+              if (chef) navigation.setParams({ ...chef, id: Number(params.id) })
             })
             .catch((error: Error) => {
               messagesStore.showError(error.message)
