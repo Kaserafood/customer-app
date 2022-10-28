@@ -16,6 +16,6 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  url: Config.API_URL,
+  url: "https://kasera-customer-api.azurewebsites.net",
   timeout: 50000,
 }
