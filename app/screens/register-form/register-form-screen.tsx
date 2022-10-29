@@ -37,6 +37,7 @@ export const RegisterFormScreen: FC<
       userStore
         .register(data)
         .then(async (userId) => {
+          commonStore.setVisibleLoading(false)
           if (userId > 0) {
             OneSignal.setExternalUserId(userId.toString())
             // Si el usuario habia entrado como "Explorar el app"
@@ -48,12 +49,11 @@ export const RegisterFormScreen: FC<
               navigation.navigate("main")
             }
           }
-          commonStore.setVisibleLoading(false)
         })
         .catch((error: Error) => {
+          commonStore.setVisibleLoading(false)
           messagesStore.showError(error.message)
         })
-        .finally(() => commonStore.setVisibleLoading(false))
     }
   }
 
