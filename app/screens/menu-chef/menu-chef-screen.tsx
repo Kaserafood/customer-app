@@ -55,10 +55,18 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     useEffect(() => {
       modalStateCart.setVisible(false)
       if (__DEV__) console.log("MenuChefScreen: useEffect", params)
+      const chefName = params.name
       ;(async () => {
-        dayStore.getDaysByChef(RNLocalize.getTimeZone(), params.id).catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
+        dayStore
+          .getDaysByChef(RNLocalize.getTimeZone(), params.id)
+          .then(() => {
+            if (!chefName || chefName?.length === 0) {
+              if (dayStore.days?.length > 0) dayStore.setCurrentDay(dayStore.days[0])
+            }
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
+          })
         if (params.isGetMenu || !params.name || params.name?.length === 0) {
           await getDishByChef()
           setDishes(dishStore.dishesChef)

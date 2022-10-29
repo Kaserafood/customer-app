@@ -11,7 +11,6 @@
  */
 import React, { useEffect, useState } from "react"
 import { Linking } from "react-native"
-import Config from "react-native-config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
@@ -70,7 +69,12 @@ function App() {
       async function verifyUser() {
         checkNotificationPermission().then((result) => {
           if (result) {
-            OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+            if (__DEV__) {
+              OneSignal.setAppId("f93984d0-c581-4eec-ad26-c3d30c3c7835")
+            } else {
+              OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+            }
+
             OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
               const { notification } = openedEvent
 
@@ -91,12 +95,6 @@ function App() {
         })
 
         const userId = await loadString("userId")
-        // rootStore.couponModalStore.setVisible(true)
-        // rootStore.couponModalStore.setTitle("Obtén un 20% de descuento usando el cupón EAT21")
-        // rootStore.couponModalStore.setSubtitle("Válido hasta el 31 de diciembre de 2021")
-        // rootStore.couponModalStore.setImage(
-        //   "https://cdn-icons-png.flaticon.com/512/2349/2349820.png",
-        // )
         if (userId && userId.length > 0) {
           if (!rootStore.commonStore.isSignedIn) {
             console.log("USER LOGIN")
