@@ -2,7 +2,6 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
-import Config from "react-native-config"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
@@ -32,7 +31,6 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     useLayoutEffect(() => {
       __DEV__ && console.log("in init screen")
       changeNavigationBarColor(color.primary, false, true)
-      console.log(Config)
     }, [])
 
     return (

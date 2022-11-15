@@ -98,8 +98,8 @@ const AppStack = observer(() => {
         <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
+        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
       </Stack.Group>
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
     </Stack.Navigator>
   )
 })

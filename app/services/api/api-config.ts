@@ -1,6 +1,10 @@
-
-import Config from "react-native-config"
-
+let url = ""
+if (__DEV__) {
+  url = "https://kasera-customer-api-test.azurewebsites.net"
+  url = "http://192.168.0.2:3000"
+} else {
+  url = "https://kasera-customer-api.azurewebsites.net"
+}
 
 export interface ApiConfig {
   /**
@@ -18,6 +22,6 @@ export interface ApiConfig {
  * The default configuration for the app.
  */
 export const DEFAULT_API_CONFIG: ApiConfig = {
-  url: "https://kasera-customer-api.azurewebsites.net",
+  url,
   timeout: 50000,
 }

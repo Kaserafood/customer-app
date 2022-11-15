@@ -94,9 +94,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       __DEV__ && console.log("Home  useEffect")
-
+      commonStore.setVisibleLoading(true)
       async function fetch() {
-        commonStore.setVisibleLoading(true)
         /*
          * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
          */
@@ -110,7 +109,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           dayStore.getDays(RNLocalize.getTimeZone()),
         ])
           .then(() => {
-            setCurrentDay(days[0])
+            if (dayStore.days?.length > 0) {
+              dayStore.setCurrentDay(dayStore.days[0])
+            }
           })
           .catch((error: Error) => {
             messagesStore.showError(error.message)
