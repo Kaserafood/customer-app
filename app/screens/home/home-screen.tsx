@@ -1,11 +1,5 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { StyleSheet, View } from "react-native"
-import { AppEventsLogger } from "react-native-fbsdk-next"
-import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+
 import {
   Categories,
   Chip,
@@ -17,21 +11,30 @@ import {
   ModalRequestDish,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
-import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { ModalLocation } from "../../components/location/modal-location"
-import { useStores } from "../../models"
-import { Category } from "../../models/category-store"
-import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import { NavigatorParamList } from "../../navigators"
+import React, { FC, useEffect, useLayoutEffect } from "react"
+import { StyleSheet, View } from "react-native"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { ModalStateHandler } from "../../utils/modalState"
-import { loadString } from "../../utils/storage"
+
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { Banner } from "./banner"
+import { Banner as BannerModel } from "../../models/banner-store"
+import { Category } from "../../models/category-store"
+import { Day } from "../../models/day-store"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
+import { ModalLocation } from "../../components/location/modal-location"
+import { ModalStateHandler } from "../../utils/modalState"
 import { ModalWelcome } from "./modal-welcome"
+import { NavigatorParamList } from "../../navigators"
+import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { loadString } from "../../utils/storage"
+import { observer } from "mobx-react-lite"
+import { useStores } from "../../models"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -55,9 +58,20 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       cartStore,
       messagesStore,
     } = useStores()
-    const { days, setCurrentDay, currentDay } = dayStore
+    const { currentDay } = dayStore
 
     const toCategory = (category: Category) => {
+      navigation.navigate("category", {
+        ...category,
+      })
+    }
+
+    const onBannerPress = (banner: BannerModel) => {
+      const category: Category = {
+        id: banner.categoryId,
+        name: banner.categoryName,
+        image: ""
+      }
       navigation.navigate("category", {
         ...category,
       })
@@ -170,9 +184,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           <Separator style={utilSpacing.m4}></Separator>
           <Banner
             onPressWelcome={() => modalStateWelcome.setVisible(true)}
-            onPressSeasonal={() => toCategory(categoryStore.seasonal)}
             onPressNewChefs={() => navigation.navigate("newChefs")}
-            onPressFavorites={() => navigation.navigate("favorite")}
+            onBannerPress={onBannerPress}
+
           ></Banner>
           <View style={utilSpacing.px4}>
             <View
