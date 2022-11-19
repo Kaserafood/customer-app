@@ -1,9 +1,11 @@
 import { Address, Coupon, OrderDetail, OrderOverview } from "../../models"
+
+import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
-import { UserChef } from "../../models/user-store"
 import { GeneralApiProblem } from "./api-problem"
+import { UserChef } from "../../models/user-store"
 
 type typeKind = "ok" | "bad-data"
 export interface GeneralApiResponse {
@@ -70,4 +72,8 @@ export type OrderDetailResponse = {
 
 export type CuponResponse = {
   data: Coupon
+} & kind
+
+export type BannerResponse = {
+  data: Banner[]
 } & kind
