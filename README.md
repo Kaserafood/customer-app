@@ -1,11 +1,13 @@
+<p align="center">
+  <img src="https://github.com/Kaserafood/customer-app/blob/main/kasera.png?raw=true" width="200" title="hover text">
+</p>
+
 # Kasera Customer App!
 
-## Quick Start
-
-The Ignite boilerplate project's structure will look similar to this:
+The project structure will look similar to this:
 
 ```
-ignite-project
+project
 ├── app
 │   ├── components
 │   ├── i18n
