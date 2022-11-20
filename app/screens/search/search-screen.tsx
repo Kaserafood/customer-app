@@ -86,10 +86,9 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                 utilSpacing.py5,
                 utilSpacing.px4,
                 utilFlex.flexRow,
-                utilSpacing.mb3,
+                utilSpacing.my5,
                 utilFlex.flexCenterVertical,
-                utilSpacing.mx3,
-                utilSpacing.mt5,
+                utilSpacing.mx3
               ]}
               onPress={() => modalStateSearch.setVisible(true)}
             >
