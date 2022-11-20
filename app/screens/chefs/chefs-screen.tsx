@@ -1,10 +1,5 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { useChef } from "../../common/hooks/useChef"
+
 import {
   Categories,
   Chip,
@@ -13,20 +8,27 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text,
+  Text
 } from "../../components"
-import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { ModalLocation } from "../../components/location/modal-location"
-import { useStores } from "../../models"
-import { Category } from "../../models/category-store"
-import { Day } from "../../models/day-store"
-import { Dish } from "../../models/dish"
-import { NavigatorParamList } from "../../navigators"
+import { DataState, ListChef } from "./chef-list"
+import React, { FC, useEffect, useLayoutEffect, useState } from "react"
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { ModalStateHandler } from "../../utils/modalState"
+
+import { Category } from "../../models/category-store"
 import { ChefItemModel } from "./chef-item"
-import { DataState, ListChef } from "./chef-list"
+import { Day } from "../../models/day-store"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
+import { Dish } from "../../models/dish"
+import { ModalLocation } from "../../components/location/modal-location"
+import { ModalStateHandler } from "../../utils/modalState"
+import { NavigatorParamList } from "../../navigators"
+import { StackScreenProps } from "@react-navigation/stack"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { observer } from "mobx-react-lite"
+import { useChef } from "../../common/hooks/useChef"
+import { useStores } from "../../models"
 
 // const state = new DataState()
 const modalStateLocation = new ModalStateHandler()
@@ -48,6 +50,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       messagesStore,
     } = useStores()
     const { formatDishesGropuedByChef } = useChef()
+    const [refreshing, setRefreshing] = useState(false);
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -56,23 +59,25 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     useEffect(() => {
       __DEV__ && console.log("chefs useEffect")
       commonStore.setVisibleLoading(true)
-      async function fetch() {
-        await dishStore
-          .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
-          .then(() => {
-            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
-          })
-          .catch((error: Error) => {
-            messagesStore.showError(error.message)
-          })
-          .finally(() => {
-            commonStore.setVisibleLoading(false)
-            __DEV__ && console.log("hide loaindg")
-          })
-      }
 
       fetch()
     }, [])
+
+    const fetch = async () => {
+      state.setData([])
+      await dishStore
+        .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+        .then(() => {
+          state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+          __DEV__ && console.log("hide loaindg")
+        })
+    }
 
     const toCategory = (category: Category) => {
       navigation.navigate("category", {
@@ -117,6 +122,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         .finally(() => commonStore.setVisibleLoading(false))
     }
 
+    const onRefresh = async () => {
+      setRefreshing(true)
+      await fetch().finally(() => setRefreshing(false))
+
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -124,7 +135,14 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         style={styles.container}
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />}
+        >
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
