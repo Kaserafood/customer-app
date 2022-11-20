@@ -1,13 +1,14 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { DrawerActions } from "@react-navigation/native"
-import React from "react"
-import { AppEventsLogger } from "react-native-fbsdk-next"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { Icon } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
-import { utilSpacing } from "../theme/Util"
+
+import { AppEventsLogger } from "react-native-fbsdk-next"
+import { DrawerActions } from "@react-navigation/native"
+import { Icon } from "../components"
+import React from "react"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { getI18nText } from "../utils/translate"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { utilSpacing } from "../theme/Util"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
@@ -18,6 +19,7 @@ export function TabMainNavigation({ navigationRef }) {
   return (
     <Tab.Navigator
       screenOptions={{
+
         headerShown: false,
         headerTintColor: color.primary,
         tabBarInactiveTintColor: color.text,
