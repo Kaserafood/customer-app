@@ -34,12 +34,22 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       commonStore,
       userStore,
       messagesStore,
+      categoryStore,
     } = useStores()
 
     useEffect(() => {
       console.log(params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
+
+        if (!params.name) {
+          categoryStore.getAll().then(() => {
+            navigation.setParams({
+              name: categoryStore.categories.find((c) => c.id === Number(params.id))?.name,
+            })
+          })
+        }
+
         await getAll(
           dayStore.currentDay.date,
           RNLocalize.getTimeZone(),

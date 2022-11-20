@@ -50,26 +50,47 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       messagesStore,
     } = useStores()
     const [currentAction, setCurrentAction] = useState<any>()
-    const { currencyCode, name, image, description, categories, id } = params.chef
     const [dishes, setDishes] = useState<DishChef[]>([])
 
     useEffect(() => {
-      if (__DEV__) {
-        console.log("MenuChefScreen: useEffect")
-        console.log(params)
-      }
-
+      modalStateCart.setVisible(false)
+      if (__DEV__) console.log("MenuChefScreen: useEffect", params)
+      const chefName = params.name
       ;(async () => {
-        dayStore.getDaysByChef(RNLocalize.getTimeZone(), id).catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
-        if (params.isGetMenu) {
+        dayStore
+          .getDaysByChef(RNLocalize.getTimeZone(), params.id)
+          .then(() => {
+            if (!chefName || chefName?.length === 0) {
+              if (dayStore.days?.length > 0) dayStore.setCurrentDay(dayStore.days[0])
+            }
+          })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
+          })
+        if (params.isGetMenu || !params.name || params.name?.length === 0) {
           await getDishByChef()
           setDishes(dishStore.dishesChef)
         } else {
           setDishes(dishStore.dishesChef)
         }
       })()
+      // El nombre no va venir en params si abre esta ventana desde el push notification
+      if (!params.name || params.name?.length === 0) {
+        commonStore.setVisibleLoading(true)
+        ;(async () => {
+          userStore
+            .getInfoChef(params.id)
+            .then((chef) => {
+              if (chef) navigation.setParams({ ...chef, id: Number(params.id) })
+            })
+            .catch((error: Error) => {
+              messagesStore.showError(error.message)
+            })
+            .finally(() => {
+              commonStore.setVisibleLoading(false)
+            })
+        })()
+      }
     }, [])
 
     useEffect(
@@ -78,7 +99,6 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           e.preventDefault()
           setCurrentAction(e.data.action)
           const payload: any = e.data.action.payload
-          console.log(e)
           if (
             !cartStore.hasItems ||
             e.data.action.type !== "GO_BACK" ||
@@ -106,7 +126,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const getDishByChef = async () => {
       commonStore.setVisibleLoading(true)
       await dishStore
-        .getByChef(params.chef.id)
+        .getByChef(params.id)
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
@@ -122,10 +142,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         description: "Se ha presionado un platillo en la pantalla menu del chef",
       })
 
-      navigation.push("dishDetail", { ...dish, chef: params.chef })
+      navigation.push("dishDetail", { ...dish, chef: params })
     }
 
     const toDeliveryDetail = () => {
+      modalStateCart.setVisible(false)
       // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
         navigation.navigate("registerForm")
@@ -147,8 +168,8 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const openCart = () => {
       AppEventsLogger.logEvent("ViewCart", 1, {
         total: cartStore.subtotal,
-        chefId: params.chef?.id,
-        chefName: params.chef?.name,
+        chefId: params.id,
+        chefName: params.name,
         description: "Se ha presionado el boton de ver carrito en la pantalla menu del chef",
       })
 
@@ -171,11 +192,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           <View style={[styles.card, { ...SHADOW }]}>
             <View style={utilFlex.flexRow}>
               <View>
-                <Image style={styles.imageChef} source={{ uri: image }}></Image>
-                <Text size="lg" style={utilSpacing.mt4} preset="bold" text={name}></Text>
+                <Image style={styles.imageChef} source={{ uri: params.image }}></Image>
+                <Text size="lg" style={utilSpacing.mt4} preset="bold" text={params.name}></Text>
               </View>
               <View style={utilFlex.flex1}>
-                <Text numberOfLines={5} style={utilSpacing.mx3} text={description}></Text>
+                <Text numberOfLines={5} style={utilSpacing.mx3} text={params.description}></Text>
               </View>
             </View>
             <View style={[utilFlex.flexRow, utilSpacing.mt2, utilFlex.flexCenterVertical]}>
@@ -183,13 +204,13 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 numberOfLines={3}
                 preset="semiBold"
                 style={[utilText.textGray, utilFlex.flex1]}
-                text={getCategoriesName(categories)}
+                text={getCategoriesName(params.categories)}
               ></Text>
               <Price
                 amount={orderStore.priceDelivery}
                 style={utilSpacing.ml3}
                 preset="delivery"
-                currencyCode={currencyCode}
+                currencyCode={params.currencyCode}
               ></Price>
             </View>
           </View>
@@ -209,7 +230,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                   visibleChefImage={false}
                   visiblePriceDelivery={false}
                   dish={dish}
-                  currencyCode={currencyCode}
+                  currencyCode={params.currencyCode}
                   onPress={() => toDishDetail(dish)}
                   sizeTextDescription="md"
                 ></Dish>
@@ -229,16 +250,12 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             onPress={openCart}
             text={`${getI18nText("menuChefScreen.watchCart")} ${getFormat(
               cartStore.subtotal,
-              currencyCode,
+              params.currencyCode,
             )}`}
           ></ButtonFooter>
         )}
 
-        <ModalCart
-          chef={params.chef}
-          onContinue={toDeliveryDetail}
-          modal={modalStateCart}
-        ></ModalCart>
+        <ModalCart chef={params} onContinue={toDeliveryDetail} modal={modalStateCart}></ModalCart>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
         <ModalLeave modalState={modalStateLeave} onPressLeave={() => onPressLeave()}></ModalLeave>
       </Screen>

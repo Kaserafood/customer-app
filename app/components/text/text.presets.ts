@@ -50,6 +50,11 @@ export const fontSize = {
    * Text large font size
    */
   lg: { fontSize: typographySize.lg },
+
+  /**
+   * Text large font exta large
+   */
+  xl: { fontSize: typographySize.xl },
 }
 
 export type TextSize = keyof typeof fontSize

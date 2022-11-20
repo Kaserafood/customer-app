@@ -1,12 +1,6 @@
-import { ApiResponse, ApisauceInstance, create } from "apisauce"
-import { Address } from "../../models"
-import { Order } from "../../models/order/order"
-import { UserLogin } from "../../models/user-store"
-import { handleMessageProblem } from "../../utils/messages"
-import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { getGeneralApiProblem } from "./api-problem"
 import {
   AddressResponse,
+  BannerResponse,
   CategoryResponse,
   ChefResponse,
   CommonResponse,
@@ -16,8 +10,16 @@ import {
   GeneralApiResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
-  UserLoginResponse,
+  UserLoginResponse
 } from "./api.types"
+import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
+
+import { Address } from "../../models"
+import { Order } from "../../models/order/order"
+import { UserLogin } from "../../models/user-store"
+import { getGeneralApiProblem } from "./api-problem"
+import { handleMessageProblem } from "../../utils/messages"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 /**
@@ -144,6 +146,14 @@ export class Api {
 
   /**
    *
+   * @description Get dish by id
+   */
+  async getDish(dishId: number): Promise<DishResponse> {
+    return await this.request({}, `/dishes/${dishId}`, "GET")
+  }
+
+  /**
+   *
    * @description Get dishes favorites by Kasera
    */
   async getFavoritesDishes(date: string, timeZone: string): Promise<DishResponse> {
@@ -175,6 +185,14 @@ export class Api {
     categoryId?: number,
   ): Promise<ChefResponse> {
     return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+  }
+
+  /**
+   *
+   * @description Get information from a specific user chef
+   */
+  async getInfoChef(chefId: number): Promise<ChefResponse> {
+    return await this.request({}, `/users/chefs/${chefId}`, "GET")
   }
 
   /**
@@ -350,5 +368,19 @@ export class Api {
    */
   async reportBug(data: any): Promise<CommonResponse> {
     return await this.request(data, `/users/report-bug`, "POST")
+  }
+
+  /**
+   * @description Get all banners
+   */
+   async getBanners(): Promise<BannerResponse> {
+    return await this.request({}, `/banners`, "GET")
+  }
+
+  /**
+   * @description Get Option in system
+   */
+   async getParam(name: string): Promise<CommonResponse> {
+    return await this.request({}, `/params/${name}`, "GET")
   }
 }

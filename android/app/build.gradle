@@ -1,5 +1,6 @@
 apply plugin: 'kotlin-android'
 apply plugin: "com.android.application"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 import com.android.build.OutputFile
 
 /**
@@ -135,8 +136,8 @@ android {
         applicationId "com.kasera.client"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 33
-        versionName "0.9.4"
+        versionCode 50
+        versionName "0.9.10"
     }
     splits {
         abi {

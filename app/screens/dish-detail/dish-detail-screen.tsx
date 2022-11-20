@@ -49,11 +49,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const [loadingDishes, setLoadingDishes] = useState(true)
 
     useEffect(() => {
-      setQuantity(1)
-      setTotal(params.price)
-      cartStore.setSubmited(false)
+      const getDish = async () => {
+        commonStore.setVisibleLoading(true)
+        dishStore.getDish(params.id).then((res) => {
+          if (res) {
+            setCurrentDish(res)
+            commonStore.setVisibleLoading(false)
+            navigation.setParams({ ...res })
+          }
+        })
+      }
+      // No va venir el chef cuando se llega a esta pantalla desde el push notification
+      if (!params.chef) getDish()
+    }, [])
 
+    useEffect(() => {
       async function fetch() {
+        setQuantity(1)
+        setTotal(params.price)
+        cartStore.setSubmited(false)
+
         if (commonStore.currentChefId !== params.chef.id) {
           commonStore.setCurrentChefId(params.chef.id)
           commonStore.setCurrentChefImage(params.chef.image)
@@ -63,12 +78,12 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           })
         } else setLoadingDishes(false)
       }
-
-      fetch()
-    }, [])
+      if (params.chef?.id > 0) fetch()
+    }, [params.chef])
 
     useEffect(() => {
-      setAddonsAvailable(params.addons.filter((addon) => addon.hide_in_app !== "yes"))
+      if (params.addons)
+        setAddonsAvailable(params.addons.filter((addon) => addon.hide_in_app !== "yes"))
     }, [params.addons])
 
     useEffect(() => {
@@ -119,7 +134,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total: total,
         description: "Se agregó un producto al carrito",
       })
-      navigation.navigate("menuChef", { ...params })
+      navigation.navigate("menuChef", { ...params.chef })
     }
 
     const changeDish = (dish: DishChefModel) => {
@@ -146,6 +161,8 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         setLoading(false)
       }, 300)
     }
+
+    if (!params.chef) return <Screen preset="fixed"></Screen>
 
     return (
       <Screen preset="fixed" style={styles.container}>
@@ -186,14 +203,14 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
                 <Price
                   style={styles.price}
                   amount={currentDish.price}
-                  currencyCode={currentDish.chef.currencyCode}
+                  currencyCode={currentDish.chef?.currencyCode}
                 ></Price>
               </>
             )}
           </View>
 
           {addonsAvailable.length > 0 ? (
-            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef.currencyCode }}>
+            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef?.currencyCode }}>
               <Addons
                 addons={addonsAvailable}
                 onTotalPriceChange={(total) => setTotalAddon(total)}
@@ -243,7 +260,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
           <View style={[utilSpacing.mt5, utilSpacing.mb3, utilSpacing.ml5, utilFlex.flexRow]}>
             <Text size="lg" tx="dishDetailScreen.moreProductsChef" preset="bold"></Text>
-            <Text size="lg" preset="bold" text={` ${currentDish.chef.name}`}></Text>
+            <Text size="lg" preset="bold" text={` ${currentDish.chef?.name}`}></Text>
           </View>
           {loadingDishes ? (
             <SkeletonPlaceholder>
@@ -300,7 +317,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             </SkeletonPlaceholder>
           ) : (
             <ListDish
-              currencyCode={currentDish.chef.currencyCode}
+              currencyCode={currentDish.chef?.currencyCode}
               onChangeDish={(dish) => changeDish(dish)}
               dishId={currentDish.id}
             ></ListDish>
@@ -310,7 +327,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           onPress={methods.handleSubmit(onSubmit)}
           text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(
             total,
-            currentDish.chef.currencyCode,
+            currentDish.chef?.currencyCode,
           )}`}
         ></ButtonFooter>
       </Screen>

@@ -94,10 +94,11 @@ const AppStack = observer(() => {
         <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
         <Stack.Screen name="newPassword" component={NewPasswordScreen} />
         <Stack.Screen name="loginForm" component={LoginFormScreen} />
-        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+
         <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
+        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )
@@ -108,11 +109,38 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
+
+  const config = {
+    screens: {
+      category: {
+        path: "categories/:id",
+      },
+      favorite: {
+        path: "favorites",
+      },
+      menuChef: {
+        path: "chefs/:id",
+      },
+      newChefs: {
+        path: "chefs/new",
+      },
+      dishDetail: {
+        path: "products/:id",
+      },
+    },
+  }
+
+  const linking = {
+    prefixes: ["kasera://"],
+    config,
+  }
+
   return (
     <NavigationContainer
       onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      linking={linking}
       {...props}
     >
       <AppStack />

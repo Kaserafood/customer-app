@@ -6,7 +6,6 @@ import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
 import { Price, Text } from "../../components"
 import { useStores } from "../../models"
-import { Dish } from "../../models/dish"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -42,11 +41,6 @@ export interface ChefItemProps {
    * Callback on change position with scroll
    */
   onChangePosition?: (index: number) => void
-
-  /**
-   * onDishPress callback
-   */
-  onDishPress?: (dish: Dish) => void
 
   /**
    * Callcback on press chef image

@@ -47,7 +47,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           commonStore.setVisibleLoading(false)
           if (userValid) {
             commonStore.setIsSignedIn(true)
-
+            OneSignal.setExternalUserId(userStore.userId.toString())
             AppEventsLogger.logEvent("login", {
               method: "email",
               description: "Se ha logueado con email",
@@ -61,9 +61,9 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           }
         })
         .catch((error: Error) => {
+          commonStore.setVisibleLoading(false)
           messagesStore.showError(error.message)
         })
-        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     const handleBack = () => {
