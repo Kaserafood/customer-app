@@ -112,17 +112,17 @@ export const DishStoreModel = types
       }
       return null
     }),
-    getSearch: flow(function* getSearch(search: string , date: string, timeZone: string) {
+    getSearch: flow(function* getSearch(search: string, date: string, timeZone: string) {
       const api = new Api()
       const result = yield api.getSearchDishes(search, date, timeZone)
 
       if (result && result.kind === "ok") {
         self.dishesSearch.replace(result.data)
-      }else {
+      } else {
         self.dishesSearch.clear()
       }
     }),
     clearSearchDishes() {
       self.dishesSearch.clear()
-    }
+    },
   }))

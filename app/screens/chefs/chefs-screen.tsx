@@ -8,7 +8,7 @@ import {
   ModalDeliveryDate,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DataState, ListChef } from "./chef-list"
 import React, { FC, useEffect, useLayoutEffect, useState } from "react"
@@ -50,7 +50,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       messagesStore,
     } = useStores()
     const { formatDishesGropuedByChef } = useChef()
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState(false)
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -125,7 +125,6 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     const onRefresh = async () => {
       setRefreshing(true)
       await fetch().finally(() => setRefreshing(false))
-
     }
 
     return (
@@ -135,13 +134,9 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         style={styles.container}
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView style={styles.container}
-
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />}
+        <ScrollView
+          style={styles.container}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
           <Location
             onPress={() => {

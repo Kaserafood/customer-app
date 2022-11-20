@@ -357,7 +357,7 @@
   "searchScreen": {
     "title": "Buscador",
     "somethingDiferent": "Quiero algo diferente",
-    "searchPlaceholder" : "Buscar..."
+    "searchPlaceholder": "Buscar..."
   },
   "mapScreen": {
     "title": "Ajusta el pin",

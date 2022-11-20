@@ -11,7 +11,7 @@ import {
   ModalRequestDish,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
@@ -46,7 +46,7 @@ const modalStateWelcome = new ModalStateHandler()
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
-    const [refreshing, setRefreshing] = useState(false);
+    const [refreshing, setRefreshing] = useState(false)
     const {
       dishStore,
       dayStore,
@@ -69,7 +69,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       const category: Category = {
         id: banner.categoryId,
         name: banner.categoryName,
-        image: ""
+        image: "",
       }
       navigation.navigate("category", {
         ...category,
@@ -128,7 +128,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }, [])
 
     const fetch = async () => {
-
       /*
        * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
        */
@@ -153,14 +152,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           commonStore.setVisibleLoading(false)
           __DEV__ && console.log("hide loading")
         })
-
     }
 
     const onRefresh = useCallback(async () => {
-      setRefreshing(true);
+      setRefreshing(true)
       console.log("NOEW IS REFRESHING")
-      await fetch().then(() => setRefreshing(false));
-    }, []);
+      await fetch().then(() => setRefreshing(false))
+    }, [])
 
     return (
       <Screen
@@ -171,11 +169,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       >
         <ScrollView
           style={styles.container}
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-            />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         >
           <Location
             onPress={() => {
@@ -201,7 +195,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             onPressWelcome={() => modalStateWelcome.setVisible(true)}
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
-
           ></Banner>
           <View style={utilSpacing.px4}>
             <View
@@ -227,15 +220,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             )}
           </View>
           <View style={utilSpacing.mb8}>
-            {
-              (!commonStore.isVisibleLoading && !refreshing) && (
-                <EmptyData
-                  lengthData={dishStore.totalDishes}
-                  onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
-                ></EmptyData>
-              )
-            }
-
+            {!commonStore.isVisibleLoading && !refreshing && (
+              <EmptyData
+                lengthData={dishStore.totalDishes}
+                onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+              ></EmptyData>
+            )}
           </View>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>

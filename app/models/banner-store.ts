@@ -8,11 +8,10 @@ export const bannerStore = types.model("CategoryStore").props({
   title: types.maybe(types.string),
   image: types.maybe(types.string),
   textWhite: types.maybe(types.boolean),
-  buttonText : types.maybe(types.string),
+  buttonText: types.maybe(types.string),
   categoryId: types.maybe(types.number),
-  categoryName : types.maybe(types.string),
-  description : types.maybe(types.string),
-  
+  categoryName: types.maybe(types.string),
+  description: types.maybe(types.string),
 })
 export interface Banner extends SnapshotOut<typeof bannerStore> {}
 
@@ -25,7 +24,7 @@ export const BannerStoreModel = types
   })
   .extend(withEnvironment)
   .actions((self) => ({
-    setBanners:  (banners: Banner[]) => {
+    setBanners: (banners: Banner[]) => {
       self.banners.replace(banners)
     },
   }))
@@ -44,7 +43,7 @@ export const BannerStoreModel = types
       const result = yield api.getParam("welcome_banner")
 
       if (result && result.kind === "ok") {
-        self.showWelcome = parseInt( result.data?.value ?? '0') === 1
+        self.showWelcome = parseInt(result.data?.value ?? "0") === 1
       }
     }),
     getNewChefs: flow(function* getNewChefs() {
@@ -52,7 +51,7 @@ export const BannerStoreModel = types
       const result = yield api.getParam("new_chefs_banner")
 
       if (result && result.kind === "ok") {
-        self.showNewChefs = parseInt( result.data?.value ?? '0') === 1
+        self.showNewChefs = parseInt(result.data?.value ?? "0") === 1
       }
     }),
   }))

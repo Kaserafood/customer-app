@@ -1,7 +1,15 @@
 import * as RNLocalize from "react-native-localize"
 
 import { BackHandler, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native"
-import { DayDelivery, Dish, EmptyData, Icon, Modal, ModalRequestDish, Separator } from "../../components"
+import {
+  DayDelivery,
+  Dish,
+  EmptyData,
+  Icon,
+  Modal,
+  ModalRequestDish,
+  Separator,
+} from "../../components"
 import React, { useEffect, useState } from "react"
 import { color, spacing } from "../../theme"
 
@@ -17,12 +25,11 @@ import { useStores } from "../../models"
 import { utilSpacing } from "../../theme/Util"
 
 interface ModalSearchProps {
-  modalState: ModalStateHandler,
+  modalState: ModalStateHandler
   onDishPress: (dish: DishChef) => void
 }
 const modalStateRequestDish = new ModalStateHandler()
 export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchProps) => {
-
   const { dishStore, dayStore, messagesStore } = useStores()
   const [search, setSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -53,18 +60,18 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
   }, [modalStateRequestDish.isVisible])
 
   useEffect(() => {
-    if (search?.length > 0)
-      setIsLoading(true)
+    if (search?.length > 0) setIsLoading(true)
   }, [search])
 
   const onSearch = () => {
     if (search?.length > 0) {
-
       setIsLoading(true)
 
-      dishStore.getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone()).catch((error: Error) => {
-        messagesStore.showError(error.message)
-      })
+      dishStore
+        .getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone())
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         .finally(() => {
           setIsLoading(false)
         })
@@ -82,7 +89,6 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
   useDebounce(onSearch, 500, [search])
 
   return (
-
     <>
       <Modal
         modal={modalState}
@@ -91,11 +97,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
         position="bottom"
         isVisibleIconClose={false}
       >
-
-        <StatusBar
-          backgroundColor={color.palette.white}
-          barStyle={"dark-content"}
-        />
+        <StatusBar backgroundColor={color.palette.white} barStyle={"dark-content"} />
 
         <View style={styles.modal}>
           <View style={[utilSpacing.mx4, utilSpacing.mt4]}>
@@ -122,24 +124,24 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
             )}
           </View>
 
-          {search?.length !== 0 &&
-            (
-              <DayDelivery
-                days={dayStore.days}
-                onPress={(day) => {
-                  onChangeDay(day)
-                }}
-                hideWhyButton={true}
-                style={utilSpacing.mt2}
-              ></DayDelivery>
-            )
-          }
+          {search?.length !== 0 && (
+            <DayDelivery
+              days={dayStore.days}
+              onPress={(day) => {
+                onChangeDay(day)
+              }}
+              hideWhyButton={true}
+              style={utilSpacing.mt2}
+            ></DayDelivery>
+          )}
 
           <ScrollView style={utilSpacing.px4}>
             {dishStore.dishesSearch.map((dish, index) => (
               <View key={dish.id}>
                 <Dish dish={dish} onPress={() => onDishPress(dish)}></Dish>
-                {index !== dishStore.totalDishes - 1 && <Separator style={utilSpacing.my3}></Separator>}
+                {index !== dishStore.totalDishes - 1 && (
+                  <Separator style={utilSpacing.my3}></Separator>
+                )}
               </View>
             ))}
 
@@ -149,14 +151,11 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
                 onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
               ></EmptyData>
             )}
-
           </ScrollView>
-
         </View>
       </Modal>
       <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
     </>
-
   )
 })
 
@@ -173,8 +172,6 @@ const styles = StyleSheet.create({
   noRadius: {
     borderTopEndRadius: 0,
     borderTopStartRadius: 0,
-    padding: 0
+    padding: 0,
   },
-
 })
-

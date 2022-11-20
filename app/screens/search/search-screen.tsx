@@ -27,7 +27,6 @@ const modalStateLocation = new ModalStateHandler()
 const modalStateSearch = new ModalStateHandler()
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
   ({ navigation }) => {
-
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
     }, [])
@@ -37,7 +36,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
       userStore,
       cartStore,
       commonStore,
-      dishStore
+      dishStore,
     } = useStores()
 
     const toCategory = (category: Category) => {
@@ -81,18 +80,25 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         />
         <ScrollView style={styles.body}>
           <View style={utilSpacing.mb5}>
-
-            <TouchableOpacity style={[styles.search, utilSpacing.py5, utilSpacing.px4, utilFlex.flexRow, utilSpacing.mb3, utilFlex.flexCenterVertical, utilSpacing.mx3, utilSpacing.mt5]} onPress={() => modalStateSearch.setVisible(true)}>
+            <TouchableOpacity
+              style={[
+                styles.search,
+                utilSpacing.py5,
+                utilSpacing.px4,
+                utilFlex.flexRow,
+                utilSpacing.mb3,
+                utilFlex.flexCenterVertical,
+                utilSpacing.mx3,
+                utilSpacing.mt5,
+              ]}
+              onPress={() => modalStateSearch.setVisible(true)}
+            >
               <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
               <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
             </TouchableOpacity>
 
             {userStore.userId > 0 && (
-              <Ripple
-                rippleOpacity={0.2}
-                rippleDuration={400}
-                onPress={openRequestDish}
-              >
+              <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={openRequestDish}>
                 <Card style={styles.card}>
                   <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
                     <Image style={[utilSpacing.mr2, styles.image]} source={images.step1}></Image>
@@ -172,7 +178,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
 const FocusAwareStatusBar = observer((props: any) => {
   const isFocused = useIsFocused()
 
-  return (isFocused) ? <StatusBar {...props} /> : null
+  return isFocused ? <StatusBar {...props} /> : null
 })
 
 const styles = StyleSheet.create({
@@ -210,6 +216,5 @@ const styles = StyleSheet.create({
   },
   text: {
     lineHeight: 20,
-  }
-
+  },
 })

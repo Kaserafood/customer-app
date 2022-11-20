@@ -19,7 +19,6 @@ export function TabMainNavigation({ navigationRef }) {
   return (
     <Tab.Navigator
       screenOptions={{
-
         headerShown: false,
         headerTintColor: color.primary,
         tabBarInactiveTintColor: color.text,
