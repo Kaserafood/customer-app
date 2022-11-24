@@ -3,7 +3,7 @@ if (__DEV__) {
   url = "https://kasera-customer-api-test.azurewebsites.net"
   url = "http://192.168.0.13:3001"
 } else {
-  url = "https://kasera-customer-api.azurewebsites.net"
+  url = "https://customer-api.kaserafood.com"
 }
 
 export interface ApiConfig {
