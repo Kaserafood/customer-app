@@ -10,7 +10,7 @@ import {
   GeneralApiResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
-  UserLoginResponse
+  UserLoginResponse,
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
@@ -373,14 +373,14 @@ export class Api {
   /**
    * @description Get all banners
    */
-   async getBanners(): Promise<BannerResponse> {
+  async getBanners(): Promise<BannerResponse> {
     return await this.request({}, `/banners`, "GET")
   }
 
   /**
    * @description Get Option in system
    */
-   async getParam(name: string): Promise<CommonResponse> {
+  async getParam(name: string): Promise<CommonResponse> {
     return await this.request({}, `/params/${name}`, "GET")
   }
 }

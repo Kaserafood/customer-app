@@ -11,7 +11,7 @@ import {
   ModalRequestDish,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import React, { FC, useEffect, useLayoutEffect } from "react"
@@ -70,7 +70,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       const category: Category = {
         id: banner.categoryId,
         name: banner.categoryName,
-        image: ""
+        image: "",
       }
       navigation.navigate("category", {
         ...category,
@@ -186,7 +186,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             onPressWelcome={() => modalStateWelcome.setVisible(true)}
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
-
           ></Banner>
           <View style={utilSpacing.px4}>
             <View

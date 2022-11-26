@@ -33,33 +33,27 @@ export const useLocation = (messagesStore: Messages) => {
       .then((response) => response.json())
       .then(async (mapResponse) => {
         const results = mapResponse.results
-        let index = 0
-        for (let j = 0; j < results.length; j++) {
-          if (results[j].types[0] === "locality") {
-            index = j
-            break
-          }
-        }
+        let index = findIndexByType(results, "locality")
+        if (index === -1) index = findIndexByType(results, "plus_code")
+        if (index === -1) index = findIndexByType(results, "route")
+        if (index === -1) index = 0
+
         let city = ""
         let region = ""
         let country = ""
         let formatted = ""
+        const components = results[index].address_components
 
-        for (let i = 0; i < results[index].address_components.length; i++) {
-          if (results[index].address_components[i].types[0] === "locality") {
-            city = results[index].address_components[i].long_name
-          }
-          if (results[index].address_components[i].types[0] === "administrative_area_level_1") {
-            region = results[index].address_components[i].long_name
-          }
-          if (results[index].address_components[i].types[0] === "country") {
-            country = results[index].address_components[i].long_name
-          }
+        for (let i = 0; i < components.length; i++) {
+          if (components[i].types.includes("locality")) city = components[i].long_name
+
+          if (components[i].types.includes("administrative_area_level_1"))
+            region = components[i].long_name
+
+          if (components[i].types.includes("country")) country = components[i].long_name
         }
 
-        if (results[0]?.formatted_address) {
-          formatted = results[0].formatted_address
-        }
+        if (results[0]?.formatted_address) formatted = results[0].formatted_address
 
         return {
           city,
@@ -79,6 +73,17 @@ export const useLocation = (messagesStore: Messages) => {
           formatted: "",
         }
       })
+  }
+
+  const findIndexByType = (results: any, type: string) => {
+    let index = -1
+    for (let j = 0; j < results.length; j++) {
+      if (results[j].types.includes(type)) {
+        index = j
+        break
+      }
+    }
+    return index
   }
 
   const hasPermissionIOS = async () => {
