@@ -1,7 +1,7 @@
 let url = ""
 if (__DEV__) {
   url = "https://kasera-customer-api-test.azurewebsites.net"
-  url = "http://192.168.0.13:3001"
+  url = "http://54.165.178.254:3002"
 } else {
   url = "https://customer-api.kaserafood.com"
 }
