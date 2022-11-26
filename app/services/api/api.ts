@@ -10,7 +10,7 @@ import {
   GeneralApiResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
-  UserLoginResponse
+  UserLoginResponse,
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
@@ -186,6 +186,24 @@ export class Api {
   ): Promise<ChefResponse> {
     return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
   }
+
+  /**
+   *
+   * @description Search dishes by name or description
+   */
+  async getSearchDishes(search: string, date: string, timeZone: string): Promise<DishResponse> {
+    return await this.request(
+      {
+        date,
+        timeZone,
+        search,
+      },
+      "/dishes/search",
+      "GET",
+    )
+  }
+
+  /**
 
   /**
    *
@@ -373,14 +391,14 @@ export class Api {
   /**
    * @description Get all banners
    */
-   async getBanners(): Promise<BannerResponse> {
+  async getBanners(): Promise<BannerResponse> {
     return await this.request({}, `/banners`, "GET")
   }
 
   /**
    * @description Get Option in system
    */
-   async getParam(name: string): Promise<CommonResponse> {
+  async getParam(name: string): Promise<CommonResponse> {
     return await this.request({}, `/params/${name}`, "GET")
   }
 }

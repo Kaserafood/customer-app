@@ -11,11 +11,11 @@ import {
   ModalRequestDish,
   Screen,
   Separator,
-  Text
+  Text,
 } from "../../components"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { StyleSheet, View } from "react-native"
+import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 
@@ -29,7 +29,6 @@ import { ModalLocation } from "../../components/location/modal-location"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalWelcome } from "./modal-welcome"
 import { NavigatorParamList } from "../../navigators"
-import { ScrollView } from "react-native-gesture-handler"
 import { StackScreenProps } from "@react-navigation/stack"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { loadString } from "../../utils/storage"
@@ -47,7 +46,7 @@ const modalStateWelcome = new ModalStateHandler()
  */
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
-    // const [dishes, setDishes] = useState<DishChef[]>([])
+    const [refreshing, setRefreshing] = useState(false)
     const {
       dishStore,
       dayStore,
@@ -70,7 +69,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       const category: Category = {
         id: banner.categoryId,
         name: banner.categoryName,
-        image: ""
+        image: "",
       }
       navigation.navigate("category", {
         ...category,
@@ -109,32 +108,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     useEffect(() => {
       __DEV__ && console.log("Home  useEffect")
       commonStore.setVisibleLoading(true)
-      async function fetch() {
-        /*
-         * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
-         */
-        if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
-
-        await Promise.all([
-          dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
-          categoryStore.getAll(),
-          categoryStore.getSeasonal(),
-          orderStore.getPriceDelivery(),
-          dayStore.getDays(RNLocalize.getTimeZone()),
-        ])
-          .then(() => {
-            if (dayStore.days?.length > 0) {
-              dayStore.setCurrentDay(dayStore.days[0])
-            }
-          })
-          .catch((error: Error) => {
-            messagesStore.showError(error.message)
-          })
-          .finally(() => {
-            commonStore.setVisibleLoading(false)
-            __DEV__ && console.log("hide loading")
-          })
-      }
       async function setUserStoreData() {
         if (!userStore.userId) {
           __DEV__ && console.log("Getting string user data")
@@ -154,6 +127,39 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       fetch()
     }, [])
 
+    const fetch = async () => {
+      /*
+       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
+       */
+      if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
+
+      await Promise.all([
+        dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
+        categoryStore.getAll(),
+        categoryStore.getSeasonal(),
+        orderStore.getPriceDelivery(),
+        dayStore.getDays(RNLocalize.getTimeZone()),
+      ])
+        .then(() => {
+          if (dayStore.days?.length > 0) {
+            dayStore.setCurrentDay(dayStore.days[0])
+          }
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+          __DEV__ && console.log("hide loading")
+        })
+    }
+
+    const onRefresh = useCallback(async () => {
+      setRefreshing(true)
+      console.log("NOEW IS REFRESHING")
+      await fetch().then(() => setRefreshing(false))
+    }, [])
+
     return (
       <Screen
         preset="fixed"
@@ -161,7 +167,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         statusBar="dark-content"
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView nestedScrollEnabled style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
@@ -186,7 +195,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             onPressWelcome={() => modalStateWelcome.setVisible(true)}
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
-
           ></Banner>
           <View style={utilSpacing.px4}>
             <View
@@ -212,10 +220,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             )}
           </View>
           <View style={utilSpacing.mb8}>
-            <EmptyData
-              lengthData={dishStore.totalDishes}
-              onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
-            ></EmptyData>
+            {!commonStore.isVisibleLoading && !refreshing && (
+              <EmptyData
+                lengthData={dishStore.totalDishes}
+                onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+              ></EmptyData>
+            )}
           </View>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>

@@ -1,14 +1,15 @@
-import { observer } from "mobx-react-lite"
-import React from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import SkeletonPlaceholder from "react-native-skeleton-placeholder"
-import { TxKeyPath } from "../../i18n"
-import { useStores } from "../../models"
-import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+
 import { Chip } from "../chip/chip"
+import { Day } from "../../models/day-store"
+import React from "react"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { Text } from "../text/text"
+import { TxKeyPath } from "../../i18n"
+import { observer } from "mobx-react-lite"
+import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**
@@ -66,8 +67,8 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
   const { dayStore } = useStores()
 
   return (
-    <View>
-      <View style={[utilFlex.flexCenterVertical, utilSpacing.mt6, styles.why]}>
+    <View style={[utilSpacing.mt6, style]}>
+      <View style={[utilFlex.flexCenterVertical, styles.why]}>
         <Text
           tx={titleTx || "mainScreen.dayShipping"}
           preset="semiBold"
@@ -77,7 +78,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
           <Chip tx="mainScreen.why" style={styles.chip} onPressIn={() => onWhyPress(true)}></Chip>
         )}
       </View>
-      <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3, style]}>
+      <ScrollView horizontal style={[utilSpacing.pt5, utilSpacing.pb3]}>
         {days.length === 0 && visibleLoading ? (
           <SkeletonPlaceholder>
             <SkeletonPlaceholder.Item flexDirection="row">
