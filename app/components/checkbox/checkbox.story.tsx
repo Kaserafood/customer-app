@@ -1,10 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-native/no-color-literals */
-import { storiesOf } from "@storybook/react-native"
 import React from "react"
 import { View, ViewStyle } from "react-native"
+import { storiesOf } from "@storybook/react-native"
+
 import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { Toggle } from "../../utils/react-powerplug"
+
 import { Checkbox } from "./checkbox"
 
 declare let module

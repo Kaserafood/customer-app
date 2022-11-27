@@ -1,4 +1,5 @@
 import i18n from "i18n-js"
+
 import es from "./es.json"
 
 i18n.fallbacks = true

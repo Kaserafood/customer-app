@@ -1,9 +1,11 @@
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { View } from "react-native"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+
 import { ScreenType } from "../../common/hooks/useChef"
 import { Dish } from "../../models/dish"
+
 import { ChefItem, ChefItemModel } from "./chef-item"
 export class DataState {
   data: ChefItemModel[] = []

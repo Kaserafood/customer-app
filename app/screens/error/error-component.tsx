@@ -1,6 +1,7 @@
 import React, { ErrorInfo } from "react"
 import { TextStyle, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+
 import { Button, Icon, Text } from "../../components"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"

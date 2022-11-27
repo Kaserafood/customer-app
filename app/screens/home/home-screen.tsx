@@ -1,4 +1,11 @@
+import React, { FC, useEffect, useLayoutEffect } from "react"
+import { StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
+import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 
 import {
   Categories,
@@ -13,28 +20,21 @@ import {
   Separator,
   Text,
 } from "../../components"
-import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { StyleSheet, View } from "react-native"
-import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
-
-import { AppEventsLogger } from "react-native-fbsdk-next"
-import { Banner } from "./banner"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
+import { ModalLocation } from "../../components/location/modal-location"
+import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
-import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { ModalLocation } from "../../components/location/modal-location"
-import { ModalStateHandler } from "../../utils/modalState"
-import { ModalWelcome } from "./modal-welcome"
+import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
-import { ScrollView } from "react-native-gesture-handler"
-import { StackScreenProps } from "@react-navigation/stack"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
-import { observer } from "mobx-react-lite"
-import { useStores } from "../../models"
+
+import { Banner } from "./banner"
+import { ModalWelcome } from "./modal-welcome"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()

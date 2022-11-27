@@ -2,6 +2,7 @@
 // eslint-disable-next-line react-native/split-platform-components
 import { Alert, Linking, PermissionsAndroid, Platform } from "react-native"
 import Geolocation from "react-native-geolocation-service"
+
 import { Messages } from "../../models"
 
 export interface Location {

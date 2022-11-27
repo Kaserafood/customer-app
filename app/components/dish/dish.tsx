@@ -1,7 +1,8 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"

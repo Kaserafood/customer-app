@@ -1,9 +1,10 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"

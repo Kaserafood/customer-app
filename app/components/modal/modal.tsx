@@ -1,9 +1,10 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ImageURISource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import ModalRN from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
 import { Image } from "../image/image"

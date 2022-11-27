@@ -1,7 +1,8 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { useEffect } from "react"
 import { StyleSheet, View } from "react-native"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"

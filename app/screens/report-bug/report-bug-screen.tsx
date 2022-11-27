@@ -1,15 +1,17 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import DeviceInfo from "react-native-device-info"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+
 import { ModalReportBug } from "./modal-report-bug"
 
 const modalStateReportBug = new ModalStateHandler()

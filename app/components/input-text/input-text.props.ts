@@ -1,5 +1,6 @@
 import { UseControllerProps } from "react-hook-form"
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native"
+
 import { TxKeyPath } from "../../i18n"
 
 type presets = "normal" | "card"

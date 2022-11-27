@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"

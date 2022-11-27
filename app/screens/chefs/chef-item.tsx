@@ -1,9 +1,10 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
+import { observer } from "mobx-react-lite"
+
 import { Price, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"

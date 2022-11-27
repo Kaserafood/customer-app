@@ -1,9 +1,10 @@
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
-import LottieView from "lottie-react-native"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, View } from "react-native"
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
+import LottieView from "lottie-react-native"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"

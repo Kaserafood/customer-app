@@ -1,3 +1,10 @@
+import { ApiResponse, ApisauceInstance, create } from "apisauce"
+
+import { Address } from "../../models"
+import { Order } from "../../models/order/order"
+import { UserLogin } from "../../models/user-store"
+import { handleMessageProblem } from "../../utils/messages"
+
 import {
   AddressResponse,
   BannerResponse,
@@ -13,13 +20,7 @@ import {
   UserLoginResponse,
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { ApiResponse, ApisauceInstance, create } from "apisauce"
-
-import { Address } from "../../models"
-import { Order } from "../../models/order/order"
-import { UserLogin } from "../../models/user-store"
 import { getGeneralApiProblem } from "./api-problem"
-import { handleMessageProblem } from "../../utils/messages"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 /**

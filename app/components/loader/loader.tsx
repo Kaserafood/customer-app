@@ -1,8 +1,9 @@
-import LottieView from "lottie-react-native"
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, View, ViewStyle } from "react-native"
 import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
+import LottieView from "lottie-react-native"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models/root-store/root-store-context"
 import { color as colorTheme } from "../../theme"
 const CONTAINER: ViewStyle = {

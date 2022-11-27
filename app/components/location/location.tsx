@@ -1,6 +1,7 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { Icon } from "../icon/icon"

@@ -1,6 +1,7 @@
 import React from "react"
 import { StyleProp, StyleSheet, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
+
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { utilSpacing } from "../../theme/Util"
 import { Image } from "../image/image"

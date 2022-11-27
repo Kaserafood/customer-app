@@ -3,6 +3,7 @@ import { FlatList, StyleSheet, TextInput, View, ViewStyle } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
+
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"

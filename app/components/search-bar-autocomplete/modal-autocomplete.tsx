@@ -1,7 +1,8 @@
-import axios from "axios"
 import React, { useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import axios from "axios"
+
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -9,6 +10,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 import { Icon } from "../icon/icon"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+
 import SearchBarWithAutocomplete, { PredictionType } from "./search-bar-autocomplete"
 import { useDebounce } from "./useDebounce"
 

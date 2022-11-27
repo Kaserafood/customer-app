@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
+
 import { Price, Text } from "../../components"
 import { Coupon, useStores } from "../../models"
 import { color } from "../../theme"

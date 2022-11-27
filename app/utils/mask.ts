@@ -1,4 +1,5 @@
 import * as RNLocalize from "react-native-localize"
+
 import { getCardType } from "./card"
 export function getFormatMaskPhone(): string {
   const timeZone = RNLocalize.getTimeZone()

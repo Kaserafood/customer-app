@@ -1,5 +1,6 @@
 import * as React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+
 import { color, typographySize } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Button } from "../button/button"

@@ -1,5 +1,6 @@
 import React from "react"
 import { StyleSheet, View } from "react-native"
+
 import { CartItemAddon, Price, Text } from "../../components"
 import { useStores } from "../../models"
 import { color } from "../../theme"

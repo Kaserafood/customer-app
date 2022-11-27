@@ -1,8 +1,9 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { DrawerActions } from "@react-navigation/native"
 import React from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { DrawerActions } from "@react-navigation/native"
+
 import { Icon } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"

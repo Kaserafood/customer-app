@@ -1,11 +1,12 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import {
   ButtonFooter,
@@ -33,6 +34,7 @@ import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
+
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
