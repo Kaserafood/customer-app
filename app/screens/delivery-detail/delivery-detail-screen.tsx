@@ -4,7 +4,6 @@ import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-
 import { getUniqueId } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
-import { add } from "react-native-reanimated"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
@@ -59,7 +58,7 @@ export const DeliveryDetailScreen: FC<
     commonStore,
     orderStore,
     messagesStore,
-    deliveryStore
+    deliveryStore,
   } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
   const [isPaymentCash, setIsPaymentCash] = useState(false)
@@ -304,8 +303,9 @@ export const DeliveryDetailScreen: FC<
 
   const getAddressText = (): string => {
     const address = ""
-    if(addressStore.current.name && addressStore.current.name.trim().length > 0) address.concat(" - ")
-    return  address.concat(addressStore.current.address)
+    if (addressStore.current.name && addressStore.current.name.trim().length > 0)
+      address.concat(" - ")
+    return address.concat(addressStore.current.address)
   }
 
   return (

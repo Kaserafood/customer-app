@@ -1,13 +1,11 @@
+import React from "react"
 import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+
 import { color } from "../../theme"
 
-import React from "react"
 import { ScreenProps } from "./screen.props"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { color } from "../../theme"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const isIos = Platform.OS === "ios"
 

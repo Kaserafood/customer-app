@@ -1,5 +1,5 @@
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { StyleSheet, View } from "react-native"
+import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
+import { RefreshControl, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
@@ -27,9 +27,7 @@ import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-
 import { NavigatorParamList } from "../../navigators"
-
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -56,10 +54,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       commonStore,
       categoryStore,
       userStore,
-      orderStore,
       cartStore,
       messagesStore,
-      deliveryStore
+      deliveryStore,
     } = useStores()
     const { currentDay } = dayStore
 

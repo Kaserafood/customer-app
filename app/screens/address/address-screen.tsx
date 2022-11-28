@@ -50,7 +50,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               addressStore.setCurrent({ ...address })
               userStore.setAddressId(address.id)
               messagesStore.showSuccess(res.message)
-              deliveryStore.getPriceDelivery(address.id) .catch((error: Error) => {
+              deliveryStore.getPriceDelivery(address.id).catch((error: Error) => {
                 messagesStore.showError(error.message)
               })
               // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
