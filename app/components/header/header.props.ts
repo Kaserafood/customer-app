@@ -1,4 +1,5 @@
 import { StyleProp, TextStyle, ViewStyle } from "react-native"
+
 import { TxKeyPath } from "../../i18n"
 
 type IconTypes = "back"

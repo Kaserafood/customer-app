@@ -1,5 +1,7 @@
 import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
-import { isNonScrolling, offsets, presets } from "./screen.presets"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { color } from "../../theme"
 
 import React from "react"
 import { ScreenProps } from "./screen.props"

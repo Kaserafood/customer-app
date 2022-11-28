@@ -1,4 +1,11 @@
+import React, { FC, useEffect, useLayoutEffect } from "react"
+import { ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
+import { useChef } from "../../common/hooks/useChef"
 
 import {
   Categories,
@@ -23,14 +30,10 @@ import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-mod
 import { Dish } from "../../models/dish"
 import { ModalLocation } from "../../components/location/modal-location"
 import { ModalStateHandler } from "../../utils/modalState"
-import { NavigatorParamList } from "../../navigators"
-import { StackScreenProps } from "@react-navigation/stack"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { observer } from "mobx-react-lite"
-import { useChef } from "../../common/hooks/useChef"
-import { useStores } from "../../models"
 
-// const state = new DataState()
+import { ChefItemModel } from "./chef-item"
+import { DataState, ListChef } from "./chef-list"
+
 const modalStateLocation = new ModalStateHandler()
 const modalStateDay = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()

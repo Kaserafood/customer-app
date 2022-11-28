@@ -1,10 +1,11 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import {
   ButtonFooter,
   Dish,
@@ -32,6 +33,7 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
+
 import { ModalLeave } from "./modal-clean-cart"
 
 const modalStateCart = new ModalStateHandler()
@@ -45,7 +47,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       commonStore,
       dishStore,
       cartStore,
-      orderStore,
+      deliveryStore,
       userStore,
       messagesStore,
     } = useStores()
@@ -207,7 +209,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 text={getCategoriesName(params.categories)}
               ></Text>
               <Price
-                amount={orderStore.priceDelivery}
+                amount={deliveryStore.priceDelivery}
                 style={utilSpacing.ml3}
                 preset="delivery"
                 currencyCode={params.currencyCode}

@@ -1,11 +1,13 @@
-import { storiesOf } from "@storybook/react-native"
 import * as React from "react"
 import { View } from "react-native"
+import { storiesOf } from "@storybook/react-native"
+
 import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Button } from "../button/button"
 import { Text } from "../text/text"
+
 import { Modal } from "./modal"
 
 const modalState = new ModalStateHandler()

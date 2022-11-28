@@ -1,7 +1,9 @@
 import { cast, SnapshotIn, types } from "mobx-state-tree"
+
 import { generateUUID } from "../utils/security"
-import { dishChef } from "./dish-store"
+
 import { metaData } from "./order/order"
+import { dishChef } from "./dish-store"
 
 const metaDataCart = metaData.props({
   label: types.string,

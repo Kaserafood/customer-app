@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
+
 import { TxKeyPath } from "../../i18n"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"

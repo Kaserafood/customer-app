@@ -1,6 +1,7 @@
 import * as React from "react"
 import { View } from "react-native"
 import { createIconSetFromIcoMoon } from "react-native-vector-icons"
+
 import { IconProps } from "./icon.props"
 import icoMoonConfig from "./selection.json"
 

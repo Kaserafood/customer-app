@@ -15,17 +15,20 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { Loader, Messages, ModalCoupon } from "./components"
+
 import "./i18n"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
+import "./utils/ignore-warnings"
+
+import { ToggleStorybook } from "../storybook/toggle-storybook"
+
 import { ErrorBoundary } from "./screens/error/error-boundary"
 import { utilFlex } from "./theme/Util"
-import "./utils/ignore-warnings"
 import { checkNotificationPermission, trackingPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
+import { Loader, Messages, ModalCoupon } from "./components"
+import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { AppNavigator, useNavigationPersistence } from "./navigators"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:

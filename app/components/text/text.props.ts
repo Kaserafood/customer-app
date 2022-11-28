@@ -1,6 +1,8 @@
-import i18n from "i18n-js"
 import { StyleProp, TextProps as TextProperties, TextStyle } from "react-native"
+import i18n from "i18n-js"
+
 import { TxKeyPath } from "../../i18n"
+
 import { TextPresets } from "./text.presets"
 
 type TextSize = "sm" | "md" | "lg" | "xl"

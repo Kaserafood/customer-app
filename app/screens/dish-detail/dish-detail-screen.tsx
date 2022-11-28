@@ -1,5 +1,3 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { ScrollView, StyleSheet, View } from "react-native"
@@ -8,6 +6,9 @@ import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import {
   Addons,
   ButtonFooter,

@@ -1,9 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import { storiesOf } from "@storybook/react-native"
 import * as React from "react"
 import { View } from "react-native"
+import { storiesOf } from "@storybook/react-native"
+
 import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { color } from "../../theme"
+
 import { Card } from "./card"
 
 storiesOf("Card", module)

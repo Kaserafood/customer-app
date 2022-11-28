@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Dish, Header, Screen, Separator } from "../../components"
 import { useStores } from "../../models"
 import { DishChef } from "../../models/dish-store"

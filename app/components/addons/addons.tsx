@@ -1,8 +1,9 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn } from "react-native-reanimated"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { Addon } from "../../models/dish"
 import { color, spacing } from "../../theme"
@@ -12,6 +13,7 @@ import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
+
 import { Incrementable, IncrementableProps, PriceOption } from "./incrementable-item"
 import { StateHandler } from "./stateHandler"
 import { useAddon } from "./useAddons"

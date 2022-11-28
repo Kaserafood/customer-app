@@ -1,8 +1,8 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { useStores } from "../../models"

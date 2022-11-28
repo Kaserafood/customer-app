@@ -1,17 +1,17 @@
 /* eslint-disable react-native/no-inline-styles */
 
-import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
-import { Icon, Text } from "../../components"
 import React, { useEffect } from "react"
+import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
+import { ScrollView } from "react-native-gesture-handler"
+
+import images from "../../assets/images"
+import { Icon, Text } from "../../components"
+import { TxKeyPath } from "../../i18n"
+import { useStores } from "../../models"
+import { Banner as BannerModel } from "../../models/banner-store"
 import { color, spacing, typography } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-
-import { AppEventsLogger } from "react-native-fbsdk-next"
-import { Banner as BannerModel } from "../../models/banner-store"
-import { ScrollView } from "react-native-gesture-handler"
-import { TxKeyPath } from "../../i18n"
-import images from "../../assets/images"
-import { useStores } from "../../models"
 
 interface PropsBanner {
   onPressWelcome: () => void

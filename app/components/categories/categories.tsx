@@ -1,6 +1,7 @@
 import React from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+
 import images from "../../assets/images"
 import { Category } from "../../models/category-store"
 import { utilSpacing } from "../../theme/Util"

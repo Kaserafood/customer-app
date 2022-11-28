@@ -1,7 +1,8 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, { FadeInUp, FadeOutUp } from "react-native-reanimated"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"

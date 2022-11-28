@@ -1,5 +1,6 @@
 import React from "react"
 import { StyleSheet, View } from "react-native"
+
 import images from "../../assets/images"
 import { Button } from "../../components/button/button"
 import { Image } from "../../components/image/image"

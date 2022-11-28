@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { BackHandler } from "react-native"
 import {
-  PartialState,
-  NavigationState,
-  NavigationAction,
   createNavigationContainerRef,
+  NavigationAction,
+  NavigationState,
+  PartialState,
 } from "@react-navigation/native"
 
 /* eslint-disable */

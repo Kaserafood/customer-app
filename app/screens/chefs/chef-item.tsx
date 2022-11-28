@@ -1,9 +1,10 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
+import { observer } from "mobx-react-lite"
+
 import { Price, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"
@@ -54,11 +55,7 @@ export interface ChefItemProps {
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
   const { style, item, onPrevious, onNext, onChangePosition, onChefPress } = props
 
-  // useEffect(() => {
-  //   console.log("item changed", item)
-  // }, [item])
-
-  const { orderStore } = useStores()
+  const { deliveryStore } = useStores()
   return (
     <View style={style} key={item.id}>
       <View style={styles.imageCarousel}>
@@ -126,7 +123,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
             ></Text>
             <Price
               preset="delivery"
-              amount={orderStore.priceDelivery}
+              amount={deliveryStore.priceDelivery}
               style={utilSpacing.mr3}
               currencyCode={item.currencyCode}
             ></Price>

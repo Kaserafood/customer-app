@@ -1,7 +1,8 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { ScrollView, TextStyle, ViewStyle } from "react-native"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Header, Screen, Text } from "../../components"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"

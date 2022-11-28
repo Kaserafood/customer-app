@@ -1,4 +1,5 @@
 import { flow, Instance, SnapshotOut, types } from "mobx-state-tree"
+
 import {
   Api,
   CommonResponse,
@@ -127,13 +128,6 @@ export const OrderModel = types
       if (result && result.kind === "ok") {
         self.ordersOverview.replace(result.data)
       } else self.ordersOverview.replace([])
-    }),
-    getPriceDelivery: flow(function* getPriceDelivery() {
-      const api = new Api()
-      const result: CommonResponse = yield api.getPriceDelivery()
-      if (result && result.kind === "ok") {
-        self.priceDelivery = Number(result.data.data)
-      }
     }),
     getDetail: flow(function* getDetail(orderId: number) {
       const api = new Api()
