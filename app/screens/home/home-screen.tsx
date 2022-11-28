@@ -57,6 +57,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       orderStore,
       cartStore,
       messagesStore,
+      deliveryStore
     } = useStores()
     const { currentDay } = dayStore
 
@@ -119,13 +120,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
           categoryStore.getAll(),
           categoryStore.getSeasonal(),
-          orderStore.getPriceDelivery(),
+          deliveryStore.getPriceDelivery(userStore.addressId),
           dayStore.getDays(RNLocalize.getTimeZone()),
         ])
           .then(() => {
             if (dayStore.days?.length > 0) {
               dayStore.setCurrentDay(dayStore.days[0])
             }
+
           })
           .catch((error: Error) => {
             messagesStore.showError(error.message)

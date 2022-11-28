@@ -6,6 +6,7 @@ import { CartStoreModel } from "../cart-store"
 import { CategoryStoreModel } from "../category-store"
 import { CommonStoreModel } from "../common-store"
 import { DayStoreModel } from "../day-store"
+import { DeliveryStoreModel } from "../delivery-store"
 import { DishStoreModel } from "../dish-store"
 import { MessagesModel } from "../messages/messages"
 import { CouponModalStoreModel } from "../modal-coupon"
@@ -28,6 +29,7 @@ export const RootStoreModel = types.model("RootStore").props({
   messagesStore: types.optional(MessagesModel, {} as any),
   couponModalStore: types.optional(CouponModalStoreModel, {} as any),
   bannerStore: types.optional(BannerStoreModel, {} as any),
+  deliveryStore: types.optional(DeliveryStoreModel, {} as any),
 })
 
 /**

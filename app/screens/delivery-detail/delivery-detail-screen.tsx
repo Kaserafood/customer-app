@@ -4,6 +4,7 @@ import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-
 import { getUniqueId } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
+import { add } from "react-native-reanimated"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
@@ -58,6 +59,7 @@ export const DeliveryDetailScreen: FC<
     commonStore,
     orderStore,
     messagesStore,
+    deliveryStore
   } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
   const [isPaymentCash, setIsPaymentCash] = useState(false)
@@ -148,7 +150,7 @@ export const DeliveryDetailScreen: FC<
       city: addressStore.current.city,
       region: addressStore.current.region,
       products: getProducts(),
-      priceDelivery: orderStore.priceDelivery,
+      priceDelivery: deliveryStore.priceDelivery,
       metaData: getMetaData(taxId),
       customerNote: data.customerNote,
       currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
@@ -293,11 +295,17 @@ export const DeliveryDetailScreen: FC<
   }
 
   const getCurrentTotal = (): number => {
-    return cartStore.subtotal + orderStore.priceDelivery - (cartStore.discount ?? 0)
+    return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
   }
 
   const getCurrency = (): string => {
     return cartStore.cart[0]?.dish.chef.currencyCode
+  }
+
+  const getAddressText = (): string => {
+    const address = ""
+    if(addressStore.current.name && addressStore.current.name.trim().length > 0) address.concat(" - ")
+    return  address.concat(addressStore.current.address)
   }
 
   return (
@@ -318,7 +326,7 @@ export const DeliveryDetailScreen: FC<
               labelTx="deliveryDetailScreen.address"
               placeholderTx="deliveryDetailScreen.addressPlaceholder"
               editable={false}
-              value={`${addressStore.current.name ?? ""} - ${addressStore.current.address}`}
+              value={getAddressText()}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>

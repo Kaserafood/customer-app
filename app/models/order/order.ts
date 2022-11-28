@@ -129,13 +129,6 @@ export const OrderModel = types
         self.ordersOverview.replace(result.data)
       } else self.ordersOverview.replace([])
     }),
-    getPriceDelivery: flow(function* getPriceDelivery() {
-      const api = new Api()
-      const result: CommonResponse = yield api.getPriceDelivery()
-      if (result && result.kind === "ok") {
-        self.priceDelivery = Number(result.data.data)
-      }
-    }),
     getDetail: flow(function* getDetail(orderId: number) {
       const api = new Api()
       const result: OrderDetailResponse = yield api.getOrderDetail(orderId)

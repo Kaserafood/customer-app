@@ -61,7 +61,7 @@ export const Dish = observer(function Dish(props: DishProps) {
     currencyCode,
     sizeTextDescription = "sm",
   } = props
-  const { orderStore } = useStores()
+  const { deliveryStore } = useStores()
 
   return (
     <Ripple
@@ -104,7 +104,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             {visiblePriceDelivery && (
               <Price
                 currencyCode={currencyCode || dish.chef.currencyCode}
-                amount={orderStore.priceDelivery}
+                amount={deliveryStore.priceDelivery}
                 preset="delivery"
               ></Price>
             )}

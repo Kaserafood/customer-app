@@ -11,7 +11,7 @@ interface TotalsProps {
 }
 
 export const Totals = (props: TotalsProps) => {
-  const { cartStore, orderStore } = useStores()
+  const { cartStore, deliveryStore } = useStores()
   const [currencyCode, setCurrencyCode] = useState("")
   const { coupon } = props
 
@@ -49,7 +49,7 @@ export const Totals = (props: TotalsProps) => {
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
         <Price
           style={styles.price}
-          amount={orderStore.priceDelivery}
+          amount={deliveryStore.priceDelivery}
           currencyCode={currencyCode}
         ></Price>
       </View>
@@ -59,7 +59,7 @@ export const Totals = (props: TotalsProps) => {
         <Price
           style={styles.price}
           textStyle={utilText.bold}
-          amount={cartStore.subtotal + orderStore.priceDelivery - cartStore.discount ?? 0}
+          amount={cartStore.subtotal + deliveryStore.priceDelivery - cartStore.discount ?? 0}
           currencyCode={currencyCode}
         ></Price>
       </View>

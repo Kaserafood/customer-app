@@ -47,7 +47,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       commonStore,
       dishStore,
       cartStore,
-      orderStore,
+      deliveryStore,
       userStore,
       messagesStore,
     } = useStores()
@@ -209,7 +209,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 text={getCategoriesName(params.categories)}
               ></Text>
               <Price
-                amount={orderStore.priceDelivery}
+                amount={deliveryStore.priceDelivery}
                 style={utilSpacing.ml3}
                 preset="delivery"
                 currencyCode={params.currencyCode}
