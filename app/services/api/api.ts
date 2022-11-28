@@ -190,6 +190,24 @@ export class Api {
 
   /**
    *
+   * @description Search dishes by name or description
+   */
+  async getSearchDishes(search: string, date: string, timeZone: string): Promise<DishResponse> {
+    return await this.request(
+      {
+        date,
+        timeZone,
+        search,
+      },
+      "/dishes/search",
+      "GET",
+    )
+  }
+
+  /**
+
+  /**
+   *
    * @description Get information from a specific user chef
    */
   async getInfoChef(chefId: number): Promise<ChefResponse> {

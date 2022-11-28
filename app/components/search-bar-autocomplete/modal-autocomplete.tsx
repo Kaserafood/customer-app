@@ -1,5 +1,7 @@
 import React, { useState } from "react"
+import SearchBarWithAutocomplete, { PredictionType } from "./search-bar-autocomplete"
 import { StyleSheet, View } from "react-native"
+
 import { TouchableOpacity } from "react-native-gesture-handler"
 import axios from "axios"
 
@@ -7,8 +9,10 @@ import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+
 import { Icon } from "../icon/icon"
 import { Modal } from "../modal/modal"
+import { ModalStateHandler } from "../../utils/modalState"
 import { Text } from "../text/text"
 
 import SearchBarWithAutocomplete, { PredictionType } from "./search-bar-autocomplete"

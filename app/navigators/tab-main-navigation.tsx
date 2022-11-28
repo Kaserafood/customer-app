@@ -1,14 +1,16 @@
 import React from "react"
-import { AppEventsLogger } from "react-native-fbsdk-next"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { getI18nText } from "../utils/translate"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
 
 import { Icon } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
+
 import { utilSpacing } from "../theme/Util"
-import { getI18nText } from "../utils/translate"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
