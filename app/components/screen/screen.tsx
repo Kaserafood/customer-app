@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { color } from "../../theme"
 
+import { isNonScrolling, offsets, presets } from "./screen.presets"
 import { ScreenProps } from "./screen.props"
 
 const isIos = Platform.OS === "ios"
@@ -58,7 +59,7 @@ function ScreenWithScrolling(props: ScreenProps) {
           backgroundColor={props.statusBarBackgroundColor || color.primary}
           barStyle={props.statusBar || "light-content"}
         />
-      </View>
+      </View>home
 
       <View style={[preset.outer, backgroundStyle]}>
         <ScrollView

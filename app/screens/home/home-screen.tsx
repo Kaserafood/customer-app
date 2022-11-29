@@ -1,7 +1,6 @@
 import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
-import { RefreshControl, StyleSheet, View } from "react-native"
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
-import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { StackScreenProps } from "@react-navigation/stack"
