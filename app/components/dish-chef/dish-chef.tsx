@@ -43,7 +43,7 @@ export const DishChef = function DishChef(props: DishChefProps) {
       onPress={onPress}
       style={[styles.containerFavoriteImageDish, utilSpacing.my4, utilSpacing.mr4, style]}
     >
-      <Image style={styles.image} source={{ uri: dish.image }}></Image>
+      <Image style={styles.image} source={{ uri: dish.imageThumbnail }}></Image>
       <Text
         preset="semiBold"
         numberOfLines={1}

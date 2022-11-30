@@ -113,7 +113,7 @@ export const Dish = observer(function Dish(props: DishProps) {
         <View style={[styles.column, !visibleChefImage && styles.h120]}>
           <Image
             style={[styles.imageDish, !visibleChefImage && styles.h100]}
-            source={{ uri: dish.image }}
+            source={{ uri: dish.imageThumbnail }}
           ></Image>
           {visibleChefImage && (
             <Image style={styles.imageChef} source={{ uri: dish.chef.image }}></Image>
