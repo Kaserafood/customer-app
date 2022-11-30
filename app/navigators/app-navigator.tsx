@@ -16,7 +16,7 @@ import {
   AccountScreen,
   AddressScreen,
   CategoryScreen,
-  DeliveryDetailScreen,
+  CheckoutScreen,
   DishDetailScreen,
   EndOrderScreen,
   FavoriteScreen,
@@ -78,7 +78,7 @@ const AppStack = observer(() => {
           </Stack.Screen>
           <Stack.Screen name="dishDetail" component={DishDetailScreen} />
           <Stack.Screen name="menuChef" component={MenuChefScreen} />
-          <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+          <Stack.Screen name="checkout" component={CheckoutScreen} />
           <Stack.Screen name="endOrder" component={EndOrderScreen} />
           <Stack.Screen name="category" component={CategoryScreen} />
           <Stack.Screen name="map" component={MapScreen} />

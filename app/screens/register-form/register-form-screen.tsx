@@ -83,7 +83,7 @@ export const RegisterFormScreen: FC<
               description: "Nuevo usuario registrado con email",
             })
             AppEventsLogger.setUserID(userId.toString())
-            navigation.navigate("deliveryDetail")
+            navigation.navigate("checkout")
           }
         })
         .catch((error: Error) => {
@@ -94,7 +94,7 @@ export const RegisterFormScreen: FC<
   }
 
   const toLogin = () => {
-    navigation.navigate("loginForm", { screenRedirect: "deliveryDetail" })
+    navigation.navigate("loginForm", { screenRedirect: "checkout" })
   }
   return (
     <>

@@ -129,7 +129,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     const fetch = async () => {
       /*
-       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
+       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
 

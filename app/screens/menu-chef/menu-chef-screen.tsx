@@ -147,12 +147,12 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       navigation.push("dishDetail", { ...dish, chef: params })
     }
 
-    const toDeliveryDetail = () => {
+    const toCheckout = () => {
       modalStateCart.setVisible(false)
       // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
         navigation.navigate("registerForm")
-      } else navigation.navigate("deliveryDetail")
+      } else navigation.navigate("checkout")
     }
 
     const getCategoriesName = (categories: Category[]) => {
@@ -257,7 +257,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
           ></ButtonFooter>
         )}
 
-        <ModalCart chef={params} onContinue={toDeliveryDetail} modal={modalStateCart}></ModalCart>
+        <ModalCart chef={params} onContinue={toCheckout} modal={modalStateCart}></ModalCart>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>
         <ModalLeave modalState={modalStateLeave} onPressLeave={() => onPressLeave()}></ModalLeave>
       </Screen>

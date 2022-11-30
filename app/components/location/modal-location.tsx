@@ -48,7 +48,7 @@ export interface LocationProps {
   /**
    * Screen to navigate to when user select location
    */
-  screenToReturn: "main" | "deliveryDetail"
+  screenToReturn: "main" | "checkout"
 }
 
 type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
