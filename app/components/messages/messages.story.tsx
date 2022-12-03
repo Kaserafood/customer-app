@@ -1,7 +1,9 @@
 import * as React from "react"
 import { storiesOf } from "@storybook/react-native"
-import { StoryScreen, Story, UseCase } from "../../../storybook/views"
+
+import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { color } from "../../theme"
+
 import { Messages } from "./messages"
 
 storiesOf("Messages", module)

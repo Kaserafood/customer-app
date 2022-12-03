@@ -1,11 +1,12 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import {
   ButtonFooter,
@@ -21,6 +22,7 @@ import {
   Text,
 } from "../../components"
 import { ModalLocation } from "../../components/location/modal-location"
+import { TxKeyPath } from "../../i18n"
 import { Coupon, MetaData, Order, Products, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -33,6 +35,7 @@ import { getFormat } from "../../utils/price"
 import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
+
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
@@ -44,8 +47,8 @@ const modalDelivery = new ModalStateHandler()
 const modalStatePaymentCard = new ModalStateHandler()
 const modalStateCoupon = new ModalStateHandler()
 
-export const DeliveryDetailScreen: FC<
-  StackScreenProps<NavigatorParamList, "deliveryDetail">
+export const CheckoutScreen: FC<
+  StackScreenProps<NavigatorParamList, "checkout">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
   const {
@@ -56,6 +59,7 @@ export const DeliveryDetailScreen: FC<
     commonStore,
     orderStore,
     messagesStore,
+    deliveryStore,
   } = useStores()
   const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
   const [isPaymentCash, setIsPaymentCash] = useState(false)
@@ -110,24 +114,24 @@ export const DeliveryDetailScreen: FC<
   const onSubmit = async (data) => {
     Keyboard.dismiss()
     if (!dayStore.currentDay) {
-      messagesStore.showError("deliveryDetailScreen.errorDayDelivery", true)
+      messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
       return
     }
 
     if (labelDeliveryTime.length === 0) {
-      messagesStore.showError("deliveryDetailScreen.errorTimeDelivery", true)
+      messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
       return
     }
 
     if (isPaymentCard) {
       if (!isCardDataValid()) {
-        messagesStore.showError("deliveryDetailScreen.errorCard", true)
+        messagesStore.showError("checkoutScreen.errorCard" as TxKeyPath, true)
         return
       }
     }
 
     if (!isPaymentCard && !isPaymentCash) {
-      messagesStore.showError("deliveryDetailScreen.errorPayment", true)
+      messagesStore.showError("checkoutScreen.errorPayment" as TxKeyPath, true)
       return
     }
 
@@ -146,7 +150,7 @@ export const DeliveryDetailScreen: FC<
       city: addressStore.current.city,
       region: addressStore.current.region,
       products: getProducts(),
-      priceDelivery: orderStore.priceDelivery,
+      priceDelivery: deliveryStore.priceDelivery,
       metaData: getMetaData(taxId),
       customerNote: data.customerNote,
       currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
@@ -172,7 +176,7 @@ export const DeliveryDetailScreen: FC<
         __DEV__ && console.log("Code order reponse", res)
 
         if (!res) {
-          messagesStore.showError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("checkoutScreen.errorOrder", true)
           return
         }
 
@@ -195,8 +199,8 @@ export const DeliveryDetailScreen: FC<
             imageChef: commonStore.currentChefImage,
           })
         } else if (Number(res.data) === -1)
-          messagesStore.showError("deliveryDetailScreen.errorOrderPayment", true)
-        else messagesStore.showError("deliveryDetailScreen.errorOrder", true)
+          messagesStore.showError("checkoutScreen.errorOrderPayment", true)
+        else messagesStore.showError("checkoutScreen.errorOrder", true)
       })
       .catch((error: Error) => {
         messagesStore.showError(error.message)
@@ -285,27 +289,34 @@ export const DeliveryDetailScreen: FC<
 
   const getTextButtonFooter = (): string => {
     const text = getI18nText(
-      isPaymentCard ? "dishDetailScreen.pay" : "deliveryDetailScreen.makeOrder",
+      isPaymentCard ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
     )
     return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
   }
 
   const getCurrentTotal = (): number => {
-    return cartStore.subtotal + orderStore.priceDelivery - (cartStore.discount ?? 0)
+    return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
   }
 
   const getCurrency = (): string => {
     return cartStore.cart[0]?.dish.chef.currencyCode
   }
 
+  const getAddressText = (): string => {
+    const address = ""
+    if (addressStore.current.name && addressStore.current.name.trim().length > 0)
+      address.concat(" - ")
+    return address.concat(addressStore.current.address)
+  }
+
   return (
     <Screen preset="fixed">
-      <Header headerTx="deliveryDetailScreen.title" leftIcon="back" onLeftPress={goBack} />
+      <Header headerTx="checkoutScreen.title" leftIcon="back" onLeftPress={goBack} />
       <ScrollView style={[styles.containerForm, utilSpacing.px3]}>
         <Text
           preset="bold"
           size="lg"
-          tx="deliveryDetailScreen.info"
+          tx="checkoutScreen.info"
           style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
         ></Text>
         <FormProvider {...methods}>
@@ -313,10 +324,10 @@ export const DeliveryDetailScreen: FC<
             <InputText
               name="address"
               preset="card"
-              labelTx="deliveryDetailScreen.address"
-              placeholderTx="deliveryDetailScreen.addressPlaceholder"
+              labelTx="checkoutScreen.address"
+              placeholderTx="checkoutScreen.addressPlaceholder"
               editable={false}
-              value={`${addressStore.current.name ?? ""} - ${addressStore.current.address}`}
+              value={getAddressText()}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
             ></InputText>
           </TouchableOpacity>
@@ -324,8 +335,8 @@ export const DeliveryDetailScreen: FC<
           <InputText
             name="customerNote"
             preset="card"
-            labelTx="deliveryDetailScreen.deliveryNote"
-            placeholderTx="deliveryDetailScreen.deliveryNotePlaceholder"
+            labelTx="checkoutScreen.deliveryNote"
+            placeholderTx="checkoutScreen.deliveryNotePlaceholder"
             value={addressStore.current.instructionsDelivery}
           ></InputText>
           <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
@@ -334,8 +345,8 @@ export const DeliveryDetailScreen: FC<
             <InputText
               name="diveryDate"
               preset="card"
-              labelTx="deliveryDetailScreen.deliveryDate"
-              placeholderTx="deliveryDetailScreen.deliveryDatePlaceholder"
+              labelTx="checkoutScreen.deliveryDate"
+              placeholderTx="checkoutScreen.deliveryDatePlaceholder"
               editable={false}
               value={getNameDayDelivery()}
               iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
@@ -345,7 +356,7 @@ export const DeliveryDetailScreen: FC<
           <Text
             preset="bold"
             style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
-            tx="deliveryDetailScreen.deliveryTime"
+            tx="checkoutScreen.deliveryTime"
           ></Text>
           <DeliveryTimeList
             ref={refDeliveryTimeList}
@@ -355,7 +366,7 @@ export const DeliveryDetailScreen: FC<
           <Text
             preset="bold"
             size="lg"
-            tx="deliveryDetailScreen.paymentMethod"
+            tx="checkoutScreen.paymentMethod"
             style={[utilSpacing.mb2, utilSpacing.mx4]}
           ></Text>
 
@@ -375,7 +386,7 @@ export const DeliveryDetailScreen: FC<
                 style={[utilSpacing.px3, utilFlex.flex1]}
                 value={isPaymentCard}
                 preset="medium"
-                tx="deliveryDetailScreen.paymentCard"
+                tx="checkoutScreen.paymentCard"
               ></Checkbox>
               <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
                 <Image style={styles.imageCard} source={images.cardVisa}></Image>
@@ -402,7 +413,7 @@ export const DeliveryDetailScreen: FC<
                 style={[utilSpacing.px3, utilFlex.flex1]}
                 value={isPaymentCash}
                 preset="medium"
-                tx="deliveryDetailScreen.paymentCash"
+                tx="checkoutScreen.paymentCash"
               ></Checkbox>
               <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
             </Ripple>
@@ -411,8 +422,8 @@ export const DeliveryDetailScreen: FC<
           <InputText
             name="taxId"
             preset="card"
-            placeholderTx="deliveryDetailScreen.nitPlaceholder"
-            labelTx="deliveryDetailScreen.nit"
+            placeholderTx="checkoutScreen.nitPlaceholder"
+            labelTx="checkoutScreen.nit"
             styleContainer={[utilSpacing.my3]}
             maxLength={100}
           ></InputText>
@@ -426,7 +437,7 @@ export const DeliveryDetailScreen: FC<
             <Card style={[utilSpacing.px6, utilSpacing.p4]}>
               <View style={[utilSpacing.p3, utilFlex.flexRow, utilFlex.flexCenter]}>
                 <Icon name="tag" size={26} color={color.text}></Icon>
-                <Text size="lg" style={utilSpacing.ml3} tx="deliveryDetailScreen.useCoupon"></Text>
+                <Text size="lg" style={utilSpacing.ml3} tx="checkoutScreen.useCoupon"></Text>
               </View>
             </Card>
           </Ripple>
@@ -438,7 +449,7 @@ export const DeliveryDetailScreen: FC<
             <Text
               style={utilSpacing.mr2}
               preset="semiBold"
-              tx="deliveryDetailScreen.delivery"
+              tx="checkoutScreen.delivery"
             ></Text>
             <Text
               preset="semiBold"
@@ -464,7 +475,7 @@ export const DeliveryDetailScreen: FC<
         ></ButtonFooter>
       )}
 
-      <ModalLocation screenToReturn={"deliveryDetail"} modal={modalStateLocation}></ModalLocation>
+      <ModalLocation screenToReturn={"checkout"} modal={modalStateLocation}></ModalLocation>
       <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
       <ModalPaymentCard
         ref={refModalPaymentCard}

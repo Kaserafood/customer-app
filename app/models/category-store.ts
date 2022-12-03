@@ -1,5 +1,7 @@
 import { flow, SnapshotOut, types } from "mobx-state-tree"
+
 import { Api } from "../services/api"
+
 import { withEnvironment } from "./extensions/with-environment"
 
 export const categoryStore = types.model("CategoryStore").props({

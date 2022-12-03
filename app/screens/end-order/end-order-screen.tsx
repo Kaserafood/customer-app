@@ -1,8 +1,9 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"

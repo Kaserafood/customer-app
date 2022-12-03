@@ -1,7 +1,8 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
@@ -60,7 +61,7 @@ export const Dish = observer(function Dish(props: DishProps) {
     currencyCode,
     sizeTextDescription = "sm",
   } = props
-  const { orderStore } = useStores()
+  const { deliveryStore } = useStores()
 
   return (
     <Ripple
@@ -103,7 +104,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             {visiblePriceDelivery && (
               <Price
                 currencyCode={currencyCode || dish.chef.currencyCode}
-                amount={orderStore.priceDelivery}
+                amount={deliveryStore.priceDelivery}
                 preset="delivery"
               ></Price>
             )}
@@ -112,7 +113,7 @@ export const Dish = observer(function Dish(props: DishProps) {
         <View style={[styles.column, !visibleChefImage && styles.h120]}>
           <Image
             style={[styles.imageDish, !visibleChefImage && styles.h100]}
-            source={{ uri: dish.image }}
+            source={{ uri: dish.imageThumbnail }}
           ></Image>
           {visibleChefImage && (
             <Image style={styles.imageChef} source={{ uri: dish.chef.image }}></Image>

@@ -1,9 +1,10 @@
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"

@@ -1,4 +1,5 @@
 import { TextStyle, ViewStyle } from "react-native"
+
 import { color, spacing } from "../../theme"
 import { typography, typographySize } from "../../theme/typography"
 import { NO_SHADOW } from "../../theme/Util"

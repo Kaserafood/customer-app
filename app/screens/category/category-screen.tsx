@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import {
   DayDelivery,
   Dish,

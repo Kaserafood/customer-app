@@ -1,5 +1,6 @@
 import React from "react"
 import { View } from "react-native"
+
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
@@ -9,7 +10,7 @@ import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
 export const ModalNecessaryLocation = (props: { modalState: ModalState }) => {
   return (
-    <Modal modal={props.modalState}>
+    <Modal modal={props.modalState} size="md">
       <View style={utilSpacing.px3}>
         <Icon
           name="location-dot"

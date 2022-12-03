@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Header, InputText, Screen } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -16,7 +17,7 @@ import { saveString } from "../../utils/storage"
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
-    const { addressStore, commonStore, userStore, messagesStore } = useStores()
+    const { addressStore, commonStore, userStore, messagesStore, deliveryStore } = useStores()
 
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
@@ -35,6 +36,9 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         userStore.setAddressId(-1)
         saveString("address", JSON.stringify(address))
         messagesStore.showSuccess("addressScreen.addressSaved", true)
+        deliveryStore.getPriceDeliveryByCity(address.city).catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         navigation.navigate(params.screenToReturn)
       } else {
         commonStore.setVisibleLoading(true)
@@ -46,6 +50,9 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               addressStore.setCurrent({ ...address })
               userStore.setAddressId(address.id)
               messagesStore.showSuccess(res.message)
+              deliveryStore.getPriceDelivery(address.id).catch((error: Error) => {
+                messagesStore.showError(error.message)
+              })
               // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
               navigation.navigate(params.screenToReturn)
             }
@@ -60,7 +67,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="addressScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.containerForm}>
             <FormProvider {...methods}>
               <InputText

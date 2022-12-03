@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+
 import { Addon } from "../../models/dish"
 import { CurrencyContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"

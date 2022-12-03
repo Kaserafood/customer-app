@@ -1,6 +1,7 @@
 import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, View } from "react-native"
+
 import { Button, Modal, PaymentCard, Text } from "../../components"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
@@ -45,7 +46,7 @@ export const ModalPaymentCard = forwardRef(
             <Text
               preset="bold"
               size="lg"
-              tx="deliveryDetailScreen.paymentCard"
+              tx="checkout.paymentCard"
               style={[utilSpacing.mb2, utilSpacing.ml4]}
             ></Text>
             {modalState.isVisible && (

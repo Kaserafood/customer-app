@@ -2,6 +2,7 @@ import React from "react"
 import { StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
+
 import { Button, Modal, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"

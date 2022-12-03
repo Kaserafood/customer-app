@@ -1,6 +1,11 @@
-import * as RNLocalize from "react-native-localize"
-
+import React, { useEffect, useState } from "react"
 import { BackHandler, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native"
+import ProgressBar from "react-native-animated-progress"
+import { ScrollView } from "react-native-gesture-handler"
+import * as RNLocalize from "react-native-localize"
+import { observer } from "mobx-react-lite"
+
+import { useDebounce } from "../../common/hooks/useDebounce"
 import {
   DayDelivery,
   Dish,
@@ -10,19 +15,13 @@ import {
   ModalRequestDish,
   Separator,
 } from "../../components"
-import React, { useEffect, useState } from "react"
-import { color, spacing } from "../../theme"
-
+import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
-import { ModalStateHandler } from "../../utils/modalState"
-import ProgressBar from "react-native-animated-progress"
-import { ScrollView } from "react-native-gesture-handler"
-import { getI18nText } from "../../utils/translate"
-import { observer } from "mobx-react-lite"
-import { useDebounce } from "../../common/hooks/useDebounce"
-import { useStores } from "../../models"
+import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
+import { getI18nText } from "../../utils/translate"
 
 interface ModalSearchProps {
   modalState: ModalStateHandler

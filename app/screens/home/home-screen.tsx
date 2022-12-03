@@ -1,4 +1,10 @@
+import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import * as RNLocalize from "react-native-localize"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 
 import {
   Categories,
@@ -13,27 +19,21 @@ import {
   Separator,
   Text,
 } from "../../components"
-import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
-import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
-import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
-
-import { AppEventsLogger } from "react-native-fbsdk-next"
-import { Banner } from "./banner"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
+import { ModalLocation } from "../../components/location/modal-location"
+import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
-import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
-import { ModalLocation } from "../../components/location/modal-location"
-import { ModalStateHandler } from "../../utils/modalState"
-import { ModalWelcome } from "./modal-welcome"
+import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
-import { StackScreenProps } from "@react-navigation/stack"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { color, spacing } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
-import { observer } from "mobx-react-lite"
-import { useStores } from "../../models"
+
+import { Banner } from "./banner"
+import { ModalWelcome } from "./modal-welcome"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -53,9 +53,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       commonStore,
       categoryStore,
       userStore,
-      orderStore,
       cartStore,
       messagesStore,
+      deliveryStore,
     } = useStores()
     const { currentDay } = dayStore
 
@@ -124,25 +124,28 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
       setUserStoreData()
 
-      fetch()
+      fetch(false)
     }, [])
 
-    const fetch = async () => {
+    const fetch = async (useCurrentDate : boolean) => {
       /*
-       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the screen delivery-detail-screen and others screens
+       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
 
       await Promise.all([
-        dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
+        dishStore.getAll(useCurrentDate ? dayStore.currentDay.date : null, RNLocalize.getTimeZone(), userStore.userId),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
-        orderStore.getPriceDelivery(),
+        deliveryStore.getPriceDelivery(userStore.addressId),
         dayStore.getDays(RNLocalize.getTimeZone()),
       ])
         .then(() => {
           if (dayStore.days?.length > 0) {
-            dayStore.setCurrentDay(dayStore.days[0])
+            if (useCurrentDate) 
+              dayStore.setCurrentDay(dayStore.currentDay)
+            else
+              dayStore.setCurrentDay(dayStore.days[0])
           }
         })
         .catch((error: Error) => {
@@ -156,8 +159,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true)
-      console.log("NOEW IS REFRESHING")
-      await fetch().then(() => setRefreshing(false))
+      const existsDate = dayStore.currentDay?.date?.length > 0
+      await fetch(existsDate).then(() => setRefreshing(false))
     }, [])
 
     return (

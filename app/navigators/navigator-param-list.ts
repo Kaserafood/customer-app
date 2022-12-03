@@ -27,7 +27,7 @@ interface endOrderParams {
 }
 
 interface mapScreenParams {
-  screenToReturn: "main" | "deliveryDetail"
+  screenToReturn: "main" | "checkout"
 }
 
 interface tokenScreenParams {
@@ -40,7 +40,7 @@ interface MenuChef extends UserChef {
 }
 
 interface loginFormParams {
-  screenRedirect: "main" | "deliveryDetail"
+  screenRedirect: "main" | "checkout"
 }
 export type NavigatorParamList = {
   init: undefined
@@ -52,7 +52,7 @@ export type NavigatorParamList = {
   main: undefined
   dishDetail: DishChef
   menuChef: MenuChef
-  deliveryDetail: undefined
+  checkout: undefined
   endOrder: endOrderParams
   category: Category
   home: undefined

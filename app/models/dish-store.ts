@@ -1,5 +1,6 @@
+import { flow, Instance, types } from "mobx-state-tree"
+
 import { Api, DishResponse } from "../services/api"
-import { Instance, flow, types } from "mobx-state-tree"
 
 import { dish } from "./dish"
 import { userChef } from "./user-store"

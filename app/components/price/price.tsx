@@ -1,6 +1,7 @@
-import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
+
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormat } from "../../utils/price"

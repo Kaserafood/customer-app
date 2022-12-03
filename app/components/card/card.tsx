@@ -1,5 +1,6 @@
 import * as React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+
 import { color, spacing } from "../../theme"
 import { SHADOW } from "../../theme/Util"
 

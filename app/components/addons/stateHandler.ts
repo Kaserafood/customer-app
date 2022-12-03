@@ -1,4 +1,5 @@
 import { makeAutoObservable } from "mobx"
+
 import { MetaDataCart } from "../../models/cart-store"
 
 export class StateHandler {

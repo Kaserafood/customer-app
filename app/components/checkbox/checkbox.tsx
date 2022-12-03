@@ -2,10 +2,12 @@ import * as React from "react"
 import { TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+
 import { color, spacing } from "../../theme"
 import { utilFlex } from "../../theme/Util"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
+
 import { CheckboxProps } from "./checkbox.props"
 
 const ROOT: ViewStyle = {

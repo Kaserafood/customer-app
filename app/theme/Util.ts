@@ -1,4 +1,5 @@
 import { StyleSheet, ViewStyle } from "react-native"
+
 import { color } from "./color"
 import { spacing } from "./spacing"
 import { typography, typographySize } from "./typography"

@@ -1,6 +1,6 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleSheet, View } from "react-native"
+import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { spacing } from "../../theme"

@@ -3,12 +3,14 @@ import { useController, useFormContext } from "react-hook-form"
 import { Platform, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import TextInputMask from "react-native-text-input-mask"
+
 import { translate, TxKeyPath } from "../../i18n"
 import { color, spacing, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Card } from "../card/card"
 import { Text } from "../text/text"
+
 import { InputTextProps } from "./input-text.props"
 const TEXT_STYLES: TextStyle = {
   paddingVertical: spacing[3],

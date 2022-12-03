@@ -1,6 +1,8 @@
 import React, { Component, ErrorInfo, ReactNode } from "react"
 import { StatusBar } from "react-native"
+
 import { color } from "../../theme"
+
 import { ErrorComponent } from "./error-component"
 
 interface Props {

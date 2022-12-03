@@ -1,26 +1,27 @@
-import { Card, Header, Icon, Image, ModalRequestDish, Screen, Text } from "../../components"
 import React, { FC, useLayoutEffect } from "react"
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import { StatusBar, StyleSheet, View } from "react-native"
-import { utilFlex, utilSpacing } from "../../theme/Util"
-
 import { AppEventsLogger } from "react-native-fbsdk-next"
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { useIsFocused } from "@react-navigation/native"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
+import images from "../../assets/images"
+import { Card, Header, Icon, Image, ModalRequestDish, Screen, Text } from "../../components"
+import { ModalLocation } from "../../components/location/modal-location"
+import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { DishChef } from "../../models/dish-store"
-import { ModalLocation } from "../../components/location/modal-location"
-import { ModalSearch } from "./modal-search"
-import { ModalStateHandler } from "../../utils/modalState"
-import { NavigatorParamList } from "../../navigators/navigator-param-list"
-import Ripple from "react-native-material-ripple"
-import { StackScreenProps } from "@react-navigation/stack"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { color } from "../../theme"
 import { goBack } from "../../navigators/navigation-utilities"
-import images from "../../assets/images"
-import { observer } from "mobx-react-lite"
+import { NavigatorParamList } from "../../navigators/navigator-param-list"
+import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
-import { useIsFocused } from "@react-navigation/native"
-import { useStores } from "../../models"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalStateHandler } from "../../utils/modalState"
+
+import { ModalSearch } from "./modal-search"
 
 const modalStateRequest = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -88,7 +89,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                 utilFlex.flexRow,
                 utilSpacing.my5,
                 utilFlex.flexCenterVertical,
-                utilSpacing.mx3
+                utilSpacing.mx3,
               ]}
               onPress={() => modalStateSearch.setVisible(true)}
             >

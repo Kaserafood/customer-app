@@ -1,11 +1,12 @@
-import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
-import { isNonScrolling, offsets, presets } from "./screen.presets"
-
 import React from "react"
-import { ScreenProps } from "./screen.props"
+import { KeyboardAvoidingView, Platform, ScrollView, StatusBar, View } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { color } from "../../theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+
+import { color } from "../../theme"
+
+import { isNonScrolling, offsets, presets } from "./screen.presets"
+import { ScreenProps } from "./screen.props"
 
 const isIos = Platform.OS === "ios"
 

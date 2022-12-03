@@ -1,8 +1,9 @@
-import { DrawerContentScrollView } from "@react-navigation/drawer"
-import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { Linking, Platform, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { DrawerContentScrollView } from "@react-navigation/drawer"
+import { useNavigation } from "@react-navigation/native"
+
 import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"

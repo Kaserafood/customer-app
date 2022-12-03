@@ -1,15 +1,15 @@
+import React from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import SkeletonPlaceholder from "react-native-skeleton-placeholder"
+import { observer } from "mobx-react-lite"
+
+import { TxKeyPath } from "../../i18n"
+import { useStores } from "../../models"
+import { Day } from "../../models/day-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-
 import { Chip } from "../chip/chip"
-import { Day } from "../../models/day-store"
-import React from "react"
-import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import { Text } from "../text/text"
-import { TxKeyPath } from "../../i18n"
-import { observer } from "mobx-react-lite"
-import { useStores } from "../../models"
 
 export interface DayDeliveryProps {
   /**

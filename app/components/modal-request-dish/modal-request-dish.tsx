@@ -1,21 +1,23 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Keyboard, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { Calendar, LocaleConfig } from "react-native-calendars"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
 import { ModalStateHandler } from "../../utils/modalState"
-import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
+import { Image } from "../image/image"
 import { InputText } from "../input-text/input-text"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+
 import { useModalRequest } from "./useModalRequest"
 
 const modalStateCalendar = new ModalStateHandler()
