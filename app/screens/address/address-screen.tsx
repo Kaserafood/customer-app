@@ -67,7 +67,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="addressScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps="handled">
           <View style={styles.containerForm}>
             <FormProvider {...methods}>
               <InputText

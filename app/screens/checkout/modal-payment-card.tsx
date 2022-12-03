@@ -46,7 +46,7 @@ export const ModalPaymentCard = forwardRef(
             <Text
               preset="bold"
               size="lg"
-              tx="deliveryDetailScreen.paymentCard"
+              tx="checkout.paymentCard"
               style={[utilSpacing.mb2, utilSpacing.ml4]}
             ></Text>
             {modalState.isVisible && (

@@ -83,7 +83,7 @@ export const RegisterFormScreen: FC<
               description: "Nuevo usuario registrado con email",
             })
             AppEventsLogger.setUserID(userId.toString())
-            navigation.navigate("deliveryDetail")
+            navigation.navigate("checkout")
           }
         })
         .catch((error: Error) => {
@@ -94,14 +94,14 @@ export const RegisterFormScreen: FC<
   }
 
   const toLogin = () => {
-    navigation.navigate("loginForm", { screenRedirect: "deliveryDetail" })
+    navigation.navigate("loginForm", { screenRedirect: "checkout" })
   }
   return (
     <>
-      <Screen preset="scroll" bottomBar="dark-content">
+      <Screen preset="fixed" bottomBar="dark-content">
         <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <View style={styles.containerForm}>
             <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
 
@@ -134,7 +134,7 @@ export const RegisterFormScreen: FC<
                   minLength: {
                     value: getMaskLength(getFormatMaskPhone()),
                     message: "registerFormScreen.phoneFormatIncorrect",
-                  },
+                  }
                 }}
                 mask={getFormatMaskPhone()}
               ></InputText>
@@ -229,7 +229,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     backgroundColor: color.palette.white,
-    flex: 1,
   },
   containerForm: {
     display: "flex",
