@@ -595,7 +595,7 @@
     "order": "Pedido"
   },
   "modalNecessaryLocation": {
-    "title": "Ubicación necesaria",
+    "title": "Ubicación requerida",
     "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
     "order": "Pedidio"
   },

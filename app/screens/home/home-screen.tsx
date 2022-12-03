@@ -124,17 +124,17 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
       setUserStoreData()
 
-      fetch()
+      fetch(false)
     }, [])
 
-    const fetch = async () => {
+    const fetch = async (useCurrentDate : boolean) => {
       /*
        * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
 
       await Promise.all([
-        dishStore.getAll(null, RNLocalize.getTimeZone(), userStore.userId),
+        dishStore.getAll(useCurrentDate ? dayStore.currentDay.date : null, RNLocalize.getTimeZone(), userStore.userId),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
         deliveryStore.getPriceDelivery(userStore.addressId),
@@ -142,7 +142,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       ])
         .then(() => {
           if (dayStore.days?.length > 0) {
-            dayStore.setCurrentDay(dayStore.days[0])
+            if (useCurrentDate) 
+              dayStore.setCurrentDay(dayStore.currentDay)
+            else
+              dayStore.setCurrentDay(dayStore.days[0])
           }
         })
         .catch((error: Error) => {
@@ -156,8 +159,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     const onRefresh = useCallback(async () => {
       setRefreshing(true)
-      console.log("NOEW IS REFRESHING")
-      await fetch().then(() => setRefreshing(false))
+      const existsDate = dayStore.currentDay?.date?.length > 0
+      await fetch(existsDate).then(() => setRefreshing(false))
     }, [])
 
     return (

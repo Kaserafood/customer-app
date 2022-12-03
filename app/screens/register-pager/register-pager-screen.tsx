@@ -96,10 +96,10 @@ export const RegisterPagerScreen: FC<
               style={[utilSpacing.mb3, utilText.textCenter]}
               preset="bold"
               size="lg"
-              tx={page.title}
+              text={page.title}
             ></Text>
 
-            <Text style={utilText.textCenter} tx={page.description}></Text>
+            <Text style={utilText.textCenter} text={page.description}></Text>
           </View>
         ))}
       </PagerView>

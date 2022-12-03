@@ -59,7 +59,7 @@ function ScreenWithScrolling(props: ScreenProps) {
           backgroundColor={props.statusBarBackgroundColor || color.primary}
           barStyle={props.statusBar || "light-content"}
         />
-      </View>home
+      </View>
 
       <View style={[preset.outer, backgroundStyle]}>
         <ScrollView
