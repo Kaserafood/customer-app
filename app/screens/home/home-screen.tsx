@@ -127,7 +127,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       fetch(false)
     }, [])
 
-    const fetch = async (useCurrentDate : boolean) => {
+    const fetch = async (useCurrentDate: boolean) => {
       /*
        * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
@@ -142,7 +142,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       ])
         .then(() => {
           if (dayStore.days?.length > 0) {
-            if (useCurrentDate) 
+            if (useCurrentDate)
               dayStore.setCurrentDay(dayStore.currentDay)
             else
               dayStore.setCurrentDay(dayStore.days[0])

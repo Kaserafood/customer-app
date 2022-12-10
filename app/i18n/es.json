@@ -329,7 +329,7 @@
     "deliveryDatePlaceholder": "Selecciona una fecha",
     "deliveryTime": "Elige el rango de entrega",
     "paymentMethod": "Método de pago",
-    "paymentCard": "Tarjeta de crédito/débito",
+    "paymentCard": "Agregar tarjeta de crédito/débito",
     "delivery": "Entrega:",
     "errorDayDelivery": "Selecciona un día de entrega",
     "errorTimeDelivery": "Selecciona un rango de entrega",
@@ -343,7 +343,8 @@
     "paymentCash": "Efectivo",
     "makeOrder": "Hacer pedido",
     "useCoupon": "Usar cupón",
-    "pay": "Pagar"
+    "pay": "Pagar",
+    "addPayment" : "Agregar tarjeta"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",

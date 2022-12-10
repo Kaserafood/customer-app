@@ -106,7 +106,7 @@ const AppStack = observer(() => {
   )
 })
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> { }
 
 export const AppNavigator = (props: NavigationProps) => {
   const colorScheme = useColorScheme()
@@ -141,7 +141,7 @@ export const AppNavigator = (props: NavigationProps) => {
     <NavigationContainer
       onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+
       linking={linking}
       {...props}
     >

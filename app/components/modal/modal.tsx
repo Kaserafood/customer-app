@@ -7,6 +7,8 @@ import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
+import { Icon } from "../icon/icon"
 import { Image } from "../image/image"
 
 interface ModalState {
@@ -70,6 +72,11 @@ interface ModalProperties {
    * Size with of the modal
    */
   size?: "md" | "lg"
+
+  /**
+   * Indicates if the modal should be full screen
+   **/
+  isFullScreen?: boolean
 }
 
 /**
@@ -88,10 +95,13 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     isVisibleIconClose = true,
     onHide,
     size,
+    isFullScreen,
     ...rest
   } = props
 
   const getModalStyleByPosition = () => {
+    if (isFullScreen) return { ...styles.bottom, ...styles.fullScreen }
+
     switch (position) {
       case "center":
         return styles.center
@@ -101,6 +111,8 @@ export const Modal = observer(function Modal(props: ModalProperties) {
   }
 
   const getStyleBodyByPosition = () => {
+    if (isFullScreen) return { ...styles.bodyBottom, ...styles.noRadius }
+
     switch (position) {
       case "center":
         return styles.bodyCenter
@@ -110,6 +122,8 @@ export const Modal = observer(function Modal(props: ModalProperties) {
   }
 
   const getAnimationInByPosition = () => {
+    if (isFullScreen) return "slideInUp"
+
     switch (position) {
       case "center":
         return "zoomIn"
@@ -119,6 +133,8 @@ export const Modal = observer(function Modal(props: ModalProperties) {
   }
 
   const getAnimationOutByPosition = () => {
+    if (isFullScreen) return "slideOutDown"
+
     switch (position) {
       case "center":
         return "zoomOut"
@@ -142,15 +158,37 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     >
       <View style={[styles.content, styleContainer]}>
         <View
-          style={[styles.body, getStyleBodyByPosition(), size === "md" && styles.w80, styleBody]}
+          style={[
+            styles.body,
+            getStyleBodyByPosition(),
+            size === "md" && styles.w80,
+            styleBody,
+            isFullScreen && styles.fullScreen,
+          ]}
         >
-          {isVisibleIconClose && (
-            <View style={styles.containerImgClose}>
-              <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-                <Image style={styles.imgClose} source={iconClose ?? images.close}></Image>
-              </TouchableOpacity>
-            </View>
+          {(isVisibleIconClose && !isFullScreen) && (
+            <>
+              {
+                position !== "bottom" ? (
+                  <View style={styles.containerImgClose}>
+                    <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
+                      <Image style={styles.imgClose} source={iconClose ?? images.close}></Image>
+                    </TouchableOpacity>
+                  </View>
+
+                ) : <View style={utilSpacing.py3}></View>
+              }
+            </>
+
           )}
+
+          {
+            isFullScreen && (
+              <TouchableOpacity onPress={() => modal.setVisible(false)}>
+                <Icon name="xmark" size={30} color={color.text}></Icon>
+              </TouchableOpacity>
+            )
+          }
 
           {children}
         </View>
@@ -199,9 +237,16 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
   },
+  fullScreen: {
+    height: "100%",
+  },
   imgClose: {
     height: 20,
     width: 20,
+  },
+  noRadius: {
+    borderTopEndRadius: 0,
+    borderTopStartRadius: 0,
   },
   top: {
     justifyContent: "flex-start",
