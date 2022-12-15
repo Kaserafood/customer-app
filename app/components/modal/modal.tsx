@@ -166,29 +166,25 @@ export const Modal = observer(function Modal(props: ModalProperties) {
             isFullScreen && styles.fullScreen,
           ]}
         >
-          {(isVisibleIconClose && !isFullScreen) && (
+          {isVisibleIconClose && !isFullScreen && (
             <>
-              {
-                position !== "bottom" ? (
-                  <View style={styles.containerImgClose}>
-                    <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
-                      <Image style={styles.imgClose} source={iconClose ?? images.close}></Image>
-                    </TouchableOpacity>
-                  </View>
-
-                ) : <View style={utilSpacing.py3}></View>
-              }
+              {position !== "bottom" ? (
+                <View style={styles.containerImgClose}>
+                  <TouchableOpacity onPress={() => modal.setVisible(false)} activeOpacity={0.7}>
+                    <Image style={styles.imgClose} source={iconClose ?? images.close}></Image>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={utilSpacing.py3}></View>
+              )}
             </>
-
           )}
 
-          {
-            isFullScreen && (
-              <TouchableOpacity onPress={() => modal.setVisible(false)}>
-                <Icon name="xmark" size={30} color={color.text}></Icon>
-              </TouchableOpacity>
-            )
-          }
+          {isFullScreen && (
+            <TouchableOpacity onPress={() => modal.setVisible(false)}>
+              <Icon name="xmark" size={30} color={color.text}></Icon>
+            </TouchableOpacity>
+          )}
 
           {children}
         </View>

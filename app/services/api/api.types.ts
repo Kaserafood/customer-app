@@ -3,7 +3,7 @@ import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
-import { UserChef } from "../../models/user-store"
+import { Card, UserChef } from "../../models/user-store"
 
 import { GeneralApiProblem } from "./api-problem"
 
@@ -76,4 +76,8 @@ export type CuponResponse = {
 
 export type BannerResponse = {
   data: Banner[]
+} & kind
+
+export type CardResponse = {
+  data: Card[]
 } & kind

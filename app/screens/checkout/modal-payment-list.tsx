@@ -1,15 +1,20 @@
-import React from "react"
-import { StyleSheet, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
+import React, { useEffect } from "react"
+import { ScrollView, StyleSheet, View } from "react-native"
+import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { Button, Image, Modal, Separator, Text } from "../../components"
+import { useStores } from "../../models"
+import { Card } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getPrefixNumberCard } from "../../utils/card"
+import { getImageByType, paymentType, typeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
+import { getI18nText } from "../../utils/translate"
 
 import { ModalPaymentCard } from "./modal-payment-card"
 
@@ -17,92 +22,93 @@ interface ModalPaymentListProps {
   stateModal: ModalStateHandler
 }
 const modalStatePaymentCard = new ModalStateHandler()
-type paymentType = "card" | "cash"
-type typeCard = "visa" | "mastercard" | "american"
+
 export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps) => {
-  const getImageByTypeCard = (type: typeCard) => {
-    switch (type) {
-      case "visa":
-        return images.cardVisa
-      case "mastercard":
-        return images.cardMastercard
-      case "american":
-        return images.cardAmex
-      default:
-        return images.cardVisa
-    }
+  const { userStore, messagesStore } = useStores()
+  useEffect(() => {
+    ;(async () => {
+      await fetch()
+    })()
+  }, [])
+
+  const fetch = async () => {
+    await userStore
+      .getCads(userStore.userId)
+      .then(() => {
+        const existsSelected = userStore.cards.find((item) => item.selected)
+
+        if (!existsSelected) {
+          userStore.setCurrentCard(null)
+        } else {
+          if (existsSelected.id !== userStore.currentCard?.id) {
+            userStore.setCurrentCard(existsSelected)
+          }
+        }
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
+      })
   }
 
-  const getImageByType = (type: paymentType, subType: typeCard) => {
-    switch (type) {
-      case "card":
-        return getImageByTypeCard(subType)
-      case "cash":
-        return images.cash
-      default:
-        return images.cash
-    }
+  const onSelectedPaymentItem = (id: number | null) => {
+    userStore
+      .updateSelectedCard(userStore.userId, id)
+      .then(async (res) => {
+        if (res) {
+          messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
+          await fetch()
+          if (id) {
+            console.log(
+              "change card",
+              userStore.cards.find((item) => item.id === id),
+            )
+            userStore.setCurrentCard(userStore.cards.find((item) => item.id === id))
+          } else {
+            userStore.setCurrentCard(null)
+          }
+        } else {
+          messagesStore.showError("checkoutScreen.paymentMethodNotUpdated", true)
+        }
+      })
+      .catch((error: Error) => {
+        console.log("error", error)
+        messagesStore.showError(error.message)
+      })
   }
 
-  const data = [
-    {
-      id: 1,
-      name: "Tarjeta de crédito",
-      number: "**** 1234",
-      type: "card",
-      typeCard: "visa",
-    },
-    {
-      id: 2,
-      name: "Tarjeta de crédito",
-      number: "**** 1234",
-      type: "cash",
-    },
-    {
-      id: 3,
-      name: "Tarjeta de crédito",
-      number: "**** 1234",
-      type: "card",
-      typeCard: "mastercard",
-    },
-    {
-      id: 5,
-      name: "Tarjeta de crédito",
-      number: "**** 1234",
-      type: "card",
-      typeCard: "american",
-    },
-  ]
   return (
     <>
       <Modal modal={stateModal} isFullScreen styleBody={utilSpacing.p5}>
         <View>
           <Text
             size="xl"
-            tx="checkoutScreen.paymentMethod"
+            tx="checkoutScreen.paymentMethods"
             style={[utilSpacing.pb4, utilSpacing.mt4]}
             preset="bold"
           ></Text>
           <ScrollView>
-            {data.map((item, index) => (
+            <PaymentMethodItem
+              id={0}
+              name={getI18nText("checkoutScreen.paymentCash")}
+              type="cash"
+              selected={userStore.isNotSelectedCards}
+              onSelected={() => onSelectedPaymentItem(null)}
+              description={getI18nText("checkoutScreen.paymentCashDescription")}
+            ></PaymentMethodItem>
+            {userStore.cards.length > 0 && <Separator></Separator>}
+            {userStore.cards.map((item, index) => (
               <View key={item.id}>
-                <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
-                  <Image
-                    style={[styles.imageCard, utilSpacing.mr4]}
-                    source={getImageByType(item.type as paymentType, item.typeCard as typeCard)}
-                  ></Image>
-                  <Text text={item.name} style={utilFlex.flex1}></Text>
-
-                  {index === 0 ? (
-                    <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-                      <IconRN name="check" size={30} color={color.palette.black} />
-                    </Animated.View>
-                  ) : (
-                    <View style={styles.h30}></View>
-                  )}
-                </View>
-
-                {index !== data.length - 1 && <Separator></Separator>}
+                <PaymentMethodItem
+                  id={item.id}
+                  name={item.name}
+                  type="card"
+                  subtType={item.type as typeCard}
+                  selected={item.selected}
+                  onSelected={() => onSelectedPaymentItem(item.id)}
+                  description={item.number}
+                  showPrefixCard
+                ></PaymentMethodItem>
+                {index !== userStore.cards.length - 1 && <Separator></Separator>}
               </View>
             ))}
           </ScrollView>
@@ -115,12 +121,62 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
         </View>
         <ModalPaymentCard
           modalState={modalStatePaymentCard}
-          onSubmit={() => console.log("bmbir")}
+          onGetCards={() => fetch()}
         ></ModalPaymentCard>
       </Modal>
     </>
   )
 })
+
+interface PaymentMethodItemProps {
+  onSelected?: () => void
+  id: number
+  name: string
+  description: string
+  type: paymentType
+  selected: boolean
+  showPrefixCard?: boolean
+  subtType?: typeCard
+}
+
+const PaymentMethodItem = ({
+  onSelected,
+  id,
+  name,
+  description,
+  type,
+  selected,
+  showPrefixCard,
+  subtType,
+}: PaymentMethodItemProps) => {
+  return (
+    <Ripple key={id} onPress={onSelected}>
+      <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
+        <Image
+          style={[styles.imageCard, utilSpacing.mr4]}
+          source={getImageByType(type as paymentType, subtType)}
+        ></Image>
+        <View style={utilFlex.flex1}>
+          <Text text={name} preset="semiBold" style={utilSpacing.pb1}></Text>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+            {showPrefixCard && (
+              <Text text="****" caption size="sm" style={[utilSpacing.mt2, utilSpacing.mr2]}></Text>
+            )}
+            <Text text={description} caption size="sm"></Text>
+          </View>
+        </View>
+
+        {selected ? (
+          <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+            <IconRN name="check" size={30} color={color.palette.black} />
+          </Animated.View>
+        ) : (
+          <View style={styles.h30}></View>
+        )}
+      </View>
+    </Ripple>
+  )
+}
 
 const styles = StyleSheet.create({
   h30: {

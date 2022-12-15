@@ -1,4 +1,6 @@
+import { action } from "mobx"
 import { flow, Instance, types } from "mobx-state-tree"
+import { isNumber } from "validate.js"
 
 import { ChefResponse } from "../services/api"
 import { Api } from "../services/api/api"
@@ -34,6 +36,16 @@ const userLogin = types.model("UserLoginStore").props({
 })
 export interface UserLogin extends Instance<typeof userLogin> {}
 
+const cardModel = types.model("Card").props({
+  id: types.maybe(types.number),
+  name: types.maybe(types.string),
+  number: types.maybe(types.string),
+  expDate: types.optional(types.string, ""),
+  type: types.maybe(types.string),
+  selected: types.maybe(types.boolean),
+})
+export interface Card extends Instance<typeof cardModel> {}
+
 export const UserRegisterModel = userRegister
   .props({
     userId: types.maybe(types.integer),
@@ -42,8 +54,15 @@ export const UserRegisterModel = userRegister
     taxId: types.maybe(types.string),
     customerNote: types.maybe(types.string),
     deliverySlotTime: types.maybe(types.string),
+    cards: types.optional(types.array(cardModel), []),
+    currentCard: types.maybe(cardModel),
   })
   .extend(withEnvironment)
+  .views((self) => ({
+    get isNotSelectedCards() {
+      return self.cards.filter((card) => card.selected).length === 0
+    },
+  }))
   .actions((self) => ({
     setUserId: (userId: number) => {
       self.userId = userId
@@ -56,6 +75,20 @@ export const UserRegisterModel = userRegister
     },
     setAddressId: (addressId: number) => {
       self.addressId = addressId
+    },
+    setCards: (cards: any) => {
+      self.cards = cards
+    },
+    setCurrentCard: (card: Card | null) => {
+      if (card === null) {
+        if (self.currentCard) {
+          self.currentCard.expDate = ""
+          self.currentCard.name = ""
+          self.currentCard.number = ""
+          self.currentCard.type = ""
+          self.currentCard.id = 0
+        }
+      } else self.currentCard = { ...card }
     },
   }))
   .actions((self) => ({
@@ -162,5 +195,33 @@ export const UserRegisterModel = userRegister
       if (result.kind === "ok") return result.data as UserChef
 
       return null
+    }),
+
+    getCads: flow(function* getCards(userId: number) {
+      const api = new Api()
+      const result = yield api.getCards(userId)
+      if (result.kind === "ok") self.setCards(result.data)
+    }),
+
+    updateSelectedCard: flow(function* updateSelectedCard(userId: number, cardId: number | null) {
+      const api = new Api()
+      const result = yield api.updateSelectedCard(userId, cardId)
+      if (result.kind === "ok") {
+        if (isNumber(result.data.value) && Number(result.data.value) > 0) {
+          return true
+        }
+      }
+      return false
+    }),
+
+    addCard: flow(function* addCard(userId: number, card: any) {
+      const api = new Api()
+      const result = yield api.addCard(userId, card)
+      if (result.kind === "ok") {
+        if (isNumber(result.data.value) && Number(result.data.value) > 0) {
+          return true
+        }
+      }
+      return false
     }),
   }))
