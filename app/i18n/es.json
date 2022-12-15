@@ -345,14 +345,14 @@
     "makeOrder": "Hacer pedido",
     "useCoupon": "Usar cupón",
     "pay": "Pagar",
-    "addPayment" : "Agregar tarjeta",
-    "paymentMethodUpdated" : "Método de pago actualizado",
+    "addPayment": "Agregar tarjeta",
+    "paymentMethodUpdated": "Método de pago actualizado",
     "paymentMethodNotUpdated": "No se ha podido actualizar el método de pago",
-    "paymentMethodAdded" : "Método de pago agregado",
-    "paymentMethodError" : "No se ha podido agregar el método de pago",
-    "paymentMethodErrorUnknown" : "La tarjeta debe ser Visa, MasterCard o American Express",
-    "paymentCashDescription" : "Pagas al recibir",
-    "paymentMethodErrorEmptyFields" : "No has ingresado todos los datos de tu tarjeta"
+    "paymentMethodAdded": "Método de pago agregado",
+    "paymentMethodError": "No se ha podido agregar el método de pago",
+    "paymentMethodErrorUnknown": "La tarjeta debe ser Visa, MasterCard o American Express",
+    "paymentCashDescription": "Pagas al recibir",
+    "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",

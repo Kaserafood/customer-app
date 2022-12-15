@@ -134,7 +134,7 @@ export const RegisterFormScreen: FC<
                   minLength: {
                     value: getMaskLength(getFormatMaskPhone()),
                     message: "registerFormScreen.phoneFormatIncorrect",
-                  }
+                  },
                 }}
                 mask={getFormatMaskPhone()}
               ></InputText>
