@@ -350,7 +350,7 @@
     "paymentMethodNotUpdated": "No se ha podido actualizar el método de pago",
     "paymentMethodAdded": "Método de pago agregado",
     "paymentMethodError": "No se ha podido agregar el método de pago",
-    "paymentMethodErrorUnknown": "La tarjeta debe ser Visa, MasterCard o American Express",
+    "paymentMethodErrorUnknown": "La tarjeta debe ser Visa o MasterCard",
     "paymentCashDescription": "Pagas al recibir",
     "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta"
   },

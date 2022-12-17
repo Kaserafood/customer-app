@@ -60,7 +60,8 @@ export const ModalPaymentCard = forwardRef(
         return
       }
 
-      if (getCardType(data.number) === "unknown") {
+      // QPayPro does not support AMEX cards for tokenization
+      if (getCardType(data.number) === "unknown" || getCardType(data.number) === "amex") {
         messagesStore.showError("checkoutScreen.paymentMethodErrorUnknown", true)
         return
       }
