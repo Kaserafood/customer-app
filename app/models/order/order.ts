@@ -20,14 +20,6 @@ const product = types.model("Product").props({
   metaData: types.array(metaData),
 })
 
-const card = types.model("Card").props({
-  cardNumber: types.maybe(types.string),
-  dateExpiry: types.maybe(types.string),
-  cvv: types.maybe(types.string),
-  name: types.maybe(types.string),
-  type: types.maybe(types.string),
-})
-
 const orderModel = types.model("Order").props({
   id: types.maybe(types.number),
   customerId: types.maybe(types.number),
@@ -42,7 +34,7 @@ const orderModel = types.model("Order").props({
   currencyCode: types.union(types.maybe(types.string), types.null),
   taxId: types.union(types.maybe(types.string), types.null),
   uuid: types.union(types.maybe(types.string), types.null),
-  card: types.union(types.maybe(card), types.null),
+  cardId: types.union(types.maybe(types.number), types.null),
   paymentMethod: types.maybe(types.string),
   couponCode: types.union(types.maybe(types.string), types.null),
 })

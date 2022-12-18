@@ -141,7 +141,6 @@ export const AppNavigator = (props: NavigationProps) => {
     <NavigationContainer
       onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       linking={linking}
       {...props}
     >

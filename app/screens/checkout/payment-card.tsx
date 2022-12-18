@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react"
 import { View } from "react-native"
 
+import { InputText } from "../../components/input-text/input-text"
 import { TxKeyPath } from "../../i18n"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getMaskCard, getMaskCVV, getMaskLength } from "../../utils/mask"
-import { InputText } from "../input-text/input-text"
 
 export interface PaymentCardProps {
   /**
