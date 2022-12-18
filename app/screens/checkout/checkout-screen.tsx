@@ -11,7 +11,6 @@ import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
-  Checkbox,
   Header,
   Icon,
   Image,
@@ -27,468 +26,423 @@ import { Coupon, MetaData, Order, Products, useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
+import { palette } from "../../theme/palette"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
-import { getCardType } from "../../utils/card"
+import { getImageByTypeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
-import { encrypt } from "../../utils/security"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
 import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
-import { Card as CardModel, ModalPaymentCard } from "./modal-payment-card"
+import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
-const modalStatePaymentCard = new ModalStateHandler()
 const modalStateCoupon = new ModalStateHandler()
+const modalStatePaymentList = new ModalStateHandler()
 
-export const CheckoutScreen: FC<
-  StackScreenProps<NavigatorParamList, "checkout">
-> = observer(({ navigation }) => {
-  const { ...methods } = useForm({ mode: "onBlur" })
-  const {
-    addressStore,
-    dayStore,
-    cartStore,
-    userStore,
-    commonStore,
-    orderStore,
-    messagesStore,
-    deliveryStore,
-  } = useStores()
-  const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
-  const [isPaymentCash, setIsPaymentCash] = useState(false)
-  const [isPaymentCard, setIsPaymentCard] = useState(false)
-  const [card, setCard] = useState<CardModel>()
-  const refDeliveryTimeList = useRef(null)
-  const refModalPaymentCard = useRef(null)
-  const [coupon, setCoupon] = useState<Coupon>()
+export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
+  ({ navigation }) => {
+    const { ...methods } = useForm({ mode: "onBlur" })
+    const {
+      addressStore,
+      dayStore,
+      cartStore,
+      userStore,
+      commonStore,
+      orderStore,
+      messagesStore,
+      deliveryStore,
+    } = useStores()
+    const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
-  useEffect(() => {
-    cartStore.setDiscount(0)
-    const loadSavedStrings = async () => {
-      const taxId = await loadString("taxId")
-      const deliveryTime = await loadString("deliveryTime")
-      const customerNote = await loadString("customerNote")
-      methods.setValue("taxId", taxId ?? "")
-      methods.setValue("deliveryNote", customerNote ?? "")
-      setLabelDeliveryTime(deliveryTime ?? "")
+    const refDeliveryTimeList = useRef(null)
+    const [coupon, setCoupon] = useState<Coupon>()
 
-      const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
+    useEffect(() => {
+      cartStore.setDiscount(0)
+      const loadSavedStrings = async () => {
+        const taxId = await loadString("taxId")
+        const deliveryTime = await loadString("deliveryTime")
+        const customerNote = await loadString("customerNote")
+        methods.setValue("taxId", taxId ?? "")
+        methods.setValue("deliveryNote", customerNote ?? "")
+        setLabelDeliveryTime(deliveryTime ?? "")
 
-      if (slotTime)
-        refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
-    }
-    loadSavedStrings()
+        const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
 
-    AppEventsLogger.logEvent("IntoCheckout", 1, {
-      description: "El usuario entró en la pantalla del checkout",
-    })
-  }, [])
-
-  useEffect(() => {
-    if (!cartStore.hasItems) {
-      console.log("to main screen")
-      navigation.navigate("main")
-    }
-  }, [navigation])
-
-  useEffect(() => {
-    if (!modalStatePaymentCard.isVisible) {
-      if (!isCardDataValid()) {
-        setIsPaymentCard(false)
-        setCard(undefined)
+        if (slotTime)
+          refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
       }
+      loadSavedStrings()
+
+      AppEventsLogger.logEvent("IntoCheckout", 1, {
+        description: "El usuario entró en la pantalla del checkout",
+      })
+    }, [])
+
+    useEffect(() => {
+      if (!cartStore.hasItems) {
+        console.log("to main screen")
+        navigation.navigate("main")
+      }
+    }, [navigation])
+
+    const getCardId = () => {
+      if (userStore.currentCard?.id > 0) return userStore.currentCard?.id
+
+      return null
     }
-  }, [modalStatePaymentCard.isVisible])
 
-  const onError: SubmitErrorHandler<any> = (errors) => {
-    __DEV__ && console.log({ errors })
-  }
-
-  const onSubmit = async (data) => {
-    Keyboard.dismiss()
-    if (!dayStore.currentDay) {
-      messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
-      return
+    const onError: SubmitErrorHandler<any> = (errors) => {
+      __DEV__ && console.log({ errors })
     }
 
-    if (labelDeliveryTime.length === 0) {
-      messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
-      return
-    }
-
-    if (isPaymentCard) {
-      if (!isCardDataValid()) {
-        messagesStore.showError("checkoutScreen.errorCard" as TxKeyPath, true)
+    const onSubmit = async (data) => {
+      Keyboard.dismiss()
+      if (!dayStore.currentDay) {
+        messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
         return
       }
-    }
 
-    if (!isPaymentCard && !isPaymentCash) {
-      messagesStore.showError("checkoutScreen.errorPayment" as TxKeyPath, true)
-      return
-    }
-
-    if (isPaymentCash) {
-      setCard(undefined)
-    }
-
-    commonStore.setVisibleLoading(true)
-    const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
-
-    const order: Order = {
-      id: 0,
-      customerId: userStore.userId,
-      address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
-      country: addressStore.current.country,
-      city: addressStore.current.city,
-      region: addressStore.current.region,
-      products: getProducts(),
-      priceDelivery: deliveryStore.priceDelivery,
-      metaData: getMetaData(taxId),
-      customerNote: data.customerNote,
-      currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
-      taxId: taxId,
-      uuid: getUniqueId(),
-      ...(isPaymentCard && {
-        card: {
-          cardNumber: encrypt(card.number.split(" ").join("")),
-          dateExpiry: encrypt(card.expirationDate),
-          cvv: encrypt(card.cvv),
-          name: card.name,
-          type: getCardType(card.number).toLocaleLowerCase(),
-        },
-      }),
-      paymentMethod: isPaymentCash ? "cod" : "qpaypro", // Contra entrega o pago con tarjeta
-      couponCode: coupon?.code,
-    }
-
-    orderStore
-      .add(order)
-      .then(async (res) => {
-        commonStore.setVisibleLoading(false)
-        __DEV__ && console.log("Code order reponse", res)
-
-        if (!res) {
-          messagesStore.showError("checkoutScreen.errorOrder", true)
-          return
-        }
-
-        if (Number(res.data) > 0) {
-          await saveString("taxId", data.taxId)
-          await saveString("customerNote", data.customerNote)
-          await saveString("deliveryTime", labelDeliveryTime)
-          cartStore.setDiscount(0)
-          __DEV__ && console.log("order added", res.data)
-
-          AppEventsLogger.logPurchase(getCurrentTotal(), getCurrency(), {
-            description: "El usuario ha realizado un pedido",
-          })
-
-          navigation.navigate("endOrder", {
-            orderId: Number(res.data),
-            deliveryDate: dayStore.currentDay.dayName,
-            deliveryTime: labelDeliveryTime,
-            deliveryAddress: addressStore.current.address,
-            imageChef: commonStore.currentChefImage,
-          })
-        } else if (Number(res.data) === -1)
-          messagesStore.showError("checkoutScreen.errorOrderPayment", true)
-        else messagesStore.showError("checkoutScreen.errorOrder", true)
-      })
-      .catch((error: Error) => {
-        messagesStore.showError(error.message)
-      })
-      .finally(() => commonStore.setVisibleLoading(false))
-
-    __DEV__ && console.log(order)
-  }
-
-  const getProducts = (): Products[] => {
-    return cartStore.cart.map((item) => {
-      return {
-        productId: item.dish.id,
-        quantity: item.quantity,
-        price: item.total,
-        name: item.dish.title,
-        noteChef: item.noteChef, // Nota que desea agregar al cliente para el chef
-        metaData: item.metaData,
+      if (labelDeliveryTime.length === 0) {
+        messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
+        return
       }
-    })
-  }
 
-  const isCardDataValid = () => {
-    if (
-      !card ||
-      !card.cvv ||
-      !card.expirationDate ||
-      !card.number ||
-      !card.name ||
-      card.cvv.trim().length === 0 ||
-      card.expirationDate.trim().length === 0 ||
-      card.number.trim().length === 0 ||
-      card.name.trim().length === 0
-    )
-      return false
+      commonStore.setVisibleLoading(true)
+      const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
 
-    return true
-  }
+      const order: Order = {
+        id: 0,
+        customerId: userStore.userId,
+        address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
+        country: addressStore.current.country,
+        city: addressStore.current.city,
+        region: addressStore.current.region,
+        products: getProducts(),
+        priceDelivery: deliveryStore.priceDelivery,
+        metaData: getMetaData(taxId),
+        customerNote: data.customerNote,
+        currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
+        taxId: taxId,
+        uuid: getUniqueId(),
+        cardId: getCardId(),
+        paymentMethod: getCardId() ? "qpaypro" : "cod", // Contra entrega o pago con tarjeta
+        couponCode: coupon?.code,
+      }
 
-  const getMetaData = (taxId: string): MetaData[] => {
-    const data: MetaData[] = []
+      orderStore
+        .add(order)
+        .then(async (res) => {
+          commonStore.setVisibleLoading(false)
+          __DEV__ && console.log("Code order reponse", res)
 
-    // Add chef id
-    data.push({
-      key: "_dokan_vendor_id",
-      value: `${commonStore.currentChefId}`,
-    })
+          if (!res) {
+            messagesStore.showError("checkoutScreen.errorOrder", true)
+            return
+          }
 
-    // Add delivery time
-    data.push({
-      key: "dokan_delivery_time_slot",
-      value: `${labelDeliveryTime}`,
-    })
+          if (Number(res.data) > 0) {
+            await saveString("taxId", data.taxId)
+            await saveString("customerNote", data.customerNote)
+            await saveString("deliveryTime", labelDeliveryTime)
+            cartStore.setDiscount(0)
+            __DEV__ && console.log("order added", res.data)
 
-    // Add delivery date
-    data.push({
-      key: "dokan_delivery_time_date",
-      value: dayStore.currentDay.date,
-    })
+            AppEventsLogger.logPurchase(getCurrentTotal(), getCurrency(), {
+              description: "El usuario ha realizado un pedido",
+            })
 
-    // Add tax of the customer
+            navigation.navigate("endOrder", {
+              orderId: Number(res.data),
+              deliveryDate: dayStore.currentDay.dayName,
+              deliveryTime: labelDeliveryTime,
+              deliveryAddress: addressStore.current.address,
+              imageChef: commonStore.currentChefImage,
+            })
+          } else if (Number(res.data) === -1)
+            messagesStore.showError("checkoutScreen.errorOrderPayment", true)
+          else messagesStore.showError("checkoutScreen.errorOrder", true)
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
 
-    data.push({
-      key: "_billing_taxid",
-      value: taxId,
-    })
+      __DEV__ && console.log(order)
+    }
 
-    data.push({
-      key: "billing_taxid",
-      value: taxId,
-    })
+    const getProducts = (): Products[] => {
+      return cartStore.cart.map((item) => {
+        return {
+          productId: item.dish.id,
+          quantity: item.quantity,
+          price: item.total,
+          name: item.dish.title,
+          noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
+          metaData: item.metaData,
+        }
+      })
+    }
 
-    data.push({
-      key: "customer_address_id",
-      value: `${userStore.addressId}`,
-    })
+    const getMetaData = (taxId: string): MetaData[] => {
+      const data: MetaData[] = []
 
-    return data
-  }
+      // Add chef id
+      data.push({
+        key: "_dokan_vendor_id",
+        value: `${commonStore.currentChefId}`,
+      })
 
-  const getNameDayDelivery = (): string => {
-    if (dayStore.currentDay.dayName.includes(" ")) return dayStore.currentDay.dayNameLong
+      // Add delivery time
+      data.push({
+        key: "dokan_delivery_time_slot",
+        value: `${labelDeliveryTime}`,
+      })
 
-    return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
-  }
+      // Add delivery date
+      data.push({
+        key: "dokan_delivery_time_date",
+        value: dayStore.currentDay.date,
+      })
 
-  const getTextButtonFooter = (): string => {
-    const text = getI18nText(
-      isPaymentCard ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
-    )
-    return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
-  }
+      // Add tax of the customer
 
-  const getCurrentTotal = (): number => {
-    return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
-  }
+      data.push({
+        key: "_billing_taxid",
+        value: taxId,
+      })
 
-  const getCurrency = (): string => {
-    return cartStore.cart[0]?.dish.chef.currencyCode
-  }
+      data.push({
+        key: "billing_taxid",
+        value: taxId,
+      })
 
-  const getAddressText = (): string => {
-    const address = ""
-    if (addressStore.current.name && addressStore.current.name.trim().length > 0)
-      address.concat(" - ")
-    return address.concat(addressStore.current.address)
-  }
+      data.push({
+        key: "customer_address_id",
+        value: `${userStore.addressId}`,
+      })
 
-  return (
-    <Screen preset="fixed">
-      <Header headerTx="checkoutScreen.title" leftIcon="back" onLeftPress={goBack} />
-      <ScrollView style={[styles.containerForm, utilSpacing.px3]}>
-        <Text
-          preset="bold"
-          size="lg"
-          tx="checkoutScreen.info"
-          style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
-        ></Text>
-        <FormProvider {...methods}>
-          <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
-            <InputText
-              name="address"
-              preset="card"
-              labelTx="checkoutScreen.address"
-              placeholderTx="checkoutScreen.addressPlaceholder"
-              editable={false}
-              value={getAddressText()}
-              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
-            ></InputText>
-          </TouchableOpacity>
+      return data
+    }
 
-          <InputText
-            name="customerNote"
-            preset="card"
-            labelTx="checkoutScreen.deliveryNote"
-            placeholderTx="checkoutScreen.deliveryNotePlaceholder"
-            value={addressStore.current.instructionsDelivery}
-          ></InputText>
-          <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
+    const getNameDayDelivery = (): string => {
+      if (dayStore.currentDay.dayName.includes(" ")) return dayStore.currentDay.dayNameLong
 
-          <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
-            <InputText
-              name="diveryDate"
-              preset="card"
-              labelTx="checkoutScreen.deliveryDate"
-              placeholderTx="checkoutScreen.deliveryDatePlaceholder"
-              editable={false}
-              value={getNameDayDelivery()}
-              iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
-            ></InputText>
-          </TouchableOpacity>
+      return `${dayStore.currentDay.dayName}  (${dayStore.currentDay.dayNameLong})`
+    }
 
-          <Text
-            preset="bold"
-            style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
-            tx="checkoutScreen.deliveryTime"
-          ></Text>
-          <DeliveryTimeList
-            ref={refDeliveryTimeList}
-            onSelectItem={(value) => setLabelDeliveryTime(value)}
-          ></DeliveryTimeList>
-          <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
+    const getTextButtonFooter = (): string => {
+      const text = getI18nText(getCardId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder")
+      return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
+    }
+
+    const getCurrentTotal = (): number => {
+      return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
+    }
+
+    const getCurrency = (): string => {
+      return cartStore.cart[0]?.dish.chef.currencyCode
+    }
+
+    const getAddressText = (): string => {
+      const address = ""
+      if (addressStore.current.name && addressStore.current.name.trim().length > 0)
+        address.concat(" - ")
+      return address.concat(addressStore.current.address)
+    }
+
+    return (
+      <Screen
+        preset="fixed"
+        statusBarBackgroundColor={
+          modalStatePaymentList.isVisible ? color.palette.white : color.primary
+        }
+        statusBar={modalStatePaymentList.isVisible ? "dark-content" : "light-content"}
+      >
+        <Header headerTx="checkoutScreen.title" leftIcon="back" onLeftPress={goBack} />
+        <ScrollView style={[styles.containerForm, utilSpacing.px3]}>
           <Text
             preset="bold"
             size="lg"
-            tx="checkoutScreen.paymentMethod"
-            style={[utilSpacing.mb2, utilSpacing.mx4]}
+            tx="checkoutScreen.info"
+            style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
+          <FormProvider {...methods}>
+            <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
+              <InputText
+                name="address"
+                preset="card"
+                labelTx="checkoutScreen.address"
+                placeholderTx="checkoutScreen.addressPlaceholder"
+                editable={false}
+                value={getAddressText()}
+                iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
+              ></InputText>
+            </TouchableOpacity>
 
-          <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}>
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              onPress={() => {
-                modalStatePaymentCard.setVisible(true)
-                setIsPaymentCard(!isPaymentCard)
-                setIsPaymentCash(false)
-              }}
-              style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+            <InputText
+              name="customerNote"
+              preset="card"
+              labelTx="checkoutScreen.deliveryNote"
+              placeholderTx="checkoutScreen.deliveryNotePlaceholder"
+              value={addressStore.current.instructionsDelivery}
+            ></InputText>
+            <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
+
+            <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
+              <InputText
+                name="diveryDate"
+                preset="card"
+                labelTx="checkoutScreen.deliveryDate"
+                placeholderTx="checkoutScreen.deliveryDatePlaceholder"
+                editable={false}
+                value={getNameDayDelivery()}
+                iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
+              ></InputText>
+            </TouchableOpacity>
+
+            <Text
+              preset="bold"
+              style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
+              tx="checkoutScreen.deliveryTime"
+            ></Text>
+            <DeliveryTimeList
+              ref={refDeliveryTimeList}
+              onSelectItem={(value) => setLabelDeliveryTime(value)}
+            ></DeliveryTimeList>
+            <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
+            <Text
+              preset="bold"
+              size="lg"
+              tx="checkoutScreen.paymentMethod"
+              style={[utilSpacing.mb2, utilSpacing.mx4]}
+            ></Text>
+
+            <Card
+              style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}
             >
-              <Checkbox
-                rounded
-                style={[utilSpacing.px3, utilFlex.flex1]}
-                value={isPaymentCard}
-                preset="medium"
-                tx="checkoutScreen.paymentCard"
-              ></Checkbox>
-              <View style={[utilSpacing.mr4, utilFlex.flexRow]}>
-                <Image style={styles.imageCard} source={images.cardVisa}></Image>
-                <Image style={styles.imageCard} source={images.cardMastercard}></Image>
-                <Image style={styles.imageCard} source={images.cardAmex}></Image>
-              </View>
-            </Ripple>
-          </Card>
+              {userStore.currentCard?.id > 0 ? (
+                <Ripple
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
+                  onPress={() => {
+                    modalStatePaymentList.setVisible(true)
+                  }}
+                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                >
+                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
+                    <Text text={userStore.currentCard.name} preset="semiBold"></Text>
+                    <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                      <Text
+                        text="****"
+                        caption
+                        size="sm"
+                        style={[utilSpacing.mt2, utilSpacing.mr2]}
+                      ></Text>
 
-          <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}>
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              onPress={() => {
-                setIsPaymentCash(!isPaymentCash)
-                setIsPaymentCard(false)
-                refModalPaymentCard.current?.cleanInputs()
-                modalStatePaymentCard.setVisible(false)
-              }}
-              style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
-            >
-              <Checkbox
-                rounded
-                style={[utilSpacing.px3, utilFlex.flex1]}
-                value={isPaymentCash}
-                preset="medium"
-                tx="checkoutScreen.paymentCash"
-              ></Checkbox>
-              <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
-            </Ripple>
-          </Card>
+                      <Text text={userStore.currentCard.number} caption size="sm"></Text>
+                    </View>
+                  </View>
 
-          <InputText
-            name="taxId"
-            preset="card"
-            placeholderTx="checkoutScreen.nitPlaceholder"
-            labelTx="checkoutScreen.nit"
-            styleContainer={[utilSpacing.my3]}
-            maxLength={100}
-          ></InputText>
+                  <Image
+                    style={[styles.imageCard, utilSpacing.mr4]}
+                    source={getImageByTypeCard(userStore.currentCard.type as never)}
+                  ></Image>
+                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
+                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
+                  </TouchableOpacity>
+                </Ripple>
+              ) : (
+                <Ripple
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
+                  onPress={() => {
+                    modalStatePaymentList.setVisible(true)
+                  }}
+                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                >
+                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
+                    <View style={utilFlex.felxColumn}>
+                      <Text tx="checkoutScreen.paymentCash" preset="semiBold"></Text>
+                      <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
+                    </View>
+                  </View>
 
-          <Ripple
-            style={[utilSpacing.my5, utilFlex.selfCenter]}
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            onPress={() => modalStateCoupon.setVisible(true)}
-          >
-            <Card style={[utilSpacing.px6, utilSpacing.p4]}>
-              <View style={[utilSpacing.p3, utilFlex.flexRow, utilFlex.flexCenter]}>
-                <Icon name="tag" size={26} color={color.text}></Icon>
-                <Text size="lg" style={utilSpacing.ml3} tx="checkoutScreen.useCoupon"></Text>
-              </View>
+                  <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
+                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
+                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
+                  </TouchableOpacity>
+                </Ripple>
+              )}
             </Card>
-          </Ripple>
-        </FormProvider>
 
-        <View style={utilSpacing.mx4}>
-          <Separator style={utilSpacing.my6}></Separator>
-          <View style={utilFlex.flexRow}>
-            <Text
-              style={utilSpacing.mr2}
-              preset="semiBold"
-              tx="checkoutScreen.delivery"
-            ></Text>
-            <Text
-              preset="semiBold"
-              caption
-              text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
-              style={utilSpacing.mb6}
-            ></Text>
+            <InputText
+              name="taxId"
+              preset="card"
+              placeholderTx="checkoutScreen.nitPlaceholder"
+              labelTx="checkoutScreen.nit"
+              styleContainer={[utilSpacing.my3]}
+              maxLength={100}
+            ></InputText>
+
+            <Ripple
+              style={[utilSpacing.my5, utilFlex.selfCenter]}
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => modalStateCoupon.setVisible(true)}
+            >
+              <Card style={[utilSpacing.px6, utilSpacing.p4]}>
+                <View style={[utilSpacing.p3, utilFlex.flexRow, utilFlex.flexCenter]}>
+                  <Icon name="tag" size={26} color={color.text}></Icon>
+                  <Text size="lg" style={utilSpacing.ml3} tx="checkoutScreen.useCoupon"></Text>
+                </View>
+              </Card>
+            </Ripple>
+          </FormProvider>
+
+          <View style={utilSpacing.mx4}>
+            <Separator style={utilSpacing.my6}></Separator>
+            <View style={utilFlex.flexRow}>
+              <Text style={utilSpacing.mr2} preset="semiBold" tx="checkoutScreen.delivery"></Text>
+              <Text
+                preset="semiBold"
+                caption
+                text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
+                style={[utilSpacing.mb6, utilFlex.flex1]}
+              ></Text>
+            </View>
+
+            {/* Resume order */}
+            <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
+              <DishesList></DishesList>
+              <Separator style={styles.separator}></Separator>
+              <Totals coupon={coupon}></Totals>
+            </Card>
           </View>
+        </ScrollView>
 
-          {/* Resume order */}
-          <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
-            <DishesList></DishesList>
-            <Separator style={styles.separator}></Separator>
-            <Totals coupon={coupon}></Totals>
-          </Card>
-        </View>
-      </ScrollView>
+        {cartStore.hasItems && (
+          <ButtonFooter
+            onPress={methods.handleSubmit(onSubmit, onError)}
+            text={getTextButtonFooter()}
+          ></ButtonFooter>
+        )}
 
-      {cartStore.hasItems && (
-        <ButtonFooter
-          onPress={methods.handleSubmit(onSubmit, onError)}
-          text={getTextButtonFooter()}
-        ></ButtonFooter>
-      )}
-
-      <ModalLocation screenToReturn={"checkout"} modal={modalStateLocation}></ModalLocation>
-      <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
-      <ModalPaymentCard
-        ref={refModalPaymentCard}
-        modalState={modalStatePaymentCard}
-        onSubmit={(values) => {
-          setCard(values)
-          setIsPaymentCard(true)
-        }}
-      ></ModalPaymentCard>
-      <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
-    </Screen>
-  )
-})
+        <ModalLocation screenToReturn={"checkout"} modal={modalStateLocation}></ModalLocation>
+        <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
+        <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
+        <ModalPaymentList stateModal={modalStatePaymentList}></ModalPaymentList>
+      </Screen>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   addToOrder: {
@@ -498,13 +452,21 @@ const styles = StyleSheet.create({
     textAlign: "center",
     ...SHADOW,
   },
+  btnChange: {
+    backgroundColor: color.palette.whiteGray,
+    borderRadius: spacing[2],
+  },
   containerForm: {
     minWidth: 300,
+  },
+
+  containerPayment: {
+    borderColor: palette.whiteGray,
+    borderWidth: 1,
   },
   coupon: {
     maxWidth: 230,
   },
-
   imageCard: {
     borderRadius: spacing[1],
     height: 24,

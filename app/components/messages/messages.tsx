@@ -111,8 +111,8 @@ export const Messages = observer(function Messages() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
     position: "absolute",
+    top: 80,
     width: "100%",
     zIndex: 100,
   },
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.black,
     borderRadius: spacing[2],
     minWidth: 300,
-    top: 80,
+
     width: "85%",
   },
   textWhite: {

@@ -3,11 +3,13 @@ import { ApiResponse, ApisauceInstance, create } from "apisauce"
 import { Address } from "../../models"
 import { Order } from "../../models/order/order"
 import { UserLogin } from "../../models/user-store"
+import { Card } from "../../screens/checkout/modal-payment-card"
 import { handleMessageProblem } from "../../utils/messages"
 
 import {
   AddressResponse,
   BannerResponse,
+  CardResponse,
   CategoryResponse,
   ChefResponse,
   CommonResponse,
@@ -408,5 +410,26 @@ export class Api {
    */
   async getParam(name: string): Promise<CommonResponse> {
     return await this.request({}, `/params/${name}`, "GET")
+  }
+
+  /**
+   * @description Get all card from user
+   */
+  async getCards(userId: number): Promise<CardResponse> {
+    return await this.request({}, `/users/cards/${userId}`, "GET")
+  }
+
+  /**
+   * @description Update the card selected from user
+   */
+  async updateSelectedCard(userId: number, cardId: number | null): Promise<CommonResponse> {
+    return await this.request({ cardId }, `/users/cards/${userId}`, "PUT")
+  }
+
+  /**
+   * @description Add a card to user
+   */
+  async addCard(userId: number, card: Card): Promise<CommonResponse> {
+    return await this.request(card, `/users/cards/${userId}`, "POST")
   }
 }

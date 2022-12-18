@@ -75,3 +75,11 @@ export function validate(rules: ValidationRules, data: Record<string, unknown>):
   }
   return Validate(data, rules, { fullMessages: false }) || {}
 }
+
+/**
+ *  @description Validate if string is number
+ *
+ */
+export function isNumber(value: string) {
+  return !isNaN(Number(value))
+}

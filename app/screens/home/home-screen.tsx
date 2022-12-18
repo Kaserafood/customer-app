@@ -127,14 +127,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       fetch(false)
     }, [])
 
-    const fetch = async (useCurrentDate : boolean) => {
+    const fetch = async (useCurrentDate: boolean) => {
       /*
        * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
 
       await Promise.all([
-        dishStore.getAll(useCurrentDate ? dayStore.currentDay.date : null, RNLocalize.getTimeZone(), userStore.userId),
+        dishStore.getAll(
+          useCurrentDate ? dayStore.currentDay.date : null,
+          RNLocalize.getTimeZone(),
+          userStore.userId,
+        ),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
         deliveryStore.getPriceDelivery(userStore.addressId),
@@ -142,10 +146,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       ])
         .then(() => {
           if (dayStore.days?.length > 0) {
-            if (useCurrentDate) 
-              dayStore.setCurrentDay(dayStore.currentDay)
-            else
-              dayStore.setCurrentDay(dayStore.days[0])
+            if (useCurrentDate) dayStore.setCurrentDay(dayStore.currentDay)
+            else dayStore.setCurrentDay(dayStore.days[0])
           }
         })
         .catch((error: Error) => {

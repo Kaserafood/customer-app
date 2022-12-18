@@ -1,10 +1,10 @@
-type CardType = "Visa" | "MasterCard" | "American Express" | ""
-
+type CardType = "visa" | "mastercard" | "amex" | "unknown"
 /* eslint-disable prefer-regex-literals */
 export function getCardType(number: string): CardType {
+  number = number.replace(/[ -]/g, "")
   // Visa
   let re = new RegExp("^4")
-  if (number.match(re) != null) return "Visa"
+  if (number.match(re) != null) return "visa"
 
   // Mastercard
   if (
@@ -12,11 +12,16 @@ export function getCardType(number: string): CardType {
       number,
     )
   )
-    return "MasterCard"
+    return "mastercard"
 
   // American Express
   re = new RegExp("^3[47]")
-  if (number.match(re) != null) return "American Express"
+  if (number.match(re) != null) return "amex"
 
-  return ""
+  return "unknown"
+}
+
+// Add prefix to card number
+export function getPrefixNumberCard(number: string): string {
+  return `**** ${number}`
 }
