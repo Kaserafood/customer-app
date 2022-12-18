@@ -22,7 +22,7 @@ export function Button(props: ButtonProps) {
   const viewStyle = viewPresets[preset] || viewPresets.primary
   if (block) {
     viewStyle.width = "100%"
-  } else viewStyle.width = 175
+  } else viewStyle.minWidth = 175
 
   if (preset === "link") {
     viewStyle.width = 35

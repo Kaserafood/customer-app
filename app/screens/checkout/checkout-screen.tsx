@@ -415,7 +415,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 preset="semiBold"
                 caption
                 text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
-                style={utilSpacing.mb6}
+                style={[utilSpacing.mb6, utilFlex.flex1]}
               ></Text>
             </View>
 
