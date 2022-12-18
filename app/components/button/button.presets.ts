@@ -10,7 +10,7 @@ const BASE_VIEW: ViewStyle = {
   borderRadius: spacing[2],
   justifyContent: "center",
   alignItems: "center",
-  minWidth: 175,
+  width: 175,
   shadowColor: color.palette.grayDark,
   shadowOffset: {
     width: 0,

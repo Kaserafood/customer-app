@@ -115,7 +115,7 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
           <Button
             preset="white"
             tx="checkoutScreen.addPayment"
-            style={[utilSpacing.mt4, utilFlex.selfCenter]}
+            style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
             onPress={() => modalStatePaymentCard.setVisible(true)}
           ></Button>
         </View>
@@ -179,6 +179,9 @@ const PaymentMethodItem = ({
 }
 
 const styles = StyleSheet.create({
+  btn: {
+    width: 210,
+  },
   h30: {
     height: 30,
   },
