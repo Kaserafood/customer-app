@@ -108,7 +108,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           description:
             "Se intentó agregar un producto al carrito pero algún complemento no fue seleccionado, por ende, no se agregó",
         })
-        console.log("INVALID ADDONS")
 
         return
       }

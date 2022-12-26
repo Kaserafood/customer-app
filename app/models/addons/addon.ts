@@ -145,6 +145,8 @@ export const AddonModel = types
         addon.total = addon.price
       }
 
+      console.log("addon", addon)
+
       self.updateAddon(addon)
     },
     calculateTotal(addon: AddonItemModel) {

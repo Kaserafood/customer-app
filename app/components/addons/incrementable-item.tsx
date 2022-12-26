@@ -8,6 +8,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { AddonItem } from "../../models/addons/addon"
@@ -27,7 +28,7 @@ export interface IncrementableProps {
   addon?: AddonItem
 }
 
-export const Incrementable = function Incrementable(props: IncrementableProps) {
+export const Incrementable = observer((props: IncrementableProps) => {
   const {
     onPress,
     addon: { required, name, label },
@@ -111,7 +112,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
       ></PriceOption>
     </Card>
   )
-}
+})
 
 export const PriceOption = (props: {
   amout: number
