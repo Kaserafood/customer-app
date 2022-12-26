@@ -1,6 +1,6 @@
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { addons, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
@@ -13,18 +13,16 @@ import {
   Addons,
   ButtonFooter,
   DishChef,
-  getMetaData,
   Header,
   Image,
   InputText,
-  isValidAddons,
   Price,
   Screen,
   Text,
 } from "../../components"
 import { Separator } from "../../components/separator/separator"
+import { AddonItem } from "../../models/addons/addon"
 import { ItemCart } from "../../models/cart-store"
-import { Addon } from "../../models/dish"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { useStores } from "../../models/root-store/root-store-context"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -40,14 +38,13 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
     const [total, setTotal] = useState(0)
-    const [totalAddon, setTotalAddon] = useState(0)
     const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
-    const [addonsAvailable, setAddonsAvailable] = useState<Addon[]>([])
     const scrollRef = useRef<ScrollView>()
     const { ...methods } = useForm({ mode: "onBlur" })
     const { dishStore, commonStore, cartStore } = useStores()
     const [loading, setLoading] = useState(false)
     const [loadingDishes, setLoadingDishes] = useState(true)
+    const { addonStore } = useStores()
 
     useEffect(() => {
       const getDish = async () => {
@@ -84,12 +81,13 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
     useEffect(() => {
       if (params.addons)
-        setAddonsAvailable(params.addons.filter((addon) => addon.hide_in_app !== "yes"))
+        addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
+      __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
     }, [params.addons])
 
     useEffect(() => {
-      setTotal((currentDish.price + totalAddon) * quantity)
-    }, [quantity, totalAddon])
+      setTotal((currentDish.price + addonStore.total) * quantity)
+    }, [quantity, addonStore.total])
 
     const minusQuantity = (number: number) => {
       if (quantity > 1) {
@@ -100,7 +98,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const onSubmit = (data) => {
       if (!cartStore.isSubmited) cartStore.setSubmited(true)
 
-      if (!isValidAddons(currentDish.addons)) {
+      if (!isValidAddons()) {
         AppEventsLogger.logEvent("IntentAddToCart", 1, {
           content_type: "dish",
           dish_id: currentDish.id,
@@ -110,6 +108,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           description:
             "Se intentó agregar un producto al carrito pero algún complemento no fue seleccionado, por ende, no se agregó",
         })
+        console.log("INVALID ADDONS")
 
         return
       }
@@ -120,7 +119,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         dish: currentDish,
         quantity: quantity,
         noteChef: data.note,
-        metaData: addonsAvailable.length > 0 ? getMetaData() : [],
+        metaData: addonStore.addons.length > 0 ? addonStore.getMetaData() : [],
         total: total,
       }
       __DEV__ && console.log(itemCart)
@@ -138,6 +137,10 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       navigation.navigate("menuChef", { ...params.chef })
     }
 
+    const isValidAddons = (): boolean => {
+      return addonStore.isValidAddonsMultiChoice(addonStore.addons)
+    }
+
     const changeDish = (dish: DishChefModel) => {
       setLoading(true)
       AppEventsLogger.logEvent("ChangeDishInDishDetail", 1, {
@@ -151,7 +154,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         setCurrentDish({ ...dish, chef: params.chef })
         setQuantity(1)
         setTotal(dish.price)
-        setAddonsAvailable(dish.addons.filter((addon) => addon.hide_in_app !== "yes"))
+        addonStore.initState(dish.addons.filter((addon) => addon.hideInApp !== "yes"))
         methods.setValue("comment", "")
         scrollRef.current?.scrollTo({
           y: 0,
@@ -210,12 +213,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             )}
           </View>
 
-          {addonsAvailable.length > 0 ? (
+          {addonStore.exitsAddons ? (
             <CurrencyContext.Provider value={{ currencyCode: currentDish.chef?.currencyCode }}>
-              <Addons
-                addons={addonsAvailable}
-                onTotalPriceChange={(total) => setTotalAddon(total)}
-              ></Addons>
+              <Addons></Addons>
             </CurrencyContext.Provider>
           ) : (
             <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>

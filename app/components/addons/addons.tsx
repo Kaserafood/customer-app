@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
+import { View as AnimatableView } from "react-native-animatable"
 import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn } from "react-native-reanimated"
 import { observer } from "mobx-react-lite"
 
+import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
-import { Addon } from "../../models/dish"
+import { AddonItem } from "../../models/addons/addon"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
@@ -15,73 +17,34 @@ import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
 
 import { Incrementable, IncrementableProps, PriceOption } from "./incrementable-item"
-import { StateHandler } from "./stateHandler"
 import { useAddon } from "./useAddons"
-
-interface AddonsSectionProps extends IncrementableProps {
-  addons: Addon[]
-}
-
-export interface AddonsProps {
-  /**
-   * Addons to display
-   */
-  addons: Addon[]
-
-  /**
-   * Callback when total price changes
-   */
-  onTotalPriceChange: (totalPrice: number) => void
-}
-
-const stateHandler = new StateHandler()
-
-export const getMetaData = () => {
-  return stateHandler.getMetaData()
-}
-
-export const isValidAddons = (addons: Addon[]): boolean => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { isValidAddonsMultiChoice } = useAddon()
-  return isValidAddonsMultiChoice(addons, stateHandler.getState())
-}
+interface AddonsSectionProps extends IncrementableProps {}
 
 /**
  * Component to show addons form dishes
  */
-export const Addons = observer(function Addons(props: AddonsProps) {
-  const { addons } = props
+export const Addons = observer(function Addons() {
+  const { getAddonsWithTitle, getAddonsWithoutTitle, getAddonsBoolean } = useAddon()
 
   const {
-    initState,
-    changeValueIncrement,
-    changeValueChecked,
-    changeValueCheckedOption,
-    uncheckAllOptions,
-    onDisableOptions,
-    getAddonsWithTitle,
-    getAddonsWithoutTitle,
-    getAddonsBoolean,
-  } = useAddon(stateHandler)
+    addonStore: {
+      addons,
+      findAddonByName,
+      changeValueIncrement,
+      changeValueChecked,
+      changeValueCheckedOption,
+      uncheckAllOptions,
+      onDisableOptions,
+    },
+  } = useStores()
 
-  useEffect(() => {
-    initState(addons)
-    __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addons)))
-  }, [addons])
-
-  useEffect(() => {
-    props.onTotalPriceChange(stateHandler.total)
-  }, [stateHandler.total])
-
-  if (!stateHandler.state[addons[0].name]) return null
+  if (!findAddonByName(addons[0].name)) return null
 
   return (
     <View style={utilSpacing.m4}>
       {getAddonsWithTitle(addons).length > 0 && <Separator style={utilSpacing.my5}></Separator>}
       <IncrementableWithTitle
         onPress={(name, value, isIncrement) => changeValueIncrement(name, value, isIncrement)}
-        state={stateHandler.state}
-        addons={addons}
       ></IncrementableWithTitle>
 
       {getAddonsWithoutTitle(addons).concat(getAddonsBoolean(addons)).length > 0 && (
@@ -92,14 +55,10 @@ export const Addons = observer(function Addons(props: AddonsProps) {
       )}
       <IncrementableWithoutTitle
         onPress={(name, value, isIncrement) => changeValueIncrement(name, value, isIncrement)}
-        state={stateHandler.state}
-        addons={addons}
       ></IncrementableWithoutTitle>
 
       <OptionBoolean
         onChecked={(name, isChecked) => changeValueChecked(name, isChecked)}
-        state={stateHandler.state}
-        addons={addons}
       ></OptionBoolean>
 
       <MultipleChoice
@@ -110,8 +69,6 @@ export const Addons = observer(function Addons(props: AddonsProps) {
         onDisableOptions={(name, options, isDisabled) =>
           onDisableOptions(name, options, isDisabled)
         }
-        state={stateHandler.state}
-        addons={addons}
       ></MultipleChoice>
     </View>
   )
@@ -121,18 +78,23 @@ export const Addons = observer(function Addons(props: AddonsProps) {
  */
 const IncrementableWithTitle = (props: AddonsSectionProps) => {
   const { getAddonsWithTitle } = useAddon()
-  const addonsWithTitle = getAddonsWithTitle(props.addons)
+  const {
+    addonStore: { addons },
+  } = useStores()
+  const addonsWithTitle = getAddonsWithTitle(addons)
 
   if (addonsWithTitle.length === 0) return null
   return (
     <>
       {addonsWithTitle.map((addon) => (
         <View key={addon.name}>
-          <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
-            <Text preset="bold" text={addon.name}></Text>
-            <Text style={styles.textRequired} text="*"></Text>
-          </View>
-          <Incrementable {...props} addon={addon}></Incrementable>
+          <AnimatableView>
+            <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
+              <Text preset="bold" text={addon.name}></Text>
+              {addon.required === 1 && <Text style={styles.textRequired} text="*"></Text>}
+            </View>
+            <Incrementable {...props} addon={addon}></Incrementable>
+          </AnimatableView>
         </View>
       ))}
     </>
@@ -141,7 +103,10 @@ const IncrementableWithTitle = (props: AddonsSectionProps) => {
 
 const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
   const { getAddonsWithoutTitle } = useAddon()
-  const addonsWithoutTitle = getAddonsWithoutTitle(props.addons)
+  const {
+    addonStore: { addons },
+  } = useStores()
+  const addonsWithoutTitle = getAddonsWithoutTitle(addons)
 
   if (addonsWithoutTitle.length === 0) return null
 
@@ -156,7 +121,13 @@ const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
 
 const OptionBoolean = (props: AddonsSectionProps) => {
   const { getAddonsBoolean } = useAddon()
-  const addonsBoolean = getAddonsBoolean(props.addons)
+  const {
+    addonStore: { addons },
+  } = useStores()
+  const addonsBoolean = getAddonsBoolean(addons)
+  const {
+    addonStore: { findAddonByName },
+  } = useStores()
 
   if (addonsBoolean.length === 0) return null
 
@@ -164,7 +135,7 @@ const OptionBoolean = (props: AddonsSectionProps) => {
     <>
       {addonsBoolean.map((addon) => (
         <Ripple
-          onPress={() => props.onChecked(addon.name, !props.state[addon.name].checked)}
+          onPress={() => props.onChecked(addon.name, !findAddonByName(addon.name).checked)}
           rippleOpacity={0.2}
           rippleDuration={400}
           key={addon.name}
@@ -172,14 +143,14 @@ const OptionBoolean = (props: AddonsSectionProps) => {
         >
           <Card style={utilFlex.flexCenterVertical}>
             <Checkbox
-              value={props.state[addon.name]?.checked}
+              value={findAddonByName(addon.name)?.checked}
               preset="medium"
-              text={addon.label_option}
+              text={addon.label}
               style={utilFlex.flex1}
             ></Checkbox>
             <PriceOption
               amout={Number(addon.options[0].price)}
-              isVisiblePlus={props.state[addon.name]?.checked}
+              isVisiblePlus={findAddonByName(addon.name)?.checked}
             ></PriceOption>
           </Card>
         </Ripple>
@@ -189,20 +160,29 @@ const OptionBoolean = (props: AddonsSectionProps) => {
 }
 
 const MultipleChoice = observer((props: AddonsSectionProps) => {
-  const { state, addons } = props
-  const { getAddonsMultileChoice, getNumberOptionSelectables } = useAddon()
+  const {
+    addonStore: { addons },
+  } = useStores()
+  const { getAddonsMultileChoice } = useAddon()
+  const {
+    addonStore: { getNumberOptionSelectables },
+  } = useStores()
   const addonsMultipleChoice = getAddonsMultileChoice(addons)
-  const { cartStore } = useStores()
+  const {
+    cartStore,
+    addonStore: { findAddonByName },
+  } = useStores()
 
-  const validCheckedOption = (addon: Addon, index: number, option: any, isChecked: boolean) => {
-    let countSelected = state[addon.name].options.filter((option) => option.checked).length
+  const validCheckedOption = (addon: AddonItem, index: number, option: any, isChecked: boolean) => {
+    let countSelected = findAddonByName(addon.name)?.options.filter((option) => option.checked)
+      .length
 
     if (isChecked) countSelected++
     else countSelected--
 
     if (addon.hash?.length > 0) {
       const currentValueSelected = Number(
-        state[addon.name].options.find((option) => option.checked)?.label,
+        findAddonByName(addon.name).options.find((option) => option.checked)?.label,
       )
 
       const addonDependency = addonsMultipleChoice.find(
@@ -215,33 +195,39 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
           props.uncheckAllOptions(addonDependency.name)
         }
       } else {
-        const optionsDisabled = state[addonDependency.name].options.filter((opt) => opt.disabled)
+        const optionsDisabled = findAddonByName(addonDependency.name).options.filter(
+          (opt) => opt.disabled,
+        )
         if (optionsDisabled.length > 0)
-          props.onDisableOptions(addonDependency.name, state[addonDependency.name].options, false)
+          props.onDisableOptions(
+            addonDependency.name,
+            findAddonByName(addonDependency.name).options,
+            false,
+          )
       }
     }
 
-    if (getNumberOptionSelectables(addon, addons, state) === 1) {
+    if (getNumberOptionSelectables(addon, addons) === 1) {
       // if only one option is selectable, then uncheck all other options
       props.uncheckAllOptions(addon.name)
       props.onCheckedOption(addon.name, option, true)
     }
 
-    if (getNumberOptionSelectables(addon, addons, state) > 1) {
+    if (getNumberOptionSelectables(addon, addons) > 1) {
       // Si el numero maximo de opciones seleccionables es igual a la cantidad de opciones
       // selecionadas, "disable" las opciones que no estan seleccionadas
 
-      if (getNumberOptionSelectables(addon, addons, state) === countSelected) {
-        const unselected = state[addon.name].options.filter(
+      if (getNumberOptionSelectables(addon, addons) === countSelected) {
+        const unselected = findAddonByName(addon.name).options.filter(
           (opt) => !opt.checked && opt.label !== option.label,
         )
         console.log("toUnseletd =", unselected)
         props.onDisableOptions(addon.name, unselected, true)
       } else {
         // If exists someone disbled, enable all options
-        const optionsDisabled = state[addon.name].options.filter((opt) => opt.disabled)
+        const optionsDisabled = findAddonByName(addon.name).options.filter((opt) => opt.disabled)
         if (optionsDisabled.length > 0)
-          props.onDisableOptions(addon.name, state[addon.name].options, false)
+          props.onDisableOptions(addon.name, findAddonByName(addon.name).options, false)
       }
 
       props.onCheckedOption(addon.name, option, isChecked)
@@ -256,7 +242,7 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
 
       {addonsMultipleChoice.map((addon) => (
         <View key={addon.name}>
-          {getNumberOptionSelectables(addon, addons, state) > 0 && (
+          {getNumberOptionSelectables(addon, addons) > 0 && (
             <View style={utilSpacing.mb4}>
               <Text text={addon.name} preset="bold"></Text>
 
@@ -266,15 +252,14 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
                 text={`${getI18nText("addons.choice")} ${getNumberOptionSelectables(
                   addon,
                   addons,
-                  state,
                 )} ${getI18nText(
-                  Number(addon.num_option_selectables) === 1 ? "addons.option" : "addons.options",
+                  Number(addon.numOptionSelectables) === 1 ? "addons.option" : "addons.options",
                 )}`}
                 style={[utilSpacing.mb3, utilSpacing.mt2]}
               ></Text>
 
               {addon.required === 1 && cartStore.isSubmited && (
-                <Required addon={addon} addons={addons} state={state}></Required>
+                <Required addon={addon} addons={addons}></Required>
               )}
 
               {addon.options.map((option, index) => (
@@ -283,7 +268,6 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
                   option={option}
                   addon={addon}
                   index={index}
-                  state={state}
                   validCheckedOption={(addon, index, option, isChecked) =>
                     validCheckedOption(addon, index, option, isChecked)
                   }
@@ -299,19 +283,21 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
 
 interface OptionMultiChoiceProos {
   option: any
-  addon: Addon
+  addon: AddonItem
   index: number
-  state: any
-  validCheckedOption: (addon: Addon, index: number, option: any, isChecked: boolean) => void
+  validCheckedOption: (addon: AddonItem, index: number, option: any, isChecked: boolean) => void
 }
 
 const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
-  const { option, addon, index, state, validCheckedOption } = props
+  const { option, addon, index, validCheckedOption } = props
   const [isDisabled, setIsDisabled] = useState(false)
+  const {
+    addonStore: { findAddonByName },
+  } = useStores()
 
   useEffect(() => {
-    setIsDisabled(state[addon.name].options[index].disabled)
-  }, [state[addon.name].options[index].disabled])
+    setIsDisabled(findAddonByName(addon.name).options[index].disabled)
+  }, [findAddonByName(addon.name).options[index].disabled])
 
   return (
     <View key={option.label}>
@@ -319,7 +305,12 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
       <Ripple
         onPress={() =>
           !isDisabled &&
-          validCheckedOption(addon, index, option, !state[addon.name].options[index].checked)
+          validCheckedOption(
+            addon,
+            index,
+            option,
+            !findAddonByName(addon.name).options[index].checked,
+          )
         }
         rippleOpacity={isDisabled ? 0 : 0.2}
         rippleDuration={400}
@@ -327,7 +318,7 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
       >
         <Card key={option.label} style={utilFlex.flexCenterVertical}>
           <Checkbox
-            value={state[addon.name].options[index].checked}
+            value={findAddonByName(addon.name).options[index].checked}
             preset="medium"
             text={option.label}
             style={utilFlex.flex1}
@@ -339,27 +330,36 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
   )
 }
 
-const Required = observer((props: { addon: Addon; addons: Addon[]; state: any }) => {
-  const { addon, addons, state } = props
+const Required = observer((props: { addon: AddonItem; addons: AddonItem[] }) => {
+  const { addon, addons } = props
+  const {
+    addonStore: { getNumberOptionSelectables, findAddonByName },
+  } = useStores()
 
-  const { getNumberOptionSelectables } = useAddon()
-
-  const selectable = getNumberOptionSelectables(addon, addons, state)
-  const selected = state[addon.name].options.filter((option) => option.checked).length
+  const selectable = getNumberOptionSelectables(addon, addons)
+  const selected = findAddonByName(addon.name).options.filter((option) => option.checked).length
 
   if (selected < selectable) {
-    return (
-      <Animated.View
-        entering={ZoomIn}
-        style={[utilSpacing.px5, utilSpacing.py3, styles.required, utilSpacing.mb4]}
-      >
-        <Text tx="addons.obligatory" preset="semiBold" style={styles.textRequired}></Text>
-      </Animated.View>
-    )
+    return null
   }
 
   return null
 })
+
+const RequiredTag = (props: { txMessage?: TxKeyPath }) => {
+  return (
+    <Animated.View
+      entering={ZoomIn}
+      style={[utilSpacing.px5, utilSpacing.py3, styles.required, utilSpacing.mb4]}
+    >
+      <Text
+        tx={props.txMessage ?? "addons.obligatory"}
+        preset="semiBold"
+        style={styles.textRequired}
+      ></Text>
+    </Animated.View>
+  )
+}
 
 const styles = StyleSheet.create({
   option: {
@@ -380,5 +380,6 @@ const styles = StyleSheet.create({
   },
   textRequired: {
     color: color.palette.redRequired,
+    letterSpacing: 1,
   },
 })

@@ -1,5 +1,6 @@
 import * as React from "react"
-import { StyleProp, View, ViewStyle } from "react-native"
+import { Button, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
@@ -52,8 +53,21 @@ export const Loader = observer(function Loader(props: LoaderProps) {
               <LottieView style={SPINNER} source={require("./spinner.json")} autoPlay loop />
             </Animated.View>
           </Animated.View>
+          {__DEV__ && (
+            <TouchableOpacity
+              style={styleLoader.btnHideLoading}
+              onPress={() => commonStore.setVisibleLoading(false)}
+            >
+              <Text>Hide loading</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </>
   )
+})
+const styleLoader = StyleSheet.create({
+  btnHideLoading: {
+    width: 130,
+  },
 })
