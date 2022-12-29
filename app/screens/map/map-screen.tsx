@@ -5,14 +5,11 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
-import MapView, { Polygon, Region } from "react-native-maps"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import MapView, { Region } from "react-native-maps"
+import MapView, { Polygon, Region } from "react-native-maps"
+
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, Screen, Text } from "../../components"
@@ -43,7 +40,6 @@ const modalWithoutCoverage = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { fetchAddressText, getCurrentPosition } = useLocation()
     const { coverageStore } = useStores()
     const { messagesStore } = useStores()
     const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
