@@ -90,8 +90,6 @@ function App() {
                 if (data.subtitle?.length > 0)
                   rootStore?.couponModalStore.setSubtitle(data.subtitle)
                 if (data.image?.length > 0) rootStore?.couponModalStore.setImage(data.image)
-
-                console.log("Coupon Modal Opened", rootStore?.couponModalStore)
               }
             })
           }
@@ -100,7 +98,6 @@ function App() {
         const userId = await loadString("userId")
         if (userId && userId.length > 0) {
           if (!rootStore.commonStore.isSignedIn) {
-            console.log("USER LOGIN")
             rootStore.commonStore.setIsSignedIn(true)
           }
         }

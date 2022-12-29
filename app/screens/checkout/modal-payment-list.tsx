@@ -58,10 +58,6 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
           messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
           await fetch()
           if (id) {
-            console.log(
-              "change card",
-              userStore.cards.find((item) => item.id === id),
-            )
             userStore.setCurrentCard(userStore.cards.find((item) => item.id === id))
           } else {
             userStore.setCurrentCard(null)

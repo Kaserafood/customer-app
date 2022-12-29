@@ -1,4 +1,13 @@
-import { cast, flow, Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import {
+  applySnapshot,
+  cast,
+  detach,
+  flow,
+  Instance,
+  SnapshotIn,
+  SnapshotOut,
+  types,
+} from "mobx-state-tree"
 
 import {
   getAddonsMultileChoice,
@@ -18,7 +27,7 @@ export const FALSE = ""
 export interface Option extends SnapshotIn<typeof option> {}
 
 export interface AddonItem extends SnapshotIn<typeof addonItem> {}
-interface AddonItemModel extends Instance<typeof addonItem> {}
+export interface AddonItemModel extends Instance<typeof addonItem> {}
 
 export const AddonModel = types
   .model("AddonModel")
@@ -32,7 +41,7 @@ export const AddonModel = types
     getMetaData(): MetaDataCart[] {
       const metaData = []
       self.addons.forEach((addon) => {
-        if ((addon.checked || addon.required === 1) && addon.total > 0) {
+        if (addon.checked || addon.required === 1) {
           const meta: MetaDataCart = {
             key: `${addon.name} (${addon.total})`,
             value: `${addon.value}`,
@@ -77,7 +86,7 @@ export const AddonModel = types
   }))
   .actions((self) => ({
     setAddons: (addons: AddonItemModel[]) => {
-      self.addons.replace(addons)
+      applySnapshot(self.addons, addons)
     },
     updateAddon: (addon: AddonItemModel) => {
       const index = self.addons.findIndex((item) => item.name === addon.name)
@@ -117,13 +126,11 @@ export const AddonModel = types
           state = {
             ...state,
             checked: false,
-            options: addon.options.map((option) => {
-              return {
-                ...option,
-                checked: false,
-                disabled: false,
-              }
-            }),
+            options: addon.options.map((option) => ({
+              ...option,
+              checked: false,
+              disabled: false,
+            })),
             dependencies: addon.dependencies,
           }
           if (addon.required === 1 && addon.optionBoolean !== TRUE && addon.multipleChoice !== TRUE)
@@ -144,8 +151,6 @@ export const AddonModel = types
         addon.checked = false
         addon.total = addon.price
       }
-
-      console.log("addon", addon)
 
       self.updateAddon(addon)
     },
@@ -213,5 +218,12 @@ export const AddonModel = types
       }
 
       return isValid
+    },
+    cleanAddons: () => {
+      applySnapshot(self.addons, [])
+    },
+    detachAddons: () => {
+      applySnapshot(self.addons, [])
+      detach(self.addons)
     },
   }))

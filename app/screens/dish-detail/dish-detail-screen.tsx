@@ -1,17 +1,19 @@
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { addons, ScrollView, StyleSheet, View } from "react-native"
+import { addons, BackHandler, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
+import { useLayout } from "@react-native-community/hooks"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
 import {
   Addons,
   ButtonFooter,
+  CartItemAddon,
   DishChef,
   Header,
   Image,
@@ -21,7 +23,7 @@ import {
   Text,
 } from "../../components"
 import { Separator } from "../../components/separator/separator"
-import { AddonItem } from "../../models/addons/addon"
+import { AddonItem, AddonItemModel } from "../../models/addons/addon"
 import { ItemCart } from "../../models/cart-store"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { useStores } from "../../models/root-store/root-store-context"
@@ -33,7 +35,12 @@ import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
-export const CurrencyContext = createContext({ currencyCode: "" })
+export const AddonContext = createContext({
+  currencyCode: "",
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
+  onChangeScrollPosition: (position: number) => {},
+})
+
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
     const [quantity, setQuantity] = useState(1)
@@ -45,6 +52,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const [loading, setLoading] = useState(false)
     const [loadingDishes, setLoadingDishes] = useState(true)
     const { addonStore } = useStores()
+    const [dishInfoHeight, setDishInfoHeight] = useState(0)
 
     useEffect(() => {
       const getDish = async () => {
@@ -59,6 +67,10 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       }
       // No va venir el chef cuando se llega a esta pantalla desde el push notification
       if (!params.chef) getDish()
+
+      return () => {
+        addonStore.detachAddons()
+      }
     }, [])
 
     useEffect(() => {
@@ -80,14 +92,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }, [params.chef])
 
     useEffect(() => {
-      if (params.addons)
+      if (params.addons) {
         addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
-      __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
+        __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
+      }
     }, [params.addons])
 
     useEffect(() => {
       setTotal((currentDish.price + addonStore.total) * quantity)
     }, [quantity, addonStore.total])
+
+    useEffect(() => {
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBack)
+
+      return () => backHandler.remove()
+    }, [navigation])
+
+    const handleBack = () => {
+      goBack()
+      return true
+    }
 
     const minusQuantity = (number: number) => {
       if (quantity > 1) {
@@ -165,13 +189,30 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       }, 300)
     }
 
+    const changeScrollPosition = (position: number) => {
+      if (position > 0) {
+        scrollRef.current?.scrollTo({
+          x: 0,
+          y: position + dishInfoHeight,
+          animated: true,
+        })
+      }
+    }
+
     if (!params.chef) return <Screen preset="fixed"></Screen>
 
     return (
       <Screen preset="fixed" style={styles.container}>
-        <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
+        <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={handleBack}></Header>
+        {/* TODO: Verify the ref in the next ScrollVIEW  */}
         <ScrollView ref={scrollRef}>
-          <View style={[utilSpacing.mx5, utilSpacing.mt5]}>
+          <View
+            style={[utilSpacing.mx5, utilSpacing.mt5]}
+            onLayout={(event) => {
+              const { height } = event.nativeEvent.layout
+              setDishInfoHeight(height)
+            }}
+          >
             {loading ? (
               <SkeletonPlaceholder>
                 <SkeletonPlaceholder.Item width={"100%"}>
@@ -213,9 +254,14 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           </View>
 
           {addonStore.exitsAddons ? (
-            <CurrencyContext.Provider value={{ currencyCode: currentDish.chef?.currencyCode }}>
+            <AddonContext.Provider
+              value={{
+                currencyCode: currentDish.chef?.currencyCode,
+                onChangeScrollPosition: (position) => changeScrollPosition(position),
+              }}
+            >
               <Addons></Addons>
-            </CurrencyContext.Provider>
+            </AddonContext.Provider>
           ) : (
             <Separator style={[utilSpacing.my3, utilSpacing.mx5]}></Separator>
           )}
@@ -316,11 +362,13 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
               </SkeletonPlaceholder.Item>
             </SkeletonPlaceholder>
           ) : (
-            <ListDish
-              currencyCode={currentDish.chef?.currencyCode}
-              onChangeDish={(dish) => changeDish(dish)}
-              dishId={currentDish.id}
-            ></ListDish>
+            <View>
+              <ListDish
+                currencyCode={currentDish.chef?.currencyCode}
+                onChangeDish={(dish) => changeDish(dish)}
+                dishId={currentDish.id}
+              ></ListDish>
+            </View>
           )}
         </ScrollView>
         <ButtonFooter
@@ -361,15 +409,6 @@ const ListDish = observer(
 )
 
 const styles = StyleSheet.create({
-  addToOrder: {
-    backgroundColor: color.primary,
-    padding: spacing[3],
-    textAlign: "center",
-    ...SHADOW,
-  },
-  buttonUnities: {
-    backgroundColor: color.palette.grayLigth,
-  },
   container: {
     backgroundColor: color.palette.white,
   },
@@ -381,18 +420,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-  flex: {
-    display: "flex",
-    flexDirection: "row",
-  },
-  iconCart: {
-    height: 23,
-    wdith: 23,
-  },
-  iconUnities: {
-    height: 20,
-    width: 20,
-  },
   image: {
     borderRadius: spacing[2],
     height: 230,
@@ -400,10 +427,6 @@ const styles = StyleSheet.create({
   },
   price: {
     alignSelf: "flex-start",
-  },
-  textAddToOrder: {
-    color: color.palette.white,
-    fontSize: 20,
   },
   textCounter: {
     marginBottom: -2,

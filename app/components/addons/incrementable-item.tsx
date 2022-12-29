@@ -12,7 +12,7 @@ import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { AddonItem } from "../../models/addons/addon"
-import { CurrencyContext } from "../../screens/dish-detail/dish-detail-screen"
+import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { Card } from "../card/card"
@@ -121,7 +121,7 @@ export const PriceOption = (props: {
   priceUnity?: number
 }) => {
   const { amout, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
-  const { currencyCode } = useContext(CurrencyContext)
+  const { currencyCode } = useContext(AddonContext)
   if (amout > 0) {
     return (
       <View>

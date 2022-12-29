@@ -1,13 +1,23 @@
-import React, { useEffect, useState } from "react"
+import React, {
+  forwardRef,
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react"
 import { StyleSheet, View } from "react-native"
 import { View as AnimatableView } from "react-native-animatable"
 import Ripple from "react-native-material-ripple"
-import Animated, { ZoomIn } from "react-native-reanimated"
+import Animated, { BounceInLeft, ZoomIn } from "react-native-reanimated"
+import { useScrollIntoView } from "react-native-scroll-into-view"
 import { observer } from "mobx-react-lite"
 
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
-import { AddonItem } from "../../models/addons/addon"
+import { AddonItem, AddonItemModel } from "../../models/addons/addon"
+import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
@@ -172,6 +182,16 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
     cartStore,
     addonStore: { findAddonByName },
   } = useStores()
+  const [positions, setPositions] = useState({})
+  const [nameAddonRequired, setNameAddonRequired] = useState("")
+  const { onChangeScrollPosition } = useContext(AddonContext)
+
+  useEffect(() => {
+    if (nameAddonRequired.length > 0 && positions[nameAddonRequired]) {
+      onChangeScrollPosition(positions[nameAddonRequired])
+      setNameAddonRequired("")
+    }
+  }, [positions, nameAddonRequired])
 
   const validCheckedOption = (addon: AddonItem, index: number, option: any, isChecked: boolean) => {
     let countSelected = findAddonByName(addon.name)?.options.filter((option) => option.checked)
@@ -221,7 +241,7 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
         const unselected = findAddonByName(addon.name).options.filter(
           (opt) => !opt.checked && opt.label !== option.label,
         )
-        console.log("toUnseletd =", unselected)
+
         props.onDisableOptions(addon.name, unselected, true)
       } else {
         // If exists someone disbled, enable all options
@@ -234,6 +254,18 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
     }
   }
 
+  const getSubtite = (addon: AddonItem) => {
+    const choice = getI18nText("addons.choice")
+
+    const optionSelectables = getNumberOptionSelectables(addon, addons)
+
+    const option = getI18nText(
+      addon.numOptionSelectables === 1 ? "addons.option" : "addons.options",
+    )
+
+    return `${choice} ${optionSelectables} ${option}`
+  }
+
   if (addonsMultipleChoice.length === 0) return null
 
   return (
@@ -241,7 +273,15 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
       <Separator style={utilSpacing.my5}></Separator>
 
       {addonsMultipleChoice.map((addon) => (
-        <View key={addon.name}>
+        <View
+          key={addon.name}
+          onLayout={(event) => {
+            const { y } = event.nativeEvent.layout
+            if (!positions[addon.name]) {
+              setPositions({ ...positions, [addon.name]: y })
+            }
+          }}
+        >
           {getNumberOptionSelectables(addon, addons) > 0 && (
             <View style={utilSpacing.mb4}>
               <Text text={addon.name} preset="bold"></Text>
@@ -249,17 +289,16 @@ const MultipleChoice = observer((props: AddonsSectionProps) => {
               <Text
                 size="sm"
                 caption
-                text={`${getI18nText("addons.choice")} ${getNumberOptionSelectables(
-                  addon,
-                  addons,
-                )} ${getI18nText(
-                  Number(addon.numOptionSelectables) === 1 ? "addons.option" : "addons.options",
-                )}`}
+                text={getSubtite(addon)}
                 style={[utilSpacing.mb3, utilSpacing.mt2]}
               ></Text>
 
               {addon.required === 1 && cartStore.isSubmited && (
-                <Required addon={addon} addons={addons}></Required>
+                <Required
+                  addon={addon}
+                  addons={addons}
+                  onLayout={() => setNameAddonRequired(addon.name)}
+                ></Required>
               )}
 
               {addon.options.map((option, index) => (
@@ -330,27 +369,32 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
   )
 }
 
-const Required = observer((props: { addon: AddonItem; addons: AddonItem[] }) => {
-  const { addon, addons } = props
-  const {
-    addonStore: { getNumberOptionSelectables, findAddonByName },
-  } = useStores()
+const Required = observer(
+  (props: { addon: AddonItem; addons: AddonItem[]; onLayout: () => void }) => {
+    const { addon, addons, onLayout } = props
+    const {
+      addonStore: { getNumberOptionSelectables },
+    } = useStores()
 
-  const selectable = getNumberOptionSelectables(addon, addons)
-  const selected = findAddonByName(addon.name).options.filter((option) => option.checked).length
+    const selectable = getNumberOptionSelectables(addon, addons)
+    const selected = addon.options.filter((option) => option.checked).length
 
-  if (selected < selectable) {
+    if (selected < selectable) {
+      return <RequiredTag onLayout={() => onLayout()}></RequiredTag>
+    }
+
     return null
-  }
+  },
+)
 
-  return null
-})
-
-const RequiredTag = (props: { txMessage?: TxKeyPath }) => {
+const RequiredTag = (props: { txMessage?: TxKeyPath; onLayout: () => void }) => {
   return (
     <Animated.View
-      entering={ZoomIn}
+      entering={BounceInLeft}
       style={[utilSpacing.px5, utilSpacing.py3, styles.required, utilSpacing.mb4]}
+      onLayout={() => {
+        props.onLayout()
+      }}
     >
       <Text
         tx={props.txMessage ?? "addons.obligatory"}
