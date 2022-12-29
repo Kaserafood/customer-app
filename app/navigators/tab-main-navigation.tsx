@@ -1,7 +1,9 @@
+import React from "react"
+import { AppEventsLogger } from "react-native-fbsdk-next"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
-import React from "react"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+
 import { Icon } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
@@ -53,6 +55,14 @@ export function TabMainNavigation({ navigationRef }) {
         }}
         name={getI18nText("tabMainNavigation.home")}
         component={HomeScreen}
+        listeners={{
+          tabPress: () => {
+            AppEventsLogger.logEvent("tabPress", 1, {
+              name: "Home",
+              description: "El usuario presionó la opción 'Home' en el menu principal",
+            })
+          },
+        }}
       />
 
       <Tab.Screen
@@ -64,6 +74,14 @@ export function TabMainNavigation({ navigationRef }) {
         }}
         name={getI18nText("tabMainNavigation.chefs")}
         component={ChefsScreen}
+        listeners={{
+          tabPress: () => {
+            AppEventsLogger.logEvent("tabPress", 1, {
+              name: "chefs",
+              description: "El usuario presionó la opción 'chefs' en el menú principal",
+            })
+          },
+        }}
       />
 
       <Tab.Screen
@@ -75,6 +93,14 @@ export function TabMainNavigation({ navigationRef }) {
         }}
         name={getI18nText("tabMainNavigation.search")}
         component={SearchScreen}
+        listeners={{
+          tabPress: () => {
+            AppEventsLogger.logEvent("tabPress", 1, {
+              name: "search",
+              description: "El usuario presionó la opción 'buscar' en el menú principal",
+            })
+          },
+        }}
       />
 
       <Tab.Screen
@@ -90,6 +116,10 @@ export function TabMainNavigation({ navigationRef }) {
           tabPress: (e) => {
             e.preventDefault()
             openDrawer()
+            AppEventsLogger.logEvent("tabPress", 1, {
+              name: "more",
+              description: "El usuario presionó la opción 'más' en el menú principal",
+            })
           },
         })}
       />

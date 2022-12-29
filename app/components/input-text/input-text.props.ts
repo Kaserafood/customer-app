@@ -1,5 +1,6 @@
 import { UseControllerProps } from "react-hook-form"
 import { StyleProp, TextInputProps, TextStyle, ViewStyle } from "react-native"
+
 import { TxKeyPath } from "../../i18n"
 
 type presets = "normal" | "card"
@@ -37,7 +38,7 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
   /**
    * An optional label to display when preset is "card"
    */
-  labelTx?: string
+  labelTx?: TxKeyPath
 
   /**
    * Name of the input

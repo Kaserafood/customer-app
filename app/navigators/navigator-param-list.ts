@@ -1,6 +1,7 @@
 import { OrderOverview } from "../models"
 import { Category } from "../models/category-store"
 import { DishChef } from "../models/dish-store"
+import { UserChef } from "../models/user-store"
 
 interface registerPageParams {
   init: boolean
@@ -26,7 +27,7 @@ interface endOrderParams {
 }
 
 interface mapScreenParams {
-  screenToReturn: "main" | "deliveryDetail"
+  screenToReturn: "main" | "checkout"
 }
 
 interface tokenScreenParams {
@@ -34,12 +35,12 @@ interface tokenScreenParams {
 }
 
 interface newPasswordScreenParams extends tokenScreenParams {}
-interface MenuChef extends DishChef {
+interface MenuChef extends UserChef {
   isGetMenu?: boolean
 }
 
 interface loginFormParams {
-  screenRedirect: "main" | "deliveryDetail"
+  screenRedirect: "main" | "checkout"
 }
 export type NavigatorParamList = {
   init: undefined
@@ -51,7 +52,7 @@ export type NavigatorParamList = {
   main: undefined
   dishDetail: DishChef
   menuChef: MenuChef
-  deliveryDetail: undefined
+  checkout: undefined
   endOrder: endOrderParams
   category: Category
   home: undefined
@@ -67,4 +68,5 @@ export type NavigatorParamList = {
   favorite: undefined
   newChefs: undefined
   orderDetail: OrderOverview
+  reportBug: undefined
 }

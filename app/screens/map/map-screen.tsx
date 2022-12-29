@@ -6,17 +6,22 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import MapView, { Polygon, Region } from "react-native-maps"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import MapView, { Region } from "react-native-maps"
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+import { StackScreenProps } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
-import { Button, Header, Screen, Text } from "../../components"
+import { Button, Header, Icon, Screen, Text } from "../../components"
 import { ModalAutocomplete } from "../../components/search-bar-autocomplete/modal-autocomplete"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 import { ModalWithoutCoverage } from "./modal-without-coverage"
@@ -40,6 +45,8 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
   ({ navigation, route: { params } }) => {
     const { fetchAddressText, getCurrentPosition } = useLocation()
     const { coverageStore } = useStores()
+    const { messagesStore } = useStores()
+    const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
     const [address, setAddress] = useState<Address>({
@@ -73,10 +80,13 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             .then((address) => {
               address && setAddress(address)
             })
+            .catch((error: Error) => {
+              messagesStore.showError(error.message)
+            })
             .finally(() => loadingState.setLoading(false))
         } else {
           loadingState.setLoading(false)
-          showMessageError("mapScreen.canNotGetLocation", true)
+          messagesStore.showError("mapScreen.canNotGetLocation", true)
         }
       })
 
@@ -129,7 +139,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           modalWithoutCoverage.setVisible(true)
         }
       } else {
-        showMessageError("mapScreen.noLocation", true)
+        messagesStore.showError("mapScreen.noLocation", true)
       }
     }
 
@@ -144,6 +154,9 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               setAddress(address)
             }
           })
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
+          })
           .finally(() => loadingState.setLoading(false))
       }
     }
@@ -152,9 +165,16 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       setAddress(address)
       mapRef.current.animateToRegion({ ...location, latitude, longitude })
     }
+
+    const onCurrentLocation = () => {
+      mapRef.current.animateToRegion({ ...initLocation })
+    }
     return (
-      <Screen preset="scroll"  statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
-      statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}>
+      <Screen
+        preset="scroll"
+        statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
+        statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}
+      >
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
         <View style={styles.container}>
           {initLocation.latitude !== 0 &&
@@ -179,6 +199,18 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           <View pointerEvents="none" style={styles.containerMarker}>
             <IconRN name="place" size={50} color={color.primary}></IconRN>
           </View>
+
+          {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+            <View style={styles.containerCurrentLocation}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={onCurrentLocation}
+                style={[styles.buttonLocation, utilFlex.flexCenter]}
+              >
+                <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
         {loadingState.loading && coverageStore.getLength === 0 ? (
           <ProgressBar
@@ -229,6 +261,13 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 )
 
 const styles = StyleSheet.create({
+  buttonLocation: {
+    backgroundColor: color.palette.white,
+    borderRadius: 100,
+    height: 55,
+    width: 55,
+    ...SHADOW,
+  },
   container: {
     alignItems: "center",
     height: "60%",
@@ -247,6 +286,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     minWidth: 300,
     width: "80%",
+  },
+  containerCurrentLocation: {
+    position: "absolute",
+    right: 30,
+    top: 30,
   },
   containerMarker: {
     alignItems: "center",

@@ -1,9 +1,12 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import OneSignal from "react-native-onesignal"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
@@ -18,7 +21,11 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
 
     const setDataStore = () => {
+      AppEventsLogger.logEvent("initScreenAppExplore", 1, {
+        description: "Se ha presionado el boton de 'Explorar el app'",
+      })
       userStore.setUserId(-1)
+      OneSignal.setExternalUserId("-1")
       commonStore.setIsSignedIn(true)
     }
 

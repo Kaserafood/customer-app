@@ -6,6 +6,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native"
+
 import { TxKeyPath } from "../../i18n/i18n"
 import { color, spacing } from "../../theme"
 import { typographySize } from "../../theme/typography"
@@ -17,6 +18,7 @@ const CONTAINER: ViewStyle = {
   paddingVertical: spacing[0],
   borderRadius: 100,
   alignSelf: "flex-start",
+  minHeight: 25,
   ...SHADOW,
 }
 

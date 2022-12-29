@@ -43,6 +43,13 @@ const images = {
   banner2: require("./images/banner-02.png"),
   banner3: require("./images/banner-03.png"),
   banner4: require("./images/banner-04.png"),
+  bannerImage1: require("./images/banner-image-01.jpg"),
+  bannerImage2: require("./images/banner-image-02.jpg"),
+  cash: require("./images/money.png"),
+  bug: require("./images/bug.png"),
+  octubre: require("./images/octubre.png"),
+  calabaza: require("./images/calabaza.png"),
+  flowers: require("./images/flowers.png"),
 }
 
 export default images

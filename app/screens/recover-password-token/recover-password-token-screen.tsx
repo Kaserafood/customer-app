@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Keyboard, StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -15,7 +16,7 @@ export const RecoverPasswordTokenScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPasswordToken">
 > = observer(({ navigation, route: { params } }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, messagesStore } = useStores()
 
   // Refs inputs for focus
   const first = useRef(null)
@@ -83,6 +84,9 @@ export const RecoverPasswordTokenScreen: FC<
       .validTokenRecoverPassword(getInputValues().join(""), params.email)
       .then((isValid: boolean) => {
         isValid && navigation.navigate("newPassword", { email: params.email })
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
   }

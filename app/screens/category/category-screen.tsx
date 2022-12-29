@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import {
   DayDelivery,
   Dish,
@@ -33,29 +34,43 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       dishStore: { dishesCategory, getAll },
       commonStore,
       userStore,
+      messagesStore,
+      categoryStore,
     } = useStores()
 
     useEffect(() => {
-      console.log(params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
+
+        if (!params.name) {
+          categoryStore.getAll().then(() => {
+            navigation.setParams({
+              name: categoryStore.categories.find((c) => c.id === Number(params.id))?.name,
+            })
+          })
+        }
+
         await getAll(
           dayStore.currentDay.date,
           RNLocalize.getTimeZone(),
           userStore.userId,
           params.id,
         )
+          .catch((error) => {
+            messagesStore.showError(error.message)
+          })
+          .finally(() => {
+            commonStore.setVisibleLoading(false)
+          })
       }
 
-      fetch().finally(() => {
-        commonStore.setVisibleLoading(false)
-      })
+      fetch()
     }, [])
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await getAll(day.date, RNLocalize.getTimeZone(), params.id).finally(() => {
+      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, params.id).finally(() => {
         commonStore.setVisibleLoading(false)
       })
     }

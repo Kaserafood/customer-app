@@ -1,10 +1,12 @@
 import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
 import * as React from "react"
-import { StyleProp, View, ViewStyle } from "react-native"
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
+
 import { useStores } from "../../models/root-store/root-store-context"
-import { color as colorTheme } from "../../theme"
+import { color, color as colorTheme } from "../../theme"
 const CONTAINER: ViewStyle = {
   flex: 1,
   position: "absolute",
@@ -51,8 +53,26 @@ export const Loader = observer(function Loader(props: LoaderProps) {
               <LottieView style={SPINNER} source={require("./spinner.json")} autoPlay loop />
             </Animated.View>
           </Animated.View>
+          {__DEV__ && (
+            <TouchableOpacity
+              style={styleLoader.btnHideLoading}
+              onPress={() => commonStore.setVisibleLoading(false)}
+            >
+              <Text style={styleLoader.textWhite}>Hide loading</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
     </>
   )
+})
+const styleLoader = StyleSheet.create({
+  btnHideLoading: {
+    alignSelf: "center",
+    backgroundColor: color.palette.whiteGray,
+    display: "flex",
+  },
+  textWhite: {
+    color: color.palette.black,
+  },
 })

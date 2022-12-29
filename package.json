@@ -4,15 +4,14 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
-    "ios": "react-native run-ios",
-    "android": "adb reverse tcp:9090 tcp:9090 && react-native run-android",
+    "ios": "ENVFILE=.env.development react-native run-ios",
+    "android": "adb reverse tcp:9090 tcp:9090 && SET ENVFILE=.env.development && react-native run-android",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",
     "ci:test:e2e": "detox test -c ios.sim.release -l verbose --cleanup",
     "ci:build:e2e": "detox build -c ios.sim.release",
     "compile": "tsc --noEmit -p . --pretty",
     "format": "npm-run-all format:*",
-    "format:js": "prettier --write \"app/**/*.js\"",
     "format:json": "prettier --write \"app/**/*.json\"",
     "format:md": "prettier --write \"**/*.md\"",
     "format:ts": "prettier --write \"app/**/*.ts{,x}\"",
@@ -27,7 +26,9 @@
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
     "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && ./gradlew assembleRelease && cd ..",
-    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi"
+    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi",
+    "release:android": "cd android && set FILEENV=.env.production && ./gradlew bundleRelease && cd ..",
+    "release:android:apk": "cd android && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
     "@klarna/react-native-vector-drawable": "^0.3.0",
@@ -59,20 +60,22 @@
     "react-native-animated-progress": "^1.0.2",
     "react-native-bootsplash": "^4.1.5",
     "react-native-calendars": "^1.1284.0",
+    "react-native-config": "^1.4.11",
     "react-native-device-country": "^1.0.2",
     "react-native-device-info": "^8.7.1",
     "react-native-fast-image": "^8.5.11",
+    "react-native-fbsdk-next": "^11.0.0",
     "react-native-flash-message": "^0.2.1",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.4.1",
     "react-native-keychain": "6.2.0",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-localize": "^2.2.1",
-    "react-native-location": "^2.5.0",
     "react-native-maps": "^0.31.1",
     "react-native-material-ripple": "^0.9.1",
     "react-native-modal": "^13.0.1",
     "react-native-navigation-bar-color": "^2.0.1",
+    "react-native-onesignal": "^4.4.1",
     "react-native-pager-view": "^5.4.15",
     "react-native-permissions": "^3.3.1",
     "react-native-reanimated": "^2.9.1",
@@ -80,6 +83,7 @@
     "react-native-screens": "3.8.0",
     "react-native-skeleton-placeholder": "^5.0.0",
     "react-native-text-input-mask": "^3.1.4",
+    "react-native-tracking-transparency": "^0.1.2",
     "react-native-vector-icons": "^9.1.0",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
@@ -102,6 +106,7 @@
     "@types/react": "17.0.37",
     "@types/react-native": "0.66.9",
     "@types/react-native-animated-progress": "^1.0.0",
+    "@types/react-native-dotenv": "^0.2.0",
     "@types/react-native-material-ripple": "^0.9.2",
     "@types/react-test-renderer": "17.0.1",
     "@typescript-eslint/eslint-plugin": "4.10.0",
@@ -143,7 +148,8 @@
     "printWidth": 100,
     "semi": false,
     "singleQuote": false,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "endOfLine": "auto"
   },
   "detox": {
     "test-runner": "jest",
@@ -237,7 +243,20 @@
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "off",
       "react-native/no-inline-styles": 1
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "*.js",
+          "*.jsx",
+          "*.ts",
+          "*.tsx"
+        ],
+        "rules": {
+        
+        }
+      }
+    ]
   },
   "resolutions": {
     "@types/react": "17.0.40"

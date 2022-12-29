@@ -1,9 +1,12 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import OneSignal from "react-native-onesignal"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
 import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
@@ -13,7 +16,6 @@ import { spacing } from "../../theme"
 import { color } from "../../theme/color"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
-import { showMessageInfo } from "../../utils/messages"
 import { loadString } from "../../utils/storage"
 
 export const RegisterFormScreen: FC<
@@ -21,13 +23,13 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore, addressStore } = useStores()
+  const { userStore, commonStore, addressStore, messagesStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
 
   const onSubmit = (data: UserRegister) => {
-    if (!terms) showMessageInfo("registerFormScreen.acceptsTerms")
+    if (!terms) messagesStore.showInfo("registerFormScreen.acceptsTerms", true)
     else {
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
@@ -36,15 +38,23 @@ export const RegisterFormScreen: FC<
       userStore
         .register(data)
         .then(async (userId) => {
+          commonStore.setVisibleLoading(false)
           if (userId > 0) {
+            OneSignal.setExternalUserId(userId.toString())
             // Si el usuario habia entrado como "Explorar el app"
+            OneSignal.setExternalUserId(userId.toString())
             if (currentUserId === -1) {
               await saveAddress(userId)
-            } else commonStore.setIsSignedIn(true)
+            } else {
+              commonStore.setIsSignedIn(true)
+              navigation.navigate("main")
+            }
           }
-          commonStore.setVisibleLoading(false)
         })
-        .finally(() => commonStore.setVisibleLoading(false))
+        .catch((error: Error) => {
+          commonStore.setVisibleLoading(false)
+          messagesStore.showError(error.message)
+        })
     }
   }
 
@@ -57,28 +67,41 @@ export const RegisterFormScreen: FC<
     if (currentAddress.length > 0) {
       const address: Address = JSON.parse(currentAddress)
       address.userId = userId
-      await addressStore.add(address).then((res) => {
-        if (res) {
-          address.id = Number(res.data)
-          addressStore.setCurrent({ ...address })
-          userStore.setAddressId(address.id)
-          userStore.updateAddresId(userId, address.id)
-          commonStore.setIsSignedIn(true)
-          navigation.navigate("deliveryDetail")
-        }
-      })
+      await addressStore
+        .add(address)
+        .then((res) => {
+          if (res) {
+            address.id = Number(res.data)
+            addressStore.setCurrent({ ...address })
+            userStore.setAddressId(address.id)
+            userStore.updateAddresId(userId, address.id)
+            commonStore.setIsSignedIn(true)
+
+            AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
+              [AppEventsLogger.AppEventParams.RegistrationMethod]: "email",
+              Currency: "GTQ",
+              description: "Nuevo usuario registrado con email",
+            })
+            AppEventsLogger.setUserID(userId.toString())
+            navigation.navigate("checkout")
+          }
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => commonStore.setVisibleLoading(false))
     }
   }
 
   const toLogin = () => {
-    navigation.navigate("loginForm", { screenRedirect: "deliveryDetail" })
+    navigation.navigate("loginForm", { screenRedirect: "checkout" })
   }
   return (
     <>
-      <Screen preset="scroll" bottomBar="dark-content">
+      <Screen preset="fixed" bottomBar="dark-content">
         <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
 
-        <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <View style={styles.containerForm}>
             <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
 
@@ -206,7 +229,6 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     backgroundColor: color.palette.white,
-    flex: 1,
   },
   containerForm: {
     display: "flex",

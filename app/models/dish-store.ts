@@ -1,5 +1,7 @@
-import { flow, Instance, types } from "mobx-state-tree"
-import { Api } from "../services/api"
+import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
+
+import { Api, DishResponse } from "../services/api"
+
 import { dish } from "./dish"
 import { userChef } from "./user-store"
 
@@ -18,6 +20,7 @@ export const DishStoreModel = types
     dishesGroupedByChef: types.optional(types.array(userChef), []), // Dishes grouped by chef
     dishesGroupedByLatestChef: types.optional(types.array(userChef), []), // Dishes grouped by latest chef
     dishesFavorites: types.optional(types.array(dishChef), []), // Dishes favorites by Kasera
+    dishesSearch: types.optional(types.array(dishChef), []), // Dishes search
   })
   .views((self) => ({
     get totalDishes() {
@@ -45,11 +48,11 @@ export const DishStoreModel = types
       }
     }),
     getByChef: flow(function* getByChef(chefId: number) {
-      self.dishesChef.clear()
+      detach(self.dishesChef)
       const api = new Api()
       const result = yield api.getDishesByChef(chefId)
       if (result && result.kind === "ok") {
-        self.dishesChef.replace(result.data)
+        applySnapshot(self.dishesChef, result.data)
       }
     }),
 
@@ -57,7 +60,6 @@ export const DishStoreModel = types
       self.dishesGroupedByChef.clear()
       const api = new Api()
       const result = yield api.getDishesGroupedByChef(date, timeZone)
-      console.log(result)
       if (result.kind === "ok") {
         self.dishesGroupedByChef.replace(result.data)
       }
@@ -101,4 +103,26 @@ export const DishStoreModel = types
         self.dishesFavorites.replace(result.data)
       }
     }),
+    getDish: flow(function* getDish(dishId: number): Generator<any, DishChef, DishResponse> {
+      const api = new Api()
+      const result = yield api.getDish(dishId)
+
+      if (result && result.kind === "ok") {
+        return result.data as DishChef
+      }
+      return null
+    }),
+    getSearch: flow(function* getSearch(search: string, date: string, timeZone: string) {
+      const api = new Api()
+      const result = yield api.getSearchDishes(search, date, timeZone)
+
+      if (result && result.kind === "ok") {
+        self.dishesSearch.replace(result.data)
+      } else {
+        self.dishesSearch.clear()
+      }
+    }),
+    clearSearchDishes() {
+      self.dishesSearch.clear()
+    },
   }))

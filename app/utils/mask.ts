@@ -1,4 +1,5 @@
 import * as RNLocalize from "react-native-localize"
+
 import { getCardType } from "./card"
 export function getFormatMaskPhone(): string {
   const timeZone = RNLocalize.getTimeZone()
@@ -21,11 +22,11 @@ export function getMaskCard(number: string) {
   const cardType = getCardType(number)
   let mask = ""
   switch (cardType) {
-    case "Visa":
-    case "MasterCard":
+    case "visa":
+    case "mastercard":
       mask = "[0000] [0000] [0000] [0000]"
       break
-    case "American Express":
+    case "amex":
       mask = "[0000] [000000] [00000]"
       break
     default:
@@ -40,11 +41,11 @@ export function getMaskCVV(number: string) {
   const cardType = getCardType(number)
   let mask = ""
   switch (cardType) {
-    case "Visa":
-    case "MasterCard":
+    case "visa":
+    case "mastercard":
       mask = "[000]"
       break
-    case "American Express":
+    case "amex":
       mask = "[0000]"
       break
     default:

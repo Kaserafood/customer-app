@@ -1,11 +1,13 @@
 import { flow, SnapshotOut, types } from "mobx-state-tree"
+
 import { Api } from "../services/api"
+
 import { withEnvironment } from "./extensions/with-environment"
 
 export const categoryStore = types.model("CategoryStore").props({
   id: types.maybe(types.number),
   name: types.maybe(types.string),
-  image: types.maybe(types.string),
+  image: types.optional(types.string, ""),
 })
 export interface Category extends SnapshotOut<typeof categoryStore> {}
 

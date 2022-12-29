@@ -1,15 +1,19 @@
 import { ApiResponse, ApisauceInstance, create } from "apisauce"
+
 import { Address } from "../../models"
 import { Order } from "../../models/order/order"
 import { UserLogin } from "../../models/user-store"
-import { handleMessageProblem, showMessageError } from "../../utils/messages"
-import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { getGeneralApiProblem } from "./api-problem"
+import { Card } from "../../screens/checkout/modal-payment-card"
+import { handleMessageProblem } from "../../utils/messages"
+
 import {
   AddressResponse,
+  BannerResponse,
+  CardResponse,
   CategoryResponse,
   ChefResponse,
   CommonResponse,
+  CuponResponse,
   CoverageResponse,
   DayResponse,
   DishResponse,
@@ -18,6 +22,8 @@ import {
   OrderOverviewResponse,
   UserLoginResponse,
 } from "./api.types"
+import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { getGeneralApiProblem } from "./api-problem"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 /**
@@ -114,8 +120,9 @@ export class Api {
       return { kind: "ok", data }
     } catch (e) {
       __DEV__ && console.log(`Error : ${e.message}`)
-      showMessageError()
-      return { kind: "bad-data", data: [] }
+      //   showMessageError()
+      throw e
+      // return { kind: "bad-data", data: [] }
     }
   }
 
@@ -139,6 +146,14 @@ export class Api {
       "/dishes",
       "GET",
     )
+  }
+
+  /**
+   *
+   * @description Get dish by id
+   */
+  async getDish(dishId: number): Promise<DishResponse> {
+    return await this.request({}, `/dishes/${dishId}`, "GET")
   }
 
   /**
@@ -174,6 +189,32 @@ export class Api {
     categoryId?: number,
   ): Promise<ChefResponse> {
     return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+  }
+
+  /**
+   *
+   * @description Search dishes by name or description
+   */
+  async getSearchDishes(search: string, date: string, timeZone: string): Promise<DishResponse> {
+    return await this.request(
+      {
+        date,
+        timeZone,
+        search,
+      },
+      "/dishes/search",
+      "GET",
+    )
+  }
+
+  /**
+
+  /**
+   *
+   * @description Get information from a specific user chef
+   */
+  async getInfoChef(chefId: number): Promise<ChefResponse> {
+    return await this.request({}, `/users/chefs/${chefId}`, "GET")
   }
 
   /**
@@ -282,6 +323,14 @@ export class Api {
 
   /**
    *
+   * @description Get detail of coupon code
+   */
+  async getCoupon(couponCode: string, userId: number, timeZone: string): Promise<CuponResponse> {
+    return await this.request({ userId, timeZone }, `/orders/coupon/${couponCode}`, "GET")
+  }
+
+  /**
+   *
    * @description Send a email whith the token to user to recover password
    */
   async sendEmailRecoverPassword(email: string): Promise<CommonResponse> {
@@ -325,8 +374,15 @@ export class Api {
   /**
    * @description Get price to delivery
    */
-  async getPriceDelivery(): Promise<CommonResponse> {
-    return await this.request({}, `/orders/price-delivery`, "GET")
+  async getPriceDelivery(addressId: number): Promise<CommonResponse> {
+    return await this.request({ addressId }, `/deliveries/price`, "GET")
+  }
+
+  /**
+   * @description Get price delivery by city name
+   */
+  async getPriceDeliveryByCity(name: string): Promise<CommonResponse> {
+    return await this.request({ name }, `/deliveries/price/city`, "GET")
   }
 
   /**
@@ -341,5 +397,47 @@ export class Api {
    */
   async getCoverage(): Promise<CoverageResponse> {
     return await this.request({}, `/deliveries/coverage`, "GET")
+  }
+
+  /**
+   * @description Send report bug to admin
+   */
+  async reportBug(data: any): Promise<CommonResponse> {
+    return await this.request(data, `/users/report-bug`, "POST")
+  }
+
+  /**
+   * @description Get all banners
+   */
+  async getBanners(): Promise<BannerResponse> {
+    return await this.request({}, `/banners`, "GET")
+  }
+
+  /**
+   * @description Get Option in system
+   */
+  async getParam(name: string): Promise<CommonResponse> {
+    return await this.request({}, `/params/${name}`, "GET")
+  }
+
+  /**
+   * @description Get all card from user
+   */
+  async getCards(userId: number): Promise<CardResponse> {
+    return await this.request({}, `/users/cards/${userId}`, "GET")
+  }
+
+  /**
+   * @description Update the card selected from user
+   */
+  async updateSelectedCard(userId: number, cardId: number | null): Promise<CommonResponse> {
+    return await this.request({ cardId }, `/users/cards/${userId}`, "PUT")
+  }
+
+  /**
+   * @description Add a card to user
+   */
+  async addCard(userId: number, card: Card): Promise<CommonResponse> {
+    return await this.request(card, `/users/cards/${userId}`, "POST")
   }
 }

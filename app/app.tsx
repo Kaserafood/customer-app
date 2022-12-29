@@ -10,20 +10,25 @@
  * if you're interested in adding screens and navigators.
  */
 import React, { useEffect, useState } from "react"
-import FlashMessage from "react-native-flash-message"
+import { Linking } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
+import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
-import { ToggleStorybook } from "../storybook/toggle-storybook"
-import { Loader } from "./components"
+
 import "./i18n"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
+import "./utils/ignore-warnings"
+
+import { ToggleStorybook } from "../storybook/toggle-storybook"
+
 import { ErrorBoundary } from "./screens/error/error-boundary"
 import { utilFlex } from "./theme/Util"
-import "./utils/ignore-warnings"
+import { checkNotificationPermission, trackingPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
+import { Loader, Messages, ModalCoupon } from "./components"
+import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { AppNavigator, useNavigationPersistence } from "./navigators"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -31,9 +36,6 @@ import { loadString } from "./utils/storage"
 enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
-/**
- * This is the root component of our app.
- */
 function App() {
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   const {
@@ -50,7 +52,11 @@ function App() {
         .catch((error) => {
           __DEV__ && console.log("FATAL ERROR APP: -> useEffect: ", error)
         })
+      trackingPermission()
     })()
+    return () => {
+      OneSignal.clearHandlers()
+    }
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.
@@ -64,13 +70,36 @@ function App() {
   } else {
     if (rootStore) {
       async function verifyUser() {
+        checkNotificationPermission().then((result) => {
+          if (result) {
+            if (__DEV__) {
+              OneSignal.setAppId("f93984d0-c581-4eec-ad26-c3d30c3c7835")
+            } else {
+              OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+            }
+
+            OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
+              const { notification } = openedEvent
+
+              if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
+
+              const data: any = notification.additionalData
+              if (data.type === "coupon") {
+                rootStore?.couponModalStore.setVisible(true)
+                if (data.title?.length > 0) rootStore?.couponModalStore.setTitle(data.title)
+                if (data.subtitle?.length > 0)
+                  rootStore?.couponModalStore.setSubtitle(data.subtitle)
+                if (data.image?.length > 0) rootStore?.couponModalStore.setImage(data.image)
+              }
+            })
+          }
+        })
+
         const userId = await loadString("userId")
         if (userId && userId.length > 0) {
           if (!rootStore.commonStore.isSignedIn) {
-            console.log("USER LOGIN")
             rootStore.commonStore.setIsSignedIn(true)
           }
-          rootStore.dishStore.clearDishes()
         }
       }
       verifyUser()
@@ -89,9 +118,9 @@ function App() {
                 onStateChange={onNavigationStateChange}
               />
               <Loader></Loader>
+              <ModalCoupon></ModalCoupon>
             </GestureHandlerRootView>
-
-            <FlashMessage position="top" />
+            <Messages></Messages>
           </ErrorBoundary>
         </SafeAreaProvider>
       </RootStoreProvider>

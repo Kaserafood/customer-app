@@ -1,11 +1,12 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { ImageRequireSource, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { Image } from "../image/image"
 import { Button } from "../button/button"
+import { Image } from "../image/image"
 import { Text } from "../text/text"
 
 export interface EmptyDataProps {

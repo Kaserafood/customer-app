@@ -1,13 +1,14 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
-import { Card, Header, Icon, Price, Screen, Separator, Text } from "../../components"
-import { goBack, NavigatorParamList } from "../../navigators"
-
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
+import { Card, Header, Icon, Price, Screen, Separator, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
+import { NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 

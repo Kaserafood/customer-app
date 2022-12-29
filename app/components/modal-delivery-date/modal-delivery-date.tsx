@@ -1,9 +1,10 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -66,7 +67,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
     <>
       <Modal modal={modal} style={style} position="bottom">
         <View>
-          <View style={utilFlex.flexRow}>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Text
               tx="modalDeliveryDate.deliveryDate"
               preset="bold"
@@ -74,7 +75,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
             ></Text>
             <Chip
               tx="modalDeliveryDate.why"
-              style={utilSpacing.pb2}
+              style={utilSpacing.py2}
               onPressIn={() => modalState.setVisible(true)}
             ></Chip>
           </View>

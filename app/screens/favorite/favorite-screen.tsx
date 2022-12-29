@@ -1,24 +1,29 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Dish, Header, Screen, Separator } from "../../components"
 import { useStores } from "../../models"
 import { DishChef } from "../../models/dish-store"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(
   function FavoriteScreen({ navigation }) {
-    const { dishStore, cartStore, commonStore, dayStore } = useStores()
+    const { dishStore, cartStore, commonStore, dayStore, messagesStore } = useStores()
 
     useEffect(() => {
       async function fetch() {
         commonStore.setVisibleLoading(true)
         await dishStore
           .getFavorites(dayStore.currentDay.date, RNLocalize.getTimeZone())
+          .catch((error) => {
+            messagesStore.showError(error.message)
+          })
           .finally(() => commonStore.setVisibleLoading(false))
       }
       fetch()

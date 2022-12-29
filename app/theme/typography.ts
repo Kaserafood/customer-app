@@ -38,11 +38,16 @@ export const typography = {
    * Lets get fancy with a monospace font!
    */
   code: Platform.select({ ios: "Courier", android: "monospace" }),
+
+  /**
+   * The primary font.  Used in most places.
+   */
+  brand: Platform.select({ ios: "ChaloopsW00-Bd", android: "Chaloops-Bold" }),
 }
 
 export const typographySize = {
   sm: 10,
   md: 12,
   lg: 15,
-  xl: 19,
+  xl: 20,
 }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Kasera</string>
+    <string name="facebook_app_id">5515187365203161</string>
+    <string name="facebook_client_token">22417b4269034abe760764ddb3aa7773</string>
 </resources>

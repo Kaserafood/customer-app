@@ -1,10 +1,16 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+
+import { AddonModel } from "../addons/addon"
 import { AddressModelStore } from "../address/address"
+import { BannerStoreModel } from "../banner-store"
 import { CartStoreModel } from "../cart-store"
 import { CategoryStoreModel } from "../category-store"
 import { CommonStoreModel } from "../common-store"
 import { DayStoreModel } from "../day-store"
+import { DeliveryStoreModel } from "../delivery-store"
 import { DishStoreModel } from "../dish-store"
+import { MessagesModel } from "../messages/messages"
+import { CouponModalStoreModel } from "../modal-coupon"
 import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
 import { CoverageModel } from "../coverage/coverage"
@@ -18,10 +24,15 @@ export const RootStoreModel = types.model("RootStore").props({
   userStore: types.optional(UserRegisterModel, {} as any),
   dayStore: types.optional(DayStoreModel, {} as any),
   categoryStore: types.optional(CategoryStoreModel, {} as any),
+  addonStore: types.optional(AddonModel, {} as any),
   dishStore: types.optional(DishStoreModel, {} as any),
   cartStore: types.optional(CartStoreModel, {} as any),
   addressStore: types.optional(AddressModelStore, {} as any),
   orderStore: types.optional(OrderModel, {} as any),
+  messagesStore: types.optional(MessagesModel, {} as any),
+  couponModalStore: types.optional(CouponModalStoreModel, {} as any),
+  bannerStore: types.optional(BannerStoreModel, {} as any),
+  deliveryStore: types.optional(DeliveryStoreModel, {} as any),
   coverageStore: types.optional(CoverageModel, {} as any),
 })
 

@@ -1,16 +1,19 @@
+import React, { FC, useLayoutEffect } from "react"
+import { StatusBar, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
 import { useIsFocused } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useLayoutEffect } from "react"
-import { StatusBar, StyleSheet, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
-import Ripple from "react-native-material-ripple"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+
 import images from "../../assets/images"
-import { Card, Header, Image, ModalRequestDish, Screen, Text } from "../../components"
+import { Card, Header, Icon, Image, ModalRequestDish, Screen, Text } from "../../components"
 import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
+import { DishChef } from "../../models/dish-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
@@ -18,8 +21,11 @@ import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
+import { ModalSearch } from "./modal-search"
+
 const modalStateRequest = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
+const modalStateSearch = new ModalStateHandler()
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
   ({ navigation }) => {
     useLayoutEffect(() => {
@@ -29,11 +35,39 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     const {
       categoryStore: { categories },
       userStore,
+      cartStore,
+      commonStore,
+      dishStore,
     } = useStores()
 
     const toCategory = (category: Category) => {
+      AppEventsLogger.logEvent("categoryPress", 1, {
+        id: category.id,
+        name: category.name,
+        description: "Se ha seleccionado una categoría en la ventana de 'Buscar'",
+      })
+
       navigation.navigate("category", {
         ...category,
+      })
+    }
+
+    const openRequestDish = () => {
+      modalStateRequest.setVisible(true)
+      AppEventsLogger.logEvent("openModalRequestDish", 1, {
+        description: "Se ha abierto la ventana de solicitar un platillo",
+      })
+    }
+
+    const toDetailDish = (dish: DishChef) => {
+      if (cartStore.hasItems) cartStore.cleanItems()
+      /**
+       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
+      navigation.navigate("dishDetail", {
+        ...dish,
       })
     }
 
@@ -47,13 +81,24 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         />
         <ScrollView style={styles.body}>
           <View style={utilSpacing.mb5}>
+            <TouchableOpacity
+              style={[
+                styles.search,
+                utilSpacing.py5,
+                utilSpacing.px4,
+                utilFlex.flexRow,
+                utilSpacing.my5,
+                utilFlex.flexCenterVertical,
+                utilSpacing.mx3,
+              ]}
+              onPress={() => modalStateSearch.setVisible(true)}
+            >
+              <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
+              <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+            </TouchableOpacity>
+
             {userStore.userId > 0 && (
-              <Ripple
-                rippleOpacity={0.2}
-                rippleDuration={400}
-                style={utilSpacing.mt7}
-                onPress={() => modalStateRequest.setVisible(true)}
-              >
+              <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={openRequestDish}>
                 <Card style={styles.card}>
                   <View style={[utilFlex.flexRow, utilFlex.flexCenter]}>
                     <Image style={[utilSpacing.mr2, styles.image]} source={images.step1}></Image>
@@ -124,16 +169,17 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         </ScrollView>
         <ModalRequestDish modalState={modalStateRequest}></ModalRequestDish>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
+        <ModalSearch modalState={modalStateSearch} onDishPress={toDetailDish}></ModalSearch>
       </Screen>
     )
   },
 )
 
-function FocusAwareStatusBar(props) {
+const FocusAwareStatusBar = observer((props: any) => {
   const isFocused = useIsFocused()
 
   return isFocused ? <StatusBar {...props} /> : null
-}
+})
 
 const styles = StyleSheet.create({
   body: {
@@ -163,6 +209,10 @@ const styles = StyleSheet.create({
   },
   row: {
     justifyContent: "space-between",
+  },
+  search: {
+    backgroundColor: color.palette.whiteGray,
+    borderRadius: spacing[2],
   },
   text: {
     lineHeight: 20,

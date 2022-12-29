@@ -1,8 +1,9 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
@@ -19,7 +20,6 @@ const ROOT: ViewStyle = {
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
     const toMain = () => {
-      console.log("to main")
       navigation.navigate("main")
     }
 
@@ -36,12 +36,12 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
       <Screen style={ROOT} preset="fixed">
         <Header style={styles.header} headerTx="endOrderScreen.title" />
         <ScrollView style={utilSpacing.pb7}>
-          <Card style={[styles.card, utilSpacing.px5]}>
-            <Text tx="endOrderScreen.deliveryOn" caption></Text>
-            <Text text={params.deliveryAddress} style={utilSpacing.mb4}></Text>
+          <Card style={[styles.card, utilSpacing.p5]}>
+            <Text tx="endOrderScreen.deliveryOn" preset="bold"></Text>
+            <Text text={params.deliveryAddress} caption style={utilSpacing.mb4}></Text>
 
-            <Text tx="endOrderScreen.deliveryDate" caption></Text>
-            <Text text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
+            <Text tx="endOrderScreen.deliveryDate" preset="bold"></Text>
+            <Text caption text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
           </Card>
           <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
           <View style={[utilFlex.flexCenter, utilSpacing.my6]}>

@@ -1,11 +1,14 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
+import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import OneSignal from "react-native-onesignal"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserLogin } from "../../models/user-store"
@@ -16,7 +19,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation, route: { params } }) => {
-    const { commonStore, userStore } = useStores()
+    const { commonStore, userStore, messagesStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
 
     useEffect(() => {
@@ -45,10 +48,23 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           commonStore.setVisibleLoading(false)
           if (userValid) {
             commonStore.setIsSignedIn(true)
-            navigation.navigate(params.screenRedirect)
+            OneSignal.setExternalUserId(userStore.userId.toString())
+            AppEventsLogger.logEvent("login", {
+              method: "email",
+              description: "Se ha logueado con email",
+            })
+            AppEventsLogger.setUserID(userStore.userId.toString())
+            OneSignal.setExternalUserId(userStore.userId.toString())
+
+            if (params.screenRedirect && params.screenRedirect.length > 0)
+              navigation.navigate(params.screenRedirect)
+            else navigation.navigate("main")
           }
         })
-        .catch(() => commonStore.setVisibleLoading(false))
+        .catch((error: Error) => {
+          commonStore.setVisibleLoading(false)
+          messagesStore.showError(error.message)
+        })
     }
 
     const handleBack = () => {

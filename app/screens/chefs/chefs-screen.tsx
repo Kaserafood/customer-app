@@ -1,9 +1,10 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect } from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
+import React, { FC, useEffect, useLayoutEffect, useState } from "react"
+import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { useChef } from "../../common/hooks/useChef"
 import {
   Categories,
@@ -25,10 +26,10 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+
 import { ChefItemModel } from "./chef-item"
 import { DataState, ListChef } from "./chef-list"
 
-// const state = new DataState()
 const modalStateLocation = new ModalStateHandler()
 const modalStateDay = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
@@ -39,8 +40,16 @@ const state = new DataState()
  */
 export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = observer(
   function ChefsScreen({ navigation }) {
-    const { categoryStore, dayStore, dishStore, commonStore } = useStores()
+    const {
+      categoryStore,
+      dayStore,
+      dishStore,
+      commonStore,
+      cartStore,
+      messagesStore,
+    } = useStores()
     const { formatDishesGropuedByChef } = useChef()
+    const [refreshing, setRefreshing] = useState(false)
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -49,20 +58,25 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     useEffect(() => {
       __DEV__ && console.log("chefs useEffect")
       commonStore.setVisibleLoading(true)
-      async function fetch() {
-        await dishStore
-          .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
-          .then(() => {
-            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
-          })
-          .finally(() => {
-            commonStore.setVisibleLoading(false)
-            __DEV__ && console.log("hide loaindg")
-          })
-      }
 
       fetch()
     }, [])
+
+    const fetch = async () => {
+      state.setData([])
+      await dishStore
+        .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+        .then(() => {
+          state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+          __DEV__ && console.log("hide loaindg")
+        })
+    }
 
     const toCategory = (category: Category) => {
       navigation.navigate("category", {
@@ -74,8 +88,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
+
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
+
+      if (cartStore.hasItems) cartStore.cleanItems()
       const chef = {
         ...userChef,
       }
@@ -83,22 +100,30 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       delete chef.currentDishName
       delete chef.pageView
       delete chef.currentIndexPage
-      navigation.push(screen, { ...dish, chef: { ...chef }, isGetMenu: screen === "menuChef" })
+      navigation.push(screen, { ...chef, isGetMenu: screen === "menuChef" })
     }
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
-      // setState([])
+      state.setData([])
       dayStore.setCurrentDay(day)
       await dishStore
         .getGroupedByChef(day.date, RNLocalize.getTimeZone())
         .then(() => {
           if (dishStore.dishesGroupedByChef.length > 0) {
-            // setState(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
             __DEV__ && console.log("formatData changed")
           }
         })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
         .finally(() => commonStore.setVisibleLoading(false))
+    }
+
+    const onRefresh = async () => {
+      setRefreshing(true)
+      await fetch().finally(() => setRefreshing(false))
     }
 
     return (
@@ -108,7 +133,10 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         style={styles.container}
         statusBarBackgroundColor={color.palette.white}
       >
-        <ScrollView style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
@@ -120,12 +148,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             onWhyPress={(state) => modalStateDay.setVisible(state)}
             onPress={(day) => onChangeDay(day)}
           ></DayDelivery>
+
+          <Separator style={utilSpacing.m4}></Separator>
+          <Categories
+            categories={categoryStore.categories}
+            onPress={(category) => toCategory(category)}
+          ></Categories>
           <View style={utilSpacing.px4}>
-            <Separator style={utilSpacing.my4}></Separator>
-            <Categories
-              categories={categoryStore.categories}
-              onPress={(category) => toCategory(category)}
-            ></Categories>
             <Separator style={utilSpacing.my4}></Separator>
             <View
               style={[
@@ -138,15 +167,17 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
               <Text size="lg" tx="mainScreen.delivery" preset="bold"></Text>
               <Chip
                 onPress={() => modalDeliveryDate.setVisible(true)}
-                text={dayStore.currentDay.dayNameLong}
+                text={dayStore.currentDay.dayName}
                 style={[utilSpacing.ml3, styles.chip]}
               ></Chip>
             </View>
 
-            <ListChef
-              state={state}
-              toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}
-            ></ListChef>
+            {state.data.length > 0 && (
+              <ListChef
+                state={state}
+                toScreen={(screen, dish, chef) => toScreen(screen, dish, chef)}
+              ></ListChef>
+            )}
           </View>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>

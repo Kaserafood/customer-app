@@ -1,4 +1,5 @@
 import { applySnapshot, flow, SnapshotOut, types } from "mobx-state-tree"
+
 import { Api } from "../services/api"
 
 const dayStore = types.model("DayStore").props({
@@ -16,6 +17,11 @@ export const DayStoreModel = types
     daysByChef: types.optional(types.array(dayStore), []), // Days available for a chef
     currentDay: types.optional(dayStore, { dayName: "", date: "" }),
   })
+  .views((self) => ({
+    get existsDaysByChef() {
+      return self.daysByChef.length > 0
+    },
+  }))
   .actions((self) => ({
     setDays: async (days: Day[]) => {
       self.days.replace(days)
@@ -34,8 +40,9 @@ export const DayStoreModel = types
       }
     }),
     getDaysByChef: flow(function* getDaysByChef(timeZone: string, chefId: number) {
+      if (chefId === 0) return
       const api = new Api()
-
+      self.daysByChef.clear()
       const result = yield api.getDaysByChefDelivery(timeZone, chefId)
 
       if (result && result.kind === "ok") {

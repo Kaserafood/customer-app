@@ -1,11 +1,12 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+def REACT_NATIVE_VERSION = new File(['node', '--print',"JSON.parse(require('fs').readFileSync(require.resolve('react-native/package.json'), 'utf-8')).version"].execute(null, rootDir).text.trim())
 
 buildscript {
     ext {
         buildToolsVersion = "30.0.2"
         minSdkVersion = 21
-        compileSdkVersion = 31
-        targetSdkVersion = 31
+        compileSdkVersion = 33
+        targetSdkVersion = 33
         ndkVersion = "21.4.7075529"
         kotlin_version = "1.6.0" // Update this to your version
     }
@@ -23,7 +24,6 @@ buildscript {
 project.ext {
     excludeAppGlideModule = true
 }
-
 
 allprojects {
     repositories {
@@ -47,6 +47,12 @@ allprojects {
         google()
         maven { url 'https://www.jitpack.io' }
         jcenter()
+    }
+    
+    configurations.all {
+        resolutionStrategy {
+            force "com.facebook.react:react-native:" + REACT_NATIVE_VERSION
+        }
     }
     
 }

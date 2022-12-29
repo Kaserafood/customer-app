@@ -1,9 +1,11 @@
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { View } from "react-native"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
+
 import { ScreenType } from "../../common/hooks/useChef"
 import { Dish } from "../../models/dish"
+
 import { ChefItem, ChefItemModel } from "./chef-item"
 export class DataState {
   data: ChefItemModel[] = []
@@ -56,7 +58,6 @@ export const ListChef = observer(function ListChef(props: {
       {state.data.map((chef, index) => (
         <View key={chef.id}>
           <ChefItem
-            onDishPress={(dish) => props.toScreen("dishDetail", dish, chef)}
             onChefPress={() => props.toScreen("menuChef", chef.dishes[0], chef)}
             onPrevious={() => state.previousDish(chef, index)}
             onNext={() => state.nextDish(chef, index)}

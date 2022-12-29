@@ -1,7 +1,9 @@
 import * as React from "react"
 import { Text as ReactNativeText, TextStyle } from "react-native"
+
 import { translate } from "../../i18n"
 import { color } from "../../theme"
+
 import { fontSize, presets } from "./text.presets"
 import { TextProps } from "./text.props"
 

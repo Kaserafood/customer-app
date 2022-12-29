@@ -1,11 +1,12 @@
-import { observer } from "mobx-react-lite"
 import React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
+import { observer } from "mobx-react-lite"
+
 import { Price, Text } from "../../components"
-import { Dish } from "../../models/dish"
+import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -43,11 +44,6 @@ export interface ChefItemProps {
   onChangePosition?: (index: number) => void
 
   /**
-   * onDishPress callback
-   */
-  onDishPress?: (dish: Dish) => void
-
-  /**
    * Callcback on press chef image
    */
   onChefPress?: () => void
@@ -59,10 +55,7 @@ export interface ChefItemProps {
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
   const { style, item, onPrevious, onNext, onChangePosition, onChefPress } = props
 
-  // useEffect(() => {
-  //   console.log("item changed", item)
-  // }, [item])
-
+  const { deliveryStore } = useStores()
   return (
     <View style={style} key={item.id}>
       <View style={styles.imageCarousel}>
@@ -119,7 +112,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
       </View>
       <View style={[styles.flex, styles.footer]}>
         <View style={[utilFlex.flex1, styles.textContainer, utilSpacing.pt3]}>
-          {/* <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text> */}
+          <Text numberOfLines={1} text={`${item.name}`} preset="bold"></Text>
           <Text style={styles.textDescription} numberOfLines={1} text={item.currentDishName}></Text>
           <View style={styles.flex}>
             <Text
@@ -130,7 +123,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
             ></Text>
             <Price
               preset="delivery"
-              amount={30}
+              amount={deliveryStore.priceDelivery}
               style={utilSpacing.mr3}
               currencyCode={item.currencyCode}
             ></Price>

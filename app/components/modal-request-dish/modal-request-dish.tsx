@@ -1,21 +1,23 @@
-import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Keyboard, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { Calendar, LocaleConfig } from "react-native-calendars"
 import Ripple from "react-native-material-ripple"
+import { observer } from "mobx-react-lite"
+
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
 import { ModalStateHandler } from "../../utils/modalState"
-import { Image } from "../image/image"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
+import { Image } from "../image/image"
 import { InputText } from "../input-text/input-text"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+
 import { useModalRequest } from "./useModalRequest"
 
 const modalStateCalendar = new ModalStateHandler()
@@ -44,7 +46,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
   const [selectedDate, setSelectedDate] = useState("")
   const [isActiveWithoutDate, setIsActiveWithoutDate] = useState(true)
   const { calendarText } = useModalRequest()
-  const { dishStore, userStore, commonStore } = useStores()
+  const { dishStore, userStore, commonStore, messagesStore } = useStores()
 
   useEffect(() => {
     if (!modalStateCalendar.isVisible) {
@@ -68,6 +70,9 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
           methods.resetField("dishName")
           methods.resetField("peopleCount")
         }
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => {
         commonStore.setVisibleLoading(false)

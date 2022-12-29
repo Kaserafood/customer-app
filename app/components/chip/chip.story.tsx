@@ -1,7 +1,9 @@
-import { storiesOf } from "@storybook/react-native"
 import * as React from "react"
+import { storiesOf } from "@storybook/react-native"
+
 import { Story, StoryScreen, UseCase } from "../../../storybook/views"
 import { utilSpacing } from "../../theme/Util"
+
 import { Chip } from "./chip"
 
 storiesOf("Chip", module)

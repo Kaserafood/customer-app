@@ -1,8 +1,10 @@
-import { Address, Coverage, OrderDetail, OrderOverview } from "../../models"
+import { Address, Coupon, Coverage, OrderDetail, OrderOverview } from "../../models"
+import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
-import { UserChef } from "../../models/user-store"
+import { Card, UserChef } from "../../models/user-store"
+
 import { GeneralApiProblem } from "./api-problem"
 
 type typeKind = "ok" | "bad-data"
@@ -42,11 +44,11 @@ export type CategoryResponse = {
 } & kind
 
 export type DishResponse = {
-  data: DishChef[]
+  data: DishChef[] | DishChef
 } & kind
 
 export type ChefResponse = {
-  data: UserChef[]
+  data: UserChef[] | UserChef
 } & kind
 
 export type AddressResponse = {
@@ -70,4 +72,16 @@ export type OrderDetailResponse = {
 
 export type CoverageResponse = {
   data: Coverage[]
+} & kind
+
+export type CuponResponse = {
+  data: Coupon
+} & kind
+
+export type BannerResponse = {
+  data: Banner[]
+} & kind
+
+export type CardResponse = {
+  data: Card[]
 } & kind

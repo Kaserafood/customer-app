@@ -1,17 +1,18 @@
-import axios from "axios"
 import React, { useState } from "react"
-import { StatusBar, StyleSheet, View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import axios from "axios"
+
+import { useDebounce } from "../../common/hooks/useDebounce"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
-import { showMessageError } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Icon } from "../icon/icon"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+
 import SearchBarWithAutocomplete, { PredictionType } from "./search-bar-autocomplete"
-import { useDebounce } from "./useDebounce"
 
 type Address = {
   latitude: number
@@ -28,7 +29,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
   const [search, setSearch] = useState({ term: "", fetchPredictions: false })
   const [isLoading, setIsLoading] = useState(false)
   const [predictions, setPredictions] = useState<PredictionType[]>([])
-  const { commonStore } = useStores()
+  const { commonStore, messagesStore } = useStores()
 
   const GOOGLE_PACES_API_BASE_URL = "https://maps.googleapis.com/maps/api/place"
 
@@ -70,7 +71,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
     } catch (e) {
       __DEV__ && console.log(e)
       setIsLoading(false)
-      showMessageError()
+      messagesStore.showError()
     }
   }
   useDebounce(onChangeText, 500, [search.term])
@@ -109,7 +110,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
     } catch (e) {
       __DEV__ && console.log(e)
       commonStore.setVisibleLoading(false)
-      showMessageError()
+      messagesStore.showError()
     }
   }
 
@@ -120,9 +121,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       styleBody={styles.noRadius}
       position="bottom"
       isVisibleIconClose={false}
-     
     >
-        
       <View style={styles.modal}>
         <TouchableOpacity onPress={() => modalState.setVisible(false)}>
           <Icon name="xmark" size={30} color={color.text}></Icon>
@@ -131,7 +130,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
         <Text
           size="lg"
           tx="modalAutocomplete.title"
-          style={[styles.title, utilSpacing.pb4 ,utilSpacing.mt4]}
+          style={[styles.title, utilSpacing.pb4, utilSpacing.mt4]}
           preset="bold"
         ></Text>
 

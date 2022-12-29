@@ -1,9 +1,10 @@
-import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { StackNavigationProp, StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Header, InputText, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -18,7 +19,7 @@ export const RecoverPasswordScreen: FC<
   StackScreenProps<NavigatorParamList, "recoverPassword">
 > = observer(({ navigation }) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, messagesStore } = useStores()
 
   useEffect(() => {
     __DEV__ && console.log("recoverPasswordScreen : useEffect")
@@ -35,6 +36,9 @@ export const RecoverPasswordScreen: FC<
       .sendEmailRecoverPassword(data.email)
       .then((sended: boolean) => {
         sended && modalState.setVisible(true)
+      })
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
       })
       .finally(() => commonStore.setVisibleLoading(false))
   }
@@ -112,6 +116,12 @@ const ModalSendedEmail = (props: {
           preset="semiBold"
           style={utilSpacing.my4}
         ></Text>
+        <Button
+          tx="common.continue"
+          style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
+          onPress={() => toTokenScreen()}
+        ></Button>
+
         <Ripple
           onPressIn={props.sendAgain}
           rippleOpacity={0.2}
@@ -119,17 +129,12 @@ const ModalSendedEmail = (props: {
           style={[styles.btnAddressAdd, utilSpacing.mx5, utilSpacing.mb5]}
         >
           <Text
-            preset="semiBold"
-            style={utilFlex.selfCenter}
+            size="md"
+            preset="bold"
+            style={[utilFlex.selfCenter, styles.textSendAgain]}
             tx="recoverPasswordScreen.sendAgain"
           ></Text>
         </Ripple>
-
-        <Button
-          tx="common.continue"
-          style={[styles.btn, utilSpacing.py5, utilSpacing.my4, utilFlex.selfCenter]}
-          onPress={() => toTokenScreen()}
-        ></Button>
       </View>
     </Modal>
   )
@@ -140,9 +145,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   btnAddressAdd: {
-    borderColor: color.palette.grayLigth,
     borderRadius: 8,
-    borderWidth: 1,
     marginVertical: spacing[4],
     padding: spacing[3],
   },
@@ -160,6 +163,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     paddingTop: spacing[6],
     width: "75%",
+  },
+  textSendAgain: {
+    color: color.primary,
+    fontSize: 13,
   },
   w80: {
     width: "80%",

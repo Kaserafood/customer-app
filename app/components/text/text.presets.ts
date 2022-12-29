@@ -1,4 +1,5 @@
 import { TextStyle } from "react-native"
+
 import { color, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
 
@@ -50,6 +51,11 @@ export const fontSize = {
    * Text large font size
    */
   lg: { fontSize: typographySize.lg },
+
+  /**
+   * Text large font exta large
+   */
+  xl: { fontSize: typographySize.xl },
 }
 
 export type TextSize = keyof typeof fontSize

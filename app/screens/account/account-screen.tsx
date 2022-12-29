@@ -1,22 +1,23 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+
 import { Button, Card, Header, Icon, Modal, Screen, Text } from "../../components"
 import { useStores } from "../../models"
-import { goBack, NavigatorParamList } from "../../navigators"
+import { NavigatorParamList } from "../../navigators"
+import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { showMessageError, showMessageSucess } from "../../utils/messages"
 import { ModalStateHandler } from "../../utils/modalState"
 import { clear } from "../../utils/storage"
 
 const modalState = new ModalStateHandler()
 export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> = observer(
-  function AccountScreen() {
-    const { commonStore, userStore, addressStore, cartStore } = useStores()
+  function AccountScreen({ navigation }) {
+    const { commonStore, userStore, addressStore, cartStore, messagesStore } = useStores()
 
     const closeSession = async () => {
       await clear()
@@ -28,6 +29,7 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
       addressStore.setAddresses([])
       cartStore.cleanItems()
       commonStore.setIsSignedIn(false)
+      navigation.navigate("init")
     }
 
     const removeAccount = () => {
@@ -36,9 +38,12 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
         .removeAccount(userStore.userId)
         .then(async (response) => {
           if (response) {
-            showMessageSucess("accountScreen.removeAccountSuccess", true)
+            messagesStore.showError("accountScreen.removeAccountSuccess", true)
             await closeSession()
-          } else showMessageError("accountScreen.removeAccountError", true)
+          } else messagesStore.showError("accountScreen.removeAccountError", true)
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
         })
         .finally(() => commonStore.setVisibleLoading(false))
     }

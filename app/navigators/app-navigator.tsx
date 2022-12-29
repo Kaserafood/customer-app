@@ -4,18 +4,18 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { useColorScheme } from "react-native"
 import RNBootSplash from "react-native-bootsplash"
+
 import { useStores } from "../models/root-store/root-store-context"
 import {
   AccountScreen,
   AddressScreen,
   CategoryScreen,
-  DeliveryDetailScreen,
+  CheckoutScreen,
   DishDetailScreen,
   EndOrderScreen,
   FavoriteScreen,
@@ -32,8 +32,10 @@ import {
   RecoverPasswordTokenScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
+  ReportBugScreen,
   TermsConditionsScreen,
 } from "../screens"
+
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
@@ -65,17 +67,17 @@ const AppStack = observer(() => {
       }}
     >
       {!commonStore.isSignedIn ? (
-        <>
+        <Stack.Group>
           <Stack.Screen name="init" component={InitScreen} />
-        </>
+        </Stack.Group>
       ) : (
-        <>
+        <Stack.Group>
           <Stack.Screen name="main">
             {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
           </Stack.Screen>
           <Stack.Screen name="dishDetail" component={DishDetailScreen} />
           <Stack.Screen name="menuChef" component={MenuChefScreen} />
-          <Stack.Screen name="deliveryDetail" component={DeliveryDetailScreen} />
+          <Stack.Screen name="checkout" component={CheckoutScreen} />
           <Stack.Screen name="endOrder" component={EndOrderScreen} />
           <Stack.Screen name="category" component={CategoryScreen} />
           <Stack.Screen name="map" component={MapScreen} />
@@ -85,16 +87,20 @@ const AppStack = observer(() => {
           <Stack.Screen name="newChefs" component={NewChefsScreen} />
           <Stack.Screen name="favorite" component={FavoriteScreen} />
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
-        </>
+        </Stack.Group>
       )}
-      <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
-      <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
-      <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
-      <Stack.Screen name="newPassword" component={NewPasswordScreen} />
-      <Stack.Screen name="loginForm" component={LoginFormScreen} />
-      <Stack.Screen name="registerForm" component={RegisterFormScreen} />
-      <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
-      <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Group navigationKey={`${commonStore.isSignedIn}`}>
+        <Stack.Screen name="registerPager" component={RegisterPagerScreen} />
+        <Stack.Screen name="recoverPassword" component={RecoverPasswordScreen} />
+        <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
+        <Stack.Screen name="newPassword" component={NewPasswordScreen} />
+        <Stack.Screen name="loginForm" component={LoginFormScreen} />
+
+        <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
+        <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
+        <Stack.Screen name="reportBug" component={ReportBugScreen} />
+        <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   )
 })
@@ -102,13 +108,38 @@ const AppStack = observer(() => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
-  const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
+
+  const config = {
+    screens: {
+      category: {
+        path: "categories/:id",
+      },
+      favorite: {
+        path: "favorites",
+      },
+      menuChef: {
+        path: "chefs/:id",
+      },
+      newChefs: {
+        path: "chefs/new",
+      },
+      dishDetail: {
+        path: "products/:id",
+      },
+    },
+  }
+
+  const linking = {
+    prefixes: ["kasera://"],
+    config,
+  }
+
   return (
     <NavigationContainer
       onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      linking={linking}
       {...props}
     >
       <AppStack />

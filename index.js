@@ -8,6 +8,7 @@
 //
 // It's easier just to leave it here.
 import { AppRegistry } from "react-native"
+
 import App from "./app/app.tsx"
 
 AppRegistry.registerComponent("ClientApp", () => App)

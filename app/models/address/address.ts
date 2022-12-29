@@ -1,4 +1,5 @@
 import { flow, Instance, types } from "mobx-state-tree"
+
 import { Api } from "../../services/api"
 import { AddressResponse, CommonResponse } from "../../services/api/api.types"
 
@@ -13,7 +14,7 @@ const addressModel = types.model("Address").props({
   address: types.maybe(types.string),
   numHouseApartment: types.union(types.maybe(types.string), types.null),
   instructionsDelivery: types.union(types.maybe(types.string), types.null),
-  name: types.maybe(types.string),
+  name: types.union(types.maybe(types.string), types.null),
   phone: types.union(types.maybe(types.string), types.null),
   country: types.union(types.maybe(types.string), types.null),
   city: types.union(types.maybe(types.string), types.null),

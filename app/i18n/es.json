@@ -17,7 +17,11 @@
     "next": "Siguiente",
     "save": "Guardar",
     "cannotConnect": "Lo sentimos, no se puede conectar con el servidor",
-    "add": "Agregar"
+    "add": "Agregar",
+    "send": "Enviar",
+    "discount": "Descuento",
+    "ready": "Listo",
+    "understand": "Entendido"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -52,8 +56,8 @@
   },
   "errorScreen": {
     "title": "Error",
-    "friendlySubtitle": "Lo sentimos, se ha producido un error inesperado.",
-    "reset": "Reiniciar"
+    "friendlySubtitle": "Lo sentimos, algo no ha funcionado como se esperaba",
+    "reset": "Restablecer"
   },
   "termsConditionsScreen": {
     "title": "Términos y condiciones",
@@ -273,12 +277,13 @@
   "modalLocation": {
     "title": "Elige una dirección",
     "addAddress": "Ingresa un dirección",
-    "useCurrentLocation": "Usar ubicación actual"
+    "useCurrentLocation": "Usar ubicación actual",
+    "cannotGetLocation": "No se pudo obtener tu ubicación"
   },
 
   "modalDeliveryDay": {
     "title": "Pide con anticipación",
-    "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tiene un pedido.",
+    "description": "Los platillos en Kasera se realizan de forma artesanal en cocinas pequeñas, por ello, los cocineros no tienen inventarios y deben conseguir ingredientes frescos cada vez que tienen un pedido.",
     "continue": "Continuar"
   },
   "categories": {
@@ -306,11 +311,14 @@
     "chefMenu": "Menú del chef",
     "watchCart": "Ver carrito",
     "leave": "¿Deseas salir?",
-    "leaveDescription": "Perderás los platillos que agregaste a tu orden",
+    "leaveDescription": "Perderás los platillos que agregaste de este chef",
     "yesLeave": "Sí, salir",
-    "noLeave": "Regresar"
+    "noLeave": "Regresar",
+    "why": "¿Por qué?",
+    "whyTitle": "¿Por qué?",
+    "whyDescription": "En Kasera, diferentes chefs de la ciudad tienen su propia tienda en el app. Cada chef está en diferente ubicación, tiene diferentes horarios y tarifa de envío. Por este motivo, es necesario que completes el pedido de un chef antes pedirle a otro."
   },
-  "deliveryDetailScreen": {
+  "checkoutScreen": {
     "title": "Detalles de entrega",
     "info": "Información de entrega",
     "address": "Dirección",
@@ -321,28 +329,45 @@
     "deliveryDatePlaceholder": "Selecciona una fecha",
     "deliveryTime": "Elige el rango de entrega",
     "paymentMethod": "Método de pago",
-    "paymentCard": "Tarjeta de crédito/débito",
+    "paymentMethods": "Métodos de pago",
+    "paymentCard": "Agregar tarjeta",
     "delivery": "Entrega:",
     "errorDayDelivery": "Selecciona un día de entrega",
     "errorTimeDelivery": "Selecciona un rango de entrega",
     "errorOrder": "Lo sentimos, no se la logrado realizar tu pedido",
     "errorOrderPayment": "Lo sentimos, no se ha logrado procesar el pago",
     "nitPlaceholder": "Ingresa tu NIT o DPI para la factura",
-    "nit": "Ingresa tu NIT (Opcional)"
+    "nit": "Ingresa tu NIT (Opcional)",
+    "uponDelivery": "Pago contra-entrega",
+    "errorCard": "No has ingresado todos los datos de tu tarjeta",
+    "errorPayment": "Selecciona un método de pago",
+    "paymentCash": "Efectivo",
+    "makeOrder": "Hacer pedido",
+    "useCoupon": "Usar cupón",
+    "pay": "Pagar",
+    "addPayment": "Agregar tarjeta",
+    "paymentMethodUpdated": "Método de pago actualizado",
+    "paymentMethodNotUpdated": "No se ha podido actualizar el método de pago",
+    "paymentMethodAdded": "Método de pago agregado",
+    "paymentMethodError": "No se ha podido agregar el método de pago",
+    "paymentMethodErrorUnknown": "La tarjeta debe ser Visa o MasterCard",
+    "paymentCashDescription": "Pagas al recibir",
+    "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",
     "deliveryOn": "Entregar en:",
     "deliveryDate": "Fecha de entrega:",
     "info": "Te enviaremos una confirmación a tu correo electrónico",
-    "order": "Pedidio",
+    "order": "Pedido",
     "thankYou": "Gracias por tu apoyo",
     "cookWithLove": "Cocinaré tu platillo con mucho amor.",
     "continueExplore": "Seguir explorando"
   },
   "searchScreen": {
     "title": "Buscador",
-    "somethingDiferent": "Quiero algo diferente"
+    "somethingDiferent": "Quiero algo diferente",
+    "searchPlaceholder": "Buscar..."
   },
   "mapScreen": {
     "title": "Ajusta el pin",
@@ -401,7 +426,11 @@
     "myOrdres": "Mis Pedidos",
     "removeAccount": "Eliminar cuenta",
     "myAccount": "Mi cuenta",
-    "termsConditions": "Términos y condiciones"
+    "termsConditions": "Términos y condiciones",
+    "loginRegister": "Iniciar sesión / Registrarse",
+    "bugReport": "Reportar un error",
+    "support": "Soporte",
+    "whatsAppMessage": "Hola, tengo un consulta"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -544,7 +573,19 @@
     "whatIsKaseraDescription1": "Kasera es un marketplace donde podrás reservar los mejores platillos de chefs caseros talentosos de tu comunidad.",
     "whatIsKaseraDescription2": "Encuentra recetas tradicionales auténticas, paquetes de almuerzos para la semana, comida para festividades y para eventos.",
     "whatIsKaseraDescription3": "Reserva con anticipación para darle tiempo al chef de buscar ingredientes frescos y cocinar artesanalmente.",
-    "whatIsKaseraDescription4": "La cocina artesanal es elaborada y con amor, por esa razón el platillo no llegará de inmediato sino a partir del día siguiente. Llegará 100% a domicilio y listo para calentar."
+    "whatIsKaseraDescription4": "La cocina artesanal es elaborada y con amor, por esa razón el platillo no llegará de inmediato sino a partir del día siguiente. Llegará 100% a domicilio y listo para calentar.",
+    "welcome": "Bienvenido a",
+    "kasera": "Kasera",
+    "whatIsIt": "¿Qué es?",
+    "seasonal": "De temporada",
+    "seasonalDescription": "Explora platillos de temporada",
+    "explore": "Explorar",
+    "tryNewFlavors": "Prueba nuevos sabores",
+    "newChefs": "Nuevos chefs",
+    "toKnow": "Conocer",
+    "kaseraFavorites": "Favoritos",
+    "kaseraFavoritesDescription": "Descrubre nuestros platillos recomendados",
+    "discover": "Descubrir"
   },
   "newChefsScreen": {
     "title": "Nuevos chefs"
@@ -560,6 +601,11 @@
     "waiting": "En espera",
     "processing": "Procesando",
     "completed": "Completado",
+    "order": "Pedido"
+  },
+  "modalNecessaryLocation": {
+    "title": "Ubicación requerida",
+    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
     "order": "Pedidio"
   },
   "modalAutocomplete": {
@@ -569,5 +615,30 @@
   "modalWithoutCoverage": {
     "title": "Sin cobertura",
     "info": "Lo sentimos, no tenemos cobertura en la ubicación seleccionada"
+  },
+  "reportBugScreen": {
+    "title": "Reportar un error",
+    "description": "Si encuentras algún error en la aplicación, por favor, repórtalo y lo solucionaremos lo antes posible.",
+    "titlePlaceholder": "Ingresa un título",
+    "descriptionPlaceholder": "Describe a detalle el error",
+    "titleRequired": "Debes ingresar el título",
+    "descriptionRequired": "Debes ingresar la descripción",
+    "minLength": "Debes ingresar al menos 3 caracteres",
+    "titleError": "Título",
+    "descriptionError": "Descripción",
+    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos"
+  },
+  "modalReportBug": {
+    "title": "Error reportado",
+    "info": "Gracias por enviar la información, lo revisaremos lo antes posible."
+  },
+  "modalCoupon": {
+    "title": "Usar cupón",
+    "placeholderCoupon": "Ingresa el código del cupón",
+    "couponRequired": "Debes ingresar el cupón",
+    "labelCoupon": "Cupón",
+    "couponInvalid": "El cupón no es válido",
+    "use": "Aplicar",
+    "discountApply": "Descuento del {{percent}} aplicado"
   }
 }

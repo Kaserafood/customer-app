@@ -1,4 +1,4 @@
-import { translate } from "../i18n"
+import { translate, TxKeyPath } from "../i18n"
 
 /**
  *
@@ -6,7 +6,7 @@ import { translate } from "../i18n"
  * @param txOptions options to use for the translation
  * @returns {string}
  */
-export const getI18nText = (text: string, txOptions?: any): string => {
+export const getI18nText = (text: TxKeyPath, txOptions?: any): string => {
   const i18nText = text && translate(text, txOptions ?? {})
 
   return i18nText ?? ""
