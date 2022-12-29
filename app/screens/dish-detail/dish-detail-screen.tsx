@@ -1,19 +1,17 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { addons, BackHandler, ScrollView, StyleSheet, View } from "react-native"
+import { BackHandler, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
-import { useLayout } from "@react-native-community/hooks"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import {
   Addons,
   ButtonFooter,
-  CartItemAddon,
   DishChef,
   Header,
   Image,
@@ -23,7 +21,6 @@ import {
   Text,
 } from "../../components"
 import { Separator } from "../../components/separator/separator"
-import { AddonItem, AddonItemModel } from "../../models/addons/addon"
 import { ItemCart } from "../../models/cart-store"
 import { DishChef as DishChefModel } from "../../models/dish-store"
 import { useStores } from "../../models/root-store/root-store-context"
@@ -31,7 +28,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
-import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 

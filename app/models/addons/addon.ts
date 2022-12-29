@@ -1,13 +1,4 @@
-import {
-  applySnapshot,
-  cast,
-  detach,
-  flow,
-  Instance,
-  SnapshotIn,
-  SnapshotOut,
-  types,
-} from "mobx-state-tree"
+import { applySnapshot, cast, detach, Instance, SnapshotIn, types } from "mobx-state-tree"
 
 import {
   getAddonsMultileChoice,
@@ -16,7 +7,7 @@ import {
 } from "../../components/addons/util"
 import { getMinValue } from "../../utils/validate"
 import { MetaDataCart } from "../cart-store"
-import { addonItem, dependencies, option } from "../dish"
+import { addonItem, option } from "../dish"
 
 export const MULTIPLE_CHOICE = "multiple_choice"
 export const INPUT_MULTIPLER = "input_multiplier"

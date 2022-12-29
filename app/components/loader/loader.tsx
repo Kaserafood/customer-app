@@ -1,9 +1,9 @@
-import * as React from "react"
-import { Button, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 
 import { useStores } from "../../models/root-store/root-store-context"
 import { color, color as colorTheme } from "../../theme"

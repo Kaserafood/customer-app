@@ -4,12 +4,11 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import React from "react"
-import { useColorScheme } from "react-native"
-import RNBootSplash from "react-native-bootsplash"
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
+import React from "react"
+import RNBootSplash from "react-native-bootsplash"
 
 import { useStores } from "../models/root-store/root-store-context"
 import {
@@ -109,7 +108,6 @@ const AppStack = observer(() => {
 interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
 
 export const AppNavigator = (props: NavigationProps) => {
-  const colorScheme = useColorScheme()
   useBackButtonHandler(canExit)
 
   const config = {

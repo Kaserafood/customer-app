@@ -1,22 +1,13 @@
-import React, {
-  forwardRef,
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react"
+import { observer } from "mobx-react-lite"
+import React, { useContext, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { View as AnimatableView } from "react-native-animatable"
 import Ripple from "react-native-material-ripple"
-import Animated, { BounceInLeft, ZoomIn } from "react-native-reanimated"
-import { useScrollIntoView } from "react-native-scroll-into-view"
-import { observer } from "mobx-react-lite"
+import Animated, { BounceInLeft } from "react-native-reanimated"
 
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
-import { AddonItem, AddonItemModel } from "../../models/addons/addon"
+import { AddonItem } from "../../models/addons/addon"
 import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
