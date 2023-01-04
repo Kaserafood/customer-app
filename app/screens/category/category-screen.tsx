@@ -39,7 +39,6 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     } = useStores()
 
     useEffect(() => {
-      console.log(params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
 

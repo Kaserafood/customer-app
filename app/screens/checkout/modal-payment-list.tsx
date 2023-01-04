@@ -1,17 +1,14 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { observer } from "mobx-react-lite"
 
-import images from "../../assets/images"
 import { Button, Image, Modal, Separator, Text } from "../../components"
 import { useStores } from "../../models"
-import { Card } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getPrefixNumberCard } from "../../utils/card"
 import { getImageByType, paymentType, typeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
@@ -58,10 +55,6 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
           messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
           await fetch()
           if (id) {
-            console.log(
-              "change card",
-              userStore.cards.find((item) => item.id === id),
-            )
             userStore.setCurrentCard(userStore.cards.find((item) => item.id === id))
           } else {
             userStore.setCurrentCard(null)

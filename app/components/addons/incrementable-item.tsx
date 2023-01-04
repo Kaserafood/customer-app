@@ -8,10 +8,11 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { AddonItem } from "../../models/addons/addon"
-import { CurrencyContext } from "../../screens/dish-detail/dish-detail-screen"
+import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { Card } from "../card/card"
@@ -27,7 +28,7 @@ export interface IncrementableProps {
   addon?: AddonItem
 }
 
-export const Incrementable = function Incrementable(props: IncrementableProps) {
+export const Incrementable = observer((props: IncrementableProps) => {
   const {
     onPress,
     addon: { required, name, label },
@@ -111,7 +112,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
       ></PriceOption>
     </Card>
   )
-}
+})
 
 export const PriceOption = (props: {
   amout: number
@@ -120,7 +121,7 @@ export const PriceOption = (props: {
   priceUnity?: number
 }) => {
   const { amout, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
-  const { currencyCode } = useContext(CurrencyContext)
+  const { currencyCode } = useContext(AddonContext)
   if (amout > 0) {
     return (
       <View>

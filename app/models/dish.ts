@@ -1,4 +1,4 @@
-import { Instance, SnapshotIn, SnapshotOut, types } from "mobx-state-tree"
+import { Instance, SnapshotIn, types } from "mobx-state-tree"
 
 export const dependencies = types.model("DependenciesAddon", {
   hash: types.string,

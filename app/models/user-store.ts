@@ -1,4 +1,3 @@
-import { action } from "mobx"
 import { flow, Instance, types } from "mobx-state-tree"
 import { isNumber } from "validate.js"
 
@@ -6,9 +5,9 @@ import { ChefResponse } from "../services/api"
 import { Api } from "../services/api/api"
 import { saveString } from "../utils/storage"
 
-import { withEnvironment } from "./extensions/with-environment"
 import { categoryStore } from "./category-store"
 import { dish } from "./dish"
+import { withEnvironment } from "./extensions/with-environment"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybe(types.number),

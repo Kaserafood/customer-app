@@ -1,4 +1,4 @@
-import { cast, SnapshotIn, types } from "mobx-state-tree"
+import { cast, detach, SnapshotIn, types } from "mobx-state-tree"
 
 import { generateUUID } from "../utils/security"
 
@@ -50,7 +50,7 @@ export const CartStoreModel = types
       })
     },
     removeItem(index: number) {
-      self.cart.splice(index, 1)
+      detach(self.cart[index])
     },
     cleanItems() {
       self.cart.clear()
