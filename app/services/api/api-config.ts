@@ -1,9 +1,8 @@
 let url = ""
 if (__DEV__) {
-  url = "https://kasera-customer-api-test.azurewebsites.net"
   url = "http://192.168.0.11:3001"
 } else {
-  url = "https://customer-api.kaserafood.com"
+  url = "https://customer-api.kaserafood.com/v0.9.13"
 }
 
 export interface ApiConfig {
