@@ -1,12 +1,12 @@
-import * as React from "react"
-import { Button, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 import LottieView from "lottie-react-native"
 import { observer } from "mobx-react-lite"
+import * as React from "react"
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
+import Animated, { FadeIn, FadeOut, ZoomIn, ZoomOut } from "react-native-reanimated"
 
 import { useStores } from "../../models/root-store/root-store-context"
-import { color as colorTheme } from "../../theme"
+import { color, color as colorTheme } from "../../theme"
 const CONTAINER: ViewStyle = {
   flex: 1,
   position: "absolute",
@@ -58,7 +58,7 @@ export const Loader = observer(function Loader(props: LoaderProps) {
               style={styleLoader.btnHideLoading}
               onPress={() => commonStore.setVisibleLoading(false)}
             >
-              <Text>Hide loading</Text>
+              <Text style={styleLoader.textWhite}>Hide loading</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -68,6 +68,11 @@ export const Loader = observer(function Loader(props: LoaderProps) {
 })
 const styleLoader = StyleSheet.create({
   btnHideLoading: {
-    width: 130,
+    alignSelf: "center",
+    backgroundColor: color.palette.whiteGray,
+    display: "flex",
+  },
+  textWhite: {
+    color: color.palette.black,
   },
 })
