@@ -61,7 +61,7 @@ export const DishStoreModel = types
       const api = new Api()
       const result = yield api.getDishesGroupedByChef(date, timeZone)
       if (result.kind === "ok") {
-        self.dishesGroupedByChef.replace(result.data)
+        applySnapshot(self.dishesGroupedByChef, result.data)
       }
     }),
     getGroupedByLatestChef: flow(function* getGroupedByLatestChef(date: string, timeZone: string) {
