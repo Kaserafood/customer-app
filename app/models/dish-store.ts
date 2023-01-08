@@ -1,4 +1,4 @@
-import { flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api, DishResponse } from "../services/api"
 
@@ -37,22 +37,22 @@ export const DishStoreModel = types
       userId: number,
       categoryId?: number,
     ) {
-      if (categoryId) self.dishesCategory.clear()
-      else self.dishes.clear()
+      if (categoryId) detach(self.dishesCategory)
+      else detach(self.dishes)
       const api = new Api()
       const result = yield api.getAllDishes(date, timeZone, userId, categoryId)
 
       if (result && result.kind === "ok") {
-        if (categoryId) self.dishesCategory.replace(result.data)
-        else self.dishes.replace(result.data)
+        if (categoryId) applySnapshot(self.dishesCategory, result.data)
+        else applySnapshot(self.dishes, result.data)
       }
     }),
     getByChef: flow(function* getByChef(chefId: number) {
-      self.dishesChef.clear()
+      detach(self.dishesChef)
       const api = new Api()
       const result = yield api.getDishesByChef(chefId)
       if (result && result.kind === "ok") {
-        self.dishesChef.replace(result.data)
+        applySnapshot(self.dishesChef, result.data)
       }
     }),
 

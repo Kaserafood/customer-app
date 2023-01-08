@@ -120,7 +120,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         dish: currentDish,
         quantity: quantity,
         noteChef: data.note,
-        metaData: addonsAvailable.length > 0 ? getMetaData() : [],
+        metaData: addonsAvailable.length > 0 ? getMetaData(currentDish.chef.currencyCode) : [],
         total: total,
       }
       __DEV__ && console.log(itemCart)

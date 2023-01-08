@@ -36,8 +36,8 @@ export interface AddonsProps {
 
 const stateHandler = new StateHandler()
 
-export const getMetaData = () => {
-  return stateHandler.getMetaData()
+export const getMetaData = (currencyCode: string) => {
+  return stateHandler.getMetaData(currencyCode)
 }
 
 export const isValidAddons = (addons: Addon[]): boolean => {

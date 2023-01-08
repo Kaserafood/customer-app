@@ -1,6 +1,6 @@
 import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, View } from "react-native"
+import { Keyboard, ScrollView, View } from "react-native"
 
 import { Button, Modal, PaymentCard, Text } from "../../components"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -42,11 +42,11 @@ export const ModalPaymentCard = forwardRef(
     return (
       <>
         <Modal modal={modalState} position="bottom">
-          <View style={[]}>
+          <ScrollView>
             <Text
               preset="bold"
               size="lg"
-              tx="checkout.paymentCard"
+              tx="checkoutScreen.paymentCard"
               style={[utilSpacing.mb2, utilSpacing.ml4]}
             ></Text>
             {modalState.isVisible && (
@@ -69,7 +69,7 @@ export const ModalPaymentCard = forwardRef(
                 onPress={methods.handleSubmit(onSubmit, onError)}
               ></Button>
             </View>
-          </View>
+          </ScrollView>
         </Modal>
       </>
     )

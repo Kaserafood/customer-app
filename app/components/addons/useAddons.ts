@@ -125,12 +125,7 @@ export const useAddon = (stateHandler?: StateHandler) => {
   }
 
   const getAddonsWithoutTitle = (addons: Addon[]) => {
-    return addons.filter(
-      (addon) =>
-        addon.show_title === FALSE &&
-        addon.incrementable === TRUE &&
-        addon.type === INPUT_MULTIPLER,
-    )
+    return addons.filter((addon) => addon.show_title === FALSE && addon.incrementable === TRUE)
   }
 
   const getAddonsBoolean = (addons: Addon[]) => {

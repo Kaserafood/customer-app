@@ -19,6 +19,7 @@ import { Modal } from "../modal/modal"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
+import { getFormat } from "../../utils/price"
 
 export interface ModalCartProps {
   /**
@@ -73,7 +74,9 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                 <View style={utilFlex.flex1}>
                   <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
                   {item.metaData.length > 0 && (
-                    <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
+                    <CartItemAddon
+                      metaDataCart={item.metaData}
+                    ></CartItemAddon>
                   )}
                 </View>
               </View>
@@ -128,14 +131,16 @@ export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
     <View style={utilSpacing.mt2}>
       {metaDataCart.map((item, index) => (
         <View key={item.key ?? index} style={utilFlex.flexRow}>
-          {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
-          <Text
-            numberOfLines={1}
-            style={utilSpacing.ml2}
-            caption
-            size="sm"
-            text={`${item.label}`}
-          ></Text>
+          <View>
+            <Text
+              numberOfLines={2}
+              style={utilSpacing.ml2}
+              caption
+              preset="semiBold"
+              size="sm"
+              text={`${item.value}`}
+            ></Text>
+          </View>
         </View>
       ))}
     </View>
@@ -186,5 +191,11 @@ const styles = StyleSheet.create({
   price: {
     backgroundColor: color.background,
     paddingRight: 0,
+  },
+  containerMetaText: {
+    display: "flex",
+    flexDirection: "row",
+    flexShrink: 1,
+    flexWrap: "wrap",
   },
 })

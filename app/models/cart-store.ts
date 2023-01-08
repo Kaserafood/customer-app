@@ -1,4 +1,4 @@
-import { cast, SnapshotIn, types } from "mobx-state-tree"
+import { cast, detach, SnapshotIn, types } from "mobx-state-tree"
 
 import { generateUUID } from "../utils/security"
 
@@ -6,7 +6,6 @@ import { metaData } from "./order/order"
 import { dishChef } from "./dish-store"
 
 const metaDataCart = metaData.props({
-  label: types.string,
   total: types.number,
 })
 
@@ -50,7 +49,7 @@ export const CartStoreModel = types
       })
     },
     removeItem(index: number) {
-      self.cart.splice(index, 1)
+      detach(self.cart[index])
     },
     cleanItems() {
       self.cart.clear()
