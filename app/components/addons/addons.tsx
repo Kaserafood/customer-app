@@ -19,6 +19,7 @@ import { Text } from "../text/text"
 
 import { Incrementable, IncrementableProps, PriceOption } from "./incrementable-item"
 import { useAddon } from "./useAddons"
+
 interface AddonsSectionProps extends IncrementableProps {}
 
 /**

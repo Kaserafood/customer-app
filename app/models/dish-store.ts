@@ -37,14 +37,14 @@ export const DishStoreModel = types
       userId: number,
       categoryId?: number,
     ) {
-      if (categoryId) self.dishesCategory.clear()
-      else self.dishes.clear()
+      if (categoryId) detach(self.dishesCategory)
+      else detach(self.dishes)
       const api = new Api()
       const result = yield api.getAllDishes(date, timeZone, userId, categoryId)
 
       if (result && result.kind === "ok") {
-        if (categoryId) self.dishesCategory.replace(result.data)
-        else self.dishes.replace(result.data)
+        if (categoryId) applySnapshot(self.dishesCategory, result.data)
+        else applySnapshot(self.dishes, result.data)
       }
     }),
     getByChef: flow(function* getByChef(chefId: number) {
