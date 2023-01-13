@@ -122,7 +122,7 @@ export const AddonModel = types
               checked: false,
               disabled: false,
             })),
-            dependencies: addon.dependencies,
+            dependencies: { ...addon.dependencies },
           }
           if (addon.required === 1 && addon.optionBoolean !== TRUE && addon.multipleChoice !== TRUE)
             state.checked = true

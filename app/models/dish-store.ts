@@ -57,7 +57,7 @@ export const DishStoreModel = types
     }),
 
     getGroupedByChef: flow(function* getGroupedByChef(date: string, timeZone: string) {
-      self.dishesGroupedByChef.clear()
+      detach(self.dishesGroupedByChef) 
       const api = new Api()
       const result = yield api.getDishesGroupedByChef(date, timeZone)
       if (result.kind === "ok") {
