@@ -5,6 +5,7 @@ import {
   getTotal,
   isDependencyQuantity,
 } from "../../components/addons/util"
+import { getLabelMetaCart } from "../../utils/string"
 import { getMinValue } from "../../utils/validate"
 import { MetaDataCart } from "../cart-store"
 import { addonItem, option } from "../dish"
@@ -29,22 +30,37 @@ export const AddonModel = types
     findAddonByName(name: string) {
       return self.addons.find((addon) => addon.name === name)
     },
-    getMetaData(): MetaDataCart[] {
+    getMetaData(currencyCode: string): MetaDataCart[] {
       const metaData = []
       self.addons.forEach((addon) => {
-        if (addon.checked || addon.required === 1) {
+        __DEV__ &&
+          console.log(
+            "Label meta: ",
+            getLabelMetaCart(addon.value, addon.label, Number(addon.total ?? 0), currencyCode),
+          )
+        if (addon.checked) {
           const meta: MetaDataCart = {
-            key: `${addon.name} (${addon.total})`,
-            value: `${addon.value}`,
-            label: addon.label,
-            total: addon.total,
+            key: addon.name,
+            value: getLabelMetaCart(
+              addon.value,
+              addon.label,
+              Number(addon.total ?? 0),
+              currencyCode,
+            ),
+            total: Number(addon.total ?? 0),
           }
 
-          if (addon.options && addon.options.some((option) => option.checked)) {
-            meta.label = addon.options
+          if (addon.options && addon.options.filter((option) => option.checked).length > 0) {
+            const label = addon.options
               .filter((option) => option.checked)
               .map((option) => option.label)
               .join(", ")
+
+            meta.total = addon.options
+              .filter((option) => option.checked)
+              .reduce((total, option) => (total += Number(option.price ?? 0)), 0)
+
+            meta.value = getLabelMetaCart(addon.value, label, meta.total, currencyCode)
           }
 
           metaData.push(meta)
@@ -81,7 +97,7 @@ export const AddonModel = types
     },
     updateAddon: (addon: AddonItemModel) => {
       const index = self.addons.findIndex((item) => item.name === addon.name)
-      self.addons[index] = addon
+      applySnapshot(self.addons[index], addon)
     },
     getNumberOptionSelectables: (addon: AddonItem, addons: AddonItem[]) => {
       // Si la dependencia es de tipo "Cantidad"
@@ -159,9 +175,10 @@ export const AddonModel = types
     },
     changeValueCheckedOption: (name: string, optionSelected: Option, isChecked: boolean) => {
       const addon = self.findAddonByName(name)
-      addon.options.forEach((option) => {
+      addon.options = addon.options.map((option) => {
         if (option.label === optionSelected.label) option.checked = isChecked
-      })
+        return option
+      }) as any
 
       const countChecked = addon.options.filter((option) => option.checked).length
       if (countChecked > 0) addon.checked = true

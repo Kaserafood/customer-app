@@ -19,7 +19,8 @@ import { Modal } from "../modal/modal"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-import { getFormat } from "../../utils/price"
+import { useNavigation } from "@react-navigation/native"
+import { DishChef } from "../../models/dish-store"
 
 export interface ModalCartProps {
   /**
@@ -45,6 +46,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
   const { cartStore } = useStores()
+  const navigation = useNavigation()
 
   const removeItemCart = (index: number, dish: Dish) => {
     cartStore.removeItem(index)
@@ -55,6 +57,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       description: "El usuario elimino un producto del carrito",
     })
   }
+
 
   return (
     <Modal modal={modal} position="bottom">
@@ -191,11 +194,5 @@ const styles = StyleSheet.create({
   price: {
     backgroundColor: color.background,
     paddingRight: 0,
-  },
-  containerMetaText: {
-    display: "flex",
-    flexDirection: "row",
-    flexShrink: 1,
-    flexWrap: "wrap",
   },
 })

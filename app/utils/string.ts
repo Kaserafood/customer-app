@@ -5,10 +5,10 @@ export const getLabelMetaCart = (value, label, total, currencyCode) => {
   if (Number(value ?? 0) > 0) {
     result += value
   }
-  result += " " + label
+  result += ` ${label}`
 
   if (Number(total ?? 0) > 0) {
-    result += " ( +" + getFormat(total, currencyCode) + " )"
+    result += ` ( +${getFormat(total, currencyCode)} )`
   }
 
   return result

@@ -121,7 +121,7 @@ const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
   )
 }
 
-const OptionBoolean = (props: AddonsSectionProps) => {
+const OptionBoolean = observer((props: AddonsSectionProps) => {
   const { getAddonsBoolean } = useAddon()
   const {
     addonStore: { addons },
@@ -159,7 +159,7 @@ const OptionBoolean = (props: AddonsSectionProps) => {
       ))}
     </>
   )
-}
+})
 
 const MultipleChoice = observer((props: AddonsSectionProps) => {
   const {

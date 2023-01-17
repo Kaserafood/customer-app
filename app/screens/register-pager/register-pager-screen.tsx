@@ -70,7 +70,8 @@ export const RegisterPagerScreen: FC<
     setPage(page + 1)
   }
   const toRegister = () => {
-    setPage(page + 1)
+    pageView.setPage(2)
+    setPage(2)
     navigation.navigate("registerForm")
   }
 
@@ -87,10 +88,13 @@ export const RegisterPagerScreen: FC<
         ref={(c) => {
           pageView = c
         }}
-        scrollEnabled={false}
+        scrollEnabled={true}
+        onPageSelected={(e) => {
+          setPage(e.nativeEvent.position)
+        }}
       >
         {data.map((page, index) => (
-          <View style={styles.page} key={index + 1}>
+          <View style={[styles.page, utilSpacing.p7]} key={index + 1}>
             <Image style={styles.image} source={page.image}></Image>
 
             <Text
@@ -164,15 +168,14 @@ const styles = StyleSheet.create({
   },
   page: {
     alignItems: "center",
-
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "center"
   },
 
   pagerView: {
     alignSelf: "center",
     display: "flex",
     flex: 1,
-    width: "75%",
+    width: "100%",
   },
 })
