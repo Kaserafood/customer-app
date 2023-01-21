@@ -235,6 +235,7 @@ const AddressItem = observer((props: { address: Address }) => {
       messagesStore.showError(error.message)
     })
     addressStore.setCurrent({ ...address })
+    userStore.setAddressId(addressId)
     modalPersistent.setPersistent(false)
   }
 

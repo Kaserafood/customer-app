@@ -25,7 +25,7 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
       userStore.setDisplayName(undefined)
       userStore.setAddressId(undefined)
       userStore.setEmail(undefined)
-      addressStore.setCurrent(undefined)
+      addressStore.removeAddress()
       addressStore.setAddresses([])
       cartStore.cleanItems()
       commonStore.setIsSignedIn(false)

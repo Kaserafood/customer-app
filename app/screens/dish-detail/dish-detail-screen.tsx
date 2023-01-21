@@ -30,6 +30,7 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
+import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
 
 export const AddonContext = createContext({
@@ -40,7 +41,7 @@ export const AddonContext = createContext({
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
-    const [quantity, setQuantity] = useState(1)
+    const [quantity, setQuantity] = useState(params.quantity ?? 1)
     const [total, setTotal] = useState(0)
     const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
     const scrollRef = useRef<ScrollView>()
@@ -71,10 +72,16 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }, [])
 
     useEffect(() => {
+      setCurrentDish(params)
+    }, [params])
+
+    useEffect(() => {
       async function fetch() {
-        setQuantity(1)
-        setTotal(params.price)
-        cartStore.setSubmited(false)
+        if (!dishStore.isUpdate) {
+          setQuantity(1)
+          setTotal(params.price)
+          cartStore.setSubmited(false)
+        }
 
         if (commonStore.currentChefId !== params.chef.id) {
           commonStore.setCurrentChefId(params.chef.id)
@@ -90,7 +97,10 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
     useEffect(() => {
       if (params.addons) {
-        addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
+        if (dishStore.isUpdate)
+          addonStore.setAddons(params.addons)
+        else 
+          addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
         __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
       }
     }, [params.addons])
@@ -104,6 +114,30 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
       return () => backHandler.remove()
     }, [navigation])
+
+    useEffect(
+      () =>
+        navigation.addListener("beforeRemove", (e) => {
+
+          e.preventDefault()
+          if (
+            e.data.action?.type === "GO_BACK" && dishStore.isUpdate
+          ) {
+            navigation.navigate("menuChef", { ...currentDish.chef, showModalCart: true })
+          } else navigation.dispatch(e.data.action)
+
+          dishStore.setIsUpdate(false)
+        }),
+      [navigation],
+    )
+
+    useEffect(() => {
+      if (dishStore.isUpdate) {
+        setQuantity(params.quantity)
+        methods.setValue("note", params.noteChef)
+
+      }
+    }, [params.timestamp])
 
     const handleBack = () => {
       goBack()
@@ -136,14 +170,21 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       cartStore.setSubmited(false)
 
       const itemCart: ItemCart = {
+        tempId: dishStore.isUpdate ? params.tempId : generateUUID(),
         dish: currentDish,
         quantity: quantity,
         noteChef: data.note,
         metaData: addonStore.addons.length > 0 ? addonStore.getMetaData(currentDish.chef.currencyCode) : [],
         total: total,
+        addons: JSON.stringify(addonStore.addons),
       }
       __DEV__ && console.log(itemCart)
-      cartStore.addItem(itemCart)
+
+      if (dishStore.isUpdate)
+        cartStore.updateItem(itemCart)
+      else
+        cartStore.addItem(itemCart)
+
       methods.setValue("comment", "")
       setQuantity(1)
       AppEventsLogger.logEvent("AddToCart", 1, {
@@ -154,7 +195,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total: total,
         description: "Se agregó un producto al carrito",
       })
-      navigation.navigate("menuChef", { ...params.chef })
+      navigation.navigate("menuChef", { ...params.chef, showModalCart: true })
     }
 
     const isValidAddons = (): boolean => {
@@ -196,12 +237,24 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       }
     }
 
+    const buttonCartText = () => {
+      let text = ""
+      if (dishStore.isUpdate) {
+        text = getI18nText("dishDetailScreen.updateOrder")
+      } else {
+        text = getI18nText("dishDetailScreen.addToOrder")
+      }
+      return `${text} ${getFormat(
+        total,
+        currentDish.chef?.currencyCode,
+      )}`
+    }
+
     if (!params.chef) return <Screen preset="fixed"></Screen>
 
     return (
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={handleBack}></Header>
-        {/* TODO: Verify the ref in the next ScrollVIEW  */}
         <ScrollView ref={scrollRef}>
           <View
             style={[utilSpacing.mx5, utilSpacing.mt5]}
@@ -370,10 +423,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         </ScrollView>
         <ButtonFooter
           onPress={methods.handleSubmit(onSubmit)}
-          text={`${getI18nText("dishDetailScreen.addToOrder")} ${getFormat(
-            total,
-            currentDish.chef?.currencyCode,
-          )}`}
+          text={buttonCartText()}
         ></ButtonFooter>
       </Screen>
     )

@@ -62,8 +62,9 @@ export const AddonModel = types
 
             meta.value = getLabelMetaCart(addon.value, label, meta.total, currencyCode)
           }
-
-          metaData.push(meta)
+          if(meta.value){
+            metaData.push(meta)
+          }
         }
       })
       return metaData
@@ -138,7 +139,7 @@ export const AddonModel = types
               checked: false,
               disabled: false,
             })),
-            dependencies: { ...addon.dependencies },
+            dependencies: addon?.dependencies?.hash ? { ...addon.dependencies } : undefined,
           }
           if (addon.required === 1 && addon.optionBoolean !== TRUE && addon.multipleChoice !== TRUE)
             state.checked = true
@@ -231,7 +232,6 @@ export const AddonModel = types
       applySnapshot(self.addons, [])
     },
     detachAddons: () => {
-      applySnapshot(self.addons, [])
       detach(self.addons)
     },
   }))

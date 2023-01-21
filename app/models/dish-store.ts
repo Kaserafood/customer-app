@@ -21,6 +21,7 @@ export const DishStoreModel = types
     dishesGroupedByLatestChef: types.optional(types.array(userChef), []), // Dishes grouped by latest chef
     dishesFavorites: types.optional(types.array(dishChef), []), // Dishes favorites by Kasera
     dishesSearch: types.optional(types.array(dishChef), []), // Dishes search
+    isUpdate: types.optional(types.boolean, false),
   })
   .views((self) => ({
     get totalDishes() {
@@ -57,7 +58,7 @@ export const DishStoreModel = types
     }),
 
     getGroupedByChef: flow(function* getGroupedByChef(date: string, timeZone: string) {
-      detach(self.dishesGroupedByChef) 
+      detach(self.dishesGroupedByChef)
       const api = new Api()
       const result = yield api.getDishesGroupedByChef(date, timeZone)
       if (result.kind === "ok") {
@@ -124,5 +125,8 @@ export const DishStoreModel = types
     }),
     clearSearchDishes() {
       self.dishesSearch.clear()
+    },
+    setIsUpdate(value: boolean) {
+      self.isUpdate = value
     },
   }))
