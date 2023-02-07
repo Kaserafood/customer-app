@@ -12,5 +12,5 @@ export const getLabelMetaCart = (value, label, total, currencyCode) => {
     result += ` ( +${getFormat(total, currencyCode)} )`
   }
 
-  return result 
+  return result
 }

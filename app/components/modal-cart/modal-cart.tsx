@@ -69,7 +69,15 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
     dishStore.setIsUpdate(true)
     navigation.navigate(
       "dishDetail" as never,
-      { ...dish, addons: JSON.parse(addons), isUpdate: true, tempId, quantity, noteChef, timestamp: new Date().getMilliseconds() } as never,
+      {
+        ...dish,
+        addons: JSON.parse(addons),
+        isUpdate: true,
+        tempId,
+        quantity,
+        noteChef,
+        timestamp: new Date().getMilliseconds(),
+      } as never,
     )
   }
 
@@ -96,23 +104,18 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
                   </View>
                   <View style={utilFlex.flex1}>
                     <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
-                    {item.metaData.length > 0 && (
-                      <CartItemAddon metaDataCart={item.metaData} />
+                    {item.metaData.length > 0 && <CartItemAddon metaDataCart={item.metaData} />}
+
+                    {item.noteChef?.length > 0 && (
+                      <Text
+                        numberOfLines={2}
+                        style={[utilSpacing.ml2, utilSpacing.mt4]}
+                        caption
+                        preset="semiBold"
+                        size="sm"
+                        text={`${getI18nText("menuChefScreen.commentChef")} ${item.noteChef}`}
+                      />
                     )}
-
-                    {
-                      item.noteChef?.length > 0 && (
-                        <Text
-                          numberOfLines={2}
-                          style={[utilSpacing.ml2, utilSpacing.mt4]}
-                          caption
-                          preset="semiBold"
-                          size="sm"
-                          text={`${getI18nText("menuChefScreen.commentChef")} ${item.noteChef}`}
-                        />
-                      )
-                    }
-
                   </View>
                 </View>
 

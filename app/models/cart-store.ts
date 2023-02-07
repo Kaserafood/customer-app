@@ -8,13 +8,13 @@ const metaDataCart = metaData.props({
 })
 
 const itemCartStore = types.model("ItemCartStore").props({
-  dish: types.maybe(dishChef),
-  quantity: types.maybe(types.number),
-  noteChef: types.maybe(types.string),
-  total: types.maybe(types.number),
+  dish: types.maybeNull(dishChef),
+  quantity: types.maybeNull(types.number),
+  noteChef: types.maybeNull(types.string),
+  total: types.maybeNull(types.number),
   metaData: types.array(metaDataCart),
-  tempId: types.maybe(types.string),
-  addons: types.maybe(types.string),
+  tempId: types.maybeNull(types.string),
+  addons: types.maybeNull(types.string),
 })
 export interface ItemCart extends SnapshotIn<typeof itemCartStore> {}
 

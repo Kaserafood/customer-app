@@ -5,14 +5,14 @@ import { Api } from "../services/api"
 import { withEnvironment } from "./extensions/with-environment"
 
 export const bannerStore = types.model("CategoryStore").props({
-  id: types.maybe(types.number),
-  title: types.maybe(types.string),
-  image: types.maybe(types.string),
-  textWhite: types.maybe(types.boolean),
-  buttonText: types.maybe(types.string),
-  categoryId: types.maybe(types.number),
-  categoryName: types.maybe(types.string),
-  description: types.maybe(types.string),
+  id: types.maybeNull(types.number),
+  title: types.maybeNull(types.string),
+  image: types.maybeNull(types.string),
+  textWhite: types.maybeNull(types.boolean),
+  buttonText: types.maybeNull(types.string),
+  categoryId: types.maybeNull(types.number),
+  categoryName: types.maybeNull(types.string),
+  description: types.maybeNull(types.string),
 })
 export interface Banner extends SnapshotOut<typeof bannerStore> {}
 

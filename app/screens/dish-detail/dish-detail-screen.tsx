@@ -97,10 +97,8 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
     useEffect(() => {
       if (params.addons) {
-        if (dishStore.isUpdate)
-          addonStore.setAddons(params.addons)
-        else 
-          addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
+        if (dishStore.isUpdate) addonStore.setAddons(params.addons)
+        else addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
         __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
       }
     }, [params.addons])
@@ -118,11 +116,8 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     useEffect(
       () =>
         navigation.addListener("beforeRemove", (e) => {
-
           e.preventDefault()
-          if (
-            e.data.action?.type === "GO_BACK" && dishStore.isUpdate
-          ) {
+          if (e.data.action?.type === "GO_BACK" && dishStore.isUpdate) {
             navigation.navigate("menuChef", { ...currentDish.chef, showModalCart: true })
           } else navigation.dispatch(e.data.action)
 
@@ -135,7 +130,6 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       if (dishStore.isUpdate) {
         setQuantity(params.quantity)
         methods.setValue("note", params.noteChef)
-
       }
     }, [params.timestamp])
 
@@ -174,16 +168,15 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         dish: currentDish,
         quantity: quantity,
         noteChef: data.note,
-        metaData: addonStore.addons.length > 0 ? addonStore.getMetaData(currentDish.chef.currencyCode) : [],
+        metaData:
+          addonStore.addons.length > 0 ? addonStore.getMetaData(currentDish.chef.currencyCode) : [],
         total: total,
         addons: JSON.stringify(addonStore.addons),
       }
       __DEV__ && console.log(itemCart)
 
-      if (dishStore.isUpdate)
-        cartStore.updateItem(itemCart)
-      else
-        cartStore.addItem(itemCart)
+      if (dishStore.isUpdate) cartStore.updateItem(itemCart)
+      else cartStore.addItem(itemCart)
 
       methods.setValue("comment", "")
       setQuantity(1)
@@ -244,10 +237,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       } else {
         text = getI18nText("dishDetailScreen.addToOrder")
       }
-      return `${text} ${getFormat(
-        total,
-        currentDish.chef?.currencyCode,
-      )}`
+      return `${text} ${getFormat(total, currentDish.chef?.currencyCode)}`
     }
 
     if (!params.chef) return <Screen preset="fixed"></Screen>

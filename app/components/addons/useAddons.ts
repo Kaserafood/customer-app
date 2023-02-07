@@ -16,10 +16,8 @@ export const useAddon = () => {
     )
   }
 
-
   const getAddonsWithoutTitle = (addons: AddonItem[]) => {
     return addons.filter((addon) => addon.showTitle === FALSE && addon.incrementable === TRUE)
-
   }
 
   const getAddonsBoolean = (addons: AddonItem[]) => {

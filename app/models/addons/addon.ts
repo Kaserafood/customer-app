@@ -62,7 +62,7 @@ export const AddonModel = types
 
             meta.value = getLabelMetaCart(addon.value, label, meta.total, currencyCode)
           }
-          if(meta.value){
+          if (meta.value) {
             metaData.push(meta)
           }
         }

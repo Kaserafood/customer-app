@@ -36,9 +36,11 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         userStore.setAddressId(-1)
         saveString("address", JSON.stringify(address))
         messagesStore.showSuccess("addressScreen.addressSaved", true)
-        deliveryStore.getPriceDeliveryByCity(address.latitude, address.longitude).catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
+        deliveryStore
+          .getPriceDeliveryByCity(address.latitude, address.longitude)
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
+          })
         navigation.navigate(params.screenToReturn)
       } else {
         commonStore.setVisibleLoading(true)

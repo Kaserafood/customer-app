@@ -10,13 +10,13 @@ import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
 
 export const userChef = types.model("UserChef").props({
-  id: types.maybe(types.number),
-  name: types.maybe(types.string),
-  image: types.maybe(types.string),
-  description: types.maybe(types.string),
-  categories: types.maybe(types.array(categoryStore)),
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  image: types.maybeNull(types.string),
+  description: types.maybeNull(types.string),
+  categories: types.maybeNull(types.array(categoryStore)),
   dishes: types.optional(types.array(dish), []), // Only used when is grouped by chef
-  currencyCode: types.maybe(types.string),
+  currencyCode: types.maybeNull(types.string),
 })
 export interface UserChef extends Instance<typeof userChef> {}
 

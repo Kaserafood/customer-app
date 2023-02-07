@@ -10,7 +10,6 @@ import Animated, {
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { observer } from "mobx-react-lite"
 
-import { useStores } from "../../models"
 import { AddonItem } from "../../models/addons/addon"
 import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
@@ -29,10 +28,7 @@ export interface IncrementableProps {
 }
 
 export const Incrementable = observer((props: IncrementableProps) => {
-  const {
-    onPress,
-    addon,
-  } = props
+  const { onPress, addon } = props
 
   const { required, name, label, value } = addon
   const [min, setMin] = useState(props.addon.min)

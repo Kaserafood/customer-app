@@ -31,7 +31,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
   ({ route: { params }, navigation }) => {
     const {
       dayStore,
-      dishStore: { dishesCategory, getAll, currentTokenPagination },
+      dishStore: { dishesCategory, getAll },
       commonStore,
       userStore,
       messagesStore,
@@ -71,9 +71,11 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null, params.id).finally(() => {
-        commonStore.setVisibleLoading(false)
-      })
+      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null, params.id).finally(
+        () => {
+          commonStore.setVisibleLoading(false)
+        },
+      )
     }
 
     const toDetail = (dish: DishModel) => {

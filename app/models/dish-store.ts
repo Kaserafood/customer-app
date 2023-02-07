@@ -1,4 +1,4 @@
-import { applySnapshot, cast, detach, flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api, DishResponse } from "../services/api"
 

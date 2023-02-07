@@ -87,8 +87,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       dishStore.clearDishesChef()
       dishStore.setIsUpdate(false)
       navigation.navigate("dishDetail", {
-        ...dish, 
-        tempId: undefined, quantity: undefined, noteChef: undefined, timestamp: undefined
+        ...dish,
+        tempId: undefined,
+        quantity: undefined,
+        noteChef: undefined,
+        timestamp: undefined,
       })
     }
 
@@ -168,9 +171,15 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       if (isCloseToBottom(event.nativeEvent) && fetchData && dishStore.dishes.length > 0) {
         setFetchData(false)
         setIsFetchingMoreData(true)
-        dishStore.getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(),
-          userStore.userId, dishStore.currentTokenPagination, false)
-          .then(response => {
+        dishStore
+          .getAll(
+            dayStore.currentDay.date,
+            RNLocalize.getTimeZone(),
+            userStore.userId,
+            dishStore.currentTokenPagination,
+            false,
+          )
+          .then((response) => {
             if (!response.isEmptyResult) setFetchData(true)
           })
           .finally(() => {
@@ -187,8 +196,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }, [])
 
     const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
-      return layoutMeasurement.height + contentOffset.y
-        >= contentSize.height - 50;
+      return layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
     }
 
     return (
@@ -201,7 +209,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         <ScrollView
           style={styles.container}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          onScroll={onScroll}> 
+          onScroll={onScroll}
+        >
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
@@ -249,13 +258,14 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}
-            {
-              (isFetchingMoreData && dishStore.dishes.length > 0) && (
-
-                <LottieView style={styles.loadingDots} source={require("../../components/loader/loading-dots.json")} autoPlay loop />
-
-              )
-            }
+            {isFetchingMoreData && dishStore.dishes.length > 0 && (
+              <LottieView
+                style={styles.loadingDots}
+                source={require("../../components/loader/loading-dots.json")}
+                autoPlay
+                loop
+              />
+            )}
           </View>
           <View style={utilSpacing.mb8}>
             {!commonStore.isVisibleLoading && !refreshing && (
@@ -332,5 +342,5 @@ const styles = StyleSheet.create({
     height: 30,
     width: "auto",
     zIndex: 10000,
-  }
+  },
 })

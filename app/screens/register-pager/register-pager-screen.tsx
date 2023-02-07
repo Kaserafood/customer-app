@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   page: {
     alignItems: "center",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
   },
 
   pagerView: {
