@@ -1,4 +1,4 @@
-import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, cast, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api, DishResponse } from "../services/api"
 
@@ -22,6 +22,7 @@ export const DishStoreModel = types
     dishesFavorites: types.optional(types.array(dishChef), []), // Dishes favorites by Kasera
     dishesSearch: types.optional(types.array(dishChef), []), // Dishes search
     isUpdate: types.optional(types.boolean, false),
+    currentTokenPagination: types.maybeNull(types.string),
   })
   .views((self) => ({
     get totalDishes() {
@@ -36,16 +37,28 @@ export const DishStoreModel = types
       date: string,
       timeZone: string,
       userId: number,
+      tokenPagination: string,
+      cleanCurrentDishes = true,
       categoryId?: number,
     ) {
       if (categoryId) detach(self.dishesCategory)
-      else detach(self.dishes)
+      else {
+        if (cleanCurrentDishes) detach(self.dishes)
+      }
       const api = new Api()
-      const result = yield api.getAllDishes(date, timeZone, userId, categoryId)
+      const result = yield api.getAllDishes(date, timeZone, userId, tokenPagination, categoryId)
 
       if (result && result.kind === "ok") {
         if (categoryId) applySnapshot(self.dishesCategory, result.data)
-        else applySnapshot(self.dishes, result.data)
+        else {
+          self.currentTokenPagination = result.data?.tokenPagination
+          if (tokenPagination) {
+            applySnapshot(self.dishes, self.dishes.concat(result.data?.dishes))
+            return { isEmptyResult: result.data?.dishes.length === 0 }
+          } else {
+            applySnapshot(self.dishes, result.data?.dishes)
+          }
+        }
       }
     }),
     getByChef: flow(function* getByChef(chefId: number) {
@@ -66,7 +79,7 @@ export const DishStoreModel = types
       }
     }),
     getGroupedByLatestChef: flow(function* getGroupedByLatestChef(date: string, timeZone: string) {
-      self.dishesGroupedByChef.clear()
+      detach(self.dishesGroupedByChef)
       const api = new Api()
       const result = yield api.getDishesGroupedByLatestChef(date, timeZone)
 
