@@ -83,8 +83,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
        */
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
+      dishStore.setIsUpdate(false)
       navigation.navigate("dishDetail", {
-        ...dish,
+        ...dish, 
+        tempId: undefined, quantity: undefined, noteChef: undefined, timestamp: undefined
       })
     }
 

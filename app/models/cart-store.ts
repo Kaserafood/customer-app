@@ -1,6 +1,4 @@
-import { cast, detach, SnapshotIn, types } from "mobx-state-tree"
-
-import { generateUUID } from "../utils/security"
+import { cast, detach, SnapshotIn, types, applySnapshot } from "mobx-state-tree"
 
 import { metaData } from "./order/order"
 import { dishChef } from "./dish-store"
@@ -16,8 +14,10 @@ const itemCartStore = types.model("ItemCartStore").props({
   total: types.maybe(types.number),
   metaData: types.array(metaDataCart),
   tempId: types.maybe(types.string),
+  addons: types.maybe(types.string),
 })
 export interface ItemCart extends SnapshotIn<typeof itemCartStore> {}
+
 export interface MetaDataCart extends SnapshotIn<typeof metaDataCart> {}
 
 export const CartStoreModel = types
@@ -37,22 +37,37 @@ export const CartStoreModel = types
   }))
   .actions((self) => ({
     addItem(itemCart: ItemCart) {
-      const { dish, quantity, noteChef } = itemCart
-
+      const { dish, quantity, noteChef, addons, tempId } = itemCart
+      console.log("item", itemCart)
       self.cart.push({
-        tempId: generateUUID(),
+        tempId,
         dish: JSON.parse(JSON.stringify(dish)),
         quantity,
         noteChef: noteChef,
         total: itemCart.total,
         metaData: cast(itemCart.metaData),
+        addons,
       })
+    },
+    updateItem(itemCart: ItemCart) {
+      const { tempId, quantity, noteChef, addons, total } = itemCart
+      const item = self.cart.find((item) => item.tempId === tempId)
+      console.log("itemUpdate", tempId)
+      if (item) {
+        item.quantity = quantity
+        item.noteChef = noteChef
+        item.total = total
+        item.metaData = cast(itemCart.metaData)
+        item.addons = addons
+
+        applySnapshot(self.cart[self.cart.indexOf(item)], item)
+      }
     },
     removeItem(index: number) {
       detach(self.cart[index])
     },
     cleanItems() {
-      self.cart.clear()
+      detach(self.cart)
     },
     setSubmited(isSubmited: boolean) {
       self.isSubmited = isSubmited

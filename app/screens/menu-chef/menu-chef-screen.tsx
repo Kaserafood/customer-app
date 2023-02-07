@@ -55,7 +55,9 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const [dishes, setDishes] = useState<DishChef[]>([])
 
     useEffect(() => {
-      modalStateCart.setVisible(false)
+      if (params.showModalCart)
+        modalStateCart.setVisible(true)
+      else modalStateCart.setVisible(false)
       if (__DEV__) console.log("MenuChefScreen: useEffect", params)
       const chefName = params.name
       ;(async () => {
@@ -79,6 +81,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       // El nombre no va venir en params si abre esta ventana desde el push notification
       if (!params.name || params.name?.length === 0) {
         commonStore.setVisibleLoading(true)
+
         ;(async () => {
           userStore
             .getInfoChef(params.id)
@@ -98,6 +101,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     useEffect(
       () =>
         navigation.addListener("beforeRemove", (e) => {
+          console.log("MenuChefScreen: beforeRemove", e.data.action)
           e.preventDefault()
           setCurrentAction(e.data.action)
           const payload: any = e.data.action.payload
@@ -143,8 +147,8 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         dishId: dish.id,
         description: "Se ha presionado un platillo en la pantalla menu del chef",
       })
-
-      navigation.push("dishDetail", { ...dish, chef: params })
+      dishStore.setIsUpdate(false)
+      navigation.push("dishDetail", { ...dish, chef: params, tempId: null, quantity: undefined, noteChef: undefined, timestamp: undefined })
     }
 
     const toCheckout = () => {

@@ -22,7 +22,6 @@ import { useAddon } from "./useAddons"
 
 interface AddonsSectionProps extends IncrementableProps {}
 
-
 /**
  * Component to show addons form dishes
  */
@@ -122,7 +121,7 @@ const IncrementableWithoutTitle = (props: AddonsSectionProps) => {
   )
 }
 
-const OptionBoolean = (props: AddonsSectionProps) => {
+const OptionBoolean = observer((props: AddonsSectionProps) => {
   const { getAddonsBoolean } = useAddon()
   const {
     addonStore: { addons },
@@ -160,7 +159,7 @@ const OptionBoolean = (props: AddonsSectionProps) => {
       ))}
     </>
   )
-}
+})
 
 const MultipleChoice = observer((props: AddonsSectionProps) => {
   const {

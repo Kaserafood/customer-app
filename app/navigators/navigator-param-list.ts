@@ -39,9 +39,21 @@ interface MenuChef extends UserChef {
   isGetMenu?: boolean
 }
 
+interface dishDetailProps extends DishChef {
+  tempId: string
+  quantity: number
+  noteChef: string
+  timestamp: number // Only used for update
+}
+
 interface loginFormParams {
   screenRedirect: "main" | "checkout"
 }
+
+interface menuChefProps extends MenuChef {
+  showModalCart?: boolean
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -50,8 +62,8 @@ export type NavigatorParamList = {
   registerPager: registerPageParams
   loginForm: loginFormParams
   main: undefined
-  dishDetail: DishChef
-  menuChef: MenuChef
+  dishDetail: dishDetailProps
+  menuChef: menuChefProps
   checkout: undefined
   endOrder: endOrderParams
   category: Category

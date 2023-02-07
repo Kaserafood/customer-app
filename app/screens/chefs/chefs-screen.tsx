@@ -91,6 +91,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
+      dishStore.setIsUpdate(false)
 
       if (cartStore.hasItems) cartStore.cleanItems()
       const chef = {
