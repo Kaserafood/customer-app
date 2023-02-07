@@ -6,7 +6,6 @@ import { metaData } from "./order/order"
 import { dishChef } from "./dish-store"
 
 const metaDataCart = metaData.props({
-  label: types.string,
   total: types.number,
 })
 
