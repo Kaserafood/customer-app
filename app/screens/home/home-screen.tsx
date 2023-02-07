@@ -31,7 +31,7 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
-
+import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
 
@@ -47,6 +47,8 @@ const modalStateWelcome = new ModalStateHandler()
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   ({ navigation }) => {
     const [refreshing, setRefreshing] = useState(false)
+    const [fetchData, setFetchData] = useState(true)
+    const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
     const {
       dishStore,
       dayStore,
@@ -98,7 +100,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await dishStore
-        .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId)
+        .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null)
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
@@ -126,20 +128,21 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
       setUserStoreData()
 
-      fetch(false)
+      fetch(false, null)
     }, [])
 
-    const fetch = async (useCurrentDate: boolean) => {
+    const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
       /*
        * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
-
+      if (tokenPagination) setIsFetchingMoreData(true)
       await Promise.all([
         dishStore.getAll(
           useCurrentDate ? dayStore.currentDay.date : null,
           RNLocalize.getTimeZone(),
           userStore.userId,
+          tokenPagination,
         ),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
@@ -161,11 +164,32 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         })
     }
 
+    const onScroll = (event) => {
+      if (isCloseToBottom(event.nativeEvent) && fetchData && dishStore.dishes.length > 0) {
+        setFetchData(false)
+        setIsFetchingMoreData(true)
+        dishStore.getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(),
+          userStore.userId, dishStore.currentTokenPagination, false)
+          .then(response => {
+            if (!response.isEmptyResult) setFetchData(true)
+          })
+          .finally(() => {
+            setIsFetchingMoreData(false)
+          })
+      }
+    }
+
     const onRefresh = useCallback(async () => {
       setRefreshing(true)
+      setFetchData(true)
       const existsDate = dayStore.currentDay?.date?.length > 0
-      await fetch(existsDate).then(() => setRefreshing(false))
+      await fetch(existsDate, null).then(() => setRefreshing(false))
     }, [])
+
+    const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+      return layoutMeasurement.height + contentOffset.y
+        >= contentSize.height - 50;
+    }
 
     return (
       <Screen
@@ -177,7 +201,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         <ScrollView
           style={styles.container}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        >
+          onScroll={onScroll}> 
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
@@ -225,6 +249,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}
+            {
+              (isFetchingMoreData && dishStore.dishes.length > 0) && (
+
+                <LottieView style={styles.loadingDots} source={require("../../components/loader/loading-dots.json")} autoPlay loop />
+
+              )
+            }
           </View>
           <View style={utilSpacing.mb8}>
             {!commonStore.isVisibleLoading && !refreshing && (
@@ -295,4 +326,11 @@ const styles = StyleSheet.create({
     marginLeft: spacing[4],
     width: 24,
   },
+  loadingDots: {
+    alignSelf: "center",
+    display: "flex",
+    height: 30,
+    width: "auto",
+    zIndex: 10000,
+  }
 })

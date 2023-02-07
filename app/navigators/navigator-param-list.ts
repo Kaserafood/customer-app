@@ -40,10 +40,10 @@ interface MenuChef extends UserChef {
 }
 
 interface dishDetailProps extends DishChef {
-  tempId: string
-  quantity: number
-  noteChef: string
-  timestamp: number // Only used for update
+  tempId?: string
+  quantity?: number
+  noteChef?: string
+  timestamp?: number // Only used for update
 }
 
 interface loginFormParams {

@@ -19,14 +19,16 @@ export const DishesList = () => {
           <View style={utilFlex.flex1}>
             <Text preset="bold" numberOfLines={2} text={item.dish.title}></Text>
             <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
-            <Text
-              numberOfLines={2}
-              style={[utilSpacing.ml2, utilSpacing.mt4]}
-              caption
-              preset="semiBold"
-              size="sm"
-              text={`${getI18nText("menuChefScreen.commentChef")}: ${item.noteChef}`}
-            ></Text>
+            {item.noteChef && item.noteChef.length > 0 && (
+              <Text
+                numberOfLines={2}
+                style={[utilSpacing.ml2, utilSpacing.mt4]}
+                caption
+                preset="semiBold"
+                size="sm"
+                text={`${getI18nText("menuChefScreen.commentChef")}: ${item.noteChef}`}
+              ></Text>
+            )}
           </View>
           <View style={utilSpacing.ml3}>
             <Price

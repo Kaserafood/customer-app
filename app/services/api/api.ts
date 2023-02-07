@@ -133,6 +133,7 @@ export class Api {
     date: string,
     timeZone: string,
     userId: number,
+    tokenPagination: string,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -140,6 +141,7 @@ export class Api {
         date,
         timeZone,
         userId,
+        tokenPagination,
         categoryId,
       },
       "/dishes",
