@@ -10,10 +10,10 @@ export const useAddon = () => {
   const getAddonsWithTitle = (addons: AddonItem[]) => {
     return addons.filter(
       (addon) =>
-      addon.show_title === TRUE && addon.incrementable === TRUE && addon.type === MULTIPLE_CHOICE
+        addon.showTitle === TRUE &&
+        addon.incrementable === TRUE &&
+        (addon.type === MULTIPLE_CHOICE || addon.type === INPUT_MULTIPLER),
     )
-
-  
   }
 
 
