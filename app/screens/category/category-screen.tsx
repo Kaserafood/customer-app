@@ -55,6 +55,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           RNLocalize.getTimeZone(),
           userStore.userId,
           null,
+          true,
           params.id,
         )
           .catch((error) => {
