@@ -20,7 +20,6 @@ const ROOT: ViewStyle = {
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
     const toMain = () => {
-      console.log("to main")
       navigation.navigate("main")
     }
 

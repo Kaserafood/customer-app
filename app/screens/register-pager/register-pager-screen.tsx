@@ -1,12 +1,13 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { BackHandler, ImageURISource, StyleSheet, View, ViewStyle } from "react-native"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import PagerView from "react-native-pager-view"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { Button, Dot, Image, Screen, Text } from "../../components"
+import { TxKeyPath } from "../../i18n"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
@@ -69,7 +70,8 @@ export const RegisterPagerScreen: FC<
     setPage(page + 1)
   }
   const toRegister = () => {
-    setPage(page + 1)
+    pageView.setPage(2)
+    setPage(2)
     navigation.navigate("registerForm")
   }
 
@@ -86,20 +88,23 @@ export const RegisterPagerScreen: FC<
         ref={(c) => {
           pageView = c
         }}
-        scrollEnabled={false}
+        scrollEnabled={true}
+        onPageSelected={(e) => {
+          setPage(e.nativeEvent.position)
+        }}
       >
         {data.map((page, index) => (
-          <View style={styles.page} key={index + 1}>
+          <View style={[styles.page, utilSpacing.p7]} key={index + 1}>
             <Image style={styles.image} source={page.image}></Image>
 
             <Text
               style={[utilSpacing.mb3, utilText.textCenter]}
               preset="bold"
               size="lg"
-              text={page.title}
+              tx={page.title as TxKeyPath}
             ></Text>
 
-            <Text style={utilText.textCenter} text={page.description}></Text>
+            <Text style={utilText.textCenter} tx={page.description as TxKeyPath}></Text>
           </View>
         ))}
       </PagerView>
@@ -163,7 +168,6 @@ const styles = StyleSheet.create({
   },
   page: {
     alignItems: "center",
-
     display: "flex",
     justifyContent: "center",
   },
@@ -172,6 +176,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     display: "flex",
     flex: 1,
-    width: "75%",
+    width: "100%",
   },
 })

@@ -9,9 +9,11 @@ export const useDay = () => {
   const onChangeDay = async (day: Day) => {
     commonStore.setVisibleLoading(true)
     dayStore.setCurrentDay(day)
-    await dishStore.getAll(day.date, RNLocalize.getTimeZone(), userStore.userId).finally(() => {
-      commonStore.setVisibleLoading(false)
-    })
+    await dishStore
+      .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null)
+      .finally(() => {
+        commonStore.setVisibleLoading(false)
+      })
   }
   return {
     onChangeDay,

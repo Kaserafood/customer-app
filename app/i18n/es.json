@@ -303,6 +303,7 @@
     "placeHolderCommetChef": "Alergias, indicaciones.",
     "moreProductsChef": "Más productos del chef",
     "addToOrder": "Agregar a orden",
+    "updateOrder": "Actualizar la orden",
     "pay": "Pagar"
   },
   "menuChefScreen": {
@@ -316,7 +317,8 @@
     "noLeave": "Regresar",
     "why": "¿Por qué?",
     "whyTitle": "¿Por qué?",
-    "whyDescription": "En Kasera, diferentes chefs de la ciudad tienen su propia tienda en el app. Cada chef está en diferente ubicación, tiene diferentes horarios y tarifa de envío. Por este motivo, es necesario que completes el pedido de un chef antes pedirle a otro."
+    "whyDescription": "En Kasera, diferentes chefs de la ciudad tienen su propia tienda en el app. Cada chef está en diferente ubicación, tiene diferentes horarios y tarifa de envío. Por este motivo, es necesario que completes el pedido de un chef antes pedirle a otro.",
+    "commentChef": "Comentario al chef:"
   },
   "checkoutScreen": {
     "title": "Detalles de entrega",

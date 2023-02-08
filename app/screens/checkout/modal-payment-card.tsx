@@ -1,6 +1,6 @@
 import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, View } from "react-native"
+import { Keyboard, ScrollView, View } from "react-native"
 
 import { Button, Modal, PaymentCard, Text } from "../../components"
 import { useStores } from "../../models"
@@ -104,7 +104,7 @@ export const ModalPaymentCard = forwardRef(
     return (
       <>
         <Modal modal={modalState} position="bottom">
-          <View>
+          <ScrollView>
             <Text
               preset="bold"
               size="lg"
@@ -130,7 +130,7 @@ export const ModalPaymentCard = forwardRef(
                 onPress={methods.handleSubmit(onSubmit, onError)}
               ></Button>
             </View>
-          </View>
+          </ScrollView>
         </Modal>
       </>
     )

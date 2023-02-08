@@ -1,4 +1,4 @@
-import { flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api } from "../../services/api"
 import { AddressResponse, CommonResponse } from "../../services/api/api.types"
@@ -54,9 +54,12 @@ export const AddressModelStore = types
       return null
     }),
     setCurrent(address: Address) {
-      self.current = address
+      applySnapshot(self.current, address)
     },
     setAddresses(addresses: Address[]) {
       self.addresses.replace(addresses)
+    },
+    removeAddress() {
+      detach(self.current)
     },
   }))

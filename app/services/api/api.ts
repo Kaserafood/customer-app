@@ -133,6 +133,7 @@ export class Api {
     date: string,
     timeZone: string,
     userId: number,
+    tokenPagination: string,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -140,6 +141,7 @@ export class Api {
         date,
         timeZone,
         userId,
+        tokenPagination,
         categoryId,
       },
       "/dishes",
@@ -380,8 +382,11 @@ export class Api {
   /**
    * @description Get price delivery by city name
    */
-  async getPriceDeliveryByCity(name: string): Promise<CommonResponse> {
-    return await this.request({ name }, `/deliveries/price/city`, "GET")
+  async getPriceDeliveryByCoordinates(
+    latitude: number,
+    longitude: number,
+  ): Promise<CommonResponse> {
+    return await this.request({ latitude, longitude }, `/deliveries/price/coordinates`, "GET")
   }
 
   /**

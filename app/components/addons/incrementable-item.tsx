@@ -8,9 +8,10 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+import { observer } from "mobx-react-lite"
 
-import { Addon } from "../../models/dish"
-import { CurrencyContext } from "../../screens/dish-detail/dish-detail-screen"
+import { AddonItem } from "../../models/addons/addon"
+import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { Card } from "../card/card"
@@ -23,23 +24,25 @@ export interface IncrementableProps {
   onCheckedOption?: (name: string, option: any, isChecked: boolean) => void
   uncheckAllOptions?: (name: string) => void
   onDisableOptions?: (name: string, options: any, isDisabled: boolean) => void
-  addon?: Addon
-  state: any
+  addon?: AddonItem
 }
 
-export const Incrementable = function Incrementable(props: IncrementableProps) {
-  const {
-    onPress,
-    addon: { required, name, label_option: labelOption },
-    state,
-  } = props
+export const Incrementable = observer((props: IncrementableProps) => {
+  const { onPress, addon } = props
 
+  const { required, name, label, value } = addon
   const [min, setMin] = useState(props.addon.min)
   const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
   const offset = useSharedValue(required === 1 ? 30 : 0)
 
   useEffect(() => {
-    if (min === 0) setMin(1)
+    if (min === 0) {
+      setMin(1)
+    }
+    if (value > 0) {
+      setIsVisibleMinus(true)
+      offset.value = 30
+    }
   }, [])
 
   const animatedStyles = useAnimatedStyle(() => {
@@ -53,20 +56,21 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
       setIsVisibleMinus(true)
       offset.value = 30
     }
-    onPress(name, Number(state[name].value), true)
+
+    onPress(name, value, true)
   }
 
   const minus = () => {
     console.log(required, ` ${min}`)
     // Se valida si el valor es mayor o igual al valor minimo requerido para el campo
-    if (Number(state[name].value) - 1 >= min) {
-      onPress(name, Number(state[name].value), false)
+    if (Number(value) - 1 >= min) {
+      onPress(name, Number(value), false)
     } else {
       // Si no es requerido, se oculta el boton de restar y se hace la resta correspondiente
       if (required !== 1) {
         setIsVisibleMinus(false)
         offset.value = 0
-        onPress(name, Number(state[name].value), false)
+        onPress(name, Number(value), false)
       }
     }
   }
@@ -84,7 +88,7 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
             </TouchableOpacity>
           </Animated.View>
 
-          <Text numberOfLines={1} text={`${state[name].value}`} style={utilSpacing.mx4}></Text>
+          <Text numberOfLines={1} text={`${addon.value}`} style={utilSpacing.mx4}></Text>
         </View>
       )}
 
@@ -97,17 +101,17 @@ export const Incrementable = function Incrementable(props: IncrementableProps) {
         </TouchableOpacity>
       </View>
 
-      <Text numberOfLines={1} style={[utilSpacing.ml4, utilFlex.flex1]} text={labelOption}></Text>
+      <Text numberOfLines={1} style={[utilSpacing.ml4, utilFlex.flex1]} text={label}></Text>
 
       <PriceOption
-        amout={Number(state[name].total)}
-        isVisiblePriceUnity={Number(state[name].value) > 1}
-        priceUnity={Number(state[name].price)}
+        amout={addon.total}
+        isVisiblePriceUnity={addon.value > 1}
+        priceUnity={addon.price}
         isVisiblePlus={isVisibleMinus}
       ></PriceOption>
     </Card>
   )
-}
+})
 
 export const PriceOption = (props: {
   amout: number
@@ -116,7 +120,7 @@ export const PriceOption = (props: {
   priceUnity?: number
 }) => {
   const { amout, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
-  const { currencyCode } = useContext(CurrencyContext)
+  const { currencyCode } = useContext(AddonContext)
   if (amout > 0) {
     return (
       <View>
