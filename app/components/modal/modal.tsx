@@ -77,6 +77,11 @@ interface ModalProperties {
    * Indicates if the modal should be full screen
    **/
   isFullScreen?: boolean
+
+  /**
+   * Color of backdrop
+   **/
+  backdropColor?: string
 }
 
 /**
@@ -96,6 +101,7 @@ export const Modal = observer(function Modal(props: ModalProperties) {
     onHide,
     size,
     isFullScreen,
+    backdropColor,
     ...rest
   } = props
 
@@ -150,7 +156,7 @@ export const Modal = observer(function Modal(props: ModalProperties) {
       isVisible={modal.isVisible}
       animationIn={getAnimationInByPosition()}
       animationOut={getAnimationOutByPosition()}
-      backdropColor={color.palette.grayTransparent}
+      backdropColor={backdropColor || color.palette.grayTransparent}
       coverScreen={false}
       onModalShow={() => changeNavigationBarColor(color.palette.white, true, true)}
       onModalHide={onHide}
