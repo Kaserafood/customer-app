@@ -319,7 +319,7 @@ interface OptionMultiChoiceProos {
   validCheckedOption: (addon: AddonItem, index: number, option: any, isChecked: boolean) => void
 }
 
-const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
+const OptionMultiChoice = observer((props: OptionMultiChoiceProos) => {
   const { option, addon, index, validCheckedOption } = props
   const [isDisabled, setIsDisabled] = useState(false)
   const {
@@ -359,7 +359,7 @@ const OptionMultiChoice = (props: OptionMultiChoiceProos) => {
       </Ripple>
     </View>
   )
-}
+})
 
 const Required = observer(
   (props: { addon: AddonItem; addons: AddonItem[]; onLayout: () => void }) => {
