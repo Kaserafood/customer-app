@@ -50,6 +50,8 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     } = useStores()
     const { formatDishesGropuedByChef } = useChef()
     const [refreshing, setRefreshing] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [isFirstTime, setIsFirstTime] = useState(true)
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -62,9 +64,17 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       fetch()
     }, [])
 
-    const fetch = async () => {
+    useEffect(() => {
+      if (!isFirstTime) {
+        __DEV__ && console.log("chefs useEffect currentDay", dayStore.currentDay.date)
+
+        fetch()
+      } else setIsFirstTime(false)
+    }, [dayStore.currentDay.date])
+
+    const fetch = () => {
       state.setData([])
-      await dishStore
+      dishStore
         .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
         .then(() => {
           state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
@@ -73,8 +83,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
           messagesStore.showError(error.message)
         })
         .finally(() => {
-          commonStore.setVisibleLoading(false)
-          __DEV__ && console.log("hide loaindg")
+          console.log("finally", isLoading)
+          setRefreshing(false)
+          if (isLoading) {
+            commonStore.setVisibleLoading(false)
+            setIsLoading(false)
+          }
         })
     }
 
@@ -106,25 +120,13 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
 
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
-      state.setData([])
+      setIsLoading(true)
       dayStore.setCurrentDay(day)
-      await dishStore
-        .getGroupedByChef(day.date, RNLocalize.getTimeZone())
-        .then(() => {
-          if (dishStore.dishesGroupedByChef.length > 0) {
-            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
-            __DEV__ && console.log("formatData changed")
-          }
-        })
-        .catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
-        .finally(() => commonStore.setVisibleLoading(false))
     }
 
     const onRefresh = async () => {
       setRefreshing(true)
-      await fetch().finally(() => setRefreshing(false))
+      fetch()
     }
 
     return (
@@ -147,7 +149,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
           <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalStateDay.setVisible(state)}
-            onPress={(day) => onChangeDay(day)}
+            onPress={onChangeDay}
           ></DayDelivery>
 
           <Separator style={utilSpacing.m4}></Separator>
