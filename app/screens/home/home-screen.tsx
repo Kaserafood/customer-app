@@ -49,6 +49,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const [refreshing, setRefreshing] = useState(false)
     const [fetchData, setFetchData] = useState(true)
     const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isFirstTime, setIsFirstTime] = useState(true)
+
     const {
       dishStore,
       dayStore,
@@ -99,17 +102,28 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       changeNavigationBarColor(color.palette.white, true, true)
     }, [])
 
+    useEffect(() => {
+      if (!isFirstTime) {
+        console.log("Home  useEffect date", dayStore.currentDay.date)
+        dishStore
+          .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
+          .catch((error: Error) => {
+            messagesStore.showError(error.message)
+          })
+          .finally(() => {
+            console.log("Home  useEffect date finally", isLoading)
+            if (isLoading) {
+              commonStore.setVisibleLoading(false)
+              setIsLoading(false)
+            }
+          })
+      } else setIsFirstTime(false)
+    }, [dayStore.currentDay.date])
+
     const onChangeDay = async (day: Day) => {
+      setIsLoading(true)
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await dishStore
-        .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null)
-        .catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
-        .finally(() => {
-          commonStore.setVisibleLoading(false)
-        })
     }
 
     useEffect(() => {
