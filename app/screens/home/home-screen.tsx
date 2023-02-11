@@ -104,7 +104,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       if (!isFirstTime) {
-        console.log("Home  useEffect date", dayStore.currentDay.date)
+        __DEV__ && console.log("Home  useEffect date", dayStore.currentDay.date)
         dishStore
           .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
           .catch((error: Error) => {
@@ -122,6 +122,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     const onChangeDay = async (day: Day) => {
       setIsLoading(true)
+      setIsFirstTime(false)
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
     }
@@ -169,7 +170,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         .then(() => {
           if (dayStore.days?.length > 0) {
             if (useCurrentDate) dayStore.setCurrentDay(dayStore.currentDay)
-            else dayStore.setCurrentDay(dayStore.days[0])
+            else {
+              setIsFirstTime(true)
+              dayStore.setCurrentDay(dayStore.days[0])
+            }
           }
         })
         .catch((error: Error) => {
@@ -177,7 +181,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         })
         .finally(() => {
           commonStore.setVisibleLoading(false)
-          __DEV__ && console.log("hide loading")
         })
     }
 
