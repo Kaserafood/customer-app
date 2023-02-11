@@ -55,12 +55,17 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
     if (!modalStateRequestDish.isVisible) {
       setSearch("")
       modalState.setVisible(false)
+      dishStore.clearSearchDishes()
     }
   }, [modalStateRequestDish.isVisible])
 
   useEffect(() => {
     if (search?.length > 0) setIsLoading(true)
   }, [search])
+
+  useEffect(() => {
+    onSearch()
+  }, [dayStore.currentDay.date])
 
   const onSearch = () => {
     if (search?.length > 0) {
@@ -82,7 +87,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 
   const onChangeDay = (day: Day) => {
     dayStore.setCurrentDay(day)
-    onSearch()
+    //  onSearch()
   }
 
   useDebounce(onSearch, 500, [search])
