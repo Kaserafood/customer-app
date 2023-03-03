@@ -27,7 +27,7 @@ import { getGeneralApiProblem } from "./api-problem"
 import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
-let countryId 
+let countryId
 /**
  * Manages all requests to the API.
  */
@@ -73,12 +73,14 @@ export class Api {
     // Add a request interceptor
     this.apisauce.axiosInstance.interceptors.request.use(
       async function (config) {
-        if(!countryId){
-          countryId =   await loadString("countryId")
-          __DEV__ && console.log({countryId})
+        if (!countryId) {
+          countryId = await loadString("countryId")
+          __DEV__ && console.log({ countryId })
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
-        config.params.countryId = countryId
+        config.headers["country-id"] = parseInt(countryId || -1)
+
+        if (config.url === "/users/login") countryId = null
         return config
       },
       function (error) {
@@ -93,6 +95,7 @@ export class Api {
         // Any status code that lie within the range of 2xx cause this function to trigger
 
         //  __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
+
         return response
       },
       function (error) {

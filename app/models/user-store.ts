@@ -90,9 +90,9 @@ export const UserRegisterModel = userRegister
         }
       } else self.currentCard = { ...card }
     },
-    setCountryId: async (countryId: number) => {
-      applySnapshot(self.countryId, countryId)
-      await saveString("countryId", `${self.countryId}`)
+    setCountryId: (countryId) => {
+      self.countryId = countryId
+      saveString("countryId", `${countryId}`)
     },
   }))
   .actions((self) => ({

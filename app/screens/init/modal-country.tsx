@@ -8,6 +8,7 @@ import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import { saveString } from "../../utils/storage"
 
 interface ModalCountryProps {
   modalState: ModalStateHandler
@@ -21,12 +22,14 @@ export const ModalCountry = observer(({ modalState }: ModalCountryProps) => {
     countryStore.getAll()
   }, [])
 
+  useEffect(() => {
+    if (countryStore.selectedCountry) saveString("countryId", `${countryStore.selectedCountry.id}`)
+  }, [countryStore.selectedCountry])
+
   const handleSelectCountry = (country) => {
     userStore.setCountryId(country.id)
     countryStore.setSelectedCountry(country)
-    setTimeout(() => {
-      modalState.setVisible(false)
-    }, 200)
+    modalState.setVisible(false)
   }
 
   return (
