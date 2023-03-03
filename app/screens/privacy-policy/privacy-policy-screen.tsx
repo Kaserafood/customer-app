@@ -8,6 +8,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { TxKeyPath } from "../../i18n"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -25,7 +26,7 @@ export const PrivacyPolicyScreen: FC<
     if (i === 1) {
       styles.marginTop = spacing[4]
     }
-    textList.push(<Text style={styles} tx={text1} key={i}></Text>)
+    textList.push(<Text style={styles} tx={text1 as TxKeyPath} key={i}></Text>)
   }
 
   return (

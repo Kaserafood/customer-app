@@ -1,4 +1,4 @@
-import { flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, flow, Instance, types } from "mobx-state-tree"
 import { isNumber } from "validate.js"
 
 import { ChefResponse } from "../services/api"
@@ -10,51 +10,52 @@ import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
 
 export const userChef = types.model("UserChef").props({
-  id: types.maybe(types.number),
-  name: types.maybe(types.string),
-  image: types.maybe(types.string),
-  description: types.maybe(types.string),
-  categories: types.maybe(types.array(categoryStore)),
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  image: types.maybeNull(types.string),
+  description: types.maybeNull(types.string),
+  categories: types.maybeNull(types.array(categoryStore)),
   dishes: types.optional(types.array(dish), []), // Only used when is grouped by chef
-  currencyCode: types.maybe(types.string),
+  currencyCode: types.maybeNull(types.string),
 })
 export interface UserChef extends Instance<typeof userChef> {}
 
 const userRegister = types.model("UserRegisterStore").props({
-  name: types.maybe(types.string),
-  lastName: types.maybe(types.string),
-  email: types.maybe(types.string),
-  password: types.maybe(types.string),
-  phone: types.maybe(types.string),
+  name: types.maybeNull(types.string),
+  lastName: types.maybeNull(types.string),
+  email: types.maybeNull(types.string),
+  password: types.maybeNull(types.string),
+  phone: types.maybeNull(types.string),
 })
 export interface UserRegister extends Instance<typeof userRegister> {}
 
 const userLogin = types.model("UserLoginStore").props({
-  email: types.maybe(types.string),
-  password: types.maybe(types.string),
+  email: types.maybeNull(types.string),
+  password: types.maybeNull(types.string),
 })
 export interface UserLogin extends Instance<typeof userLogin> {}
 
 const cardModel = types.model("Card").props({
-  id: types.maybe(types.number),
-  name: types.maybe(types.string),
-  number: types.maybe(types.string),
+  id: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  number: types.maybeNull(types.string),
   expDate: types.optional(types.string, ""),
-  type: types.maybe(types.string),
-  selected: types.maybe(types.boolean),
+  type: types.maybeNull(types.string),
+  selected: types.maybeNull(types.boolean),
 })
 export interface Card extends Instance<typeof cardModel> {}
 
 export const UserRegisterModel = userRegister
   .props({
-    userId: types.maybe(types.integer),
-    displayName: types.maybe(types.string),
-    addressId: types.maybe(types.number),
-    taxId: types.maybe(types.string),
-    customerNote: types.maybe(types.string),
-    deliverySlotTime: types.maybe(types.string),
+    userId: types.maybeNull(types.integer),
+    displayName: types.maybeNull(types.string),
+    addressId: types.maybeNull(types.number),
+    taxId: types.maybeNull(types.string),
+    customerNote: types.maybeNull(types.string),
+    deliverySlotTime: types.maybeNull(types.string),
     cards: types.optional(types.array(cardModel), []),
-    currentCard: types.maybe(cardModel),
+    currentCard: types.maybeNull(cardModel),
+    countryId: types.maybeNull(types.number),
   })
   .extend(withEnvironment)
   .views((self) => ({
@@ -89,6 +90,10 @@ export const UserRegisterModel = userRegister
         }
       } else self.currentCard = { ...card }
     },
+    setCountryId: (countryId) => {
+      self.countryId = countryId
+      saveString("countryId", `${countryId}`)
+    },
   }))
   .actions((self) => ({
     saveData: async (result) => {
@@ -107,7 +112,7 @@ export const UserRegisterModel = userRegister
     },
   }))
   .actions((self) => ({
-    register: async (user: UserRegister): Promise<number> => {
+    register: async (user): Promise<number> => {
       const userApi = new Api()
       const result = await userApi.register(user)
 

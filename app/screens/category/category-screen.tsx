@@ -54,6 +54,8 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           dayStore.currentDay.date,
           RNLocalize.getTimeZone(),
           userStore.userId,
+          null,
+          true,
           params.id,
         )
           .catch((error) => {
@@ -70,9 +72,11 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, params.id).finally(() => {
-        commonStore.setVisibleLoading(false)
-      })
+      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null, params.id).finally(
+        () => {
+          commonStore.setVisibleLoading(false)
+        },
+      )
     }
 
     const toDetail = (dish: DishModel) => {

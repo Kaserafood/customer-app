@@ -1,5 +1,5 @@
 import * as React from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 import { observer } from "mobx-react-lite"
@@ -19,6 +19,9 @@ import { Modal } from "../modal/modal"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
+import { useNavigation } from "@react-navigation/native"
+import { DishChef } from "../../models/dish-store"
+import { getI18nText } from "../../utils/translate"
 
 export interface ModalCartProps {
   /**
@@ -43,7 +46,8 @@ export interface ModalCartProps {
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
-  const { cartStore } = useStores()
+  const { cartStore, dishStore } = useStores()
+  const navigation = useNavigation()
 
   const removeItemCart = (index: number, dish: Dish) => {
     cartStore.removeItem(index)
@@ -53,6 +57,28 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       dishName: dish.title,
       description: "El usuario elimino un producto del carrito",
     })
+  }
+
+  const toDishDetail = (
+    dish: DishChef,
+    addons: string,
+    tempId: string,
+    quantity: number,
+    noteChef: string,
+  ) => {
+    dishStore.setIsUpdate(true)
+    navigation.navigate(
+      "dishDetail" as never,
+      {
+        ...dish,
+        addons: JSON.parse(addons),
+        isUpdate: true,
+        tempId,
+        quantity,
+        noteChef,
+        timestamp: new Date().getMilliseconds(),
+      } as never,
+    )
   }
 
   return (
@@ -65,27 +91,44 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
 
         <ScrollView style={styles.containerDishes}>
           {cartStore.cart.map((item, index) => (
-            <Card key={item.tempId} style={[styles.card, utilFlex.flexRow, utilSpacing.m4]}>
-              <View style={[utilFlex.flexRow, utilFlex.flex1]}>
-                <View style={utilSpacing.mr3}>
-                  <Text preset="semiBold" text={`X ${item.quantity.toString()}`}></Text>
-                </View>
-                <View style={utilFlex.flex1}>
-                  <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
-                  {item.metaData.length > 0 && (
-                    <CartItemAddon metaDataCart={item.metaData}></CartItemAddon>
-                  )}
-                </View>
-              </View>
+            <Card key={item.tempId} style={[utilFlex.flexRow, utilSpacing.m4, utilSpacing.p0]}>
+              <TouchableOpacity
+                style={[utilFlex.flexRow, styles.card, utilSpacing.p5, utilFlex.flex1]}
+                onPress={() =>
+                  toDishDetail(item.dish, item.addons, item.tempId, item.quantity, item.noteChef)
+                }
+              >
+                <View style={[utilFlex.flexRow, utilFlex.flex1]}>
+                  <View style={utilSpacing.mr3}>
+                    <Text preset="semiBold" text={`X ${item.quantity.toString()}`}></Text>
+                  </View>
+                  <View style={utilFlex.flex1}>
+                    <Text preset="semiBold" numberOfLines={2} text={item.dish.title}></Text>
+                    {item.metaData.length > 0 && <CartItemAddon metaDataCart={item.metaData} />}
 
-              <View>
-                <Price
-                  style={styles.price}
-                  textStyle={utilText.bold}
-                  amount={item.total}
-                  currencyCode={chef.currencyCode}
-                ></Price>
-              </View>
+                    {item.noteChef?.length > 0 && (
+                      <Text
+                        numberOfLines={2}
+                        style={[utilSpacing.ml2, utilSpacing.mt4]}
+                        caption
+                        preset="semiBold"
+                        size="sm"
+                        text={`${getI18nText("menuChefScreen.commentChef")} ${item.noteChef}`}
+                      />
+                    )}
+                  </View>
+                </View>
+
+                <View>
+                  <Price
+                    style={styles.price}
+                    textStyle={utilText.bold}
+                    amount={item.total}
+                    currencyCode={chef.currencyCode}
+                  ></Price>
+                </View>
+              </TouchableOpacity>
+
               <Ripple
                 rippleContainerBorderRadius={100}
                 rippleOpacity={0.07}
@@ -128,14 +171,16 @@ export const CartItemAddon = (props: { metaDataCart: MetaDataCart[] }) => {
     <View style={utilSpacing.mt2}>
       {metaDataCart.map((item, index) => (
         <View key={item.key ?? index} style={utilFlex.flexRow}>
-          {Number(item.value) > 0 && <Text caption size="sm" text={item.value}></Text>}
-          <Text
-            numberOfLines={1}
-            style={utilSpacing.ml2}
-            caption
-            size="sm"
-            text={`${item.label}`}
-          ></Text>
+          <View>
+            <Text
+              numberOfLines={2}
+              style={utilSpacing.ml2}
+              caption
+              preset="semiBold"
+              size="sm"
+              text={`${item.value}`}
+            ></Text>
+          </View>
         </View>
       ))}
     </View>
@@ -155,10 +200,8 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   card: {
-    alignItems: "center",
     backgroundColor: color.background,
     borderRadius: spacing[2],
-    padding: spacing[4],
   },
   containerDishes: {
     maxHeight: 320,

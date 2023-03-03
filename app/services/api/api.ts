@@ -2,7 +2,7 @@ import { ApiResponse, ApisauceInstance, create } from "apisauce"
 
 import { Address } from "../../models"
 import { Order } from "../../models/order/order"
-import { UserLogin } from "../../models/user-store"
+import { UserLogin, UserRegister } from "../../models/user-store"
 import { Card } from "../../screens/checkout/modal-payment-card"
 import { handleMessageProblem } from "../../utils/messages"
 
@@ -13,6 +13,7 @@ import {
   CategoryResponse,
   ChefResponse,
   CommonResponse,
+  CountryResponse,
   CuponResponse,
   CoverageResponse,
   DayResponse,
@@ -24,8 +25,10 @@ import {
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
+import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
+let countryId
 /**
  * Manages all requests to the API.
  */
@@ -70,8 +73,15 @@ export class Api {
 
     // Add a request interceptor
     this.apisauce.axiosInstance.interceptors.request.use(
-      function (config) {
+      async function (config) {
+        if (!countryId) {
+          countryId = await loadString("countryId")
+          __DEV__ && console.log({ countryId })
+        }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
+        config.headers["country-id"] = parseInt(countryId || -1)
+
+        if (config.url === "/users/login") countryId = null
         return config
       },
       function (error) {
@@ -86,6 +96,7 @@ export class Api {
         // Any status code that lie within the range of 2xx cause this function to trigger
 
         //  __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
+
         return response
       },
       function (error) {
@@ -134,6 +145,7 @@ export class Api {
     date: string,
     timeZone: string,
     userId: number,
+    tokenPagination: string,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -141,6 +153,7 @@ export class Api {
         date,
         timeZone,
         userId,
+        tokenPagination,
         categoryId,
       },
       "/dishes",
@@ -237,8 +250,8 @@ export class Api {
    *
    * @description Register new user
    */
-  async register(userLogin: UserLogin): Promise<UserLoginResponse> {
-    return await this.request(userLogin, "/users/register", "POST")
+  async register(userRegister: UserRegister): Promise<UserLoginResponse> {
+    return await this.request(userRegister, "/users/register", "POST")
   }
 
   /**
@@ -381,8 +394,11 @@ export class Api {
   /**
    * @description Get price delivery by city name
    */
-  async getPriceDeliveryByCity(name: string): Promise<CommonResponse> {
-    return await this.request({ name }, `/deliveries/price/city`, "GET")
+  async getPriceDeliveryByCoordinates(
+    latitude: number,
+    longitude: number,
+  ): Promise<CommonResponse> {
+    return await this.request({ latitude, longitude }, `/deliveries/price/coordinates`, "GET")
   }
 
   /**
@@ -439,5 +455,12 @@ export class Api {
    */
   async addCard(userId: number, card: Card): Promise<CommonResponse> {
     return await this.request(card, `/users/cards/${userId}`, "POST")
+  }
+
+  /**
+   * @description Get all countries
+   */
+  async getCountries(): Promise<CountryResponse> {
+    return await this.request({}, `/countries`, "GET")
   }
 }

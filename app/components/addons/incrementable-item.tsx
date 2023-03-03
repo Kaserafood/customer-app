@@ -10,7 +10,6 @@ import Animated, {
 import IconRN from "react-native-vector-icons/MaterialIcons"
 import { observer } from "mobx-react-lite"
 
-import { useStores } from "../../models"
 import { AddonItem } from "../../models/addons/addon"
 import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
@@ -29,20 +28,20 @@ export interface IncrementableProps {
 }
 
 export const Incrementable = observer((props: IncrementableProps) => {
-  const {
-    onPress,
-    addon: { required, name, label },
-  } = props
+  const { onPress, addon } = props
 
+  const { required, name, label, value } = addon
   const [min, setMin] = useState(props.addon.min)
   const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
   const offset = useSharedValue(required === 1 ? 30 : 0)
-  const { addonStore } = useStores()
-  const addon = addonStore.findAddonByName(name)
 
   useEffect(() => {
     if (min === 0) {
       setMin(1)
+    }
+    if (value > 0) {
+      setIsVisibleMinus(true)
+      offset.value = 30
     }
   }, [])
 
@@ -58,20 +57,20 @@ export const Incrementable = observer((props: IncrementableProps) => {
       offset.value = 30
     }
 
-    onPress(name, addon.value, true)
+    onPress(name, value, true)
   }
 
   const minus = () => {
     console.log(required, ` ${min}`)
     // Se valida si el valor es mayor o igual al valor minimo requerido para el campo
-    if (Number(addon.value) - 1 >= min) {
-      onPress(name, Number(addon.value), false)
+    if (Number(value) - 1 >= min) {
+      onPress(name, Number(value), false)
     } else {
       // Si no es requerido, se oculta el boton de restar y se hace la resta correspondiente
       if (required !== 1) {
         setIsVisibleMinus(false)
         offset.value = 0
-        onPress(name, Number(addon.value), false)
+        onPress(name, Number(value), false)
       }
     }
   }
