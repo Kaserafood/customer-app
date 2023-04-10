@@ -6,7 +6,7 @@ import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import MapView, { Polygon, Region } from "react-native-maps"
+import MapView, { Geojson, Region } from "react-native-maps"
 
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
@@ -40,8 +40,8 @@ const modalWithoutCoverage = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { coverageStore } = useStores()
-    const { messagesStore } = useStores()
+    const { messagesStore, coverageStore } = useStores()
+
     const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
@@ -87,7 +87,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       })
 
       const fetch = async () => {
-        await coverageStore.getAll()
+        await coverageStore.getCoverage()
       }
 
       fetch()
@@ -96,40 +96,49 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     const toAddress = () => {
       if ((location.latitude !== 0 || location.longitude !== 0) && address.formatted !== "") {
         // Verificar si esta dentro del area de covertura
-        const isPointInCoverage = isPointInPolygon(
-          { latitude: location.latitude, longitude: location.longitude },
-          coverageStore.coordinates,
-        )
 
-        if (isPointInCoverage) {
-          // Verificamos si la ubicación esta adentro de las zonas excluidas
-          let isPointInHole = false
-          for (const hold of coverageStore.getHoles) {
-            isPointInHole = isPointInPolygon(
-              { latitude: location.latitude, longitude: location.longitude },
-              hold,
-            )
-
-            if (isPointInHole) {
-              __DEV__ && console.log("Dentro de areas excluidas")
-              isPointInHole = true
-              modalWithoutCoverage.setVisible(true)
-              return
+        const geoJson = JSON.parse(coverageStore.coverage)
+        let isPointInCoverage = false
+        geoJson.forEach((item) => {
+          if (item.geometry.type === "Polygon") {
+            if (!isPointInCoverage) {
+              isPointInCoverage = isPointInPolygon(
+                { latitude: location.latitude, longitude: location.longitude },
+                item.geometry.coordinates[0],
+              )
             }
           }
-          if (!isPointInHole) {
-            navigation.navigate("address", {
-              latitude: location.latitude,
-              longitude: location.longitude,
-              addressMap: address.formatted,
-              latitudeDelta: location.latitudeDelta,
-              longitudeDelta: location.longitudeDelta,
-              country: address.country,
-              city: address.city,
-              region: address.region,
-              screenToReturn: params.screenToReturn,
-            })
-          }
+        })
+
+        if (isPointInCoverage) {
+          // NOT APPLICABLE FOR NOW ---> Verificamos si la ubicación esta adentro de las zonas excluidas
+          // let isPointInHole = false
+          // for (const hold of coverageStore.getHoles) {
+          //   isPointInHole = isPointInPolygon(
+          //     { latitude: location.latitude, longitude: location.longitude },
+          //     hold,
+          //   )
+
+          //   if (isPointInHole) {
+          //     __DEV__ && console.log("Dentro de areas excluidas")
+          //     isPointInHole = true
+          //     modalWithoutCoverage.setVisible(true)
+          //     return
+          //   }
+          // }
+          // if (!isPointInHole) {
+          navigation.navigate("address", {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            addressMap: address.formatted,
+            latitudeDelta: location.latitudeDelta,
+            longitudeDelta: location.longitudeDelta,
+            country: address.country,
+            city: address.city,
+            region: address.region,
+            screenToReturn: params.screenToReturn,
+          })
+          // }
         } else {
           __DEV__ && console.log("No esta dentro del poligono")
           modalWithoutCoverage.setVisible(true)
@@ -175,16 +184,18 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         <View style={styles.container}>
           {initLocation.latitude !== 0 &&
             initLocation.longitude !== 0 &&
-            coverageStore.getLength > 0 && (
+            coverageStore.coverage?.length > 0 && (
               <MapView
                 ref={mapRef}
                 style={styles.map}
                 initialRegion={initLocation}
                 onRegionChangeComplete={onRegionChangeComplete}
               >
-                <Polygon
-                  coordinates={coverageStore.getCoordinates}
-                  holes={coverageStore.getHoles}
+                <Geojson
+                  geojson={{
+                    type: "FeatureCollection",
+                    features: JSON.parse(coverageStore.coverage),
+                  }}
                   strokeColor="#555"
                   fillColor="rgba(0,0,0,0.2)"
                   strokeWidth={1}
@@ -208,7 +219,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             </View>
           )}
         </View>
-        {loadingState.loading && coverageStore.getLength === 0 ? (
+        {loadingState.loading && coverageStore.coverage?.length === 0 ? (
           <ProgressBar
             height={5}
             indeterminate

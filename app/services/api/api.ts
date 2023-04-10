@@ -146,6 +146,8 @@ export class Api {
     timeZone: string,
     userId: number,
     tokenPagination: string,
+    latitude: number,
+    longitude: number,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -154,6 +156,8 @@ export class Api {
         timeZone,
         userId,
         tokenPagination,
+        latitude,
+        longitude,
         categoryId,
       },
       "/dishes",

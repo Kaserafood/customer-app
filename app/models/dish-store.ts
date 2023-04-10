@@ -2,8 +2,9 @@ import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api, DishResponse } from "../services/api"
 
-import { dish } from "./dish"
+import { Dish, dish } from "./dish"
 import { userChef } from "./user-store"
+import { DishParams } from "../screens/home/dish.types"
 
 export const dishChef = dish.props({
   chef: types.optional(types.maybe(userChef), {}),
@@ -33,30 +34,42 @@ export const DishStoreModel = types
     },
   }))
   .actions((self) => ({
-    getAll: flow(function* getByChef(
-      date: string,
-      timeZone: string,
-      userId: number,
-      tokenPagination: string,
-      cleanCurrentDishes = true,
-      categoryId?: number,
-    ) {
+    getAll: flow(function* (params: DishParams) {
+      const {
+        categoryId,
+        cleanCurrentDishes,
+        date,
+        timeZone,
+        userId,
+        tokenPagination,
+        latitude,
+        longitude,
+      } = params
       if (categoryId) detach(self.dishesCategory)
       else {
         if (cleanCurrentDishes) detach(self.dishes)
       }
       const api = new Api()
-      const result = yield api.getAllDishes(date, timeZone, userId, tokenPagination, categoryId)
+      const result = yield api.getAllDishes(
+        date,
+        timeZone,
+        userId,
+        tokenPagination,
+        latitude,
+        longitude,
+        categoryId,
+      )
 
       if (result && result.kind === "ok") {
         if (categoryId) applySnapshot(self.dishesCategory, result.data)
         else {
           self.currentTokenPagination = result.data?.tokenPagination
           if (tokenPagination) {
+            if (!result.data?.dishes || result.data?.dishes.length === 0)
+              return { isEmptyResult: true }
             applySnapshot(self.dishes, self.dishes.concat(result.data?.dishes))
-            return { isEmptyResult: result.data?.dishes.length === 0 }
           } else {
-            applySnapshot(self.dishes, result.data?.dishes)
+            if (result.data?.dishes) applySnapshot(self.dishes, result.data?.dishes)
           }
         }
       }
@@ -84,7 +97,7 @@ export const DishStoreModel = types
       const result = yield api.getDishesGroupedByLatestChef(date, timeZone)
 
       if (result.kind === "ok") {
-        self.dishesGroupedByLatestChef.replace(result.data)
+        applySnapshot(self.dishesGroupedByLatestChef, result.data)
       }
     }),
 

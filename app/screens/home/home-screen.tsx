@@ -34,6 +34,7 @@ import { loadString } from "../../utils/storage"
 import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
+import { DishParams } from "./dish.types"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -58,8 +59,16 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       cartStore,
       messagesStore,
       deliveryStore,
+      addressStore,
     } = useStores()
     const { currentDay } = dayStore
+
+    useEffect(() => {
+      console.log("HomeScreen useEffect, address ", addressStore.current)
+      if (addressStore.current?.latitude && addressStore.current?.longitude) {
+        fetch(false, null)
+      }
+    }, [addressStore.current])
 
     const toCategory = (category: Category) => {
       navigation.navigate("category", {
@@ -100,10 +109,22 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }, [])
 
     const onChangeDay = async (day: Day) => {
+      const { latitude, longitude } = addressStore.current
+      const params: DishParams = {
+        date: day.date,
+        timeZone: RNLocalize.getTimeZone(),
+        userId: userStore.userId,
+        latitude: latitude,
+        longitude: longitude,
+        cleanCurrentDishes: true,
+        categoryId: null,
+        tokenPagination: null,
+      }
+
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       await dishStore
-        .getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null)
+        .getAll(params)
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })
@@ -114,7 +135,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useEffect(() => {
       __DEV__ && console.log("Home  useEffect")
-      commonStore.setVisibleLoading(true)
+
       async function setUserStoreData() {
         if (!userStore.userId) {
           __DEV__ && console.log("Getting string user data")
@@ -131,22 +152,28 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       }
       setUserStoreData()
 
-      fetch(false, null)
+      if (addressStore.current.id) fetch(false, null)
     }, [])
 
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
+      commonStore.setVisibleLoading(true)
       /*
-       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
+       * When is in development environment, not is nessesary clean items from cart because will be producess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
       if (tokenPagination) setIsFetchingMoreData(true)
+      const params: DishParams = {
+        date: useCurrentDate ? dayStore.currentDay.date : null,
+        timeZone: RNLocalize.getTimeZone(),
+        userId: userStore.userId,
+        latitude: addressStore.current.latitude,
+        longitude: addressStore.current.longitude,
+        cleanCurrentDishes: true,
+        tokenPagination,
+      }
+
       await Promise.all([
-        dishStore.getAll(
-          useCurrentDate ? dayStore.currentDay.date : null,
-          RNLocalize.getTimeZone(),
-          userStore.userId,
-          tokenPagination,
-        ),
+        dishStore.getAll(params),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
         deliveryStore.getPriceDelivery(userStore.addressId),
@@ -171,14 +198,18 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       if (isCloseToBottom(event.nativeEvent) && fetchData && dishStore.dishes.length > 0) {
         setFetchData(false)
         setIsFetchingMoreData(true)
+
+        const params: DishParams = {
+          date: dayStore.currentDay.date,
+          timeZone: RNLocalize.getTimeZone(),
+          userId: userStore.userId,
+          latitude: addressStore.current.latitude,
+          longitude: addressStore.current.longitude,
+          cleanCurrentDishes: false,
+          tokenPagination: dishStore.currentTokenPagination,
+        }
         dishStore
-          .getAll(
-            dayStore.currentDay.date,
-            RNLocalize.getTimeZone(),
-            userStore.userId,
-            dishStore.currentTokenPagination,
-            false,
-          )
+          .getAll(params)
           .then((response) => {
             if (!response.isEmptyResult) setFetchData(true)
           })

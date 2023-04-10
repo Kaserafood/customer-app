@@ -161,7 +161,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
         navigation.navigate("registerForm")
-      } else navigation.navigate("checkout")
+      } else navigation.navigate("checkout", { priceDelivery: params.priceDelivery })
     }
 
     const getCategoriesName = (categories: Category[]) => {
@@ -218,7 +218,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 text={getCategoriesName(params.categories)}
               ></Text>
               <Price
-                amount={deliveryStore.priceDelivery}
+                amount={params.priceDelivery}
                 style={utilSpacing.ml3}
                 preset="delivery"
                 currencyCode={params.currencyCode}

@@ -47,7 +47,7 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const {
       addressStore,
@@ -57,7 +57,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       commonStore,
       orderStore,
       messagesStore,
-      deliveryStore,
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
@@ -126,7 +125,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         city: addressStore.current.city,
         region: addressStore.current.region,
         products: getProducts(),
-        priceDelivery: deliveryStore.priceDelivery,
+        priceDelivery: params.priceDelivery,
         metaData: getMetaData(taxId),
         customerNote: data.customerNote,
         currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
@@ -244,7 +243,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getCurrentTotal = (): number => {
-      return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
+      return cartStore.subtotal + params.priceDelivery - (cartStore.discount ?? 0)
     }
 
     const getCurrency = (): string => {
@@ -423,7 +422,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
               <DishesList></DishesList>
               <Separator style={styles.separator}></Separator>
-              <Totals coupon={coupon}></Totals>
+              <Totals priceDelivery={params.priceDelivery} coupon={coupon}></Totals>
             </Card>
           </View>
         </ScrollView>
