@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
@@ -17,6 +17,13 @@ import { color } from "../../theme/color"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+
+const hideTextFields = {
+  type: UXCamOcclusionType.OccludeAllTextFields,
+  screens: [],
+}
 
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
@@ -27,6 +34,18 @@ export const RegisterFormScreen: FC<
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
+
+  useEffect(() => {
+    RNUxcam.applyOcclusion(hideTextFields)
+  }, [])
+
+  useEffect(
+    () =>
+      navigation.addListener("beforeRemove", (e) => {
+        RNUxcam.removeOcclusion(hideTextFields)
+      }),
+    [navigation],
+  )
 
   const onSubmit = (data: UserRegister) => {
     if (!terms) messagesStore.showInfo("registerFormScreen.acceptsTerms", true)
@@ -41,11 +60,14 @@ export const RegisterFormScreen: FC<
           commonStore.setVisibleLoading(false)
           if (userId > 0) {
             OneSignal.setExternalUserId(userId.toString())
-            // Si el usuario habia entrado como "Explorar el app"
-            OneSignal.setExternalUserId(userId.toString())
+            RNUxcam.setUserProperty("userId", userId.toString())
+
             if (currentUserId === -1) {
               await saveAddress(userId)
             } else {
+              RNUxcam.logEvent("register", {
+                exploreApp: false,
+              })
               commonStore.setIsSignedIn(true)
               navigation.navigate("main")
             }
@@ -83,6 +105,10 @@ export const RegisterFormScreen: FC<
               description: "Nuevo usuario registrado con email",
             })
             AppEventsLogger.setUserID(userId.toString())
+
+            RNUxcam.logEvent("register", {
+              exploreApp: true,
+            })
             navigation.navigate("checkout")
           }
         })

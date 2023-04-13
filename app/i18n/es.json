@@ -21,7 +21,8 @@
     "send": "Enviar",
     "discount": "Descuento",
     "ready": "Listo",
-    "understand": "Entendido"
+    "understand": "Entendido",
+    "omit": "Omitir"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -379,26 +380,29 @@
     "addressPlaceholder": "Ingresa una dirección",
     "noLocation": "Debe ajustar el pin",
     "errorToGetLocation": "Lo sentimos, no se ha logrado obtener la ubicación",
-    "canNotGetLocation": "No se ha logrado obtener tu ubicación"
+    "canNotGetLocation": "No se ha logrado obtener tu ubicación",
+    "searchPlaceholder": "Buscar una ubicación",
+    "cofirmUbication": "Confirmar ubicación"
   },
   "addressScreen": {
-    "title": "Dirección",
-    "addressComplete": "Dirección completa",
+    "title": "Confirmar dirección",
+    "addressComplete": "Dirección o lugar",
     "addressPlaceholder": "Escribe la dirección",
-    "addressCompleteRequired": "Debes ingresar la dirección completa",
-    "houseApartmentNumber": "Número de casa o apartamento",
+    "addressCompleteRequired": "Debes ingresar la dirección o lugar",
+    "houseApartmentNumber": "Número de casa o apartamento (Opcional)",
     "houseApartmentNumberPlaceholder": "Ingresalo aquí",
     "houseApartmentNumberRequired": "Debes ingresar el número de casa o apartamento",
-    "instructionsDelivery": "Instrucciones de entrega, referencias, codigo de acceso",
+    "instructionsDelivery": "Instrucciones de entrega, referencias, codigo de acceso (Opcional)",
     "instructionsDeliveryPlaceholder": "Escribe aquí",
-    "howSaveThisAddress": "¿Cómo deseas guardar esta dirección?",
+    "howSaveThisAddress": "¿Cómo deseas guardar esta dirección? (Opcional)",
     "howSaveThisAddressPlaceholder": "Ejemplo: Mi casa, la oficina",
     "howSaveThisAddressRequired": "Debes ingresar el nombre de la dirección",
-    "phoneDelivery": "Teléfono de entrega",
+    "phoneDelivery": "Teléfono de entrega (Opcional)",
     "phoneDeliveryPlaceholder": "1234-5678",
     "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
     "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
-    "addressSaved": "Se ha guardado tu dirección"
+    "addressSaved": "Se ha guardado tu dirección",
+    "checkYourAddress": "*Revisa si es correcta tu dirección"
   },
   "modalDeliveryDate": {
     "deliveryDate": "Fecha de entrega",
@@ -611,8 +615,8 @@
     "order": "Pedidio"
   },
   "modalAutocomplete": {
-    "title": "Ingresa una dirección",
-    "placeholderSearch": "Escribe la dirección"
+    "title": "Ingresa una ubicación",
+    "placeholderSearch": "Escribe la ubicación"
   },
   "reportBugScreen": {
     "title": "Reportar un error",

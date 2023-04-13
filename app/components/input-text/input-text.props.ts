@@ -74,4 +74,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Required flag
    */
   required?: boolean
+
+  /**
+   * Helper text
+   */
+  helperText?: React.ReactElement
 }

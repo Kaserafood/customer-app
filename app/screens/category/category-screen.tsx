@@ -24,6 +24,7 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
@@ -43,6 +44,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
         commonStore.setVisibleLoading(true)
 
         if (!params.name) {
+          RNUxcam.tagScreenName("category")
           categoryStore.getAll().then(() => {
             navigation.setParams({
               name: categoryStore.categories.find((c) => c.id === Number(params.id))?.name,

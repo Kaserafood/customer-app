@@ -13,25 +13,28 @@ import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
 import { utilSpacing, utilText } from "../../theme/Util"
+import RNUxcam from "react-native-ux-cam"
 
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore } = useStores()
     const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
-
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {
         description: "Se ha presionado el boton de 'Explorar el app'",
       })
       userStore.setUserId(-1)
       OneSignal.setExternalUserId("-1")
+      RNUxcam.setUserProperty("exploreTheApp", "true")
+      RNUxcam.logEvent("exploreTheApp")
       commonStore.setIsSignedIn(true)
     }
 
     useLayoutEffect(() => {
       __DEV__ && console.log("in init screen")
       changeNavigationBarColor(color.primary, false, true)
+      RNUxcam.tagScreenName("init")
     }, [])
 
     return (

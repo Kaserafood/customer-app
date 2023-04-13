@@ -7,6 +7,7 @@ import { Button, Modal, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateWhy = new ModalStateHandler()
 export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave: () => void }) => {
@@ -17,6 +18,8 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
     AppEventsLogger.logEvent("PressCleanCart", 1, {
       description: "El usuario presionó 'Sí, salir' en el menú del chef",
     })
+
+    RNUxcam.logEvent("acceptCleanCart")
   }
 
   const onPressCancel = () => {
@@ -24,6 +27,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
     AppEventsLogger.logEvent("CancelCleanCart", 1, {
       description: "El usuario presionó 'Regresar' en el menú del chef",
     })
+    RNUxcam.logEvent("cancelCleanCart")
   }
 
   const onPressWhyCleanCart = () => {
@@ -31,6 +35,8 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
     AppEventsLogger.logEvent("PressWhyCleanCart", 1, {
       description: "El usuario presionó '¿Por qué?' en el menú del chef",
     })
+
+    RNUxcam.logEvent("whyCleanCart")
   }
 
   return (

@@ -7,7 +7,7 @@
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useRef } from "react"
 import RNBootSplash from "react-native-bootsplash"
 
 import { useStores } from "../models/root-store/root-store-context"
@@ -109,7 +109,7 @@ interface NavigationProps extends Partial<React.ComponentProps<typeof Navigation
 
 export const AppNavigator = (props: NavigationProps) => {
   useBackButtonHandler(canExit)
-
+  const routeNameRef = useRef(null)
   const config = {
     screens: {
       category: {
@@ -137,9 +137,12 @@ export const AppNavigator = (props: NavigationProps) => {
 
   return (
     <NavigationContainer
-      onReady={() => RNBootSplash.hide()}
       ref={navigationRef}
       linking={linking}
+      onReady={() => {
+        RNBootSplash.hide()
+        routeNameRef.current = navigationRef.getCurrentRoute().name
+      }}
       {...props}
     >
       <AppStack />

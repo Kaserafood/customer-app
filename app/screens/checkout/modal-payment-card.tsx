@@ -1,4 +1,4 @@
-import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
+import React, { forwardRef, MutableRefObject, useEffect, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, View } from "react-native"
 
@@ -116,7 +116,7 @@ export const ModalPaymentCard = forwardRef(
               <PaymentCard methods={methods}></PaymentCard>
             </FormProvider>
 
-            <View style={[utilFlex.flexRow, utilSpacing.mx4, utilSpacing.mt5]}>
+            <View style={[utilFlex.flexRow, utilSpacing.mx4, utilSpacing.mt5, utilSpacing.mb4]}>
               <Button
                 tx="common.cancel"
                 preset="white"

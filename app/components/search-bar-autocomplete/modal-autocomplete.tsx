@@ -77,8 +77,8 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
   useDebounce(onChangeText, 500, [search.term])
 
   /**
-   * Grab lattitude and longitude on prediction tapped
-   *    by sending another reqyest using the place id.
+   * Grab latitude and longitude on prediction tapped
+   *    by sending another request using the place id.
    * You can check what kind of information you can get at:
    *    https://developers.google.com/maps/documentation/places/web-service/details#PlaceDetailsRequests
    */
@@ -100,7 +100,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
         } = result
         const { lat, lng } = location
 
-        console.log(lat, lng)
+        __DEV__ && console.log(lat, lng)
         commonStore.setVisibleLoading(false)
         setSearch({ term: "", fetchPredictions: false })
         setPredictions([])
@@ -122,7 +122,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
       position="bottom"
       isVisibleIconClose={false}
     >
-      <View style={styles.modal}>
+      <View style={[styles.modal, utilSpacing.mx3]}>
         <TouchableOpacity onPress={() => modalState.setVisible(false)}>
           <Icon name="xmark" size={30} color={color.text}></Icon>
         </TouchableOpacity>

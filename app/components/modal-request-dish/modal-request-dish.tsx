@@ -17,7 +17,7 @@ import { Image } from "../image/image"
 import { InputText } from "../input-text/input-text"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
-
+import RNUxcam from "react-native-ux-cam"
 import { useModalRequest } from "./useModalRequest"
 
 const modalStateCalendar = new ModalStateHandler()
@@ -64,6 +64,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
       .request(data.dishName, data.peopleCount, selectedDate, userStore.email, userStore.userId)
       .then((response) => {
         if (response.data > 0) {
+          RNUxcam.logEvent("requestDish")
           modalStateConfirmation.setVisible(true)
           modalState.setVisible(false)
           setSelectedDate("")
@@ -219,7 +220,7 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
           props.onDayPress(day.dateString)
         }}
         theme={{
-          textColor: color.text,
+          dayTextColor: color.text,
           todayTextColor: color.primary,
           arrowColor: color.primary,
         }}

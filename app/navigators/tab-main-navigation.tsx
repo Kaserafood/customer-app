@@ -9,6 +9,7 @@ import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
+import RNUxcam from "react-native-ux-cam"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
@@ -57,6 +58,7 @@ export function TabMainNavigation({ navigationRef }) {
         component={HomeScreen}
         listeners={{
           tabPress: () => {
+            RNUxcam.logEvent("tabPress", { name: "Home" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "Home",
               description: "El usuario presionó la opción 'Home' en el menu principal",
@@ -76,6 +78,7 @@ export function TabMainNavigation({ navigationRef }) {
         component={ChefsScreen}
         listeners={{
           tabPress: () => {
+            RNUxcam.logEvent("tabPress", { name: "chefs" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "chefs",
               description: "El usuario presionó la opción 'chefs' en el menú principal",
@@ -95,6 +98,7 @@ export function TabMainNavigation({ navigationRef }) {
         component={SearchScreen}
         listeners={{
           tabPress: () => {
+            RNUxcam.logEvent("tabPress", { name: "search" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "search",
               description: "El usuario presionó la opción 'buscar' en el menú principal",
@@ -116,6 +120,7 @@ export function TabMainNavigation({ navigationRef }) {
           tabPress: (e) => {
             e.preventDefault()
             openDrawer()
+            RNUxcam.logEvent("tabPress", { name: "more" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "more",
               description: "El usuario presionó la opción 'más' en el menú principal",

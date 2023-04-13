@@ -29,6 +29,8 @@ import { loadString } from "./utils/storage"
 import { Loader, Messages, ModalCoupon } from "./components"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -100,6 +102,29 @@ function App() {
           if (!rootStore.commonStore.isSignedIn) {
             rootStore.commonStore.setIsSignedIn(true)
           }
+        }
+
+        RNUxcam.optIntoSchematicRecordings() // Add this line to enable iOS screen recordings
+        const configuration = {
+          userAppKey: __DEV__ ? "9npd6zpadvyezev" : "1dg22cwy6m7db2l",
+          enableAutomaticScreenNameTagging: true,
+          enableImprovedScreenCapture: true,
+          occlusions: [],
+        }
+
+        RNUxcam.startWithConfiguration(configuration)
+
+        const hideTextFields = {
+          type: UXCamOcclusionType.OccludeAllTextFields,
+          screens: ["loginForm", "registerForm", "recoverPassword"],
+        }
+
+        RNUxcam.applyOcclusion(hideTextFields)
+
+        if (rootStore && rootStore.userStore.isTester) {
+          RNUxcam.optOutOverall()
+        } else {
+          RNUxcam.optInOverall()
         }
       }
       verifyUser()
