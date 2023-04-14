@@ -114,13 +114,6 @@ function App() {
 
         RNUxcam.startWithConfiguration(configuration)
 
-        const hideTextFields = {
-          type: UXCamOcclusionType.OccludeAllTextFields,
-          screens: ["loginForm", "registerForm", "recoverPassword"],
-        }
-
-        RNUxcam.applyOcclusion(hideTextFields)
-
         if (rootStore && rootStore.userStore.isTester) {
           RNUxcam.optOutOverall()
         } else {

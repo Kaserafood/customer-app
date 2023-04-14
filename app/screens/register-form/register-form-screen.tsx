@@ -101,7 +101,7 @@ export const RegisterFormScreen: FC<
 
             AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
               [AppEventsLogger.AppEventParams.RegistrationMethod]: "email",
-              Currency: "GTQ",
+              [AppEventsLogger.AppEventParams.Currency]: "GTQ",
               description: "Nuevo usuario registrado con email",
             })
             AppEventsLogger.setUserID(userId.toString())

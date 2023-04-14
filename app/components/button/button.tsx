@@ -46,7 +46,7 @@ export function Button(props: ButtonProps) {
 
   __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
-    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled} activeOpacity={0.8}>
+    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled === true} activeOpacity={0.8}>
       {content}
     </TouchableOpacity>
   )

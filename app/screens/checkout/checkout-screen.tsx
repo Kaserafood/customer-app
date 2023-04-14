@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
-import { getUniqueId } from "react-native-device-info"
+import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
+import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -241,6 +241,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       data.push({
         key: "customer_address_id",
         value: `${userStore.addressId}`,
+      })
+
+      data.push({
+        key: "device_type",
+        value: Platform.OS,
+      })
+
+      data.push({
+        key: "app_version",
+        value: getVersion(),
       })
 
       return data

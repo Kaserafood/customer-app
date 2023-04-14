@@ -373,7 +373,7 @@
     "searchPlaceholder": "Buscar..."
   },
   "mapScreen": {
-    "title": "Ajusta el pin",
+    "title": "Verifica la ubicación",
     "disabledLocation": "Para poder usar esta función, debes activar la localización en tu dispositivo.",
     "whereReciveFood": "¿Dónde deseas recibir tu comida?",
     "addressRequired": "Debes ingresar una dirección",
@@ -381,14 +381,14 @@
     "noLocation": "Debe ajustar el pin",
     "errorToGetLocation": "Lo sentimos, no se ha logrado obtener la ubicación",
     "canNotGetLocation": "No se ha logrado obtener tu ubicación",
-    "searchPlaceholder": "Buscar una ubicación",
+    "searchPlaceholder": "Buscar una ubicación o referencia",
     "cofirmUbication": "Confirmar ubicación"
   },
   "addressScreen": {
     "title": "Confirmar dirección",
-    "addressComplete": "Dirección o lugar",
-    "addressPlaceholder": "Escribe la dirección",
-    "addressCompleteRequired": "Debes ingresar la dirección o lugar",
+    "addressComplete": "Dirección completa",
+    "addressPlaceholder": "Escribe la dirección completa",
+    "addressCompleteRequired": "Debes ingresar la dirección completa",
     "houseApartmentNumber": "Número de casa o apartamento (Opcional)",
     "houseApartmentNumberPlaceholder": "Ingresalo aquí",
     "houseApartmentNumberRequired": "Debes ingresar el número de casa o apartamento",
@@ -616,7 +616,7 @@
   },
   "modalAutocomplete": {
     "title": "Ingresa una ubicación",
-    "placeholderSearch": "Escribe la ubicación"
+    "placeholderSearch": "Escribe la ubicación o referencia"
   },
   "reportBugScreen": {
     "title": "Reportar un error",

@@ -5,24 +5,25 @@ import { ScrollView } from "react-native-gesture-handler"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
-import { Button, Header, InputText, Screen, Text } from "../../components"
+import { Button, Header, InputText, Screen } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
-import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing, SHADOW, NO_SHADOW } from "../../theme/Util"
+import { color } from "../../theme"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { saveString } from "../../utils/storage"
-import * as Animatable from "react-native-animatable"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const { addressStore, commonStore, userStore, messagesStore, deliveryStore } = useStores()
-    const fieldNumber = useRef(null)
+    const fieldAddress = useRef(null)
+
+    const address = methods.watch("address")
 
     useEffect(() => {
-      fieldNumber.current.focus()
+      fieldAddress.current.focus()
     }, [])
 
     const onError: SubmitErrorHandler<any> = (errors) => {
@@ -80,6 +81,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
             <FormProvider {...methods}>
               <InputText
                 preset="card"
+                forwardedRef={fieldAddress}
                 name="address"
                 placeholderTx="addressScreen.addressPlaceholder"
                 rules={{
@@ -89,16 +91,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 styleContainer={[utilSpacing.mb6, utilSpacing.mt6]}
                 maxLength={400}
                 required
-                defaultValue={params.addressMap}
-                helperText={
-                  <Animatable.Text style={styles.containerHelper} animation="shake">
-                    <Text
-                      size="sm"
-                      style={styles.textHelper}
-                      tx={"addressScreen.checkYourAddress"}
-                    ></Text>
-                  </Animatable.Text>
-                }
               ></InputText>
 
               <InputText
@@ -108,7 +100,24 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 labelTx="addressScreen.houseApartmentNumber"
                 styleContainer={[utilSpacing.mb6]}
                 maxLength={50}
-                forwardedRef={fieldNumber}
+              ></InputText>
+
+              <InputText
+                preset="card"
+                name="instructionsDelivery"
+                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
+                labelTx="addressScreen.instructionsDelivery"
+                styleContainer={utilSpacing.mb6}
+                maxLength={200}
+              ></InputText>
+
+              <InputText
+                preset="card"
+                name="name"
+                placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
+                labelTx="addressScreen.howSaveThisAddress"
+                styleContainer={utilSpacing.mb6}
+                maxLength={50}
               ></InputText>
 
               <InputText
@@ -125,24 +134,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 styleContainer={utilSpacing.mb6}
                 keyboardType="phone-pad"
                 mask={getFormatMaskPhone()}
-              ></InputText>
-
-              <InputText
-                preset="card"
-                name="name"
-                placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
-                labelTx="addressScreen.howSaveThisAddress"
-                styleContainer={utilSpacing.mb6}
-                maxLength={50}
-              ></InputText>
-
-              <InputText
-                preset="card"
-                name="instructionsDelivery"
-                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
-                labelTx="addressScreen.instructionsDelivery"
-                styleContainer={utilSpacing.mb6}
-                maxLength={200}
               ></InputText>
             </FormProvider>
           </View>
