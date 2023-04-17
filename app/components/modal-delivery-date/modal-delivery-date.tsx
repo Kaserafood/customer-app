@@ -48,7 +48,7 @@ export interface ModalDeliveryDateProps {
 }
 
 /**
- * Modal for display delivery dates avalibales for the order
+ * Modal for display delivery dates available for the order
  */
 export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDeliveryDateProps) {
   const { style, modal, isAllGet, onSelectDay, isVisibleContinue = true } = props

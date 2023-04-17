@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useRef } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
@@ -10,14 +10,22 @@ import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { saveString } from "../../utils/storage"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const { addressStore, commonStore, userStore, messagesStore, deliveryStore } = useStores()
+    const fieldAddress = useRef(null)
+    const insets = useSafeAreaInsets()
+    const address = methods.watch("address")
+
+    useEffect(() => {
+      fieldAddress.current.focus()
+    }, [])
 
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
@@ -67,13 +75,14 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
     }
 
     return (
-      <Screen preset="fixed" style={styles.container}>
+      <Screen preset="fixed">
         <Header headerTx="addressScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView keyboardShouldPersistTaps="handled">
-          <View style={styles.containerForm}>
+        <ScrollView style={[utilFlex.flex1, styles.container]} keyboardShouldPersistTaps="handled">
+          <View style={[styles.containerForm, utilSpacing.px3]}>
             <FormProvider {...methods}>
               <InputText
                 preset="card"
+                forwardedRef={fieldAddress}
                 name="address"
                 placeholderTx="addressScreen.addressPlaceholder"
                 rules={{
@@ -90,6 +99,24 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 name="numHouseApartment"
                 placeholderTx="addressScreen.houseApartmentNumberPlaceholder"
                 labelTx="addressScreen.houseApartmentNumber"
+                styleContainer={[utilSpacing.mb6]}
+                maxLength={50}
+              ></InputText>
+
+              <InputText
+                preset="card"
+                name="instructionsDelivery"
+                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
+                labelTx="addressScreen.instructionsDelivery"
+                styleContainer={utilSpacing.mb6}
+                maxLength={200}
+              ></InputText>
+
+              <InputText
+                preset="card"
+                name="name"
+                placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
+                labelTx="addressScreen.howSaveThisAddress"
                 styleContainer={utilSpacing.mb6}
                 maxLength={50}
               ></InputText>
@@ -109,57 +136,54 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 keyboardType="phone-pad"
                 mask={getFormatMaskPhone()}
               ></InputText>
-
-              <InputText
-                preset="card"
-                name="name"
-                placeholderTx="addressScreen.howSaveThisAddressPlaceholder"
-                labelTx="addressScreen.howSaveThisAddress"
-                styleContainer={utilSpacing.mb6}
-                maxLength={50}
-              ></InputText>
-
-              <InputText
-                preset="card"
-                name="instructionsDelivery"
-                placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
-                labelTx="addressScreen.instructionsDelivery"
-                styleContainer={utilSpacing.mb6}
-                maxLength={200}
-              ></InputText>
             </FormProvider>
           </View>
+        </ScrollView>
 
-          <View style={styles.containerButton}>
+        <View style={styles.containerButtons}>
+          <View style={[utilFlex.flexRow, utilSpacing.px3, utilSpacing.py4, utilSpacing.mx4]}>
             <Button
               block
               tx="common.save"
-              style={[utilSpacing.m6, styles.button]}
+              style={[utilFlex.flex1, utilSpacing.ml2]}
               onPress={methods.handleSubmit(onSubmit, onError)}
             ></Button>
+             
           </View>
-        </ScrollView>
+          <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
+        </View>
       </Screen>
     )
   },
 )
 
 const styles = StyleSheet.create({
-  button: {
-    alignSelf: "center",
-    minWidth: 260,
-    width: "75%",
+  btnOmit: {
+    borderColor: color.palette.whiteGray,
+    borderWidth: 1,
   },
+
   container: {
     backgroundColor: color.palette.whiteGray,
   },
-  containerButton: {
-    backgroundColor: color.background,
+
+  containerButtons: {
+    borderTopColor: color.palette.whiteGray,
+    borderTopWidth: 1,
   },
   containerForm: {
     alignSelf: "center",
     flex: 1,
+
     minWidth: 300,
-    width: "90%",
+    width: "100%",
+  },
+
+  containerHelper: {
+    bottom: -18,
+    position: "absolute",
+  },
+  textHelper: {
+    color: color.palette.orangeDarker,
   },
 })

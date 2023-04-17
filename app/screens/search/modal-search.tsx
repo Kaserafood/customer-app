@@ -22,6 +22,7 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
+import RNUxcam from "react-native-ux-cam"
 
 interface ModalSearchProps {
   modalState: ModalStateHandler
@@ -70,7 +71,9 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
   const onSearch = () => {
     if (search?.length > 0) {
       setIsLoading(true)
-
+      RNUxcam.logEvent("searchDish", {
+        search,
+      })
       dishStore
         .getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone())
         .catch((error: Error) => {
@@ -87,7 +90,10 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 
   const onChangeDay = (day: Day) => {
     dayStore.setCurrentDay(day)
-    //  onSearch()
+
+    RNUxcam.logEvent("changeDate", {
+      screen: "modalSearch",
+    })
   }
 
   useDebounce(onSearch, 500, [search])
@@ -104,7 +110,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
         <StatusBar backgroundColor={color.palette.white} barStyle={"dark-content"} />
 
         <View style={styles.modal}>
-          <View style={[utilSpacing.mx4, utilSpacing.mt4]}>
+          <View style={[utilSpacing.mx5, utilSpacing.mt4]}>
             <TouchableOpacity onPress={() => modalState.setVisible(false)}>
               <Icon name="xmark" size={30} color={color.text}></Icon>
             </TouchableOpacity>
@@ -166,7 +172,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 const styles = StyleSheet.create({
   inputStyle: {
     backgroundColor: color.palette.whiteGray,
-    borderRadius: spacing[2],
+    borderRadius: spacing[3],
     color: color.text,
   },
   modal: {

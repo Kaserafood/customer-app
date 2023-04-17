@@ -5,6 +5,7 @@ import { color, typographySize } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Button } from "../button/button"
 import { ButtonProps } from "../button/button.props"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export interface ButtonFooterProps extends ButtonProps {
   /**
@@ -18,7 +19,7 @@ export interface ButtonFooterProps extends ButtonProps {
  */
 export const ButtonFooter = function ButtonFooter(props: ButtonFooterProps) {
   const { style, onPress, ...rest } = props
-
+  const insets = useSafeAreaInsets()
   return (
     <View style={[styles.container, style]}>
       <View style={[utilSpacing.mx7, utilSpacing.pb3, utilSpacing.pt5]}>
@@ -30,6 +31,7 @@ export const ButtonFooter = function ButtonFooter(props: ButtonFooterProps) {
           {...rest}
         ></Button>
       </View>
+      <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
     </View>
   )
 }

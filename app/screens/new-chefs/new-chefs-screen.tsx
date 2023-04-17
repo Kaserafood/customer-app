@@ -13,6 +13,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
 import { ChefItemModel } from "../chefs/chef-item"
 import { DataState, ListChef } from "../chefs/chef-list"
+import RNUxcam from "react-native-ux-cam"
 
 const state = new DataState()
 export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">> = observer(
@@ -23,6 +24,7 @@ export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">
     useEffect(() => {
       __DEV__ && console.log("new chefs useEffect")
       commonStore.setVisibleLoading(true)
+      RNUxcam.tagScreenName("newChefs")
       async function fetch() {
         await dishStore
           .getGroupedByLatestChef(dayStore.currentDay.date, RNLocalize.getTimeZone())

@@ -32,6 +32,7 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
+import RNUxcam from "react-native-ux-cam"
 
 export const AddonContext = createContext({
   currencyCode: "",
@@ -60,11 +61,29 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             setCurrentDish(res)
             commonStore.setVisibleLoading(false)
             navigation.setParams({ ...res })
+            RNUxcam.logEvent("dishDetail", {
+              id: res.id,
+              name: res.title,
+              price: res.price,
+              chefId: res.chef.id,
+              chefName: res.chef.name,
+            })
           }
         })
       }
       // No va venir el chef cuando se llega a esta pantalla desde el push notification
-      if (!params.chef) getDish()
+      if (!params.chef) {
+        RNUxcam.tagScreenName("dishDetail")
+        getDish()
+      } else {
+        RNUxcam.logEvent("dishDetail", {
+          id: params.id,
+          name: params.title,
+          price: params.price,
+          chefId: params.chef.id,
+          chefName: params.chef.name,
+        })
+      }
 
       return () => {
         addonStore.detachAddons()
@@ -158,6 +177,16 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             "Se intentó agregar un producto al carrito pero algún complemento no fue seleccionado, por ende, no se agregó",
         })
 
+        RNUxcam.logEvent("cantAddToCartByAddons", {
+          id: currentDish.id,
+          name: currentDish.title,
+          price: currentDish.price,
+          chefId: currentDish.chef.id,
+          chefName: currentDish.chef.name,
+          quantity,
+          total,
+        })
+
         return
       }
 
@@ -188,6 +217,17 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total: total,
         description: "Se agregó un producto al carrito",
       })
+
+      RNUxcam.logEvent("addToCart", {
+        id: currentDish.id,
+        name: currentDish.title,
+        price: currentDish.price,
+        chefId: currentDish.chef.id,
+        chefName: currentDish.chef.name,
+        quantity,
+        total,
+      })
+
       navigation.navigate("menuChef", { ...params.chef, showModalCart: true })
     }
 
@@ -213,6 +253,14 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         scrollRef.current?.scrollTo({
           y: 0,
           animated: true,
+        })
+
+        RNUxcam.logEvent("changeDishInDetail", {
+          id: dish.id,
+          name: dish.title,
+          price: dish.price,
+          chefId: dish.chef.id,
+          chefName: dish.chef.name,
         })
       }
       setTimeout(() => {
@@ -240,7 +288,12 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       return `${text} ${getFormat(total, currentDish.chef?.currencyCode)}`
     }
 
-    if (!params.chef) return <Screen preset="fixed"></Screen>
+    if (!params.chef)
+      return (
+        <Screen preset="fixed">
+          <Text text="No hay data de chef"></Text>
+        </Screen>
+      )
 
     return (
       <Screen preset="fixed" style={styles.container}>

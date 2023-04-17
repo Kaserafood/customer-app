@@ -11,12 +11,14 @@ import { DishChef } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
+import RNUxcam from "react-native-ux-cam"
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(
   function FavoriteScreen({ navigation }) {
     const { dishStore, cartStore, commonStore, dayStore, messagesStore } = useStores()
 
     useEffect(() => {
+      RNUxcam.tagScreenName("favorite")
       async function fetch() {
         commonStore.setVisibleLoading(true)
         await dishStore

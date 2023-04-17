@@ -11,6 +11,7 @@ import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
+import RNUxcam from "react-native-ux-cam"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
@@ -20,6 +21,7 @@ const ROOT: ViewStyle = {
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
     const toMain = () => {
+      RNUxcam.logEvent("endOrderContinue")
       navigation.navigate("main")
     }
 

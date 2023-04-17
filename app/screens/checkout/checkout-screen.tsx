@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
-import { getUniqueId } from "react-native-device-info"
+import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
+import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -40,6 +40,7 @@ import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -84,6 +85,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       AppEventsLogger.logEvent("IntoCheckout", 1, {
         description: "El usuario entró en la pantalla del checkout",
       })
+
+      RNUxcam.logEvent("checkout")
     }, [])
 
     useEffect(() => {
@@ -100,6 +103,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const onError: SubmitErrorHandler<any> = (errors) => {
+      RNUxcam.logEvent("checkout: errorSubmit", { errors })
       __DEV__ && console.log({ errors })
     }
 
@@ -107,11 +111,13 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       Keyboard.dismiss()
       if (!dayStore.currentDay) {
         messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
+        RNUxcam.logEvent("checkout: errorDayDelivery")
         return
       }
 
       if (labelDeliveryTime.length === 0) {
         messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
+        RNUxcam.logEvent("checkout: errorTimeDelivery")
         return
       }
 
@@ -145,6 +151,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
           if (!res) {
             messagesStore.showError("checkoutScreen.errorOrder", true)
+            RNUxcam.logEvent("checkout: errorOrder")
             return
           }
 
@@ -159,6 +166,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               description: "El usuario ha realizado un pedido",
             })
 
+            RNUxcam.logEvent("checkout: successOrder")
+
             navigation.navigate("endOrder", {
               orderId: Number(res.data),
               deliveryDate: dayStore.currentDay.dayName,
@@ -166,11 +175,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               deliveryAddress: addressStore.current.address,
               imageChef: commonStore.currentChefImage,
             })
-          } else if (Number(res.data) === -1)
+          } else if (Number(res.data) === -1) {
             messagesStore.showError("checkoutScreen.errorOrderPayment", true)
-          else messagesStore.showError("checkoutScreen.errorOrder", true)
+            RNUxcam.logEvent("checkout: errorOrderPayment")
+          } else {
+            RNUxcam.logEvent("checkout: errorOrder")
+            messagesStore.showError("checkoutScreen.errorOrder", true)
+          }
         })
         .catch((error: Error) => {
+          RNUxcam.logEvent("checkout: ERROR CRITICAL")
           messagesStore.showError(error.message)
         })
         .finally(() => commonStore.setVisibleLoading(false))
@@ -229,6 +243,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         value: `${userStore.addressId}`,
       })
 
+      data.push({
+        key: "device_type",
+        value: Platform.OS,
+      })
+
+      data.push({
+        key: "app_version",
+        value: getVersion(),
+      })
+
       return data
     }
 
@@ -258,6 +282,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return address.concat(addressStore.current.address)
     }
 
+    const onPressAddress = () => {
+      modalStateLocation.setVisible(true)
+      RNUxcam.logEvent("checkout: onPressAddress")
+    }
+
+    const onPressCoupon = () => {
+      modalStateCoupon.setVisible(true)
+      RNUxcam.logEvent("checkout: onPressCoupon")
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -275,7 +309,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
           <FormProvider {...methods}>
-            <TouchableOpacity activeOpacity={1} onPress={() => modalStateLocation.setVisible(true)}>
+            <TouchableOpacity activeOpacity={1} onPress={onPressAddress}>
               <InputText
                 name="address"
                 preset="card"
@@ -396,7 +430,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               style={[utilSpacing.my5, utilFlex.selfCenter]}
               rippleOpacity={0.2}
               rippleDuration={400}
-              onPress={() => modalStateCoupon.setVisible(true)}
+              onPress={onPressCoupon}
             >
               <Card style={[utilSpacing.px6, utilSpacing.p4]}>
                 <View style={[utilSpacing.p3, utilFlex.flexRow, utilFlex.flexCenter]}>

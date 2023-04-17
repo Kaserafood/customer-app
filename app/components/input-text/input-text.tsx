@@ -78,6 +78,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
     counter,
     iconRight,
     required,
+    helperText,
     ...rest
   } = props
 
@@ -146,6 +147,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
         </View>
 
         <ErrorMessage name={name}></ErrorMessage>
+        {helperText && !ErrorMessage({ name }) && helperText}
       </View>
       {counter && (
         <View style={styles.containerCounter}>

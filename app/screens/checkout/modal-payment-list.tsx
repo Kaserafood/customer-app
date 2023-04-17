@@ -12,8 +12,9 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getImageByType, paymentType, typeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-
+import RNUxcam from "react-native-ux-cam"
 import { ModalPaymentCard } from "./modal-payment-card"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 
 interface ModalPaymentListProps {
   stateModal: ModalStateHandler
@@ -27,6 +28,22 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       await fetch()
     })()
   }, [])
+
+  useEffect(() => {
+    const hideTextFields = {
+      type: UXCamOcclusionType.OccludeAllTextFields,
+      screens: [],
+    }
+    if (modalStatePaymentCard.isVisible) {
+      RNUxcam.tagScreenName("modalPaymentCard")
+
+      RNUxcam.applyOcclusion(hideTextFields)
+    } else {
+      RNUxcam.tagScreenName("checkout")
+
+      RNUxcam.removeOcclusion(hideTextFields)
+    }
+  }, [modalStatePaymentCard.isVisible])
 
   const fetch = async () => {
     await userStore

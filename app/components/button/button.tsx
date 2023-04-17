@@ -16,6 +16,7 @@ export function Button(props: ButtonProps) {
     children,
     rounded,
     block,
+    disabled,
     ...rest
   } = props
 
@@ -34,6 +35,8 @@ export function Button(props: ButtonProps) {
   } else {
     viewStyle.borderRadius = 8
   }
+  if (disabled) viewStyle.opacity = 0.5
+  else viewStyle.opacity = 1
 
   const viewStyles = [viewStyle, styleOverride]
   const textStyle = textPresets[preset] || textPresets.primary
@@ -43,7 +46,7 @@ export function Button(props: ButtonProps) {
 
   __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
-    <TouchableOpacity style={viewStyles} {...rest} activeOpacity={0.8}>
+    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled === true} activeOpacity={0.8}>
       {content}
     </TouchableOpacity>
   )

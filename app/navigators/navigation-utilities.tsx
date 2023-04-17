@@ -6,6 +6,7 @@ import {
   NavigationState,
   PartialState,
 } from "@react-navigation/native"
+import RNUxcam from "react-native-ux-cam"
 
 /* eslint-disable */
 export const RootNavigation = {
@@ -97,6 +98,7 @@ export function useNavigationPersistence(storage: any, persistenceKey: string) {
     const previousRouteName = routeNameRef.current
     const currentRouteName = getActiveRouteName(state)
 
+    RNUxcam.tagScreenName(currentRouteName)
     if (previousRouteName !== currentRouteName) {
       // track screens.
       __DEV__ && console.tron.log(currentRouteName)
