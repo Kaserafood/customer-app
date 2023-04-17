@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native"
 import { DishChef } from "../../models/dish-store"
 import { getI18nText } from "../../utils/translate"
 import RNUxcam from "react-native-ux-cam"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export interface ModalCartProps {
   /**
@@ -48,6 +49,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
   const { cartStore, dishStore } = useStores()
+  const insets = useSafeAreaInsets()
   const navigation = useNavigation()
 
   useEffect(() => {
@@ -216,6 +218,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
           block
           tx="common.continue"
         ></Button>
+          <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
       </View>
     </Modal>
   )

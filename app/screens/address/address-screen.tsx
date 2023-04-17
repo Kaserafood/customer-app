@@ -13,13 +13,14 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
 import { saveString } from "../../utils/storage"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const { addressStore, commonStore, userStore, messagesStore, deliveryStore } = useStores()
     const fieldAddress = useRef(null)
-
+    const insets = useSafeAreaInsets()
     const address = methods.watch("address")
 
     useEffect(() => {
@@ -147,7 +148,9 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               style={[utilFlex.flex1, utilSpacing.ml2]}
               onPress={methods.handleSubmit(onSubmit, onError)}
             ></Button>
+             
           </View>
+          <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
         </View>
       </Screen>
     )
