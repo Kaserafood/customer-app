@@ -54,7 +54,15 @@ export const useLocation = (messagesStore: Messages) => {
           if (components[i].types.includes("country")) country = components[i].long_name
         }
 
-        if (results[0]?.formatted_address) formatted = results[0].formatted_address
+        if (results.length > 0) {
+          results.forEach((item) => {
+            if (item.types.includes("route")) {
+              formatted = item.formatted_address
+            }
+          })
+
+          if (formatted.length === 0) formatted = results[0].formatted_address
+        }
 
         return {
           city,

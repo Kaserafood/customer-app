@@ -55,6 +55,7 @@ export const UserRegisterModel = userRegister
     deliverySlotTime: types.maybe(types.string),
     cards: types.optional(types.array(cardModel), []),
     currentCard: types.maybe(cardModel),
+    isTester: types.maybeNull(types.boolean),
   })
   .extend(withEnvironment)
   .views((self) => ({

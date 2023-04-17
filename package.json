@@ -83,6 +83,7 @@
     "react-native-skeleton-placeholder": "^5.0.0",
     "react-native-text-input-mask": "^3.1.4",
     "react-native-tracking-transparency": "^0.1.2",
+    "react-native-ux-cam": "5.4.3",
     "react-native-vector-icons": "^9.1.0",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
@@ -251,9 +252,7 @@
           "*.ts",
           "*.tsx"
         ],
-        "rules": {
-        
-        }
+        "rules": {}
       }
     ]
   },

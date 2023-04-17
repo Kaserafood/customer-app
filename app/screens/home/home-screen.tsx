@@ -34,6 +34,7 @@ import { loadString } from "../../utils/storage"
 import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -51,7 +52,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [isFirstTime, setIsFirstTime] = useState(true)
-
     const {
       dishStore,
       dayStore,
@@ -65,6 +65,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const { currentDay } = dayStore
 
     const toCategory = (category: Category) => {
+      RNUxcam.logEvent("categoryTap", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -76,6 +82,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         name: banner.categoryName,
         image: "",
       }
+      RNUxcam.logEvent("bannerTap", {
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -100,6 +111,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
+      RNUxcam.tagScreenName("Inicio")
     }, [])
 
     useEffect(() => {
@@ -111,7 +123,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             messagesStore.showError(error.message)
           })
           .finally(() => {
-            console.log("Home  useEffect date finally", isLoading)
             if (isLoading) {
               commonStore.setVisibleLoading(false)
               setIsLoading(false)
@@ -125,6 +136,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       setIsFirstTime(false)
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
+      RNUxcam.logEvent("changeDate", {
+        screen: "home",
+      })
     }
 
     useEffect(() => {
@@ -132,7 +146,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       commonStore.setVisibleLoading(true)
       async function setUserStoreData() {
         if (!userStore.userId) {
-          __DEV__ && console.log("Getting string user data")
           const id = await loadString("userId")
           const displayName = await loadString("displayName")
           const addressId = await loadString("addressId")
@@ -151,7 +164,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
 
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
       /*
-       * When is in develoment enviroment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
+       * When is in development environment, not need clean items from cart because will be produccess an error when is in the checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
       if (tokenPagination) setIsFetchingMoreData(true)

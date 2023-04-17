@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useEffect } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
@@ -22,6 +22,8 @@ import { Text } from "../text/text"
 import { useNavigation } from "@react-navigation/native"
 import { DishChef } from "../../models/dish-store"
 import { getI18nText } from "../../utils/translate"
+import RNUxcam from "react-native-ux-cam"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export interface ModalCartProps {
   /**
@@ -47,10 +49,40 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
   const { cartStore, dishStore } = useStores()
+  const insets = useSafeAreaInsets()
   const navigation = useNavigation()
+
+  useEffect(() => {
+    if (modal.isVisible) {
+      const items = [
+        ...cartStore.cart.map((item) => {
+          return {
+            id: item.dish.id,
+            name: item.dish.title,
+            price: item.dish.price,
+            quantity: item.quantity,
+            chef: item.dish.chef.name,
+            chefId: item.dish.chef.id,
+          }
+        }),
+      ]
+
+      RNUxcam.logEvent("openCart", {
+        total: cartStore.subtotal,
+        data: JSON.stringify(items),
+      })
+    }
+  }, [modal.isVisible])
 
   const removeItemCart = (index: number, dish: Dish) => {
     cartStore.removeItem(index)
+    RNUxcam.logEvent("removeDishInCart", {
+      id: dish.id,
+      name: dish.title,
+      price: dish.price,
+      currentTotal: cartStore.subtotal,
+    })
+
     AppEventsLogger.logEvent("RemoveDishInCart", 1, {
       total: cartStore.subtotal,
       dishId: dish.id,
@@ -66,6 +98,14 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
     quantity: number,
     noteChef: string,
   ) => {
+    RNUxcam.logEvent("cartPressItem", {
+      id: dish.id,
+      name: dish.title,
+      price: dish.price,
+      quantity,
+      chef: dish.chef.name,
+      chefId: dish.chef.id,
+    })
     dishStore.setIsUpdate(true)
     navigation.navigate(
       "dishDetail" as never,
@@ -81,6 +121,25 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
     )
   }
 
+  const continueToCheckout = () => {
+    const items = [
+      ...cartStore.cart.map((item) => {
+        return {
+          id: item.dish.id,
+          name: item.dish.title,
+          price: item.dish.price,
+          quantity: item.quantity,
+          chef: item.dish.chef.name,
+          chefId: item.dish.chef.id,
+        }
+      }),
+    ]
+    RNUxcam.logEvent("cartContinueToCheckout", {
+      total: cartStore.subtotal,
+      data: JSON.stringify(items),
+    })
+    onContinue()
+  }
   return (
     <Modal modal={modal} position="bottom">
       <View style={styles.body}>
@@ -154,11 +213,12 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
         </View>
         <Button
           disabled={!cartStore.hasItems}
-          onPress={onContinue}
+          onPress={continueToCheckout}
           style={[utilSpacing.mt6, styles.button]}
           block
           tx="common.continue"
         ></Button>
+          <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
       </View>
     </Modal>
   )

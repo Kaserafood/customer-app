@@ -16,18 +16,31 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+const hideTextFields = {
+  type: UXCamOcclusionType.OccludeAllTextFields,
+  screens: [],
+}
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation, route: { params } }) => {
     const { commonStore, userStore, messagesStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
-
     useEffect(() => {
       if (__DEV__) {
         methods.setValue("email", "cunquero.carlos@gmail.com")
         methods.setValue("password", "1111")
       }
+      RNUxcam.applyOcclusion(hideTextFields)
     }, [])
+
+    useEffect(
+      () =>
+        navigation.addListener("beforeRemove", (e) => {
+          RNUxcam.removeOcclusion(hideTextFields)
+        }),
+      [navigation],
+    )
 
     useEffect(() => {
       const backHandler = BackHandler.addEventListener("hardwareBackPress", handleBack)
@@ -42,6 +55,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     const onSubmit = (data: UserLogin) => {
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
+      const currentUserId = userStore.userId
       userStore
         .login(data)
         .then((userValid: boolean) => {
@@ -54,7 +68,16 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
               description: "Se ha logueado con email",
             })
             AppEventsLogger.setUserID(userStore.userId.toString())
-            OneSignal.setExternalUserId(userStore.userId.toString())
+            RNUxcam.setUserProperty("userId", userStore.userId.toString())
+            if (currentUserId === -1) {
+              RNUxcam.logEvent("login", {
+                exploreApp: true,
+              })
+            } else {
+              RNUxcam.logEvent("login", {
+                exploreApp: false,
+              })
+            }
 
             if (params.screenRedirect && params.screenRedirect.length > 0)
               navigation.navigate(params.screenRedirect)

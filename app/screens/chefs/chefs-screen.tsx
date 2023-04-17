@@ -29,6 +29,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 
 import { ChefItemModel } from "./chef-item"
 import { DataState, ListChef } from "./chef-list"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDay = new ModalStateHandler()
@@ -93,6 +94,11 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     }
 
     const toCategory = (category: Category) => {
+      RNUxcam.logEvent("categoryTap", {
+        screen: "chefs",
+        category: category.name,
+        id: category.id,
+      })
       navigation.navigate("category", {
         ...category,
       })
@@ -122,6 +128,10 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       commonStore.setVisibleLoading(true)
       setIsLoading(true)
       dayStore.setCurrentDay(day)
+
+      RNUxcam.logEvent("changeDate", {
+        screen: "chefs",
+      })
     }
 
     const onRefresh = async () => {

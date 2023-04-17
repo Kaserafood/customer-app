@@ -10,6 +10,7 @@ import { Button } from "../button/button"
 import { Image } from "../image/image"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateCoupon = new ModalStateHandler()
 /**
@@ -25,6 +26,11 @@ export const ModalCoupon = observer(function ModalCoupon() {
   useEffect(() => {
     modalStateCoupon.setVisible(couponModalStore.isVisible)
   }, [couponModalStore.isVisible])
+
+  const onUnderstand = () => {
+    couponModalStore.setVisible(false)
+    RNUxcam.logEvent("understandCoupon")
+  }
 
   return (
     <Modal
@@ -52,11 +58,7 @@ export const ModalCoupon = observer(function ModalCoupon() {
           ></Image>
         )}
 
-        <Button
-          tx="common.understand"
-          onPress={() => couponModalStore.setVisible(false)}
-          style={utilFlex.selfCenter}
-        ></Button>
+        <Button tx="common.understand" onPress={onUnderstand} style={utilFlex.selfCenter}></Button>
       </View>
     </Modal>
   )

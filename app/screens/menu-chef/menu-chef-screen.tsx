@@ -35,6 +35,7 @@ import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
 import { ModalLeave } from "./modal-clean-cart"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
@@ -79,6 +80,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       })()
       // El nombre no va venir en params si abre esta ventana desde el push notification
       if (!params.name || params.name?.length === 0) {
+        RNUxcam.tagScreenName("menuChef")
         commonStore.setVisibleLoading(true)
         ;(async () => {
           userStore
@@ -95,6 +97,15 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         })()
       }
     }, [])
+
+    useEffect(() => {
+      // if (params.id) {
+      //   RNUxcam.logEvent("menuChef", {
+      //     chef: params.name,
+      //     chefId: params.id,
+      //   })
+      // }
+    }, [params])
 
     useEffect(
       () =>
@@ -125,6 +136,9 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     const onChangeDay = async (day: Day) => {
       dayStore.setCurrentDay(day)
       await getDishByChef()
+      RNUxcam.logEvent("changeDate", {
+        screen: "menuChef",
+      })
     }
 
     const getDishByChef = async () => {
@@ -177,6 +191,12 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
     }
 
     const openCart = () => {
+      RNUxcam.logEvent("openCart", {
+        total: cartStore.subtotal,
+        chefId: params.id,
+        chefName: params.name,
+      })
+
       AppEventsLogger.logEvent("ViewCart", 1, {
         total: cartStore.subtotal,
         chefId: params.id,

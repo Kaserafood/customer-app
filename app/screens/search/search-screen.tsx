@@ -22,6 +22,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
 import { ModalSearch } from "./modal-search"
+import RNUxcam from "react-native-ux-cam"
 
 const modalStateRequest = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -54,12 +55,19 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
 
     const openRequestDish = () => {
       modalStateRequest.setVisible(true)
+      RNUxcam.logEvent("search: modalRequestDish")
       AppEventsLogger.logEvent("openModalRequestDish", 1, {
         description: "Se ha abierto la ventana de solicitar un platillo",
       })
     }
 
     const toDetailDish = (dish: DishChef) => {
+      RNUxcam.logEvent("search: pressDish", {
+        id: dish.id,
+        name: dish.title,
+        chefId: dish.chef.id,
+        chefName: dish.chef.name,
+      })
       if (cartStore.hasItems) cartStore.cleanItems()
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
@@ -71,14 +79,25 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
       })
     }
 
+    const onPressSearch = () => {
+      modalStateSearch.setVisible(true)
+      RNUxcam.logEvent("search: modalSearch")
+    }
+
+    const onPressCategory = (category: Category) => {
+      toCategory(category)
+      RNUxcam.logEvent("search: category", {
+        id: category.id,
+        name: category.name,
+      })
+    }
+
     return (
-      <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
-        <FocusAwareStatusBar barStyle="light-content" backgroundColor={color.primary} />
-        <Header
-          headerTx="searchScreen.title"
-          titleStyle={[utilSpacing.pt2, utilSpacing.mb2]}
-          onLeftPress={goBack}
-        />
+      <Screen
+        preset="fixed"
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+      >
         <ScrollView style={styles.body}>
           <View style={utilSpacing.mb5}>
             <TouchableOpacity
@@ -91,7 +110,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                 utilFlex.flexCenterVertical,
                 utilSpacing.mx3,
               ]}
-              onPress={() => modalStateSearch.setVisible(true)}
+              onPress={onPressSearch}
             >
               <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
               <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
@@ -121,7 +140,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                   <Ripple
                     rippleOpacity={0.2}
                     rippleDuration={400}
-                    onPress={() => toCategory(category)}
+                    onPress={() => onPressCategory(category)}
                     style={styles.containerCard}
                   >
                     <Card style={styles.card}>
@@ -212,7 +231,7 @@ const styles = StyleSheet.create({
   },
   search: {
     backgroundColor: color.palette.whiteGray,
-    borderRadius: spacing[2],
+    borderRadius: spacing[3],
   },
   text: {
     lineHeight: 20,

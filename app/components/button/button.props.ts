@@ -44,4 +44,9 @@ export interface ButtonProps extends TouchableOpacityProps {
    * Block styling for the button
    */
   block?: boolean
+
+  /**
+   * Disabled styling for the button
+   */
+  disabled?: boolean
 }
