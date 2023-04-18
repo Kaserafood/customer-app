@@ -61,6 +61,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       cartStore,
       messagesStore,
       deliveryStore,
+      addressStore,
     } = useStores()
     const { currentDay } = dayStore
 
@@ -177,7 +178,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         ),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
-        deliveryStore.getPriceDelivery(userStore.addressId),
+        userStore.addressId > 0
+          ? deliveryStore.getPriceDelivery(userStore.addressId)
+          : deliveryStore.getPriceDeliveryByCity(
+              addressStore.current?.latitude,
+              addressStore.current?.longitude,
+            ),
         dayStore.getDays(RNLocalize.getTimeZone()),
       ])
         .then(() => {
