@@ -6,7 +6,6 @@ import Icon from "react-native-vector-icons/FontAwesome"
 import { observer } from "mobx-react-lite"
 
 import { Price, Text } from "../../components"
-import { useStores } from "../../models"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -29,12 +28,12 @@ export interface ChefItemProps {
   item: ChefItemModel
 
   /**
-   * Callback on previous dihs
+   * Callback on previous dish
    */
   onPrevious?: () => void
 
   /**
-   * Callback on next dihs
+   * Callback on next dish
    */
   onNext?: () => void
 
@@ -44,7 +43,7 @@ export interface ChefItemProps {
   onChangePosition?: (index: number) => void
 
   /**
-   * Callcback on press chef image
+   * Callback on press chef image
    */
   onChefPress?: () => void
 }
@@ -55,7 +54,6 @@ export interface ChefItemProps {
 export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
   const { style, item, onPrevious, onNext, onChangePosition, onChefPress } = props
 
-  const { deliveryStore } = useStores()
   return (
     <View style={style} key={item.id}>
       <View style={styles.imageCarousel}>
@@ -123,7 +121,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
             ></Text>
             <Price
               preset="delivery"
-              amount={deliveryStore.priceDelivery}
+              amount={item.priceDelivery}
               style={utilSpacing.mr3}
               currencyCode={item.currencyCode}
             ></Price>

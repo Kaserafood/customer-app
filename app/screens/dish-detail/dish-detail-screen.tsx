@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { BackHandler, ScrollView, StyleSheet, View } from "react-native"
+import { BackHandler, ScrollView, StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
@@ -14,6 +14,7 @@ import {
   ButtonFooter,
   DishChef,
   Header,
+  Icon,
   Image,
   InputText,
   Price,
@@ -33,6 +34,8 @@ import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
 import RNUxcam from "react-native-ux-cam"
+import { fontSize } from "../../components/text/text.presets"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const AddonContext = createContext({
   currencyCode: "",
@@ -288,19 +291,22 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       return `${text} ${getFormat(total, currentDish.chef?.currencyCode)}`
     }
 
-    if (!params.chef)
-      return (
-        <Screen preset="fixed">
-          <Text text="No hay data de chef"></Text>
-        </Screen>
-      )
+    if (!params.chef) return <Screen preset="fixed"></Screen>
 
     return (
-      <Screen preset="fixed" style={styles.container}>
-        <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={handleBack}></Header>
+      <View
+        style={[
+          styles.container,
+          {
+            justifyContent: "flex-start",
+            alignItems: "stretch",
+            flex: 1,
+          },
+        ]}
+      >
+        <StatusBar barStyle="light-content" backgroundColor={"transparent"} translucent></StatusBar>
         <ScrollView ref={scrollRef}>
           <View
-            style={[utilSpacing.mx5, utilSpacing.mt5]}
             onLayout={(event) => {
               const { height } = event.nativeEvent.layout
               setDishInfoHeight(height)
@@ -333,15 +339,55 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             ) : (
               <>
                 <Image style={styles.image} source={{ uri: currentDish.image }}></Image>
-                <View style={[utilFlex.flexRow, utilSpacing.my3]}>
-                  <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+                <View
+                  style={{
+                    backgroundColor: color.palette.blackTransparent,
+                    height: 45,
+                    width: 45,
+                    position: "absolute",
+                    top: 40,
+                    left: 20,
+                    borderRadius: 25,
+                  }}
+                >
+                  <TouchableOpacity onPress={handleBack}>
+                    <Icon
+                      name="angle-left-1"
+                      style={{
+                        marginTop: 12,
+                        marginLeft: 16,
+                      }}
+                      size={24}
+                      color={color.palette.white}
+                    ></Icon>
+                  </TouchableOpacity>
                 </View>
-                <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
-                <Price
-                  style={styles.price}
-                  amount={currentDish.price}
-                  currencyCode={currentDish.chef?.currencyCode}
-                ></Price>
+                <View style={utilSpacing.mx5}>
+                  <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+                    <Text
+                      style={[utilSpacing.mr3, utilFlex.flex1]}
+                      text={"Pan de banano"}
+                      size="xl"
+                      preset="bold"
+                    ></Text>
+
+                    <View style={[utilFlex.flexRow, { alignItems: "flex-end" }]}>
+                      <Text
+                        text={`$${currentDish.price}`}
+                        preset="bold"
+                        style={styles.priceText}
+                      ></Text>
+                    </View>
+                  </View>
+                  <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
+                  {/* <Price
+                    style={styles.price}
+                    amount={currentDish.price}
+                    currencyCode={currentDish.chef?.currencyCode}
+                    preset="simple"
+                    textStyle={styles.priceText}
+                  ></Price> */}
+                </View>
               </>
             )}
           </View>
@@ -468,7 +514,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           onPress={methods.handleSubmit(onSubmit)}
           text={buttonCartText()}
         ></ButtonFooter>
-      </Screen>
+      </View>
     )
   },
 )
@@ -512,11 +558,14 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: spacing[2],
-    height: 230,
+    height: 245,
     width: "100%",
   },
   price: {
     alignSelf: "flex-start",
+  },
+  priceText: {
+    fontSize: 22,
   },
   textCounter: {
     marginBottom: -2,

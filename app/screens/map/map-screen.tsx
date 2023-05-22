@@ -1,13 +1,15 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { isPointInPolygon } from "geolib"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import MapView, { Region } from "react-native-maps"
+import MapView, { Geojson, Region } from "react-native-maps"
+
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { StackScreenProps } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, Screen, Text } from "../../components"
@@ -19,6 +21,7 @@ import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
+import { ModalWithoutCoverage } from "./modal-without-coverage"
 class LoadingState {
   loading = true
 
@@ -33,10 +36,12 @@ class LoadingState {
 
 const loadingState = new LoadingState()
 const modalAddressState = new ModalStateHandler()
+const modalWithoutCoverage = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { messagesStore } = useStores()
+    const { messagesStore, coverageStore } = useStores()
+
     const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
@@ -80,21 +85,64 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           messagesStore.showError("mapScreen.canNotGetLocation", true)
         }
       })
+
+      const fetch = async () => {
+        await coverageStore.getCoverage()
+      }
+
+      fetch()
     }, [])
 
     const toAddress = () => {
       if ((location.latitude !== 0 || location.longitude !== 0) && address.formatted !== "") {
-        navigation.navigate("address", {
-          latitude: location.latitude,
-          longitude: location.longitude,
-          addressMap: address.formatted,
-          latitudeDelta: location.latitudeDelta,
-          longitudeDelta: location.longitudeDelta,
-          country: address.country,
-          city: address.city,
-          region: address.region,
-          screenToReturn: params.screenToReturn,
+        // Verificar si esta dentro del area de covertura
+
+        const geoJson = JSON.parse(coverageStore.coverage)
+        let isPointInCoverage = false
+        geoJson.forEach((item) => {
+          if (item.geometry.type === "Polygon") {
+            if (!isPointInCoverage) {
+              isPointInCoverage = isPointInPolygon(
+                { latitude: location.latitude, longitude: location.longitude },
+                item.geometry.coordinates[0],
+              )
+            }
+          }
         })
+
+        if (isPointInCoverage) {
+          // NOT APPLICABLE FOR NOW ---> Verificamos si la ubicación esta adentro de las zonas excluidas
+          // let isPointInHole = false
+          // for (const hold of coverageStore.getHoles) {
+          //   isPointInHole = isPointInPolygon(
+          //     { latitude: location.latitude, longitude: location.longitude },
+          //     hold,
+          //   )
+
+          //   if (isPointInHole) {
+          //     __DEV__ && console.log("Dentro de areas excluidas")
+          //     isPointInHole = true
+          //     modalWithoutCoverage.setVisible(true)
+          //     return
+          //   }
+          // }
+          // if (!isPointInHole) {
+          navigation.navigate("address", {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            addressMap: address.formatted,
+            latitudeDelta: location.latitudeDelta,
+            longitudeDelta: location.longitudeDelta,
+            country: address.country,
+            city: address.city,
+            region: address.region,
+            screenToReturn: params.screenToReturn,
+          })
+          // }
+        } else {
+          __DEV__ && console.log("No esta dentro del poligono")
+          modalWithoutCoverage.setVisible(true)
+        }
       } else {
         messagesStore.showError("mapScreen.noLocation", true)
       }
@@ -133,16 +181,26 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}
       >
         <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
-        <View style={utilFlex.flex1}>
-          <View style={styles.container}>
-            {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+        <View style={styles.container}>
+          {initLocation.latitude !== 0 &&
+            initLocation.longitude !== 0 &&
+            coverageStore.coverage?.length > 0 && (
               <MapView
                 ref={mapRef}
-                provider={null}
                 style={styles.map}
                 initialRegion={initLocation}
                 onRegionChangeComplete={onRegionChangeComplete}
-              />
+              >
+                <Geojson
+                  geojson={{
+                    type: "FeatureCollection",
+                    features: JSON.parse(coverageStore.coverage),
+                  }}
+                  strokeColor="#555"
+                  fillColor="rgba(0,0,0,0.2)"
+                  strokeWidth={1}
+                />
+              </MapView>
             )}
 
             <View pointerEvents="none" style={styles.containerMarker}>
@@ -193,6 +251,17 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           ) : (
             <View style={styles.heightProgress}></View>
           )}
+        </View>
+        {loadingState.loading && coverageStore.coverage?.length === 0 ? (
+          <ProgressBar
+            height={5}
+            indeterminate
+            backgroundColor={color.primary}
+            trackColor={color.palette.grayLigth}
+          />
+        ) : (
+          <View style={styles.heightProgress}></View>
+        )}
 
           <View style={styles.containerBottom}>
             <View style={utilSpacing.mb4}>
@@ -214,6 +283,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           modalState={modalAddressState}
           onPressAddress={onPressAddress}
         ></ModalAutocomplete>
+        <ModalWithoutCoverage modalState={modalWithoutCoverage}></ModalWithoutCoverage>
       </Screen>
     )
   },

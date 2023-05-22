@@ -1,4 +1,4 @@
-import { Address, Coupon, OrderDetail, OrderOverview } from "../../models"
+import { Address, Coupon, Coverage, OrderDetail, OrderOverview } from "../../models"
 import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Country } from "../../models/country-store"
@@ -69,6 +69,10 @@ export type OrderOverviewResponse = {
 
 export type OrderDetailResponse = {
   data: OrderDetail
+} & kind
+
+export type CoverageResponse = {
+  data: Coverage[]
 } & kind
 
 export type CuponResponse = {

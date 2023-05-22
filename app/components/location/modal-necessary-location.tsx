@@ -2,7 +2,7 @@ import React from "react"
 import { View } from "react-native"
 
 import { color } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
 import { Button } from "../button/button"
 import { Icon } from "../icon/icon"
@@ -22,11 +22,14 @@ export const ModalNecessaryLocation = (props: { modalState: ModalState }) => {
           tx="modalNecessaryLocation.title"
           preset="bold"
           size="lg"
-          style={utilSpacing.pb3}
+          style={[utilSpacing.pb3, utilText.textCenter]}
         ></Text>
-        <Text tx="modalNecessaryLocation.description" style={utilSpacing.pb3}></Text>
+        <Text
+          tx="modalNecessaryLocation.description"
+          style={[utilSpacing.pb3, utilText.textCenter]}
+        ></Text>
         <Button
-          tx="common.ok"
+          tx="common.understand"
           style={[utilSpacing.mx4, utilFlex.selfCenter, utilSpacing.my4]}
           onPress={() => props.modalState.setVisible(false)}
         ></Button>

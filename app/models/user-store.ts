@@ -17,6 +17,7 @@ export const userChef = types.model("UserChef").props({
   categories: types.maybeNull(types.array(categoryStore)),
   dishes: types.optional(types.array(dish), []), // Only used when is grouped by chef
   currencyCode: types.maybeNull(types.string),
+  priceDelivery: types.maybeNull(types.number),
 })
 export interface UserChef extends Instance<typeof userChef> {}
 

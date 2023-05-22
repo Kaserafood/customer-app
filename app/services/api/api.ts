@@ -15,6 +15,7 @@ import {
   CommonResponse,
   CountryResponse,
   CuponResponse,
+  CoverageResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -145,6 +146,8 @@ export class Api {
     timeZone: string,
     userId: number,
     tokenPagination: string,
+    latitude: number,
+    longitude: number,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -153,6 +156,8 @@ export class Api {
         timeZone,
         userId,
         tokenPagination,
+        latitude,
+        longitude,
         categoryId,
       },
       "/dishes",
@@ -405,6 +410,13 @@ export class Api {
    */
   async removeAccount(userId: number): Promise<CommonResponse> {
     return await this.request({}, `/users/account/${userId}`, "DELETE")
+  }
+
+  /**
+   * @description Get all coordiantes of the coverage.
+   */
+  async getCoverage(): Promise<CoverageResponse> {
+    return await this.request({}, `/deliveries/coverage`, "GET")
   }
 
   /**

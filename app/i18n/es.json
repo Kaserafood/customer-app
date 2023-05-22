@@ -619,6 +619,10 @@
     "title": "Ingresa una ubicación",
     "placeholderSearch": "Escribe la ubicación o referencia"
   },
+  "modalWithoutCoverage": {
+    "title": "Sin cobertura",
+    "info": "Lo sentimos, no tenemos cobertura en la ubicación seleccionada"
+  },
   "reportBugScreen": {
     "title": "Reportar un error",
     "description": "Si encuentras algún error en la aplicación, por favor, repórtalo y lo solucionaremos lo antes posible.",

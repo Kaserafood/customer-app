@@ -44,11 +44,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
         userStore.setAddressId(-1)
         saveString("address", JSON.stringify(address))
         messagesStore.showSuccess("addressScreen.addressSaved", true)
-        deliveryStore
-          .getPriceDeliveryByCity(address.latitude, address.longitude)
-          .catch((error: Error) => {
-            messagesStore.showError(error.message)
-          })
         navigation.navigate(params.screenToReturn)
       } else {
         commonStore.setVisibleLoading(true)
@@ -60,9 +55,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               addressStore.setCurrent({ ...address })
               userStore.setAddressId(address.id)
               messagesStore.showSuccess(res.message)
-              deliveryStore.getPriceDelivery(address.id).catch((error: Error) => {
-                messagesStore.showError(error.message)
-              })
               // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
               navigation.navigate(params.screenToReturn)
             }
