@@ -1,6 +1,7 @@
 import { Address, Coupon, OrderDetail, OrderOverview } from "../../models"
 import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
+import { Country } from "../../models/country-store"
 import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
 import { Card, UserChef } from "../../models/user-store"
@@ -81,3 +82,8 @@ export type BannerResponse = {
 export type CardResponse = {
   data: Card[]
 } & kind
+
+export type CountryResponse = {
+  data: Country[]
+} & kind
+

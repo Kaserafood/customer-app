@@ -29,7 +29,8 @@
     "byChefIndependently": "Por chefs independientes",
     "register": "Regístrate",
     "login": "Iniciar sesión",
-    "exploreApp": "Explora la app"
+    "exploreApp": "Explora la app",
+    "selectCountry" : "Selecciona tu país"
   },
   "registerFormScreen": {
     "title": "Regístrate",

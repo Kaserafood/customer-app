@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect } from "react"
+import React, { FC, useLayoutEffect, useEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
@@ -7,22 +7,25 @@ import OneSignal from "react-native-onesignal"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 
-import { Button, Text } from "../../components"
+import { Button, Icon, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
-import { utilSpacing, utilText } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { ModalCountry } from "./modal-country"
+import { ModalStateHandler } from "../../utils/modalState"
 import RNUxcam from "react-native-ux-cam"
 
+const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
-    const { userStore, commonStore } = useStores()
+    const { userStore, commonStore, countryStore } = useStores()
     const toRegister = () => navigation.navigate("registerPager")
     const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {
-        description: "Se ha presionado el boton de 'Explorar el app'",
+        description: "Se ha presionado el botón de 'Explorar el app'",
       })
       userStore.setUserId(-1)
       OneSignal.setExternalUserId("-1")
@@ -30,6 +33,20 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       RNUxcam.logEvent("exploreTheApp")
       commonStore.setIsSignedIn(true)
     }
+
+    useEffect(() => {
+      modalCountry.setVisible(true)
+    }, [])
+
+    useEffect(() => {
+      if (countryStore.countries.length > 0) userStore.setCountryId(countryStore.countries[0].id)
+    }, [countryStore.countries])
+
+    useEffect(() => {
+      if (!modalCountry.isVisible) {
+        changeNavigationBarColor(color.primary, false, true)
+      }
+    }, [modalCountry.isVisible])
 
     useLayoutEffect(() => {
       __DEV__ && console.log("in init screen")
@@ -40,6 +57,26 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     return (
       <ScrollView contentContainerStyle={styles.root}>
         <StatusBar backgroundColor={color.primary} barStyle="light-content" />
+        {countryStore.selectedCountry && (
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={[
+              styles.btnCountry,
+              utilSpacing.px4,
+              utilSpacing.py3,
+              utilFlex.flexRow,
+              utilFlex.flexCenterVertical,
+            ]}
+            onPress={() => modalCountry.setVisible(true)}
+          >
+            <Image
+              style={[styles.flagSmall, utilSpacing.mr2]}
+              source={{ uri: countryStore.selectedCountry.flag }}
+            ></Image>
+            <Text text={countryStore.selectedCountry.name}></Text>
+            <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
+          </TouchableOpacity>
+        )}
 
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>
@@ -74,12 +111,19 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             ></Text>
           </TouchableOpacity>
         </View>
+        <ModalCountry modalState={modalCountry}></ModalCountry>
       </ScrollView>
     )
   },
 )
 
 const styles = StyleSheet.create({
+  btnCountry: {
+    backgroundColor: color.palette.white,
+    borderRadius: 35,
+    position: "absolute",
+    top: 20,
+  },
   btnExplore: {
     alignSelf: "center",
     lineHeight: 35,
@@ -91,6 +135,11 @@ const styles = StyleSheet.create({
   },
   containerButtons: {
     width: "60%",
+  },
+  flagSmall: {
+    borderRadius: 25,
+    height: 25,
+    width: 25,
   },
   imageLogo: {
     height: 230,
