@@ -30,12 +30,13 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import { loadString } from "../../utils/storage"
+import { loadString, saveString } from "../../utils/storage"
 import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
 import RNUxcam from "react-native-ux-cam"
 import { DishParams } from "./dish.types"
+import { async } from "validate.js"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -123,22 +124,22 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       RNUxcam.tagScreenName("Inicio")
     }, [])
 
-    useEffect(() => {
-      if (!isFirstTime) {
-        __DEV__ && console.log("Home  useEffect date", dayStore.currentDay.date)
-        dishStore
-          .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
-          .catch((error: Error) => {
-            messagesStore.showError(error.message)
-          })
-          .finally(() => {
-            if (isLoading) {
-              commonStore.setVisibleLoading(false)
-              setIsLoading(false)
-            }
-          })
-      } else setIsFirstTime(false)
-    }, [dayStore.currentDay.date])
+    // useEffect(() => {
+    //   if (!isFirstTime) {
+    //     __DEV__ && console.log("Home  useEffect date", dayStore.currentDay.date)
+    //     dishStore
+    //       .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
+    //       .catch((error: Error) => {
+    //         messagesStore.showError(error.message)
+    //       })
+    //       .finally(() => {
+    //         if (isLoading) {
+    //           commonStore.setVisibleLoading(false)
+    //           setIsLoading(false)
+    //         }
+    //       })
+    //   } else setIsFirstTime(false)
+    // }, [dayStore.currentDay.date])
 
     const onChangeDay = async (day: Day) => {
       const { latitude, longitude } = addressStore.current

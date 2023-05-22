@@ -203,53 +203,20 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               </MapView>
             )}
 
-            <View pointerEvents="none" style={styles.containerMarker}>
-              <IconRN name="place" size={50} color={color.primary}></IconRN>
-            </View>
-
-            {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
-              <View style={styles.containerCurrentLocation}>
-                <Ripple
-                  rippleOpacity={0.2}
-                  rippleDuration={400}
-                  onPress={onCurrentLocation}
-                  style={[styles.buttonLocation, utilFlex.flexCenter]}
-                >
-                  <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
-                </Ripple>
-              </View>
-            )}
-
-            <View style={[styles.containerSearch, utilSpacing.mt5]}>
-              <Ripple
-                rippleOpacity={0.2}
-                rippleDuration={400}
-                rippleContainerBorderRadius={150}
-                style={[
-                  styles.search,
-                  utilSpacing.py5,
-                  utilSpacing.px4,
-                  utilFlex.flexRow,
-
-                  utilFlex.flexCenterVertical,
-                  SHADOW,
-                ]}
-                onPress={() => modalAddressState.setVisible(true)}
-              >
-                <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
-                <Text tx="mapScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
-              </Ripple>
-            </View>
+          <View pointerEvents="none" style={styles.containerMarker}>
+            <IconRN name="place" size={50} color={color.primary}></IconRN>
           </View>
-          {loadingState.loading ? (
-            <ProgressBar
-              height={5}
-              indeterminate
-              backgroundColor={color.primary}
-              trackColor={color.palette.grayLigth}
-            />
-          ) : (
-            <View style={styles.heightProgress}></View>
+
+          {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+            <View style={styles.containerCurrentLocation}>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={onCurrentLocation}
+                style={[styles.buttonLocation, utilFlex.flexCenter]}
+              >
+                <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
+              </TouchableOpacity>
+            </View>
           )}
         </View>
         {loadingState.loading && coverageStore.coverage?.length === 0 ? (
@@ -263,22 +230,33 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           <View style={styles.heightProgress}></View>
         )}
 
-          <View style={styles.containerBottom}>
-            <View style={utilSpacing.mb4}>
-              <Text text={address.formatted} preset="bold" size="lg" style={utilSpacing.mt4}></Text>
-            </View>
+        <View style={styles.containerBottom}>
+          <View>
+            <Text
+              tx="mapScreen.whereReciveFood"
+              preset="bold"
+              size="lg"
+              style={utilSpacing.my4}
+            ></Text>
 
-            <Button
-              onPressIn={toAddress}
-              block
-              preset="primary"
-              style={[utilFlex.selfCenter, utilSpacing.mb5]}
-              tx="mapScreen.cofirmUbication"
-              disabled={loadingState.loading}
-            ></Button>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              style={styles.containerAddress}
+              onPress={() => modalAddressState.setVisible(true)}
+            >
+              <Text text={address.formatted} style={styles.textAddrres}></Text>
+            </Ripple>
           </View>
-        </View>
 
+          <Button
+            onPressIn={toAddress}
+            block
+            preset="primary"
+            style={[utilFlex.selfCenter, utilSpacing.mb4]}
+            tx="common.next"
+          ></Button>
+        </View>
         <ModalAutocomplete
           modalState={modalAddressState}
           onPressAddress={onPressAddress}
@@ -292,13 +270,14 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 const styles = StyleSheet.create({
   buttonLocation: {
     backgroundColor: color.palette.white,
-    borderRadius: 150,
+    borderRadius: 100,
     height: 55,
     width: 55,
+    ...SHADOW,
   },
   container: {
     alignItems: "center",
-    flex: 1,
+    height: "60%",
     justifyContent: "center",
     width: "100%",
   },
@@ -310,14 +289,15 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     alignSelf: "center",
+    flex: 1,
     justifyContent: "space-between",
     minWidth: 300,
     width: "80%",
   },
   containerCurrentLocation: {
-    bottom: 30,
     position: "absolute",
     right: 30,
+    top: 30,
   },
   containerMarker: {
     alignItems: "center",
@@ -325,12 +305,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     top: 0,
-  },
-  containerSearch: {
-    minWidth: 300,
-    position: "absolute",
-    top: 0,
-    width: "80%",
   },
   heightProgress: {
     height: 5,
@@ -340,11 +314,7 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
-  search: {
-    backgroundColor: color.palette.white,
-    borderRadius: spacing[3],
-  },
-  textAddress: {
+  textAddrres: {
     textAlignVertical: "top",
   },
 })
