@@ -68,11 +68,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const { currentDay } = dayStore
 
     useEffect(() => {
-      console.log("HomeScreen useEffect, address ", addressStore.current)
       if (addressStore.current?.latitude && addressStore.current?.longitude) {
         fetch(false, null)
       }
-    }, [addressStore.current])
+    }, [addressStore.current.id])
 
     const toCategory = (category: Category) => {
       RNUxcam.logEvent("categoryTap", {
@@ -105,7 +104,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const toDetail = (dish: DishModel) => {
       if (cartStore.hasItems) cartStore.cleanItems()
       /**
-       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       *the chef id is set to 0 so that the dishes can be obtained the first time it enters dish-detail
        */
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
@@ -174,6 +173,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     useEffect(() => {
       __DEV__ && console.log("Home  useEffect")
 
+      if (!userStore.addressId) {
+        navigation.navigate("map", { screenToReturn: "main" })
+      }
+
       async function setUserStoreData() {
         if (!userStore.userId) {
           const id = await loadString("userId")
@@ -185,6 +188,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           userStore.setDisplayName(displayName)
           userStore.setAddressId(Number(addressId))
           userStore.setEmail(email)
+        }
+
+        if (!userStore.countryId) {
+          await saveString("countryId", "1")
+          userStore.setCountryId(1)
         }
       }
       setUserStoreData()
@@ -208,17 +216,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         cleanCurrentDishes: true,
         tokenPagination,
       }
-
+      console.log("Fetch home data")
       await Promise.all([
         dishStore.getAll(params),
         categoryStore.getAll(),
         categoryStore.getSeasonal(),
-        userStore.addressId > 0
-          ? deliveryStore.getPriceDelivery(userStore.addressId)
-          : deliveryStore.getPriceDeliveryByCity(
-              addressStore.current?.latitude,
-              addressStore.current?.longitude,
-            ),
         dayStore.getDays(RNLocalize.getTimeZone()),
       ])
         .then(() => {

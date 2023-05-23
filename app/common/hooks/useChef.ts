@@ -3,7 +3,7 @@ import { UserChef } from "../../models/user-store"
 import { ChefItemModel } from "../../screens/chefs/chef-item"
 export type ScreenType = "dishDetail" | "menuChef"
 export const useChef = () => {
-  const formatDishesGropuedByChef = (dishes: UserChef[]): ChefItemModel[] => {
+  const formatDishesGroupedByChef = (dishes: UserChef[]): ChefItemModel[] => {
     return dishes.map((chef: UserChef) => {
       return {
         ...chef,
@@ -27,6 +27,6 @@ export const useChef = () => {
   }
 
   return {
-    formatDishesGropuedByChef,
+    formatDishesGroupedByChef,
   }
 }

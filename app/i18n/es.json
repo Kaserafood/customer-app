@@ -30,7 +30,7 @@
     "register": "Regístrate",
     "login": "Iniciar sesión",
     "exploreApp": "Explora la app",
-    "selectCountry" : "Selecciona tu país"
+    "selectCountry": "Selecciona tu país"
   },
   "registerFormScreen": {
     "title": "Regístrate",
@@ -546,7 +546,7 @@
     "writeHere": "Escribe aquí",
     "requestDish": "Solicitar platillo",
     "ready": "¡Listo!",
-    "confirmationInfo": "Te enviaremos un correo cuando encontremos al chef indicado para esta receta.",
+    "confirmationInfo": "Te enviaremos un correo cuando encontremos al chef indicado para tu solicitud.",
     "continue": "Seguir"
   },
   "addons": {
@@ -601,7 +601,7 @@
     "title": "Favoritos Kasera"
   },
   "orderDetailScreen": {
-    "title": "Detalle del pedido",
+    "title": "Pedido",
     "pending": "Pendiente",
     "paymentMethod": "Método de pago",
     "orderStatus": "Estado del pedido",
@@ -611,8 +611,8 @@
     "order": "Pedido"
   },
   "modalNecessaryLocation": {
-    "title": "Ubicación requerida",
-    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
+    "title": "Ingresa una ubicación",
+    "description": "Ingresa una ubicación para buscar cocineros cercanos.",
     "order": "Pedidio"
   },
   "modalAutocomplete": {
@@ -620,7 +620,7 @@
     "placeholderSearch": "Escribe la ubicación o referencia"
   },
   "modalWithoutCoverage": {
-    "title": "Sin cobertura",
+    "title": "Fuera de cobertura",
     "info": "Lo sentimos, no tenemos cobertura en la ubicación seleccionada"
   },
   "reportBugScreen": {
@@ -633,7 +633,8 @@
     "minLength": "Debes ingresar al menos 3 caracteres",
     "titleError": "Título",
     "descriptionError": "Descripción",
-    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos"
+    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos",
+    "successToSendBug": "Error reportado"
   },
   "modalReportBug": {
     "title": "Error reportado",

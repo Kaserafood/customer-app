@@ -107,10 +107,12 @@ export const UserRegisterModel = userRegister
       await saveString("taxId", data.taxId) // Tax id of latest order created
       await saveString("customerNote", data.customerNote) // Customer note of latest order created
       await saveString("deliveryTimeSlot", data.deliveryTimeSlot) // Delivery time slot of latest order created
+      await saveString("countryId", `${data.countryId}`) // Delivery time slot of latest order created
       self.setUserId(data.id)
       self.setDisplayName(data.displayName)
       self.setEmail(data.email)
       self.setAddressId(data.addressId)
+      self.setCountryId(data.countryId)
     },
   }))
   .actions((self) => ({

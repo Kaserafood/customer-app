@@ -1,27 +1,29 @@
-import { StackScreenProps } from "@react-navigation/stack"
-import { isPointInPolygon } from "geolib"
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import MapView, { Geojson, Region } from "react-native-maps"
-
 import Ripple from "react-native-material-ripple"
 import IconRN from "react-native-vector-icons/MaterialIcons"
+import { StackScreenProps } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
 
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, Screen, Text } from "../../components"
 import { ModalAutocomplete } from "../../components/search-bar-autocomplete/modal-autocomplete"
 import { useStores } from "../../models"
-import { goBack } from "../../navigators/navigation-utilities"
+import { canGoBack, goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 import { ModalWithoutCoverage } from "./modal-without-coverage"
+
+import { isPointInPolygon } from "geolib"
+import ModalNecessaryLocation from "./modal-necessary-location"
+
 class LoadingState {
   loading = true
 
@@ -37,11 +39,11 @@ class LoadingState {
 const loadingState = new LoadingState()
 const modalAddressState = new ModalStateHandler()
 const modalWithoutCoverage = new ModalStateHandler()
+const modalLocation = new ModalStateHandler()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { messagesStore, coverageStore } = useStores()
-
+    const { messagesStore, coverageStore, commonStore, userStore } = useStores()
     const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
@@ -91,6 +93,10 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       }
 
       fetch()
+
+      if (!canGoBack() || !userStore.addressId) {
+        modalLocation.setVisible(true)
+      }
     }, [])
 
     const toAddress = () => {
@@ -111,22 +117,6 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         })
 
         if (isPointInCoverage) {
-          // NOT APPLICABLE FOR NOW ---> Verificamos si la ubicación esta adentro de las zonas excluidas
-          // let isPointInHole = false
-          // for (const hold of coverageStore.getHoles) {
-          //   isPointInHole = isPointInPolygon(
-          //     { latitude: location.latitude, longitude: location.longitude },
-          //     hold,
-          //   )
-
-          //   if (isPointInHole) {
-          //     __DEV__ && console.log("Dentro de areas excluidas")
-          //     isPointInHole = true
-          //     modalWithoutCoverage.setVisible(true)
-          //     return
-          //   }
-          // }
-          // if (!isPointInHole) {
           navigation.navigate("address", {
             latitude: location.latitude,
             longitude: location.longitude,
@@ -136,9 +126,8 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             country: address.country,
             city: address.city,
             region: address.region,
-            screenToReturn: params.screenToReturn,
+            screenToReturn: params?.screenToReturn || "main",
           })
-          // }
         } else {
           __DEV__ && console.log("No esta dentro del poligono")
           modalWithoutCoverage.setVisible(true)
@@ -174,94 +163,120 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     const onCurrentLocation = () => {
       mapRef.current.animateToRegion({ ...initLocation })
     }
+
+    const returnToPreviousScreen = () => {
+      if (!canGoBack()) {
+        commonStore.setIsSignedIn(false)
+        return
+      }
+
+      goBack()
+    }
+
     return (
       <Screen
         preset="scroll"
         statusBarBackgroundColor={modalAddressState.isVisible ? color.palette.white : color.primary}
         statusBar={modalAddressState.isVisible ? "dark-content" : "light-content"}
       >
-        <Header leftIcon="back" headerTx="mapScreen.title" onLeftPress={goBack}></Header>
-        <View style={styles.container}>
-          {initLocation.latitude !== 0 &&
-            initLocation.longitude !== 0 &&
-            coverageStore.coverage?.length > 0 && (
-              <MapView
-                ref={mapRef}
-                style={styles.map}
-                initialRegion={initLocation}
-                onRegionChangeComplete={onRegionChangeComplete}
-              >
-                <Geojson
-                  geojson={{
-                    type: "FeatureCollection",
-                    features: JSON.parse(coverageStore.coverage),
-                  }}
-                  strokeColor="#555"
-                  fillColor="rgba(0,0,0,0.2)"
-                  strokeWidth={1}
-                />
-              </MapView>
+        <Header
+          leftIcon="back"
+          headerTx="mapScreen.title"
+          onLeftPress={returnToPreviousScreen}
+        ></Header>
+        <View style={utilFlex.flex1}>
+          <View style={styles.container}>
+            {initLocation.latitude !== 0 &&
+              initLocation.longitude !== 0 &&
+              coverageStore.coverage?.length > 0 && (
+                <MapView
+                  ref={mapRef}
+                  style={styles.map}
+                  initialRegion={initLocation}
+                  onRegionChangeComplete={onRegionChangeComplete}
+                >
+                  <Geojson
+                    geojson={{
+                      type: "FeatureCollection",
+                      features: JSON.parse(coverageStore.coverage),
+                    }}
+                    strokeColor="#555"
+                    fillColor="rgba(149, 149, 149, 0.1)"
+                    strokeWidth={1}
+                  />
+                </MapView>
+              )}
+
+            <View pointerEvents="none" style={styles.containerMarker}>
+              <IconRN name="place" size={50} color={color.primary}></IconRN>
+            </View>
+            {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
+              <View style={styles.containerCurrentLocation}>
+                <Ripple
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
+                  onPress={onCurrentLocation}
+                  style={[styles.buttonLocation, utilFlex.flexCenter]}
+                >
+                  <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
+                </Ripple>
+              </View>
             )}
 
-          <View pointerEvents="none" style={styles.containerMarker}>
-            <IconRN name="place" size={50} color={color.primary}></IconRN>
-          </View>
+            <View style={[styles.containerSearch, utilSpacing.mt5]}>
+              <Ripple
+                rippleOpacity={0.2}
+                rippleDuration={400}
+                rippleContainerBorderRadius={150}
+                style={[
+                  styles.search,
+                  utilSpacing.py5,
+                  utilSpacing.px4,
+                  utilFlex.flexRow,
 
-          {initLocation.latitude !== 0 && initLocation.longitude !== 0 && (
-            <View style={styles.containerCurrentLocation}>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={onCurrentLocation}
-                style={[styles.buttonLocation, utilFlex.flexCenter]}
+                  utilFlex.flexCenterVertical,
+                  SHADOW,
+                ]}
+                onPress={() => modalAddressState.setVisible(true)}
               >
-                <Icon name="location-crosshairs" size={33} color={color.text}></Icon>
-              </TouchableOpacity>
+                <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
+                <Text tx="mapScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+              </Ripple>
             </View>
-          )}
-        </View>
-        {loadingState.loading && coverageStore.coverage?.length === 0 ? (
-          <ProgressBar
-            height={5}
-            indeterminate
-            backgroundColor={color.primary}
-            trackColor={color.palette.grayLigth}
-          />
-        ) : (
-          <View style={styles.heightProgress}></View>
-        )}
-
-        <View style={styles.containerBottom}>
-          <View>
-            <Text
-              tx="mapScreen.whereReciveFood"
-              preset="bold"
-              size="lg"
-              style={utilSpacing.my4}
-            ></Text>
-
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              style={styles.containerAddress}
-              onPress={() => modalAddressState.setVisible(true)}
-            >
-              <Text text={address.formatted} style={styles.textAddrres}></Text>
-            </Ripple>
           </View>
+          {loadingState.loading ? (
+            <ProgressBar
+              height={5}
+              indeterminate
+              backgroundColor={color.primary}
+              trackColor={color.palette.grayLigth}
+            />
+          ) : (
+            <View style={styles.heightProgress}></View>
+          )}
 
-          <Button
-            onPressIn={toAddress}
-            block
-            preset="primary"
-            style={[utilFlex.selfCenter, utilSpacing.mb4]}
-            tx="common.next"
-          ></Button>
+          <View style={styles.containerBottom}>
+            <View style={utilSpacing.mb4}>
+              <Text text={address.formatted} preset="bold" size="lg" style={utilSpacing.mt4}></Text>
+            </View>
+
+            <Button
+              onPressIn={toAddress}
+              block
+              preset="primary"
+              style={[utilFlex.selfCenter, utilSpacing.mb5]}
+              tx="mapScreen.cofirmUbication"
+              disabled={loadingState.loading}
+            ></Button>
+          </View>
         </View>
+
         <ModalAutocomplete
           modalState={modalAddressState}
           onPressAddress={onPressAddress}
         ></ModalAutocomplete>
         <ModalWithoutCoverage modalState={modalWithoutCoverage}></ModalWithoutCoverage>
+        <ModalNecessaryLocation modalState={modalLocation}></ModalNecessaryLocation>
       </Screen>
     )
   },
@@ -270,14 +285,13 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 const styles = StyleSheet.create({
   buttonLocation: {
     backgroundColor: color.palette.white,
-    borderRadius: 100,
+    borderRadius: 150,
     height: 55,
     width: 55,
-    ...SHADOW,
   },
   container: {
     alignItems: "center",
-    height: "60%",
+    flex: 1,
     justifyContent: "center",
     width: "100%",
   },
@@ -289,15 +303,14 @@ const styles = StyleSheet.create({
   },
   containerBottom: {
     alignSelf: "center",
-    flex: 1,
     justifyContent: "space-between",
     minWidth: 300,
     width: "80%",
   },
   containerCurrentLocation: {
+    bottom: 30,
     position: "absolute",
     right: 30,
-    top: 30,
   },
   containerMarker: {
     alignItems: "center",
@@ -305,6 +318,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     position: "absolute",
     top: 0,
+  },
+  containerSearch: {
+    minWidth: 300,
+    position: "absolute",
+    top: 0,
+    width: "80%",
   },
   heightProgress: {
     height: 5,
@@ -314,7 +333,11 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
   },
-  textAddrres: {
+  search: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[3],
+  },
+  textAddress: {
     textAlignVertical: "top",
   },
 })

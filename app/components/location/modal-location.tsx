@@ -92,8 +92,8 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
   }, [userStore.userId])
 
   useEffect(() => {
-    // El id de la direccion va ser -1 cuando el usaurio registra su dirección
-    // pero ha ingresado como "Exolorar la app"
+    // El id de la direccion va ser -1 cuando el usuario registra su dirección
+    // pero ha ingresado como "Exolorar la app", es decir la direccion solo se guarda localmente
     if (userStore.addressId > 0 || userStore.addressId === -1) {
       modalPersistent.setPersistent(false)
     }
@@ -226,12 +226,8 @@ const AddressItem = observer((props: { address: Address }) => {
   const address = props.address
 
   const { userStore, addressStore, messagesStore, deliveryStore } = useStores()
-  const updateAddressId = (addressId: number) => {
-    userStore.updateAddresId(userStore.userId, addressId).catch((error: Error) => {
-      messagesStore.showError(error.message)
-    })
-
-    deliveryStore.getPriceDelivery(addressId).catch((error: Error) => {
+  const updateAddressId = async (addressId: number) => {
+    await userStore.updateAddresId(userStore.userId, addressId).catch((error: Error) => {
       messagesStore.showError(error.message)
     })
     addressStore.setCurrent({ ...address })

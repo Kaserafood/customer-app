@@ -149,3 +149,10 @@ export function resetRoot(params = { index: 0, routes: [] }) {
     navigationRef.resetRoot(params)
   }
 }
+
+export function canGoBack() {
+  if (navigationRef.isReady() && navigationRef.canGoBack()) {
+    return true
+  }
+  return false
+}

@@ -7,7 +7,7 @@ import { Image } from "../../components/image/image"
 import { Modal } from "../../components/modal/modal"
 import { Text } from "../../components/text/text"
 import { goBack } from "../../navigators/navigation-utilities"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
 
 export const ModalReportBug = (props: { modalState: ModalState }) => {
@@ -23,7 +23,7 @@ export const ModalReportBug = (props: { modalState: ModalState }) => {
           style={[utilFlex.selfCenter, utilSpacing.p4]}
           tx="modalReportBug.title"
         ></Text>
-        <Text tx="modalReportBug.info" style={utilSpacing.pb5}></Text>
+        <Text tx="modalReportBug.info" style={[utilSpacing.pb5, utilText.textCenter]}></Text>
         <Button
           tx="common.ok"
           style={[utilFlex.selfCenter, utilSpacing.mt5]}

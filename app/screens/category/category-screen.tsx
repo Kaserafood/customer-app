@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
@@ -25,11 +25,13 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import RNUxcam from "react-native-ux-cam"
+import { DishParams } from "../home/dish.types"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">> = observer(
   ({ route: { params }, navigation }) => {
+    const [fetched, setFetched] = useState(false)
     const {
       dayStore,
       dishStore: { dishesCategory, getAll },
@@ -37,6 +39,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
       userStore,
       messagesStore,
       categoryStore,
+      addressStore,
     } = useStores()
 
     useEffect(() => {
@@ -52,19 +55,26 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
           })
         }
 
-        await getAll(
-          dayStore.currentDay.date,
-          RNLocalize.getTimeZone(),
-          userStore.userId,
-          null,
-          true,
-          params.id,
-        )
+        const { latitude, longitude } = addressStore.current
+
+        const paramsDish: DishParams = {
+          date: dayStore.currentDay.date,
+          timeZone: RNLocalize.getTimeZone(),
+          userId: userStore.userId,
+          latitude: latitude,
+          longitude: longitude,
+          cleanCurrentDishes: true,
+          categoryId: params.id,
+          tokenPagination: null,
+        }
+
+        await getAll(paramsDish)
           .catch((error) => {
             messagesStore.showError(error.message)
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
+            setFetched(true)
           })
       }
 
@@ -74,11 +84,23 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
     const onChangeDay = async (day: Day) => {
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
-      await getAll(day.date, RNLocalize.getTimeZone(), userStore.userId, null, params.id).finally(
-        () => {
-          commonStore.setVisibleLoading(false)
-        },
-      )
+
+      const { latitude, longitude } = addressStore.current
+
+      const paramsDish: DishParams = {
+        date: day.date,
+        timeZone: RNLocalize.getTimeZone(),
+        userId: userStore.userId,
+        latitude: latitude,
+        longitude: longitude,
+        cleanCurrentDishes: true,
+        categoryId: params.id,
+        tokenPagination: null,
+      }
+
+      await getAll(paramsDish).finally(() => {
+        commonStore.setVisibleLoading(false)
+      })
     }
 
     const toDetail = (dish: DishModel) => {
@@ -111,10 +133,12 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             </View>
           </View>
 
-          <EmptyData
-            lengthData={dishesCategory.length}
-            onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
-          ></EmptyData>
+          {fetched && (
+            <EmptyData
+              lengthData={dishesCategory.length}
+              onPressRequestDish={() => modalStateRequestDish.setVisible(true)}
+            ></EmptyData>
+          )}
         </ScrollView>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
         <ModalRequestDish modalState={modalStateRequestDish}></ModalRequestDish>

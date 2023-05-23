@@ -83,18 +83,28 @@ export const DishStoreModel = types
       }
     }),
 
-    getGroupedByChef: flow(function* getGroupedByChef(date: string, timeZone: string) {
+    getGroupedByChef: flow(function* (
+      date: string,
+      timeZone: string,
+      latitude: number,
+      longitude: number,
+    ) {
       detach(self.dishesGroupedByChef)
       const api = new Api()
-      const result = yield api.getDishesGroupedByChef(date, timeZone)
+      const result = yield api.getDishesGroupedByChef(date, timeZone, latitude, longitude)
       if (result.kind === "ok") {
         applySnapshot(self.dishesGroupedByChef, result.data)
       }
     }),
-    getGroupedByLatestChef: flow(function* getGroupedByLatestChef(date: string, timeZone: string) {
+    getGroupedByLatestChef: flow(function* getGroupedByLatestChef(
+      date: string,
+      timeZone: string,
+      latitude: number,
+      longitude: number,
+    ) {
       detach(self.dishesGroupedByChef)
       const api = new Api()
-      const result = yield api.getDishesGroupedByLatestChef(date, timeZone)
+      const result = yield api.getDishesGroupedByLatestChef(date, timeZone, latitude, longitude)
 
       if (result.kind === "ok") {
         applySnapshot(self.dishesGroupedByLatestChef, result.data)
@@ -139,9 +149,15 @@ export const DishStoreModel = types
       }
       return null
     }),
-    getSearch: flow(function* getSearch(search: string, date: string, timeZone: string) {
+    getSearch: flow(function* (
+      search: string,
+      date: string,
+      timeZone: string,
+      latitude: number,
+      longitude: number,
+    ) {
       const api = new Api()
-      const result = yield api.getSearchDishes(search, date, timeZone)
+      const result = yield api.getSearchDishes(search, date, timeZone, latitude, longitude)
 
       if (result && result.kind === "ok") {
         self.dishesSearch.replace(result.data)

@@ -203,21 +203,35 @@ export class Api {
   async getDishesGroupedByChef(
     date: string,
     timeZone: string,
+    latitude: number,
+    longitude: number,
     categoryId?: number,
   ): Promise<ChefResponse> {
-    return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+    return await this.request(
+      { date, timeZone, latitude, longitude, categoryId },
+      "/dishes/chefs",
+      "GET",
+    )
   }
 
   /**
    *
    * @description Search dishes by name or description
    */
-  async getSearchDishes(search: string, date: string, timeZone: string): Promise<DishResponse> {
+  async getSearchDishes(
+    search: string,
+    date: string,
+    timeZone: string,
+    latitude: number,
+    longitude: number,
+  ): Promise<DishResponse> {
     return await this.request(
       {
         date,
         timeZone,
         search,
+        latitude,
+        longitude,
       },
       "/dishes/search",
       "GET",
@@ -238,8 +252,17 @@ export class Api {
    *
    * @description Get dishes grouped by latest chef
    */
-  async getDishesGroupedByLatestChef(date: string, timeZone: string): Promise<ChefResponse> {
-    return await this.request({ date, timeZone }, "/dishes/chefs-latest", "GET")
+  async getDishesGroupedByLatestChef(
+    date: string,
+    timeZone: string,
+    latitude: number,
+    longitude: number,
+  ): Promise<ChefResponse> {
+    return await this.request(
+      { date, timeZone, latitude, longitude },
+      "/dishes/chefs-latest",
+      "GET",
+    )
   }
 
   /**

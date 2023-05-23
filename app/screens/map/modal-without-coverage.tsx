@@ -15,7 +15,7 @@ export const ModalWithoutCoverage = (props: { modalState: ModalStateHandler }) =
           style={utilSpacing.pb5}
           tx="modalWithoutCoverage.title"
         ></Text>
-        <Text tx="modalWithoutCoverage.info" style={utilSpacing.pb5}></Text>
+        <Text tx="modalWithoutCoverage.info" style={utilSpacing.pb6}></Text>
         <Button
           tx="common.ok"
           onPress={() => modalState.setVisible(false)}
