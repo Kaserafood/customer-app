@@ -72,7 +72,7 @@ const AppStack = observer(() => {
         </Stack.Group>
       ) : (
         <Stack.Group>
-          {!userStore.addCard && <Stack.Screen name="map" component={MapScreen} />}
+          {!userStore.addPaymentMethod && <Stack.Screen name="map" component={MapScreen} />}
           <Stack.Screen name="main">
             {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
           </Stack.Screen>

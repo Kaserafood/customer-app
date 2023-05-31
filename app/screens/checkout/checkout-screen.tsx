@@ -95,8 +95,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       }
     }, [navigation])
 
-    const getCardId = () => {
-      if (userStore.currentCard?.id > 0) return userStore.currentCard?.id
+    const getPaymentMethodId = () => {
+      if (userStore.currentCard?.id) return userStore.currentCard?.id
 
       return null
     }
@@ -137,9 +137,10 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
         taxId: taxId,
         uuid: getUniqueId(),
-        cardId: getCardId(),
-        paymentMethod: getCardId() ? "qpaypro" : "cod", // Contra entrega o pago con tarjeta
+        paymentMethodId: getPaymentMethodId(),
+        paymentMethod: getPaymentMethodId() ? "card" : "cod", // Contra entrega o pago con tarjeta
         couponCode: coupon?.code,
+        total: getCurrentTotal(),
       }
 
       orderStore
@@ -262,7 +263,9 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getTextButtonFooter = (): string => {
-      const text = getI18nText(getCardId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder")
+      const text = getI18nText(
+        getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
+      )
       return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
     }
 
@@ -361,7 +364,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <Card
               style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}
             >
-              {userStore.currentCard?.id > 0 ? (
+              {userStore.currentCard?.id ? (
                 <Ripple
                   rippleOpacity={0.2}
                   rippleDuration={400}
