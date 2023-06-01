@@ -19,10 +19,6 @@ const ModalNecessaryLocation = ({ modalState }: ModalNecessaryLocationProps) => 
           tx="modalNecessaryLocation.title"
           style={[utilSpacing.mb2, utilText.textCenter]}
         ></Text>
-        <Text
-          tx="modalNecessaryLocation.description"
-          style={[utilSpacing.mb6, utilText.textCenter]}
-        ></Text>
         <Image style={[styles.image, utilSpacing.mb5]} source={images.map}></Image>
 
         <Button

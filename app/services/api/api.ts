@@ -438,7 +438,7 @@ export class Api {
   /**
    * @description Get all coordiantes of the coverage.
    */
-  async getCoverage(): Promise<CoverageResponse> {
+  async getCoverage(): Promise<CommonResponse> {
     return await this.request({}, `/deliveries/coverage`, "GET")
   }
 

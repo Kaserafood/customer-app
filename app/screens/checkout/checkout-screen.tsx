@@ -131,7 +131,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         city: addressStore.current.city,
         region: addressStore.current.region,
         products: getProducts(),
-        priceDelivery: params.priceDelivery,
+        priceDelivery: priceDelivery(),
         metaData: getMetaData(taxId),
         customerNote: data.customerNote,
         currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
@@ -270,7 +270,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getCurrentTotal = (): number => {
-      return cartStore.subtotal + params.priceDelivery - (cartStore.discount ?? 0)
+      return cartStore.subtotal + priceDelivery() - (cartStore.discount ?? 0)
     }
 
     const getCurrency = (): string => {
@@ -292,6 +292,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     const onPressCoupon = () => {
       modalStateCoupon.setVisible(true)
       RNUxcam.logEvent("checkout: onPressCoupon")
+    }
+
+    const priceDelivery = () => {
+      if (cartStore.cart.length === 0) return 0
+      return cartStore.cart[0]?.dish.chef.priceDelivery
     }
 
     return (
@@ -459,7 +464,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
               <DishesList></DishesList>
               <Separator style={styles.separator}></Separator>
-              <Totals priceDelivery={params.priceDelivery} coupon={coupon}></Totals>
+              <Totals priceDelivery={priceDelivery()} coupon={coupon}></Totals>
             </Card>
           </View>
         </ScrollView>

@@ -21,7 +21,10 @@ const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
-    const toRegister = () => navigation.navigate("registerPager")
+    const toRegister = () => {
+      userStore.setUserId(0)
+      navigation.navigate("registerPager")
+    }
     const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {

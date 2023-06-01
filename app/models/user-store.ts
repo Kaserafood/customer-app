@@ -225,16 +225,18 @@ export const UserRegisterModel = userRegister
 
     addPaymentMethod: flow(function* (userId: number, card: any) {
       const api = new Api()
-      let result
+      let result: { kind: string; data: { value: any } }
 
       if (self.countryId === GUATEMALA) result = yield api.addPaymentMethodQPayPro(userId, card)
       else result = yield api.addPaymentMethodStripe(userId, self.email, card)
-      console.log(result)
+
       if (result.kind === "ok") {
-        if (self.countryId === GUATEMALA) {
-          if (isNumber(result.data.value) && Number(result.data.value) > 0) {
-            return true
-          }
+        if (
+          self.countryId === GUATEMALA &&
+          isNumber(result.data.value) &&
+          Number(result.data.value) > 0
+        ) {
+          return true
         } else if (result.data.value) return true
       }
       return false

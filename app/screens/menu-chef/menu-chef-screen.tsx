@@ -175,7 +175,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
         navigation.navigate("registerForm")
-      } else navigation.navigate("checkout", { priceDelivery: params.priceDelivery })
+      } else navigation.navigate("checkout")
     }
 
     const getCategoriesName = (categories: Category[]) => {

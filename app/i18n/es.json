@@ -611,8 +611,7 @@
     "order": "Pedido"
   },
   "modalNecessaryLocation": {
-    "title": "Ingresa una ubicación",
-    "description": "Ingresa una ubicación para buscar cocineros cercanos.",
+    "title": "Ingresa una ubicación para buscar cocineros cercanos.",
     "order": "Pedidio"
   },
   "modalAutocomplete": {

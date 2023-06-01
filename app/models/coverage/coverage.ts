@@ -45,7 +45,7 @@ export const CoverageModel = types
 
     getCoverage: flow(function* () {
       const api = new Api()
-      const result = yield api.getParam("_coverage")
+      const result = yield api.getCoverage()
 
       if (result && result.kind === "ok") {
         self.coverage = result.data?.value

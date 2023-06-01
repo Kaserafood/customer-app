@@ -54,9 +54,7 @@ interface menuChefProps extends MenuChef {
   showModalCart?: boolean
 }
 
-interface checkoutProps {
-  priceDelivery: number
-}
+interface checkoutProps {}
 
 export type NavigatorParamList = {
   init: undefined
