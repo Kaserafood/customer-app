@@ -29,6 +29,10 @@ import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
+
+export function setCountryId(id: number) {
+  countryId = id
+}
 /**
  * Manages all requests to the API.
  */

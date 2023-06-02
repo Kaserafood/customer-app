@@ -257,7 +257,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         dishStore
           .getAll(params)
           .then((response) => {
-            if (!response.isEmptyResult) setFetchData(true)
+            if (!response?.isEmptyResult) setFetchData(true)
           })
           .finally(() => {
             setIsFetchingMoreData(false)

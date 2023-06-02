@@ -108,7 +108,11 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             leftIcon="back"
             onLeftPress={handleBack}
           ></Header>
-          <ScrollView style={styles.w100} contentContainerStyle={utilFlex.flexCenterHorizontal}>
+          <ScrollView
+            style={styles.w100}
+            keyboardShouldPersistTaps={"handled"}
+            contentContainerStyle={utilFlex.flexCenterHorizontal}
+          >
             <View style={styles.containerForm}>
               <Text
                 preset="semiBold"
