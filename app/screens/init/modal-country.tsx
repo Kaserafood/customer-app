@@ -19,7 +19,7 @@ export const ModalCountry = observer(({ modalState }: ModalCountryProps) => {
   const { countryStore, userStore } = useStores()
 
   useEffect(() => {
-    modalState.setVisible(true)
+    // modalState.setVisible(true)
     countryStore.getAll()
   }, [])
 
