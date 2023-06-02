@@ -69,7 +69,7 @@ export const RegisterFormScreen: FC<
                 exploreApp: false,
               })
               commonStore.setIsSignedIn(true)
-              // navigation.navigate("map")
+              navigation.navigate("map")
             }
           }
         })

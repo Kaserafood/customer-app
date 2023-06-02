@@ -8,6 +8,7 @@ import { saveString } from "../utils/storage"
 import { categoryStore } from "./category-store"
 import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
+import { GUATEMALA } from "../utils/constants"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybeNull(types.number),
@@ -37,7 +38,7 @@ const userLogin = types.model("UserLoginStore").props({
 export interface UserLogin extends Instance<typeof userLogin> {}
 
 const cardModel = types.model("Card").props({
-  id: types.maybeNull(types.number),
+  id: types.maybeNull(types.union(types.string, types.number)),
   name: types.maybeNull(types.string),
   number: types.maybeNull(types.string),
   expDate: types.optional(types.string, ""),
@@ -155,10 +156,7 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    validTokenRecoverPassword: flow(function* validTokenRecoverPassword(
-      token: string,
-      email: string,
-    ) {
+    validTokenRecoverPassword: flow(function* (token: string, email: string) {
       const api = new Api()
 
       const result = yield api.validTokenRecoverPassword(token, email)
@@ -168,7 +166,7 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    changePassword: flow(function* changePassword(email: string, password: string) {
+    changePassword: flow(function* (email: string, password: string) {
       const api = new Api()
 
       const result = yield api.changePassword(email, password)
@@ -177,7 +175,7 @@ export const UserRegisterModel = userRegister
       }
       return false
     }),
-    removeAccount: flow(function* removeAccount(userId: number) {
+    removeAccount: flow(function* (userId: number) {
       const api = new Api()
 
       const result = yield api.removeAccount(userId)
@@ -186,7 +184,7 @@ export const UserRegisterModel = userRegister
       }
       return false
     }),
-    reportBug: flow(function* reportBug(data: any) {
+    reportBug: flow(function* (data: any) {
       const api = new Api()
 
       const result = yield api.reportBug(data)
@@ -205,13 +203,16 @@ export const UserRegisterModel = userRegister
       return null
     }),
 
-    getCads: flow(function* getCards(userId: number) {
+    getPaymentMethods: flow(function* (userId: number) {
       const api = new Api()
-      const result = yield api.getCards(userId)
-      if (result.kind === "ok") self.setCards(result.data)
+      let result: { kind: string; data: any }
+
+      if (self.countryId === GUATEMALA) result = yield api.getPaymentMethodsQPayPro(userId)
+      else result = yield api.getPaymentMethodsStripe(userId)
+      if (result.kind === "ok") applySnapshot(self.cards, result.data)
     }),
 
-    updateSelectedCard: flow(function* updateSelectedCard(userId: number, cardId: number | null) {
+    updateSelectedCard: flow(function* (userId: number, cardId: number | null | string) {
       const api = new Api()
       const result = yield api.updateSelectedCard(userId, cardId)
       if (result.kind === "ok") {
@@ -222,13 +223,21 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    addCard: flow(function* addCard(userId: number, card: any) {
+    addPaymentMethod: flow(function* (userId: number, card: any) {
       const api = new Api()
-      const result = yield api.addCard(userId, card)
+      let result: { kind: string; data: { value: any } }
+
+      if (self.countryId === GUATEMALA) result = yield api.addPaymentMethodQPayPro(userId, card)
+      else result = yield api.addPaymentMethodStripe(userId, self.email, card)
+
       if (result.kind === "ok") {
-        if (isNumber(result.data.value) && Number(result.data.value) > 0) {
+        if (
+          self.countryId === GUATEMALA &&
+          isNumber(result.data.value) &&
+          Number(result.data.value) > 0
+        ) {
           return true
-        }
+        } else if (result.data.value) return true
       }
       return false
     }),

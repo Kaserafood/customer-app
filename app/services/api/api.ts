@@ -29,6 +29,10 @@ import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
+
+export function setCountryId(id: number) {
+  countryId = id
+}
 /**
  * Manages all requests to the API.
  */
@@ -438,7 +442,7 @@ export class Api {
   /**
    * @description Get all coordiantes of the coverage.
    */
-  async getCoverage(): Promise<CoverageResponse> {
+  async getCoverage(): Promise<CommonResponse> {
     return await this.request({}, `/deliveries/coverage`, "GET")
   }
 
@@ -466,21 +470,24 @@ export class Api {
   /**
    * @description Get all card from user
    */
-  async getCards(userId: number): Promise<CardResponse> {
+  async getPaymentMethodsQPayPro(userId: number): Promise<CardResponse> {
     return await this.request({}, `/users/cards/${userId}`, "GET")
   }
 
   /**
    * @description Update the card selected from user
    */
-  async updateSelectedCard(userId: number, cardId: number | null): Promise<CommonResponse> {
+  async updateSelectedCard(
+    userId: number,
+    cardId: number | null | string,
+  ): Promise<CommonResponse> {
     return await this.request({ cardId }, `/users/cards/${userId}`, "PUT")
   }
 
   /**
    * @description Add a card to user
    */
-  async addCard(userId: number, card: Card): Promise<CommonResponse> {
+  async addPaymentMethodQPayPro(userId: number, card: Card): Promise<CommonResponse> {
     return await this.request(card, `/users/cards/${userId}`, "POST")
   }
 
@@ -489,5 +496,19 @@ export class Api {
    */
   async getCountries(): Promise<CountryResponse> {
     return await this.request({}, `/countries`, "GET")
+  }
+
+  /**
+   * @description Get all payment methods from user
+   */
+  async getPaymentMethodsStripe(userId: number): Promise<CardResponse> {
+    return await this.request({}, `/stripe/payment-methods/${userId}`, "GET")
+  }
+
+  /**
+   * @description Add payment method in stripe
+   */
+  async addPaymentMethodStripe(userId: number, email: string, card: Card): Promise<CommonResponse> {
+    return await this.request({ userId, email, ...card }, `/stripe/payment-methods/`, "POST")
   }
 }

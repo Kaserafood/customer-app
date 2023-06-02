@@ -16,12 +16,16 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalCountry } from "./modal-country"
 import { ModalStateHandler } from "../../utils/modalState"
 import RNUxcam from "react-native-ux-cam"
+import { setCountryId } from "../../services/api"
 
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
-    const toRegister = () => navigation.navigate("registerPager")
+    const toRegister = () => {
+      userStore.setUserId(0)
+      navigation.navigate("registerPager")
+    }
     const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {
@@ -39,7 +43,13 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }, [])
 
     useEffect(() => {
-      if (countryStore.countries.length > 0) userStore.setCountryId(countryStore.countries[0].id)
+      if (countryStore.countries?.length > 0) {
+        const countryId = countryStore.countries[0].id
+        if (countryStore.countries.length > 0) {
+          userStore.setCountryId(countryId)
+          setCountryId(countryId)
+        }
+      }
     }, [countryStore.countries])
 
     useEffect(() => {
@@ -57,26 +67,26 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     return (
       <ScrollView contentContainerStyle={styles.root}>
         <StatusBar backgroundColor={color.primary} barStyle="light-content" />
-        {countryStore.selectedCountry && (
-          <TouchableOpacity
-            activeOpacity={0.5}
-            style={[
-              styles.btnCountry,
-              utilSpacing.px4,
-              utilSpacing.py3,
-              utilFlex.flexRow,
-              utilFlex.flexCenterVertical,
-            ]}
-            onPress={() => modalCountry.setVisible(true)}
-          >
-            <Image
-              style={[styles.flagSmall, utilSpacing.mr2]}
-              source={{ uri: countryStore.selectedCountry.flag }}
-            ></Image>
-            <Text text={countryStore.selectedCountry.name}></Text>
-            <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
-          </TouchableOpacity>
-        )}
+        {/* {countryStore.selectedCountry && (
+          // <TouchableOpacity
+          //   activeOpacity={0.5}
+          //   style={[
+          //     styles.btnCountry,
+          //     utilSpacing.px4,
+          //     utilSpacing.py3,
+          //     utilFlex.flexRow,
+          //     utilFlex.flexCenterVertical,
+          //   ]}
+          //   onPress={() => modalCountry.setVisible(true)}
+          // >
+          //   <Image
+          //     style={[styles.flagSmall, utilSpacing.mr2]}
+          //     source={{ uri: countryStore.selectedCountry.flag }}
+          //   ></Image>
+          //   <Text text={countryStore.selectedCountry.name}></Text>
+          //   <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
+          // </TouchableOpacity>
+        )} */}
 
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>
@@ -111,7 +121,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             ></Text>
           </TouchableOpacity>
         </View>
-        <ModalCountry modalState={modalCountry}></ModalCountry>
+        {/* <ModalCountry modalState={modalCountry}></ModalCountry> */}
       </ScrollView>
     )
   },

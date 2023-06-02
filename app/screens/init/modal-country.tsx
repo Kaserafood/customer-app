@@ -9,6 +9,7 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { saveString } from "../../utils/storage"
+import { setCountryId } from "../../services/api"
 
 interface ModalCountryProps {
   modalState: ModalStateHandler
@@ -23,7 +24,12 @@ export const ModalCountry = observer(({ modalState }: ModalCountryProps) => {
   }, [])
 
   useEffect(() => {
-    if (countryStore.selectedCountry) saveString("countryId", `${countryStore.selectedCountry.id}`)
+    if (countryStore.selectedCountry) {
+      const countryId = countryStore.selectedCountry.id
+
+      saveString("countryId", `${countryId}`)
+      setCountryId(countryId)
+    }
   }, [countryStore.selectedCountry])
 
   const handleSelectCountry = (country) => {
