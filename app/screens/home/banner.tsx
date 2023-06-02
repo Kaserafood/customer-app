@@ -31,7 +31,6 @@ export const Banner = (props: PropsBanner) => {
       await bannerStore.getNewChefs()
       await bannerStore.getWelcome()
     })()
-    console.log("Banner useEffect", windowWidth)
   }, [])
 
   const onPressWelcomeBanner = () => {

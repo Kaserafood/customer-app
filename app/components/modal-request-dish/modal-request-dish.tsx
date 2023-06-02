@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite"
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { color } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Button } from "../button/button"
@@ -238,23 +238,23 @@ const ModalConfirmation = () => {
       <View style={utilSpacing.p4}>
         <Text
           size="lg"
-          preset="semiBold"
+          preset="bold"
           tx="modalRequestDish.ready"
-          style={utilSpacing.mb5}
+          style={[utilSpacing.mb5, utilFlex.selfCenter]}
         ></Text>
         <Text
           preset="semiBold"
           tx="modalRequestDish.confirmationInfo"
-          style={utilSpacing.mb5}
+          style={[utilSpacing.mb5, utilText.textCenter]}
         ></Text>
 
         <Image
           resizeMode="contain"
-          style={[styles.imgNotFound, utilSpacing.mb5, utilSpacing.ml2]}
-          source={images.soup}
+          style={[styles.imgNotFound, utilSpacing.mb7]}
+          source={images.checkGreen}
         ></Image>
         <Button
-          tx="modalRequestDish.continue"
+          tx="common.ok"
           style={styles.btnContinue}
           onPress={() => modalStateConfirmation.setVisible(false)}
         ></Button>
@@ -280,8 +280,7 @@ const styles = StyleSheet.create({
   },
   imgNotFound: {
     alignSelf: "center",
-    height: 200,
-    left: 15,
+    height: 100,
     position: "relative",
     width: "100%",
   },

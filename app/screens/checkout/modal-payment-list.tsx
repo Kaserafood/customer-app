@@ -19,7 +19,8 @@ import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 interface ModalPaymentListProps {
   stateModal: ModalStateHandler
 }
-const modalStatePaymentCard = new ModalStateHandler()
+const modalStatePaymentQPayPro = new ModalStateHandler()
+// const modalStatePaymentStripe = new ModalStateHandler()
 
 export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps) => {
   const { userStore, messagesStore } = useStores()
@@ -34,7 +35,7 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       type: UXCamOcclusionType.OccludeAllTextFields,
       screens: [],
     }
-    if (modalStatePaymentCard.isVisible) {
+    if (modalStatePaymentQPayPro.isVisible) {
       RNUxcam.tagScreenName("modalPaymentCard")
 
       RNUxcam.applyOcclusion(hideTextFields)
@@ -43,11 +44,11 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
 
       RNUxcam.removeOcclusion(hideTextFields)
     }
-  }, [modalStatePaymentCard.isVisible])
+  }, [modalStatePaymentQPayPro.isVisible])
 
   const fetch = async () => {
     await userStore
-      .getCads(userStore.userId)
+      .getPaymentMethods(userStore.userId)
       .then(() => {
         const existsSelected = userStore.cards.find((item) => item.selected)
 
@@ -64,7 +65,7 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       })
   }
 
-  const onSelectedPaymentItem = (id: number | null) => {
+  const onSelectedPaymentItem = (id: number | null | string) => {
     userStore
       .updateSelectedCard(userStore.userId, id)
       .then(async (res) => {
@@ -85,6 +86,11 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
         messagesStore.showError(error.message)
       })
   }
+
+  // const addPaymentMethod = () => {
+  //   if (userStore.countryId === 1) modalStatePaymentQPayPro.setVisible(true)
+  //   else if (userStore.countryId === 2) modalStatePaymentStripe.setVisible(true)
+  // }
 
   return (
     <>
@@ -112,7 +118,7 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
                   id={item.id}
                   name={item.name}
                   type="card"
-                  subtType={item.type as typeCard}
+                  subType={item.type as typeCard}
                   selected={item.selected}
                   onSelected={() => onSelectedPaymentItem(item.id)}
                   description={item.number}
@@ -126,13 +132,14 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
             preset="white"
             tx="checkoutScreen.addPayment"
             style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
-            onPress={() => modalStatePaymentCard.setVisible(true)}
+            onPress={() => modalStatePaymentQPayPro.setVisible(true)}
           ></Button>
         </View>
         <ModalPaymentCard
-          modalState={modalStatePaymentCard}
+          modalState={modalStatePaymentQPayPro}
           onGetCards={() => fetch()}
         ></ModalPaymentCard>
+        {/* <ModalPaymentStripe modalState={modalStatePaymentQPayPro}></ModalPaymentStripe> */}
       </Modal>
     </>
   )
@@ -140,13 +147,13 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
 
 interface PaymentMethodItemProps {
   onSelected?: () => void
-  id: number
+  id: number | string
   name: string
   description: string
   type: paymentType
   selected: boolean
   showPrefixCard?: boolean
-  subtType?: typeCard
+  subType?: typeCard
 }
 
 const PaymentMethodItem = ({
@@ -157,7 +164,7 @@ const PaymentMethodItem = ({
   type,
   selected,
   showPrefixCard,
-  subtType,
+  subType: subtType,
 }: PaymentMethodItemProps) => {
   return (
     <Ripple key={id} onPress={onSelected}>

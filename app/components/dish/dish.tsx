@@ -104,7 +104,7 @@ export const Dish = observer(function Dish(props: DishProps) {
             {visiblePriceDelivery && (
               <Price
                 currencyCode={currencyCode || dish.chef.currencyCode}
-                amount={deliveryStore.priceDelivery}
+                amount={dish.chef?.priceDelivery}
                 preset="delivery"
               ></Price>
             )}

@@ -1,4 +1,4 @@
-import { flow, Instance, types } from "mobx-state-tree"
+import { applySnapshot, flow, Instance, types } from "mobx-state-tree"
 import { isNumber } from "validate.js"
 
 import { ChefResponse } from "../services/api"
@@ -8,6 +8,7 @@ import { saveString } from "../utils/storage"
 import { categoryStore } from "./category-store"
 import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
+import { GUATEMALA } from "../utils/constants"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybeNull(types.number),
@@ -17,45 +18,47 @@ export const userChef = types.model("UserChef").props({
   categories: types.maybeNull(types.array(categoryStore)),
   dishes: types.optional(types.array(dish), []), // Only used when is grouped by chef
   currencyCode: types.maybeNull(types.string),
+  priceDelivery: types.maybeNull(types.number),
 })
 export interface UserChef extends Instance<typeof userChef> {}
 
 const userRegister = types.model("UserRegisterStore").props({
-  name: types.maybe(types.string),
-  lastName: types.maybe(types.string),
-  email: types.maybe(types.string),
-  password: types.maybe(types.string),
-  phone: types.maybe(types.string),
+  name: types.maybeNull(types.string),
+  lastName: types.maybeNull(types.string),
+  email: types.maybeNull(types.string),
+  password: types.maybeNull(types.string),
+  phone: types.maybeNull(types.string),
 })
 export interface UserRegister extends Instance<typeof userRegister> {}
 
 const userLogin = types.model("UserLoginStore").props({
-  email: types.maybe(types.string),
-  password: types.maybe(types.string),
+  email: types.maybeNull(types.string),
+  password: types.maybeNull(types.string),
 })
 export interface UserLogin extends Instance<typeof userLogin> {}
 
 const cardModel = types.model("Card").props({
-  id: types.maybe(types.number),
-  name: types.maybe(types.string),
-  number: types.maybe(types.string),
+  id: types.maybeNull(types.union(types.string, types.number)),
+  name: types.maybeNull(types.string),
+  number: types.maybeNull(types.string),
   expDate: types.optional(types.string, ""),
-  type: types.maybe(types.string),
-  selected: types.maybe(types.boolean),
+  type: types.maybeNull(types.string),
+  selected: types.maybeNull(types.boolean),
 })
 export interface Card extends Instance<typeof cardModel> {}
 
 export const UserRegisterModel = userRegister
   .props({
-    userId: types.maybe(types.integer),
-    displayName: types.maybe(types.string),
-    addressId: types.maybe(types.number),
-    taxId: types.maybe(types.string),
-    customerNote: types.maybe(types.string),
-    deliverySlotTime: types.maybe(types.string),
+    userId: types.maybeNull(types.integer),
+    displayName: types.maybeNull(types.string),
+    addressId: types.maybeNull(types.number),
+    taxId: types.maybeNull(types.string),
+    customerNote: types.maybeNull(types.string),
+    deliverySlotTime: types.maybeNull(types.string),
     cards: types.optional(types.array(cardModel), []),
     currentCard: types.maybe(cardModel),
     isTester: types.maybeNull(types.boolean),
+    countryId: types.maybeNull(types.number),
   })
   .extend(withEnvironment)
   .views((self) => ({
@@ -90,6 +93,10 @@ export const UserRegisterModel = userRegister
         }
       } else self.currentCard = { ...card }
     },
+    setCountryId: (countryId) => {
+      self.countryId = countryId
+      saveString("countryId", `${countryId}`)
+    },
   }))
   .actions((self) => ({
     saveData: async (result) => {
@@ -101,14 +108,16 @@ export const UserRegisterModel = userRegister
       await saveString("taxId", data.taxId) // Tax id of latest order created
       await saveString("customerNote", data.customerNote) // Customer note of latest order created
       await saveString("deliveryTimeSlot", data.deliveryTimeSlot) // Delivery time slot of latest order created
+      await saveString("countryId", `${data.countryId}`) // Delivery time slot of latest order created
       self.setUserId(data.id)
       self.setDisplayName(data.displayName)
       self.setEmail(data.email)
       self.setAddressId(data.addressId)
+      self.setCountryId(data.countryId)
     },
   }))
   .actions((self) => ({
-    register: async (user: UserRegister): Promise<number> => {
+    register: async (user): Promise<number> => {
       const userApi = new Api()
       const result = await userApi.register(user)
 
@@ -147,10 +156,7 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    validTokenRecoverPassword: flow(function* validTokenRecoverPassword(
-      token: string,
-      email: string,
-    ) {
+    validTokenRecoverPassword: flow(function* (token: string, email: string) {
       const api = new Api()
 
       const result = yield api.validTokenRecoverPassword(token, email)
@@ -160,7 +166,7 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    changePassword: flow(function* changePassword(email: string, password: string) {
+    changePassword: flow(function* (email: string, password: string) {
       const api = new Api()
 
       const result = yield api.changePassword(email, password)
@@ -169,7 +175,7 @@ export const UserRegisterModel = userRegister
       }
       return false
     }),
-    removeAccount: flow(function* removeAccount(userId: number) {
+    removeAccount: flow(function* (userId: number) {
       const api = new Api()
 
       const result = yield api.removeAccount(userId)
@@ -178,7 +184,7 @@ export const UserRegisterModel = userRegister
       }
       return false
     }),
-    reportBug: flow(function* reportBug(data: any) {
+    reportBug: flow(function* (data: any) {
       const api = new Api()
 
       const result = yield api.reportBug(data)
@@ -197,13 +203,16 @@ export const UserRegisterModel = userRegister
       return null
     }),
 
-    getCads: flow(function* getCards(userId: number) {
+    getPaymentMethods: flow(function* (userId: number) {
       const api = new Api()
-      const result = yield api.getCards(userId)
-      if (result.kind === "ok") self.setCards(result.data)
+      let result: { kind: string; data: any }
+
+      if (self.countryId === GUATEMALA) result = yield api.getPaymentMethodsQPayPro(userId)
+      else result = yield api.getPaymentMethodsStripe(userId)
+      if (result.kind === "ok") applySnapshot(self.cards, result.data)
     }),
 
-    updateSelectedCard: flow(function* updateSelectedCard(userId: number, cardId: number | null) {
+    updateSelectedCard: flow(function* (userId: number, cardId: number | null | string) {
       const api = new Api()
       const result = yield api.updateSelectedCard(userId, cardId)
       if (result.kind === "ok") {
@@ -214,13 +223,21 @@ export const UserRegisterModel = userRegister
       return false
     }),
 
-    addCard: flow(function* addCard(userId: number, card: any) {
+    addPaymentMethod: flow(function* (userId: number, card: any) {
       const api = new Api()
-      const result = yield api.addCard(userId, card)
+      let result: { kind: string; data: { value: any } }
+
+      if (self.countryId === GUATEMALA) result = yield api.addPaymentMethodQPayPro(userId, card)
+      else result = yield api.addPaymentMethodStripe(userId, self.email, card)
+
       if (result.kind === "ok") {
-        if (isNumber(result.data.value) && Number(result.data.value) > 0) {
+        if (
+          self.countryId === GUATEMALA &&
+          isNumber(result.data.value) &&
+          Number(result.data.value) > 0
+        ) {
           return true
-        }
+        } else if (result.data.value) return true
       }
       return false
     }),

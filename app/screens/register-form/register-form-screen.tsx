@@ -30,7 +30,7 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore, addressStore, messagesStore } = useStores()
+  const { userStore, commonStore, addressStore, messagesStore, countryStore } = useStores()
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
@@ -55,7 +55,7 @@ export const RegisterFormScreen: FC<
       __DEV__ && console.log(data)
       const currentUserId = userStore.userId
       userStore
-        .register(data)
+        .register({ ...data, countryId: userStore.countryId })
         .then(async (userId) => {
           commonStore.setVisibleLoading(false)
           if (userId > 0) {
@@ -69,7 +69,7 @@ export const RegisterFormScreen: FC<
                 exploreApp: false,
               })
               commonStore.setIsSignedIn(true)
-              navigation.navigate("main")
+              navigation.navigate("map")
             }
           }
         })
@@ -158,11 +158,11 @@ export const RegisterFormScreen: FC<
                 rules={{
                   required: "registerFormScreen.phoneRequired",
                   minLength: {
-                    value: getMaskLength(getFormatMaskPhone()),
+                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
                     message: "registerFormScreen.phoneFormatIncorrect",
                   },
                 }}
-                mask={getFormatMaskPhone()}
+                mask={countryStore.selectedCountry.maskPhone}
               ></InputText>
               <InputText
                 name="email"

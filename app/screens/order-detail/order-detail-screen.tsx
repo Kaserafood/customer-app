@@ -11,6 +11,7 @@ import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 
 export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDetail">> = observer(
   function OrderDetailScreen({ route: { params } }) {
@@ -24,17 +25,16 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
       fetch()
     }, [])
 
+    const getTitle = () => {
+      return `${getI18nText("orderDetailScreen.order")} #${params.id}`
+    }
+
     return (
-      <Screen preset="fixed" style={{ backgroundColor: color.palette.whiteGray }}>
-        <Header headerTx="orderDetailScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
+      <Screen preset="fixed">
+        <Header headerText={getTitle()} leftIcon="back" onLeftPress={goBack}></Header>
         <ScrollView>
           <View style={utilSpacing.px5}>
             <Card style={[utilSpacing.my5, utilSpacing.px4, utilSpacing.py6]}>
-              <View style={[utilFlex.flexRow, utilSpacing.mb4]}>
-                <Text tx="orderDetailScreen.order" size="lg" preset="bold"></Text>
-                <Text text={` #${params.id}`} size="lg" preset="bold"></Text>
-              </View>
-
               <Text tx="endOrderScreen.deliveryOn" caption preset="semiBold"></Text>
               <Text text={orderStore.orderDetail?.deliveryAddress} style={utilSpacing.mb4}></Text>
 
@@ -46,11 +46,14 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
               </View>
 
               <Text tx="orderDetailScreen.paymentMethod" caption preset="semiBold"></Text>
-              <Text text={orderStore.orderDetail.paymentMethod}></Text>
+              <Text text={orderStore.orderDetail.paymentMethod} style={utilSpacing.mb4}></Text>
+
               {orderStore.orderDetail.paymentPending > 0 && (
                 <View style={utilFlex.flex}>
                   <Text tx="orderDetailScreen.pending" caption preset="semiBold"></Text>
-                  <Text text={params.currencyCode + orderStore.orderDetail.paymentPending}></Text>
+                  <Text
+                    text={`${params.currencyCode} ${orderStore.orderDetail.paymentPending}`}
+                  ></Text>
                 </View>
               )}
             </Card>

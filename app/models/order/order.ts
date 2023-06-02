@@ -9,65 +9,66 @@ import {
 } from "../../services/api"
 
 export const metaData = types.model("metaData").props({
-  key: types.maybe(types.string),
-  value: types.maybe(types.string),
+  key: types.maybeNull(types.string),
+  value: types.maybeNull(types.string),
 })
 const product = types.model("Product").props({
-  productId: types.maybe(types.number),
-  quantity: types.maybe(types.number),
-  name: types.maybe(types.string),
-  price: types.maybe(types.number),
+  productId: types.maybeNull(types.number),
+  quantity: types.maybeNull(types.number),
+  name: types.maybeNull(types.string),
+  price: types.maybeNull(types.number),
   metaData: types.array(metaData),
 })
 
 const orderModel = types.model("Order").props({
-  id: types.maybe(types.number),
-  customerId: types.maybe(types.number),
-  address: types.maybe(types.string),
-  country: types.maybe(types.string),
-  city: types.union(types.maybe(types.string), types.null),
-  region: types.union(types.maybe(types.string), types.null),
+  id: types.maybeNull(types.number),
+  customerId: types.maybeNull(types.number),
+  address: types.maybeNull(types.string),
+  country: types.maybeNull(types.string),
+  city: types.union(types.maybeNull(types.string), types.null),
+  region: types.union(types.maybeNull(types.string), types.null),
   products: types.optional(types.array(product), []),
-  priceDelivery: types.maybe(types.number),
+  priceDelivery: types.maybeNull(types.number),
   metaData: types.optional(types.array(metaData), []),
-  customerNote: types.maybe(types.string),
-  currencyCode: types.union(types.maybe(types.string), types.null),
-  taxId: types.union(types.maybe(types.string), types.null),
-  uuid: types.union(types.maybe(types.string), types.null),
-  cardId: types.union(types.maybe(types.number), types.null),
-  paymentMethod: types.maybe(types.string),
-  couponCode: types.union(types.maybe(types.string), types.null),
+  customerNote: types.maybeNull(types.string),
+  currencyCode: types.union(types.maybeNull(types.string), types.null),
+  taxId: types.union(types.maybeNull(types.string), types.null),
+  uuid: types.union(types.maybeNull(types.string), types.null),
+  paymentMethodId: types.union(types.maybeNull(types.number), types.null, types.string),
+  paymentMethod: types.maybeNull(types.string),
+  couponCode: types.union(types.maybeNull(types.string), types.null),
+  total: types.maybeNull(types.number),
 })
 
 const orderOverviewModel = types.model("OrderOverview").props({
-  id: types.maybe(types.number),
-  chefName: types.maybe(types.string),
-  status: types.maybe(types.string),
-  woocommerceStatus: types.maybe(types.string),
-  deliveryDate: types.maybe(types.string),
-  deliverySlotTime: types.maybe(types.string),
-  productCount: types.maybe(types.number),
-  total: types.maybe(types.number),
-  chefImage: types.maybe(types.string),
-  currencyCode: types.maybe(types.string),
+  id: types.maybeNull(types.number),
+  chefName: types.maybeNull(types.string),
+  status: types.maybeNull(types.string),
+  woocommerceStatus: types.maybeNull(types.string),
+  deliveryDate: types.maybeNull(types.string),
+  deliverySlotTime: types.maybeNull(types.string),
+  productCount: types.maybeNull(types.number),
+  total: types.maybeNull(types.number),
+  chefImage: types.maybeNull(types.string),
+  currencyCode: types.maybeNull(types.string),
 })
 
 const orderDetail = orderOverviewModel.props({
-  products: types.optional(types.maybe(types.array(product)), []),
-  deliveryAddress: types.maybe(types.string),
-  paymentMethod: types.maybe(types.string),
-  deliveryPrice: types.maybe(types.number),
-  paymentPending: types.maybe(types.number),
+  products: types.optional(types.maybeNull(types.array(product)), []),
+  deliveryAddress: types.maybeNull(types.string),
+  paymentMethod: types.maybeNull(types.string),
+  deliveryPrice: types.maybeNull(types.number),
+  paymentPending: types.maybeNull(types.number),
 })
 
 const cuponCodeModel = types.model("CuponCode").props({
-  id: types.maybe(types.number),
-  code: types.maybe(types.string),
-  amount: types.maybe(types.number),
-  discountType: types.maybe(types.string),
-  minimumAmount: types.maybe(types.number),
-  useageLimitPerUser: types.maybe(types.number),
-  freeShipping: types.maybe(types.boolean),
+  id: types.maybeNull(types.number),
+  code: types.maybeNull(types.string),
+  amount: types.maybeNull(types.number),
+  discountType: types.maybeNull(types.string),
+  minimumAmount: types.maybeNull(types.number),
+  useageLimitPerUser: types.maybeNull(types.number),
+  freeShipping: types.maybeNull(types.boolean),
 })
 
 export interface Order extends SnapshotOut<typeof orderModel> {}

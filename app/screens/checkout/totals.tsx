@@ -8,12 +8,13 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 interface TotalsProps {
   coupon: Coupon
+  priceDelivery: number
 }
 
 export const Totals = (props: TotalsProps) => {
-  const { cartStore, deliveryStore } = useStores()
+  const { cartStore } = useStores()
   const [currencyCode, setCurrencyCode] = useState("")
-  const { coupon } = props
+  const { coupon, priceDelivery } = props
 
   useEffect(() => {
     if (cartStore.cart.length > 0) setCurrencyCode(cartStore.cart[0].dish.chef.currencyCode)
@@ -47,11 +48,7 @@ export const Totals = (props: TotalsProps) => {
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
-        <Price
-          style={styles.price}
-          amount={deliveryStore.priceDelivery}
-          currencyCode={currencyCode}
-        ></Price>
+        <Price style={styles.price} amount={priceDelivery} currencyCode={currencyCode}></Price>
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
@@ -59,7 +56,7 @@ export const Totals = (props: TotalsProps) => {
         <Price
           style={styles.price}
           textStyle={utilText.bold}
-          amount={cartStore.subtotal + deliveryStore.priceDelivery - cartStore.discount ?? 0}
+          amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
           currencyCode={currencyCode}
         ></Price>
       </View>

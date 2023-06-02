@@ -73,7 +73,7 @@ export const Price = observer(function Price(props: PriceProps) {
 
   const Simple = () => {
     const price = getFormat(amount, currencyCode)
-    return <Text style={textStyle} text={`${price}`}></Text>
+    return <Text style={textStyle} text={`${price}`} preset="bold"></Text>
   }
 
   if (preset === "delivery") return <Delivery></Delivery>

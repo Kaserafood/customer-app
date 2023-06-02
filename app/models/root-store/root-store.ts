@@ -6,6 +6,7 @@ import { BannerStoreModel } from "../banner-store"
 import { CartStoreModel } from "../cart-store"
 import { CategoryStoreModel } from "../category-store"
 import { CommonStoreModel } from "../common-store"
+import { CountryStoreModel } from "../country-store"
 import { DayStoreModel } from "../day-store"
 import { DeliveryStoreModel } from "../delivery-store"
 import { DishStoreModel } from "../dish-store"
@@ -13,6 +14,7 @@ import { MessagesModel } from "../messages/messages"
 import { CouponModalStoreModel } from "../modal-coupon"
 import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
+import { CoverageModel } from "../coverage/coverage"
 
 /**
  * A RootStore model.
@@ -32,7 +34,8 @@ export const RootStoreModel = types.model("RootStore").props({
   couponModalStore: types.optional(CouponModalStoreModel, {} as any),
   bannerStore: types.optional(BannerStoreModel, {} as any),
   deliveryStore: types.optional(DeliveryStoreModel, {} as any),
- 
+  countryStore: types.optional(CountryStoreModel, {} as any),
+  coverageStore: types.optional(CoverageModel, {} as any),
 })
 
 /**

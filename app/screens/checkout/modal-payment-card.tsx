@@ -7,6 +7,8 @@ import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
 import { ModalState } from "../../utils/modalState"
+import { GUATEMALA } from "../../utils/constants"
+import { encrypt } from "../../utils/security"
 
 interface PropsModalPaymentCard {
   modalState: ModalState
@@ -23,6 +25,7 @@ export interface Card {
   city: string
   state: string
   country: string
+  customerName: string
 }
 
 export const ModalPaymentCard = forwardRef(
@@ -61,7 +64,10 @@ export const ModalPaymentCard = forwardRef(
       }
 
       // QPayPro does not support AMEX cards for tokenization
-      if (getCardType(data.number) === "unknown" || getCardType(data.number) === "amex") {
+      if (
+        userStore.countryId === GUATEMALA &&
+        (getCardType(data.number) === "unknown" || getCardType(data.number) === "amex")
+      ) {
         messagesStore.showError("checkoutScreen.paymentMethodErrorUnknown", true)
         return
       }
@@ -69,16 +75,20 @@ export const ModalPaymentCard = forwardRef(
       Keyboard.dismiss()
       commonStore.setVisibleLoading(true)
       const model: Card = {
-        ...data,
+        name: data.name,
+        number: encrypt(data.number.replace(/\s/g, "")),
+        expirationDate: encrypt(data.expirationDate),
+        cvv: encrypt(data.cvv),
         type: getCardType(data.number).toLocaleLowerCase(),
         address: addressStore.current.address,
         city: addressStore.current.city,
         state: addressStore.current.region,
         country: addressStore.current.country,
+        customerName: `${userStore.name} ${userStore.lastName}`,
       }
       __DEV__ && console.log({ model })
       await userStore
-        .addCard(userStore.userId, model)
+        .addPaymentMethod(userStore.userId, model)
         .then(async (res) => {
           if (res) {
             modalState.setVisible(false)
@@ -104,7 +114,7 @@ export const ModalPaymentCard = forwardRef(
     return (
       <>
         <Modal modal={modalState} position="bottom">
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps={"handled"}>
             <Text
               preset="bold"
               size="lg"

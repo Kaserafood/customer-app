@@ -48,7 +48,7 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const {
       addressStore,
@@ -58,7 +58,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       commonStore,
       orderStore,
       messagesStore,
-      deliveryStore,
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
@@ -96,8 +95,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       }
     }, [navigation])
 
-    const getCardId = () => {
-      if (userStore.currentCard?.id > 0) return userStore.currentCard?.id
+    const getPaymentMethodId = () => {
+      if (userStore.currentCard?.id) return userStore.currentCard?.id
 
       return null
     }
@@ -132,15 +131,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         city: addressStore.current.city,
         region: addressStore.current.region,
         products: getProducts(),
-        priceDelivery: deliveryStore.priceDelivery,
+        priceDelivery: priceDelivery(),
         metaData: getMetaData(taxId),
         customerNote: data.customerNote,
         currencyCode: cartStore.cart[0]?.dish.chef.currencyCode,
         taxId: taxId,
         uuid: getUniqueId(),
-        cardId: getCardId(),
-        paymentMethod: getCardId() ? "qpaypro" : "cod", // Contra entrega o pago con tarjeta
+        paymentMethodId: getPaymentMethodId(),
+        paymentMethod: getPaymentMethodId() ? "card" : "cod", // Contra entrega o pago con tarjeta
         couponCode: coupon?.code,
+        total: getCurrentTotal(),
       }
 
       orderStore
@@ -263,12 +263,14 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getTextButtonFooter = (): string => {
-      const text = getI18nText(getCardId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder")
+      const text = getI18nText(
+        getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
+      )
       return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
     }
 
     const getCurrentTotal = (): number => {
-      return cartStore.subtotal + deliveryStore.priceDelivery - (cartStore.discount ?? 0)
+      return cartStore.subtotal + priceDelivery() - (cartStore.discount ?? 0)
     }
 
     const getCurrency = (): string => {
@@ -290,6 +292,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     const onPressCoupon = () => {
       modalStateCoupon.setVisible(true)
       RNUxcam.logEvent("checkout: onPressCoupon")
+    }
+
+    const priceDelivery = () => {
+      if (cartStore.cart.length === 0) return 0
+      return cartStore.cart[0]?.dish.chef.priceDelivery
     }
 
     return (
@@ -362,7 +369,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <Card
               style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}
             >
-              {userStore.currentCard?.id > 0 ? (
+              {userStore.currentCard?.id ? (
                 <Ripple
                   rippleOpacity={0.2}
                   rippleDuration={400}
@@ -457,7 +464,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
               <DishesList></DishesList>
               <Separator style={styles.separator}></Separator>
-              <Totals coupon={coupon}></Totals>
+              <Totals priceDelivery={priceDelivery()} coupon={coupon}></Totals>
             </Card>
           </View>
         </ScrollView>

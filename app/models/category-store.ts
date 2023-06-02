@@ -7,7 +7,7 @@ import { withEnvironment } from "./extensions/with-environment"
 export const categoryStore = types.model("CategoryStore").props({
   id: types.maybeNull(types.number),
   name: types.maybeNull(types.string),
-  image: types.optional(types.string, ""),
+  image: types.maybeNull(types.string),
 })
 export interface Category extends SnapshotOut<typeof categoryStore> {}
 

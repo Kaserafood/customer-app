@@ -29,7 +29,8 @@
     "byChefIndependently": "Por chefs independientes",
     "register": "Regístrate",
     "login": "Iniciar sesión",
-    "exploreApp": "Explora la app"
+    "exploreApp": "Explora la app",
+    "selectCountry": "Selecciona tu país"
   },
   "registerFormScreen": {
     "title": "Regístrate",
@@ -350,9 +351,9 @@
     "pay": "Pagar",
     "addPayment": "Agregar tarjeta",
     "paymentMethodUpdated": "Método de pago actualizado",
-    "paymentMethodNotUpdated": "No se ha podido actualizar el método de pago",
+    "paymentMethodNotUpdated": "No se ha logrado actualizar el método de pago",
     "paymentMethodAdded": "Método de pago agregado",
-    "paymentMethodError": "No se ha podido agregar el método de pago",
+    "paymentMethodError": "No se ha logrado agregar el método de pago",
     "paymentMethodErrorUnknown": "La tarjeta debe ser Visa o MasterCard",
     "paymentCashDescription": "Pagas al recibir",
     "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta"
@@ -545,7 +546,7 @@
     "writeHere": "Escribe aquí",
     "requestDish": "Solicitar platillo",
     "ready": "¡Listo!",
-    "confirmationInfo": "Te enviaremos un correo cuando encontremos al chef indicado para esta receta.",
+    "confirmationInfo": "Te enviaremos un correo cuando encontremos al chef indicado para tu solicitud.",
     "continue": "Seguir"
   },
   "addons": {
@@ -600,7 +601,7 @@
     "title": "Favoritos Kasera"
   },
   "orderDetailScreen": {
-    "title": "Detalle del pedido",
+    "title": "Pedido",
     "pending": "Pendiente",
     "paymentMethod": "Método de pago",
     "orderStatus": "Estado del pedido",
@@ -610,13 +611,16 @@
     "order": "Pedido"
   },
   "modalNecessaryLocation": {
-    "title": "Ubicación requerida",
-    "description": "Es necesario que ingreses tu ubicación para buscar los cocineros que están cerca de ti.",
+    "title": "Ingresa una ubicación para buscar cocineros cercanos.",
     "order": "Pedidio"
   },
   "modalAutocomplete": {
     "title": "Ingresa una ubicación",
     "placeholderSearch": "Escribe la ubicación o referencia"
+  },
+  "modalWithoutCoverage": {
+    "title": "Fuera de cobertura",
+    "info": "Lo sentimos, no tenemos cobertura en la ubicación seleccionada"
   },
   "reportBugScreen": {
     "title": "Reportar un error",
@@ -628,7 +632,8 @@
     "minLength": "Debes ingresar al menos 3 caracteres",
     "titleError": "Título",
     "descriptionError": "Descripción",
-    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos"
+    "errorToSendBug": "Lo sentimos, no se ha logrado enviar los datos",
+    "successToSendBug": "Error reportado"
   },
   "modalReportBug": {
     "title": "Error reportado",

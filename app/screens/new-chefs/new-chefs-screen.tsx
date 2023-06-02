@@ -18,18 +18,25 @@ import RNUxcam from "react-native-ux-cam"
 const state = new DataState()
 export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">> = observer(
   function NewChefsScreen({ navigation }) {
-    const { dayStore, dishStore, commonStore, messagesStore } = useStores()
-    const { formatDishesGropuedByChef } = useChef()
+    const { dayStore, dishStore, commonStore, messagesStore, addressStore } = useStores()
+    const { formatDishesGroupedByChef } = useChef()
 
     useEffect(() => {
       __DEV__ && console.log("new chefs useEffect")
       commonStore.setVisibleLoading(true)
       RNUxcam.tagScreenName("newChefs")
       async function fetch() {
+        const { latitude, longitude } = addressStore.current
+
         await dishStore
-          .getGroupedByLatestChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+          .getGroupedByLatestChef(
+            dayStore.currentDay.date,
+            RNLocalize.getTimeZone(),
+            latitude,
+            longitude,
+          )
           .then(() => {
-            state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByLatestChef))
+            state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByLatestChef))
           })
           .catch((error: Error) => {
             messagesStore.showError(error.message)

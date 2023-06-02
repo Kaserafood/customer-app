@@ -57,7 +57,7 @@ import { NavigatorParamList } from "./navigator-param-list"
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
 const AppStack = observer(() => {
-  const { commonStore } = useStores()
+  const { commonStore, userStore } = useStores()
 
   return (
     <Stack.Navigator
@@ -72,6 +72,7 @@ const AppStack = observer(() => {
         </Stack.Group>
       ) : (
         <Stack.Group>
+          <Stack.Screen name="map" component={MapScreen} />
           <Stack.Screen name="main">
             {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
           </Stack.Screen>
@@ -80,7 +81,6 @@ const AppStack = observer(() => {
           <Stack.Screen name="checkout" component={CheckoutScreen} />
           <Stack.Screen name="endOrder" component={EndOrderScreen} />
           <Stack.Screen name="category" component={CategoryScreen} />
-          <Stack.Screen name="map" component={MapScreen} />
           <Stack.Screen name="address" component={AddressScreen} />
           <Stack.Screen name="orders" component={OrdersScreen} />
           <Stack.Screen name="account" component={AccountScreen} />

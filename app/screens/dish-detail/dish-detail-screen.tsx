@@ -2,24 +2,14 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { createContext, FC, useEffect, useRef, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { BackHandler, ScrollView, StyleSheet, View } from "react-native"
+import { BackHandler, ScrollView, StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
 
-import {
-  Addons,
-  ButtonFooter,
-  DishChef,
-  Header,
-  Image,
-  InputText,
-  Price,
-  Screen,
-  Text,
-} from "../../components"
+import { Addons, ButtonFooter, Icon, Image, InputText, Screen, Price, Text } from "../../components"
 import { Separator } from "../../components/separator/separator"
 import { ItemCart } from "../../models/cart-store"
 import { DishChef as DishChefModel } from "../../models/dish-store"
@@ -33,6 +23,8 @@ import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
 import RNUxcam from "react-native-ux-cam"
+import ListDish from "./ListDish"
+import SkeletonLoadingDish from "./SkeletonLoadingDish"
 
 export const AddonContext = createContext({
   currencyCode: "",
@@ -288,19 +280,23 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
       return `${text} ${getFormat(total, currentDish.chef?.currencyCode)}`
     }
 
-    if (!params.chef)
-      return (
-        <Screen preset="fixed">
-          <Text text="No hay data de chef"></Text>
-        </Screen>
-      )
+    if (!params.chef) return <Screen preset="fixed"></Screen>
 
     return (
-      <Screen preset="fixed" style={styles.container}>
-        <Header headerTx="dishDetailScreen.title" leftIcon="back" onLeftPress={handleBack}></Header>
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" backgroundColor={"transparent"} translucent></StatusBar>
+        <View style={styles.containerBtnBack}>
+          <TouchableOpacity onPress={handleBack}>
+            <Icon
+              name="angle-left-1"
+              style={styles.iconBack}
+              size={24}
+              color={color.palette.white}
+            ></Icon>
+          </TouchableOpacity>
+        </View>
         <ScrollView ref={scrollRef}>
           <View
-            style={[utilSpacing.mx5, utilSpacing.mt5]}
             onLayout={(event) => {
               const { height } = event.nativeEvent.layout
               setDishInfoHeight(height)
@@ -333,15 +329,27 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             ) : (
               <>
                 <Image style={styles.image} source={{ uri: currentDish.image }}></Image>
-                <View style={[utilFlex.flexRow, utilSpacing.my3]}>
-                  <Text style={utilSpacing.mr3} text={currentDish.title} preset="bold"></Text>
+
+                <View style={utilSpacing.mx5}>
+                  <View style={[utilFlex.flexRow, utilSpacing.my3]}>
+                    <Text
+                      style={[utilSpacing.mr3, utilFlex.flex1]}
+                      text={currentDish.title}
+                      size="xl"
+                      preset="bold"
+                    ></Text>
+
+                    <View style={[utilFlex.flexRow, styles.flexEnd]}>
+                      <Price
+                        preset="simple"
+                        amount={currentDish.price}
+                        textStyle={styles.priceText}
+                        currencyCode={currentDish.chef?.currencyCode}
+                      ></Price>
+                    </View>
+                  </View>
+                  <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
                 </View>
-                <Text style={utilSpacing.mb2} text={currentDish.description}></Text>
-                <Price
-                  style={styles.price}
-                  amount={currentDish.price}
-                  currencyCode={currentDish.chef?.currencyCode}
-                ></Price>
               </>
             )}
           </View>
@@ -402,58 +410,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
             <Text size="lg" preset="bold" text={` ${currentDish.chef?.name}`}></Text>
           </View>
           {loadingDishes ? (
-            <SkeletonPlaceholder>
-              <SkeletonPlaceholder.Item width={"100%"} flexDirection="row" marginLeft={spacing[4]}>
-                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
-                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
-                  <SkeletonPlaceholder.Item
-                    marginTop={10}
-                    width={150}
-                    height={16}
-                    borderRadius={8}
-                  />
-                  <SkeletonPlaceholder.Item
-                    alignSelf="flex-end"
-                    marginTop={6}
-                    width={50}
-                    height={16}
-                    borderRadius={24}
-                  />
-                </SkeletonPlaceholder.Item>
-                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
-                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
-                  <SkeletonPlaceholder.Item
-                    marginTop={10}
-                    width={150}
-                    height={16}
-                    borderRadius={8}
-                  />
-                  <SkeletonPlaceholder.Item
-                    alignSelf="flex-end"
-                    marginTop={6}
-                    width={50}
-                    height={16}
-                    borderRadius={24}
-                  />
-                </SkeletonPlaceholder.Item>
-                <SkeletonPlaceholder.Item width={150} marginRight={spacing[3]}>
-                  <SkeletonPlaceholder.Item width={150} height={110} borderRadius={16} />
-                  <SkeletonPlaceholder.Item
-                    marginTop={10}
-                    width={150}
-                    height={16}
-                    borderRadius={8}
-                  />
-                  <SkeletonPlaceholder.Item
-                    alignSelf="flex-end"
-                    marginTop={6}
-                    width={50}
-                    height={16}
-                    borderRadius={24}
-                  />
-                </SkeletonPlaceholder.Item>
-              </SkeletonPlaceholder.Item>
-            </SkeletonPlaceholder>
+            <SkeletonLoadingDish />
           ) : (
             <View>
               <ListDish
@@ -468,39 +425,27 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           onPress={methods.handleSubmit(onSubmit)}
           text={buttonCartText()}
         ></ButtonFooter>
-      </Screen>
-    )
-  },
-)
-
-const ListDish = observer(
-  (props: {
-    onChangeDish: (dish: DishChefModel) => void
-    dishId: number
-    currencyCode: string
-  }) => {
-    const { dishStore } = useStores()
-    return (
-      <ScrollView horizontal style={[utilSpacing.mb4, utilSpacing.ml5]}>
-        {dishStore.dishesChef.map(
-          (dish) =>
-            props.dishId !== dish.id && (
-              <DishChef
-                onPress={() => props.onChangeDish(dish)}
-                dish={dish}
-                key={dish.id}
-                currencyCode={props.currencyCode}
-              ></DishChef>
-            ),
-        )}
-      </ScrollView>
+      </View>
     )
   },
 )
 
 const styles = StyleSheet.create({
   container: {
+    alignItems: "stretch",
     backgroundColor: color.palette.white,
+    flex: 1,
+    justifyContent: "flex-start",
+  },
+  containerBtnBack: {
+    backgroundColor: color.palette.blackTransparent,
+    borderRadius: 25,
+    height: 45,
+    left: 20,
+    position: "absolute",
+    top: 40,
+    width: 45,
+    zIndex: 1000,
   },
   containerUnities: {
     alignItems: "center",
@@ -510,13 +455,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
+  flexEnd: {
+    alignItems: "flex-end",
+  },
+  iconBack: {
+    marginLeft: 16,
+    marginTop: 12,
+  },
   image: {
     borderRadius: spacing[2],
-    height: 230,
+    height: 245,
     width: "100%",
   },
   price: {
     alignSelf: "flex-start",
+  },
+  priceText: {
+    fontSize: 22,
   },
   textCounter: {
     marginBottom: -2,

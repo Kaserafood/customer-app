@@ -48,8 +48,10 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       commonStore,
       cartStore,
       messagesStore,
+      addressStore,
+      userStore,
     } = useStores()
-    const { formatDishesGropuedByChef } = useChef()
+    const { formatDishesGroupedByChef } = useChef()
     const [refreshing, setRefreshing] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [isFirstTime, setIsFirstTime] = useState(true)
@@ -66,19 +68,21 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     }, [])
 
     useEffect(() => {
-      if (!isFirstTime) {
-        __DEV__ && console.log("chefs useEffect currentDay", dayStore.currentDay.date)
+      if (addressStore.current?.latitude && addressStore.current?.longitude) {
+        commonStore.setVisibleLoading(true)
 
         fetch()
-      } else setIsFirstTime(false)
-    }, [dayStore.currentDay.date])
+      }
+    }, [userStore.addressId])
 
     const fetch = () => {
+      const { latitude, longitude } = addressStore.current
+
       state.setData([])
       dishStore
-        .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone())
+        .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
         .then(() => {
-          state.setData(formatDishesGropuedByChef(dishStore.dishesGroupedByChef))
+          state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByChef))
         })
         .catch((error: Error) => {
           messagesStore.showError(error.message)
@@ -86,10 +90,8 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         .finally(() => {
           console.log("finally", isLoading)
           setRefreshing(false)
-          if (isLoading) {
-            commonStore.setVisibleLoading(false)
-            setIsLoading(false)
-          }
+          commonStore.setVisibleLoading(false)
+          setIsLoading(false)
         })
     }
 
@@ -132,6 +134,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       RNUxcam.logEvent("changeDate", {
         screen: "chefs",
       })
+      fetch()
     }
 
     const onRefresh = async () => {

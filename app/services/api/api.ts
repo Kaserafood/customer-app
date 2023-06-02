@@ -2,7 +2,7 @@ import { ApiResponse, ApisauceInstance, create } from "apisauce"
 
 import { Address } from "../../models"
 import { Order } from "../../models/order/order"
-import { UserLogin } from "../../models/user-store"
+import { UserLogin, UserRegister } from "../../models/user-store"
 import { Card } from "../../screens/checkout/modal-payment-card"
 import { handleMessageProblem } from "../../utils/messages"
 
@@ -13,7 +13,9 @@ import {
   CategoryResponse,
   ChefResponse,
   CommonResponse,
+  CountryResponse,
   CuponResponse,
+  CoverageResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -23,8 +25,14 @@ import {
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
+import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
+let countryId
+
+export function setCountryId(id: number) {
+  countryId = id
+}
 /**
  * Manages all requests to the API.
  */
@@ -69,8 +77,15 @@ export class Api {
 
     // Add a request interceptor
     this.apisauce.axiosInstance.interceptors.request.use(
-      function (config) {
+      async function (config) {
+        if (!countryId) {
+          countryId = await loadString("countryId")
+          __DEV__ && console.log({ countryId })
+        }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
+        config.headers["country-id"] = parseInt(countryId || -1)
+
+        if (config.url === "/users/login") countryId = null
         return config
       },
       function (error) {
@@ -85,6 +100,7 @@ export class Api {
         // Any status code that lie within the range of 2xx cause this function to trigger
 
         //  __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
+
         return response
       },
       function (error) {
@@ -134,6 +150,8 @@ export class Api {
     timeZone: string,
     userId: number,
     tokenPagination: string,
+    latitude: number,
+    longitude: number,
     categoryId?: number,
   ): Promise<DishResponse> {
     return await this.request(
@@ -142,6 +160,8 @@ export class Api {
         timeZone,
         userId,
         tokenPagination,
+        latitude,
+        longitude,
         categoryId,
       },
       "/dishes",
@@ -187,21 +207,35 @@ export class Api {
   async getDishesGroupedByChef(
     date: string,
     timeZone: string,
+    latitude: number,
+    longitude: number,
     categoryId?: number,
   ): Promise<ChefResponse> {
-    return await this.request({ date, timeZone, categoryId }, "/dishes/chefs", "GET")
+    return await this.request(
+      { date, timeZone, latitude, longitude, categoryId },
+      "/dishes/chefs",
+      "GET",
+    )
   }
 
   /**
    *
    * @description Search dishes by name or description
    */
-  async getSearchDishes(search: string, date: string, timeZone: string): Promise<DishResponse> {
+  async getSearchDishes(
+    search: string,
+    date: string,
+    timeZone: string,
+    latitude: number,
+    longitude: number,
+  ): Promise<DishResponse> {
     return await this.request(
       {
         date,
         timeZone,
         search,
+        latitude,
+        longitude,
       },
       "/dishes/search",
       "GET",
@@ -222,8 +256,17 @@ export class Api {
    *
    * @description Get dishes grouped by latest chef
    */
-  async getDishesGroupedByLatestChef(date: string, timeZone: string): Promise<ChefResponse> {
-    return await this.request({ date, timeZone }, "/dishes/chefs-latest", "GET")
+  async getDishesGroupedByLatestChef(
+    date: string,
+    timeZone: string,
+    latitude: number,
+    longitude: number,
+  ): Promise<ChefResponse> {
+    return await this.request(
+      { date, timeZone, latitude, longitude },
+      "/dishes/chefs-latest",
+      "GET",
+    )
   }
 
   /**
@@ -238,8 +281,8 @@ export class Api {
    *
    * @description Register new user
    */
-  async register(userLogin: UserLogin): Promise<UserLoginResponse> {
-    return await this.request(userLogin, "/users/register", "POST")
+  async register(userRegister: UserRegister): Promise<UserLoginResponse> {
+    return await this.request(userRegister, "/users/register", "POST")
   }
 
   /**
@@ -397,6 +440,13 @@ export class Api {
   }
 
   /**
+   * @description Get all coordiantes of the coverage.
+   */
+  async getCoverage(): Promise<CommonResponse> {
+    return await this.request({}, `/deliveries/coverage`, "GET")
+  }
+
+  /**
    * @description Send report bug to admin
    */
   async reportBug(data: any): Promise<CommonResponse> {
@@ -420,21 +470,45 @@ export class Api {
   /**
    * @description Get all card from user
    */
-  async getCards(userId: number): Promise<CardResponse> {
+  async getPaymentMethodsQPayPro(userId: number): Promise<CardResponse> {
     return await this.request({}, `/users/cards/${userId}`, "GET")
   }
 
   /**
    * @description Update the card selected from user
    */
-  async updateSelectedCard(userId: number, cardId: number | null): Promise<CommonResponse> {
+  async updateSelectedCard(
+    userId: number,
+    cardId: number | null | string,
+  ): Promise<CommonResponse> {
     return await this.request({ cardId }, `/users/cards/${userId}`, "PUT")
   }
 
   /**
    * @description Add a card to user
    */
-  async addCard(userId: number, card: Card): Promise<CommonResponse> {
+  async addPaymentMethodQPayPro(userId: number, card: Card): Promise<CommonResponse> {
     return await this.request(card, `/users/cards/${userId}`, "POST")
+  }
+
+  /**
+   * @description Get all countries
+   */
+  async getCountries(): Promise<CountryResponse> {
+    return await this.request({}, `/countries`, "GET")
+  }
+
+  /**
+   * @description Get all payment methods from user
+   */
+  async getPaymentMethodsStripe(userId: number): Promise<CardResponse> {
+    return await this.request({}, `/stripe/payment-methods/${userId}`, "GET")
+  }
+
+  /**
+   * @description Add payment method in stripe
+   */
+  async addPaymentMethodStripe(userId: number, email: string, card: Card): Promise<CommonResponse> {
+    return await this.request({ userId, email, ...card }, `/stripe/payment-methods/`, "POST")
   }
 }

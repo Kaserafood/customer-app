@@ -50,6 +50,8 @@ const images = {
   octubre: require("./images/octubre.png"),
   calabaza: require("./images/calabaza.png"),
   flowers: require("./images/flowers.png"),
+  map: require("./images/map.png"),
+  checkGreen: require("./images/check.png"),
 }
 
 export default images

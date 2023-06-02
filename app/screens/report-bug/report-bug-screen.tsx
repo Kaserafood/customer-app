@@ -13,6 +13,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
 import { ModalReportBug } from "./modal-report-bug"
+import { Keyboard } from "react-native"
 
 const modalStateReportBug = new ModalStateHandler()
 export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug">> = observer(
@@ -26,9 +27,10 @@ export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug
       const isLocationEnabled = await DeviceInfo.isLocationEnabled()
       const manufacturer = await DeviceInfo.getManufacturer()
 
+      Keyboard.dismiss()
+
       const dataReport = {
         userId: userStore.userId,
-        title: data.title,
         description: data.description,
         manufacturer,
         deviceBrand: DeviceInfo.getBrand(),
@@ -48,11 +50,11 @@ export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug
         .reportBug(dataReport)
         .then((res) => {
           if (res) {
-            messagesStore.showSuccess("Reporte enviado")
+            messagesStore.showSuccess("reportBugScreen.successToSendBug", true)
             methods.reset()
             modalStateReportBug.setVisible(true)
           } else {
-            messagesStore.showSuccess("reportBugScreen.errorToSendBug")
+            messagesStore.showSuccess("reportBugScreen.errorToSendBug", true)
           }
           commonStore.setVisibleLoading(false)
         })
@@ -67,27 +69,9 @@ export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug
     return (
       <Screen preset="fixed">
         <Header headerTx="reportBugScreen.title" leftIcon="back" onLeftPress={goBack}></Header>
-        <ScrollView style={utilSpacing.p6}>
+        <ScrollView style={utilSpacing.p6} keyboardShouldPersistTaps={"handled"}>
           <Text tx="reportBugScreen.description"></Text>
           <FormProvider {...methods}>
-            <Text
-              preset="semiBold"
-              tx="reportBugScreen.titleError"
-              style={[utilSpacing.mt5, utilSpacing.mb2]}
-            ></Text>
-            <InputText
-              name="title"
-              rules={{
-                required: "reportBugScreen.titleRequired",
-                minLength: {
-                  value: 3,
-                  message: "reportBugScreen.minLength",
-                },
-              }}
-              multiline
-              maxLength={500}
-              placeholderTx="reportBugScreen.titlePlaceholder"
-            ></InputText>
             <Text
               preset="semiBold"
               tx="reportBugScreen.descriptionError"

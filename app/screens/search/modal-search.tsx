@@ -30,7 +30,7 @@ interface ModalSearchProps {
 }
 const modalStateRequestDish = new ModalStateHandler()
 export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchProps) => {
-  const { dishStore, dayStore, messagesStore } = useStores()
+  const { dishStore, dayStore, messagesStore, addressStore } = useStores()
   const [search, setSearch] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -70,12 +70,13 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 
   const onSearch = () => {
     if (search?.length > 0) {
+      const { latitude, longitude } = addressStore.current
       setIsLoading(true)
       RNUxcam.logEvent("searchDish", {
         search,
       })
       dishStore
-        .getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone())
+        .getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
         .catch((error: Error) => {
           messagesStore.showError(error.message)
         })

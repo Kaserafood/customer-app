@@ -6,6 +6,7 @@ export const DeliveryStoreModel = types
   .model("DeliveryStore")
   .props({
     priceDelivery: types.optional(types.number, 0),
+    coverage: types.maybeNull(types.string),
   })
   .actions((self) => ({
     getPriceDelivery: flow(function* getPriceDelivery(addressId = -1) {

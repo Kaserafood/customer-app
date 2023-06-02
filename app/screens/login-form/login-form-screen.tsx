@@ -28,8 +28,8 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
     const { ...methods } = useForm({ mode: "onBlur" })
     useEffect(() => {
       if (__DEV__) {
-        methods.setValue("email", "cunquero.carlos@gmail.com")
-        methods.setValue("password", "1111")
+        methods.setValue("email", "asd@fg.com")
+        methods.setValue("password", "asdfg")
       }
       RNUxcam.applyOcclusion(hideTextFields)
     }, [])
@@ -108,7 +108,11 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             leftIcon="back"
             onLeftPress={handleBack}
           ></Header>
-          <ScrollView style={styles.w100} contentContainerStyle={utilFlex.flexCenterHorizontal}>
+          <ScrollView
+            style={styles.w100}
+            keyboardShouldPersistTaps={"handled"}
+            contentContainerStyle={utilFlex.flexCenterHorizontal}
+          >
             <View style={styles.containerForm}>
               <Text
                 preset="semiBold"
