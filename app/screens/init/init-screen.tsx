@@ -39,7 +39,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }
 
     useEffect(() => {
-      modalCountry.setVisible(true)
+      // modalCountry.setVisible(true)
     }, [])
 
     useEffect(() => {
@@ -114,6 +114,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
           <TouchableOpacity
             onPress={() => setDataStore()}
             style={[styles.btnExplore, utilSpacing.p4]}
+            disabled={!countryStore.selectedCountry}
           >
             <Text
               style={[styles.button, utilText.bold, styles.txtExplore]}
@@ -121,7 +122,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             ></Text>
           </TouchableOpacity>
         </View>
-        {/* <ModalCountry modalState={modalCountry}></ModalCountry> */}
+        <ModalCountry modalState={modalCountry}></ModalCountry>
       </ScrollView>
     )
   },
