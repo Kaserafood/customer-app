@@ -276,7 +276,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           onPressAddress={onPressAddress}
         ></ModalAutocomplete>
         <ModalWithoutCoverage modalState={modalWithoutCoverage}></ModalWithoutCoverage>
-        <ModalNecessaryLocation modalState={modalLocation}></ModalNecessaryLocation>
+        {/* <ModalNecessaryLocation modalState={modalLocation}></ModalNecessaryLocation> */}
       </Screen>
     )
   },
