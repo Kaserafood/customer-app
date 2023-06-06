@@ -49,6 +49,10 @@ export const utilText = StyleSheet.create({
   textSm: {
     fontSize: typographySize.sm,
   },
+
+  textWhite: {
+    color: color.palette.white,
+  },
 })
 
 export const utilFlex = StyleSheet.create({

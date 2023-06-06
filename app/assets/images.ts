@@ -52,6 +52,13 @@ const images = {
   flowers: require("./images/flowers.png"),
   map: require("./images/map.png"),
   checkGreen: require("./images/check.png"),
+  mark: require("./images/mark.png"),
+  fresh: require("./images/fresh.png"),
+  healthy: require("./images/healthy.png"),
+  hour: require("./images/hour.png"),
+  microwave: require("./images/microwave.png"),
+  trunkFood: require("./images/trunkFood.png"),
+  knife: require("./images/knife.png"),
 }
 
 export default images

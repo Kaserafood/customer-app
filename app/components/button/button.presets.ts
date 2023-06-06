@@ -19,6 +19,8 @@ const BASE_VIEW: ViewStyle = {
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
   elevation: 5,
+  display: "flex",
+  flexDirection: "row",
 }
 
 const BASE_TEXT: TextStyle = {

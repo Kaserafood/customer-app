@@ -443,7 +443,9 @@
     "home": "Inicio",
     "chefs": "Chefs",
     "search": "Buscar",
-    "more": "Más"
+    "more": "Más",
+    "packages": "Paquetes",
+    "new": "Nuevo"
   },
   "ordersScreen": {
     "title": "Mis pedidos",
@@ -647,5 +649,19 @@
     "couponInvalid": "El cupón no es válido",
     "use": "Aplicar",
     "discountApply": "Descuento del {{percent}} aplicado"
+  },
+  "plansScreen": {
+    "title": "Paquetes de almuerzos semanales",
+    "benefits": {
+      "title": "Beneficios",
+      "benefit1": "Nuevas opciones cada semana",
+      "benefit2": "Ahorrarás tiempo y comerás sin tener que cocinar",
+      "benefit3": "Almuerzos saludables y caseros hechos por amantes de la cocina",
+      "benefit4": "Ingredientes frescos en cada platillo",
+      "benefit5": "Envío hasta la puerta de tu casa",
+      "benefit6": "Fácil de calentar en microondas, horno o sartén"
+    },
+    "moreInfo": "Más información",
+    "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales"
   }
 }

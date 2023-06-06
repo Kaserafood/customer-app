@@ -49,4 +49,9 @@ export interface ButtonProps extends TouchableOpacityProps {
    * Disabled styling for the button
    */
   disabled?: boolean
+
+  /**
+   * Icon to display on the left of the button
+   */
+  iconLeft?: React.ReactNode
 }
