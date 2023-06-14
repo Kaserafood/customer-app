@@ -17,12 +17,4 @@ export const DeliveryStoreModel = types
         self.priceDelivery = Number(result.data?.data)
       }
     }),
-    getPriceDeliveryByCity: flow(function* getPriceDelivery(latitude: number, longitude: number) {
-      const api = new Api()
-
-      const result: CommonResponse = yield api.getPriceDeliveryByCoordinates(latitude, longitude)
-      if (result && result.kind === "ok") {
-        self.priceDelivery = Number(result.data?.data)
-      }
-    }),
   }))

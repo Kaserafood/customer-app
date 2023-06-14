@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
 import { getUniqueId, getVersion } from "react-native-device-info"
@@ -35,7 +35,7 @@ import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
-import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
+import { DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
@@ -48,7 +48,7 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation, route: { params } }) => {
+  ({ navigation }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const {
       addressStore,
@@ -61,7 +61,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
-    const refDeliveryTimeList = useRef(null)
     const [coupon, setCoupon] = useState<Coupon>()
 
     useEffect(() => {
@@ -73,11 +72,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         methods.setValue("taxId", taxId ?? "")
         methods.setValue("deliveryNote", customerNote ?? "")
         setLabelDeliveryTime(deliveryTime ?? "")
-
-        const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
-
-        if (slotTime)
-          refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
       }
       loadSavedStrings()
 
@@ -193,16 +187,14 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getProducts = (): Products[] => {
-      return cartStore.cart.map((item) => {
-        return {
-          productId: item.dish.id,
-          quantity: item.quantity,
-          price: item.total,
-          name: item.dish.title,
-          noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
-          metaData: item.metaData,
-        }
-      })
+      return cartStore.cart.map((item) => ({
+        productId: item.dish.id,
+        quantity: item.quantity,
+        price: item.total,
+        name: item.dish.title,
+        noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
+        metaData: item.metaData,
+      }))
     }
 
     const getMetaData = (taxId: string): MetaData[] => {
@@ -335,7 +327,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               placeholderTx="checkoutScreen.deliveryNotePlaceholder"
               value={addressStore.current.instructionsDelivery}
             ></InputText>
-            <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
 
             <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
               <InputText
@@ -349,14 +340,9 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               ></InputText>
             </TouchableOpacity>
 
-            <Text
-              preset="bold"
-              style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
-              tx="checkoutScreen.deliveryTime"
-            ></Text>
             <DeliveryTimeList
-              ref={refDeliveryTimeList}
               onSelectItem={(value) => setLabelDeliveryTime(value)}
+              chefId={commonStore.currentChefId}
             ></DeliveryTimeList>
             <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
             <Text

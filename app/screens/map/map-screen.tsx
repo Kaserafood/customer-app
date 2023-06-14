@@ -68,6 +68,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     })
 
     useEffect(() => {
+      __DEV__ && console.log(`Map Screen`)
       loadingState.setLoading(true)
       // Request permision to access the location and then enable the location from the device
       getCurrentPosition((location) => {

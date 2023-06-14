@@ -92,9 +92,9 @@ export function TabMainNavigation({ navigationRef }) {
         component={PlansScreen}
         listeners={{
           tabPress: () => {
-            RNUxcam.logEvent("tabPress", { name: "Home" })
+            RNUxcam.logEvent("tabPress", { name: "Packages" })
             AppEventsLogger.logEvent("tabPress", 1, {
-              name: "Home",
+              name: "Packages",
               description: "El usuario presionó la opción 'Paquetes' en el menu principal",
             })
           },

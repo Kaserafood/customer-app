@@ -1,52 +1,66 @@
-import React, { forwardRef, MutableRefObject, useImperativeHandle, useState } from "react"
+import React, { useEffect } from "react"
 import { View } from "react-native"
 import Ripple from "react-native-material-ripple"
 
-import { Card, Checkbox } from "../../components"
+import { Card, Checkbox, Separator, Text } from "../../components"
 import { utilSpacing } from "../../theme/Util"
+import { useStores } from "../../models"
+import { loadString } from "../../utils/storage"
+import { DeliveryTime } from "../../models/day-store"
+import { observer } from "mobx-react-lite"
+import { useEffectAsync } from "react-native-text-input-mask"
 
-export const deliverySlotTime = [
-  {
-    label: "12pm - 3pm",
-    value: false,
-  },
-  {
-    label: "3pm - 6pm",
-    value: false,
-  },
-  {
-    label: "6pm - 9pm",
-    value: false,
-  },
-]
+interface Props {
+  onSelectItem: (item: string) => void
+  chefId: number
+}
 
-export const DeliveryTimeList = forwardRef(
-  (props: { onSelectItem: (item: string) => void }, ref: MutableRefObject<any>) => {
-    const [data, setData] = useState(deliverySlotTime)
+export const DeliveryTimeList = observer(({ onSelectItem, chefId }: Props) => {
+  const { dayStore } = useStores()
 
-    const changeValue = (value: boolean, index: number) => {
-      let newData = [...data]
-      newData = newData.map((item) => {
-        item.value = false
-        return item
-      })
-      newData[index].value = value
-      setData(newData)
-      props.onSelectItem(newData[index].label)
+  useEffect(() => {
+    ;(async () => {
+      await dayStore.getDeliveryTime(chefId)
+      const time = await loadString("deliveryTime")
+
+      const current = dayStore.deliveryTime.find((item) => getLabel(item) === time)
+
+      if (current) {
+        changeValue(current.value, dayStore.deliveryTime.indexOf(current), getLabel(current))
+      }
+    })()
+  }, [])
+
+  useEffectAsync(async () => {
+    await dayStore.getDeliveryTime(chefId)
+    if (dayStore.deliveryTime.length === 0) {
+      onSelectItem("")
     }
+  }, [dayStore.currentDay.date])
 
-    useImperativeHandle(ref, () => ({
-      changeValue,
-    }))
+  const changeValue = (value: boolean, index: number, label: string) => {
+    dayStore.changeValueDeliveryTime(value, index)
+    onSelectItem(label)
+  }
 
-    return (
-      <View>
-        {data.map((item, index) => (
-          <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]} key={index}>
+  const getLabel = (item: DeliveryTime) => {
+    return `${item.start} - ${item.end}`
+  }
+
+  return (
+    <View>
+      <Card style={[utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}>
+        <Text
+          preset="semiBold"
+          style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
+          tx="checkoutScreen.deliveryTime"
+        ></Text>
+        {dayStore.deliveryTime.map((item, index) => (
+          <View key={index}>
             <Ripple
               rippleOpacity={0.2}
               rippleDuration={400}
-              onPress={() => changeValue(!item.value, index)}
+              onPress={() => changeValue(!item.value, index, getLabel(item))}
               style={utilSpacing.p2}
             >
               <Checkbox
@@ -54,13 +68,16 @@ export const DeliveryTimeList = forwardRef(
                 style={utilSpacing.px3}
                 value={item.value}
                 preset="medium"
-                text={item.label}
+                text={getLabel(item)}
               ></Checkbox>
             </Ripple>
-          </Card>
+            {index !== dayStore.deliveryTime.length - 1 && (
+              <Separator style={utilSpacing.mx4}></Separator>
+            )}
+          </View>
         ))}
-      </View>
-    )
-  },
-)
+      </Card>
+    </View>
+  )
+})
 DeliveryTimeList.displayName = "DeliveryTimeList"

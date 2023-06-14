@@ -80,7 +80,6 @@ export class Api {
       async function (config) {
         if (!countryId) {
           countryId = await loadString("countryId")
-          __DEV__ && console.log({ countryId })
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         config.headers["country-id"] = parseInt(countryId || -1)
@@ -423,16 +422,6 @@ export class Api {
   }
 
   /**
-   * @description Get price delivery by city name
-   */
-  async getPriceDeliveryByCoordinates(
-    latitude: number,
-    longitude: number,
-  ): Promise<CommonResponse> {
-    return await this.request({ latitude, longitude }, `/deliveries/price/coordinates`, "GET")
-  }
-
-  /**
    * @description Remove account from user
    */
   async removeAccount(userId: number): Promise<CommonResponse> {
@@ -510,5 +499,12 @@ export class Api {
    */
   async addPaymentMethodStripe(userId: number, email: string, card: Card): Promise<CommonResponse> {
     return await this.request({ userId, email, ...card }, `/stripe/payment-methods/`, "POST")
+  }
+
+  /**
+   * @description Get delivery time for chef
+   */
+  async getDeliveryTime(chefId: number, date: string): Promise<CountryResponse> {
+    return await this.request({ chefId, date }, `/deliveries/delivery-time`, "GET")
   }
 }

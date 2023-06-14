@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { observer } from "mobx-react-lite"
 import { StatusBar, StyleSheet, View } from "react-native"
 import { StackScreenProps } from "@react-navigation/stack"
@@ -14,9 +14,14 @@ import images from "../../assets/images"
 import ItemBenefit from "./item-benefit"
 import { TxKeyPath } from "../../i18n"
 import { openWhatsApp } from "../../utils/linking"
+import RNUxcam from "react-native-ux-cam"
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen() {
+    useEffect(() => {
+      RNUxcam.tagScreenName("plans")
+    }, [])
+
     const benefits = [
       {
         title: "plansScreen.benefits.benefit1" as TxKeyPath,
@@ -53,6 +58,11 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
       },
     ]
 
+    const toWhatsApp = () => {
+      RNUxcam.logEvent("openWhatsAppPlans")
+      openWhatsApp("plansScreen.messageWhatsApp")
+    }
+
     return (
       <ScrollView style={styles.container}>
         <StatusBar barStyle="light-content" backgroundColor={"transparent"} translucent></StatusBar>
@@ -80,7 +90,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           <ButtonFooter
             borderTop={false}
             style={utilSpacing.my3}
-            onPress={() => openWhatsApp("plansScreen.messageWhatsApp")}
+            onPress={() => toWhatsApp()}
             iconLeft={
               <Icon name="whatsapp" style={utilSpacing.mr1} size={24} color={color.palette.white} />
             }
