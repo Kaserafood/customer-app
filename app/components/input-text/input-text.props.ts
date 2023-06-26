@@ -79,4 +79,9 @@ export interface InputTextProps extends TextInputProps, UseControllerProps {
    * Helper text
    */
   helperText?: React.ReactElement
+
+  /**
+   * Prefix
+   */
+  prefix?: React.ReactElement
 }

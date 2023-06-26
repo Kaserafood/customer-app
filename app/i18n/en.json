@@ -1,6 +1,629 @@
 {
   "common": {
-    "ok": "Ok",
-    "cancel": "Cancel"
+    "ok": "Accept",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "deliveryAmount": "Cost of shipping",
+    "someError": "Sorry, an unexpected error has occurred",
+    "operationSuccess": "Successful process",
+    "operationExecuted": "Process executed",
+    "notFound": {
+      "dishes": "No results found",
+      "tellUsWhatNeed": "Tell us what you need and we will find the best option."
+    },
+    "dishes": "Dishes",
+    "next": "Next",
+    "save": "Save",
+    "cannotConnect": "Sorry, can't connect to the server",
+    "add": "Add",
+    "send": "Send",
+    "discount": "Discount",
+    "ready": "Ready",
+    "understand": "Got it",
+    "omit": "omit"
+  },
+  "initScreen": {
+    "homemadeFood": "Homemade Food",
+    "byChefIndependently": "By independent chefs",
+    "register": "Sign up",
+    "login": "Log in",
+    "exploreApp": "Explore the app",
+    "selectCountry": "Select your country"
+  },
+  "registerFormScreen": {
+    "title": "Sign up",
+    "firstName": "First name:",
+    "lastName": "Last name:",
+    "email": "Email:",
+    "password": "Password:",
+    "phone": "Phone number:",
+    "acceptThe": "I accept the",
+    "termsAndConditions": " terms and conditions ",
+    "andThe": "and the ",
+    "privacyPolicy": " privacy policies",
+    "info": "Fill in the blanks with the information requested.",
+    "register": "Create Account",
+    "firstNameRequired": "You must enter your name",
+    "lastNameRequired": "You must enter your last name",
+    "emailRequired": "You must enter your email",
+    "passwordRequired": "You must enter your password",
+    "phoneRequired": "You must enter your phone number",
+    "emailFormat": "You must enter a valid email",
+    "acceptsTerms": "You must accept the terms and conditions",
+    "phoneFormatIncorrect": "It seems that your number is incorrect. Please enter the area code",
+    "passwordMinLength": "The password must be at least 4 characters long",
+    "logIn": "Log in"
+  },
+  "errorScreen": {
+    "title": "Error",
+    "friendlySubtitle": "Sorry, something didn't work as expected",
+    "reset": "Restore"
+  },
+  "termsConditionsScreen": {
+    "title": "Términos y condiciones",
+    "text1": "Aiuda, S,A. (“Aiuda”, “Kasera”, “nosotros”, “nuestro”) a través de su empresa Kasera provee sus servicios (descritos abajo) a través de su sitio web ubicado en www.kaserafood.com y food.kaserafood.com (“Sitio(s) Web”) y a través de sus aplicaciones móviles y servicios relacionados (esos servicios, llamados colectivamente incluyendo cualquier nueva característica o aplicación, y el Sitio Web, como los “Servicio(s)” están sujetos a los siguientes Términos y Condiciones (modificados cada cierto tiempo, los “Términos y Condiciones”).",
+
+    "text2": "Estos Términos y Condiciones forman un contrato legalmente vinculante (“El Acuerdo”) entre tú, Kasera, su casa matriz, sus subsidiarias, representantes, afiliados, oficiales y directores gobernando tu uso del Servicio. Nos reservamos el derecho, a nuestra discreción, de cambiar o modificar porciones de estos Términos y Condiciones en cualquier momento. Si hacemos esto, publicaremos los cambios en esta página e indicaremos la última fecha en que estos Términos y Condiciones fueron revisados. Nosotros nos tomaremos la tarea de notificarte acerca de cambios materiales en los Términos y Condiciones, tanto a través de la interfaz de usuario, un correo electrónico u otros medios razonables. Cualquier posible modificación será efectiva inmediatamente aceptes los Términos y Condiciones modificados. Tu uso del Servicio después de la fecha en que algún cambio sea efectivo constituye tu inmediata y efectiva aceptación de los nuevos Términos y Condiciones. A no ser que se realicen cambios materiales a las provisiones de arbitraje contenidas, aceptas que una modificación de este acuerdo no crea un oportunidad renovada de rechazar el arbitraje (si aplica). Si no aceptas acatar estos o futuros Términos y Condiciones, no uses o accedas (o continues accediendo) al Servicio.",
+
+    "text3": "Por favor lee estos Términos y Condiciones detenidamente, ya que contienen un acuerdo de arbitraje y otra información importante con respecto a tus derechos legales, recursos y obligaciones. El acuerdo de arbitraje requiere (con excepción limitada), que presentes cualquier reclamo que tengas contra nosotros a un arbitraje vinculante y final, y además 1) sólo podrás presentar reclamos contra Kasera de forma individual, no como demandante o miembro en cualquier clase de demanda, acción o procedimiento representativo o colectivo. 2) Solo podrás solicitar compensación (incluyendo compensación monetaria, judicial o declaratoria) de forma individual, y 3) Es posible que no puedas tener ningún reclamo contra Nosotros resuelto por una corte o tribunal de ley. Al aceptar estos Términos y Condiciones y/o usando el Sitio Web de Kasera, expresamente admites y aceptas que has leído y aceptado, sin limitante o capacidad impedida, ser suscrito y afecto por estos Términos y Condiciones y que aceptas todos los Términos y Condiciones.",
+
+    "text4": "Además, al utilizar ciertos servicios, podrías estar sujeto a otros términos adicionales a esos servicios que puedan ser publicados en el Servicio de vez en cuando, incluyendo, sin ser limitante, la Política de Privacidad, ubicada en www.kaserafood.com/privacy-policy . Todos esos términos son por lo tanto, incorporado por referencia en estos Términos y Condiciones.",
+
+    "text5": "Acceso y uso de el Servicio",
+
+    "text6": "Descripción del Servicio: El servicio es una plataforma tecnológica que provee un mercado virtual que permite conexiones entre chefs independientes, proveedores de catering y otros individuos que deseen listar, ofrecer, vender y entregar alimentos, productos artesanales, productos preparados (“Comida(s)”) al público general y clientes que naveguen y compren Comidas. Usuarios que compren Comidas son “Cliente(s)” y usuarios que vendan Comidas a través de el Servicio son “Vendedor(es)”. Un usuario puede ser tanto Cliente como Vendedor. Todas las compras son realizadas directamente (y todo contacto de compra y venta es entre Clientes y Vendedores. ",
+
+    "text7": "Kasera ofrece un mercado, no es un Vendedor y no prepara, empaca o vende alimentos. El Servicio otorga la habilidad a los usuarios de conectarse entre ellos y servicios relacionados pero Nosotros no somos una parte en ninguna transacción de compra o venta. Para motivar el uso recurrente de el Servicio, Kasera puede ofrecer facilitar la resolución de disputas entre Clientes y Vendedores, pero Kasera no tiene control sobre y no garantiza a) la existencia, calidad, seguridad, autenticidad o legalidad de las Comidas ofrecidas o vendidas en el Servicio; b) la verdad o exactitud del contenido u oferta de los Vendedores en el Servicio; c) la habilidad de un Vendedor de vender Comidas a través del Servicio y entregar las Comidas dentro del las ventanas de entregas requeridas; d) la habilidad de los Clientes para pagar por Comidas compradas a través del Servicio; o e) que un Cliente o Vendedor completen realmente una transacción, que el envío y despacho sucedan sin inconvenientes, o que sea posible retornar una Comida a través del Servicio.",
+
+    "text8": "Los Vendedores son dueños de empresas independientes y contratistas independientes y no son empleados socios, representantes, agentes, miembros de un proyecto conjunto, contratistas independientes o franquiciatarios de Kasera. Kasera no cocina, empaca o entrega comida y no emplea personas para cocinar, empacar o entregar comida.",
+
+    "text9": "Cada Vendedor es individualmente responsable de cumplir con todas las leyes aplicables, reglas, regulaciones y estándares, incluyendo, pero no limitadas a aquellas que rigen sobre la preparación, venta, comercialización, y empaque de todas las Comidas ordenadas a través de Kasera, y actualizar detalles y precios relacionadas a las Comidas ofrecidas. Cada Vendedor es responsable legalmente por la calidad, seguridad y frescura de sus productos y Kasera no verifica las credenciales, representaciones, productos, servicios o precios ofrecidos por ninguno de los Vendedores, y no garantiza la calidad de los productos o servicios, o que los Vendedores o Comidas cumplan con las leyes aplicables. Kasera no será demandable o responsable de ninguna manera por cualquier Comida proveída por los Vendedores que sea causa de daños de tu salud, lesiones o que no cumpla tus expectativas.",
+
+    "text10": " Dependiente la jurisdicción, Kasera podría entrar en acuerdos con contratistas independientes (cada uno una “Empresa de Entregas”) para proveer servicios de entregas bajo ciertas circunstancias y si es deseado así por Vendedores individuales o Clientes. Si un Vendedor o Cliente elige usar a una Empresa de Entregas para entregar una Comida, Kasera no está ofreciendo esos servicios de entrega y no tiene ninguna responsabilidad o responsabilidad legal por las acciones o inacciones de cualquier Empresa de Entregas. Kasera no será responsable legalmente o responsable por cualquier servicio de entrega proveído por una Empresa de Entregas o por cualquier error o mala representación hecha por ellos. Las Empresa de Entregas son requeridas a cumplir con todas las leyes aplicables, reglas y regulaciones.",
+
+    "text11": "Obligaciones de registro: Podrías estar obligado a registrarte con Kasera para poder acceder y usar ciertas características del Servicio. Si eliges registrarte para el Servicio, aceptas que proveerás y mantendrás información verdadera, acertada, vigente y completa sobre tu persona, como es incitado en los campos en el formulario de registro de el Servicio. La información de registro y otros tipos de información sobre ti, son gobernados por nuestra Política de Privacidad. El Servicio está disponible únicamente para individuos que forman contratos legalmente vinculantes bajo las leyes aplicables. Sin limitar lo anterior, el Servicio no está disponible para menores (personas menores de edad según cada legislación aplicable) o a usuarios suspendidos temporal o permanentemente suspendidos o eliminados de el Servicio (tanto Clientes como Vendedores). Si no calificas, por favor no uses el Servicio. Kasera se reserva el derecho de rechazar el acceso o el uso del Servicio, a cualquiera que infrinja los Términos y Condiciones o por razones relacionadas a la seguridad de la comunidad Kasera, incluyendo usuarios de Kasera, empleados o usuarios prospectos. Solo estás autorizado a crear o usar una sola cuenta para el Servicio y está prohibido el uso de alter egos o cualquier otro tipo de identidad disfrazada mientras se use el Servicio.",
+
+    "text12": "Cuenta de miembros, contraseña y seguridad: Tu eres responsable por mantener la confidencialidad de tu password y cuenta, si existe alguna, y eres completamente responsable por cualquiera y todas las actividades que ocurran dentro de tu acceso a tu cuenta. Aceptas a) notificar inmediatamente a Kasera sobre cualquier uso sin autorización de tu password o cuenta o cualquier otro fallo de seguridad y b) asegurar tu salida al final de cada sesión al accesar al Servicio . Kasera no será legalmente responsable por ningún daño o pérdida generada por un fallo tuyo al comprender esta Sección",
+
+    "text13": "Modificaciones al Servicio: Kasera se reserva el derecho a modificar o discontinuar temporal o permanentemente el Servicio (o cualquier parte contenida en él) con o sin aviso previo. Aceptas que no podrás demandar a Kasera o pedir que Kasera sea legalmente responsable . Aceptas que Kasera no puede ser demandada por ti o por un tercero por cualquier modificación, suspensión, o descontinuación normal de el “Servicio”.",
+
+    "text14": "Prácticas generales relacionadas al uso y el almacenamiento: Aceptas que Kasera pueda establecer prácticas generales y límites relativos al uso del el Servicio. Aceptas que Kasera no tiene ninguna responsabilidad o responsabilidad legal por la eliminación o fallo al guardar cualquier información o contenido mantenido, o transmitido por el Servicio. Aceptas que Kasera se reserva el derecho a eliminar cuentas que estén inactivas por un determinado periodo de tiempo. Además, aceptas que Kasera se reserva el derecho a cambiar estas prácticas y límites en cualquier momento, a discreción unilateral, con o sin aviso.",
+
+    "text15": "Servicios móviles: El Servicio puede incluir ciertos servicios que estás disponibles a través de un dispositivo móvil, incluyendo (i) la habilidad de subir contenido (incluyendo opciones de Comidas o información de Clientes y Vendedores) al Servicio a través de un dispositivo móvil, ii) la habilidad de navegar el Servicio y el Sitio Web desde un dispositivo móvil y iii) la habilidad de acceder a ciertas funciones a través de una aplicación móvil instalada en un dispositivo móvil (colectivamente, los “Servicios Móviles”). Dependiendo el uso que le des al Servicio desde un dispositivo móvil, podrías incurrir en cargos de parte de tu proveedor de servicios de internet y telefonía. Adicionalmente, puede que tu proveedor de servicios de internet restrinja tu habilidad de descargar, instalar o usar los Servicios Móviles y puede que no todos los Servicios Móviles funcionen con todas las empresas de internet y telefonía o todos los dispositivos. Al usar los Servicios Móviles, aceptas que Kasera pueda comunicarse contigo mediante SMS, WhatsApp, llamadas u otros medios electrónicos sobre temas relacionados a Kasera y otras entidades y aceptas que cierta información sobre tu uso de Los Servicios Móviles pueda ser comunicada a Kasera. Si cambias o desactivas tu número de teléfono celular, aceptas realizar el cambio correspondiente en tu perfil de Kasera para asegurar que tus mensajes no sean enviados a la persona que adquiera tu viejo número. Aceptas y admites que tu uso de el Servicio debe ir de acuerdo a las normas establecidas por la plataforma móvil que utilizas o tu proveedor de servicios de internet y telefonía.",
+
+    "text16": "Al registrarte a Kasera y proveer tu información de contacto estás aceptando ser contactado por Kasera o cualquiera de sus socios comerciales por medio de teléfono, mensajes de texto, (que pueden ser automáticos), WhatsApp, correo electrónico, fax, teléfono o cualquier otro medio. Si ya no deseas recibir comunicaciones de parte de Kasera o sus socios comerciales, aceptas la obligación de notificar a nuestros socios comerciales directamente. Puedes decidir dejar de recibir comunicaciones por varios métodos escribiendo al correo electrónico kaserafood@gmail.com.",
+
+    "text17": "Condiciones de uso",
+
+    "text18": "Conducta de usuario: Tu eres únicamente responsable por cualquier descripción, imagen, ofertas, listados, información, datos, texto, música, sonido, gráficos, video, mensajes u otros materiales (“contenido(s)”) que subas, postees, publiques o muestres (de ahora en adelante “subas”) o mandes por correo o uses de cualquier manera mediante el Servicio. Los siguientes son algunos ejemplos de contenido ilegal o prohibido por Kasera. Kasera se reserva el derecho de investigar y tomar acciones legales contra cualquier que, según el criterio de Kasera, viole esta provisión, incluyendo pero no limitado a, remover el contenido del Servicio, suspender o eliminar la cuenta de quienes violen las condiciones y reportarte a las autoridades pertinentes. Aceptas el no usar el Servicio para lo siguiente:",
+
+    "text19": "a) Vender, postear o transmitir cualquier contenido o información relativo al ofrecimiento de Comidas o cualquier otro contenido que i) sea ilegal, dañino, peligroso, abusivo, relativo a tortura, violento, difamatorio, vulgar, obsceno, pornográfico, falso, invada la privacidad de otros, esté cargado de odio, racista, o éticamente cuestionable ; ii) no tengas derecho a vender o transmitir bajo alguna ley o contrato o relación fiduciaria; iii) que provoque un riesgo de privacidad para alguien; iv) que infrinja la propiedad intelectual de terceros; v) constituya publicidad, materiales de promoción, actividad comerciales y/o ventas, “spam”, “correo no solicitado”, concursos, sorteos, o cualquier otra forma de solicitud; vi) que contenga viruses informáticos o cualquier otro tipo de código computacional diseñado para interrumpir, destruir o limitar el funcionamiento de cualquier programa de computación o equipo o equipo de telecomunicaciones; o vii) que a juicio exclusivo de Kasera, sea cuestionable o que restrinja o inhiba a cualquier persona de usar o disfrutar el Servicio, o que pueda exponer a Kasera o sus usuarios a cualquier tipo de daño o responsabilidad de cualquier tipo; b) personificar a cualquier persona o entidad ajena a ti, o falsamente declarar o dar a entender tu afiliación con cualquier persona o entidad; c) solicitar información personal de cualquier persona menor a 18 años; d) colectar o almacenar correos electrónicos de otros usuarios del Servicio o el Sitio Web de forma electrónica o por otros medios, con el propósito de enviar correos electrónicos no solicitados u otros tipos de comunicación no solicitada; e) anunciar u ofrecer vender cualquier bien o servicio ajeno a las Comidas preparadas, vendidas y compradas a través de el Servicio; f) Usar el servicio para solicitar, hacer o aceptar alguna Comida afuera o independiente del Servicio, para saltarse o evitar cualquier comisión o pago que de otra manera aplicase para dicha transacción; g) Para interferir o interrumpir el Servicio, o los servidores, o las redes conectadas al Servicio, o desobedecer cualquier requerimiento, procedimiento, política o regulaciones de redes conectadas al servicio; h) violar cualquier ley aplicable local, estatal, departamental, nacional o internacional  o cualquier regulación que tenga el peso de la ley; i) que sea parte de cualquier actividad que viole el Decreto Número 57-2008 del Congreso de la República de Guatemala, o que viole la Ley de Acceso a la Información Pública y decretos subsecuentes, así como la “Telephone Consumer Protection Act, 47 U.S.C § 227 at seq. y sus regulaciones, 47 C.F.R. § 64.1200; la “Do-Not-Call Implementation Act, 15 U.S.C § 6101 et seq de los Estados Unidos; o cualquier ley o regulación anti-spam, de protección de datos o privacidad de cualquier jurisdicción; j) fomentar o promover cualquier actividad o empresa criminal o proveer instrucción sobre actividades ilícitas; o k) obtener o intentar acceder a cualquier material o información que sin importar el medio, no haya sido puesta en disponibilidad intencionalmente o proveída a través del Servicio.",
+
+    "text20": "Declaraciones, garantías y acuerdo de usuarios. Todos los usuarios declaran y garantizan qué:",
+
+    "text21": "Tienes como mínimo la edad mínima requerida en la jurisdicción donde resides para entrar en contratos legalmente vinculantes;",
+
+    "text22": "Tienes el derecho, autoridad y capacidad para entrar en este Acuerdo y regirte por los términos y condiciones de este Acuerdo, y que vas a regirte por este Acuerdo;",
+
+    "text23": "Has leído, entendido y aceptado ser afecto a los Términos y Condiciones y la Política de Privacidad;",
+
+    "text24": "Que respetarás la privacidad (incluyendo pero no limitada a la vida privada, hogareña o familiar) y los derechos de protección de los usuarios con los que te comunicas a través de la plataforma de Kasera;",
+
+    "text25": "Que vas a cumplir tus compromisos hechos a otros usuarios, vas a comunicarte claramente y respetuosamente, proveerás o aceptarás Comidas en el horario acordado y que solo utilizarás métodos de pagos seleccionados o aprobados por Kasera para hacer o recibir pagos a a través de el Servicio;",
+
+    "text26": "Que vas actuar profesional y responsablemente en tus interacciones con otros usuarios;",
+
+    "text27": "Que utilizarás tu nombre o nombre real de tu negocio en tu perfil; ",
+
+    "text28": "Al usar o acceder el Servicio, incluyendo cuando preparas, empacas, entregues, proveas o recibas Comidas, vas a actuar en cumplimiento en buena fé de todas las leyes y regulaciones aplicables, locales, estatales, departamentales y nacionales;",
+
+    "text29": "Que no tienes ninguna motivación, estatus o interés del que Kasera necesite o desee saber en conexión a El Servicio, incluyendo pero no limitado a, si estás usando o vas a utilizar el Servicio para cualquier propósito periodístico, académico, investigador, o ilegal.",
+    "text30": "Los Vendedores adicionalmente declaran y garantizan qué:",
+    "text31": "",
+    "text32": "Al vender a través de el Servicio, estás operando como un propietario único, pequeño contribuyente, sociedad, sociedad anónima, sociedad limitada, corporación o cualquier otra entidad fiscal o empresarial;",
+    "text33": "Que tienes un negocio independientemente establecido vendiendo bienes similares a los bienes que vendes a Clientes a través del Servicio de Kasera y que mantienes una clientela independiente;",
+    "text34": "Que tienes el derecho irrestricto a generar ingresos en la jurisdicción donde venderás Comida;",
+    "text35": "Si vendes Comida en una jurisdicción que requiere que tengas alguna(s) licencia(s) y/o registro fiscal, garantizas que tienes la(s) licencia(s) requeridas y/o el registro tributario.",
+    "text36": "Tú eres responsable por identificar y obtener cualquier licencia, permiso o registro antes de vender comida a través de el Servicio.",
+    "text37": "Cuentas con cualquiera y todos los tipos de seguros requeridos para operar tu negocio y vender comida a través de el Servicio.",
+    "text38": "Que usarás tu nombre o el nombre real de tu negocio para vender comida a través de el Servicio.",
+    "text39": "Vas a honrar tus compromisos a otros usuarios en la plataforma, incluyendo cumplir con las órdenes de productos a tiempo según lo acordado con el Cliente, proveyendo comida de alta calidad y en tiempo a los Clientes.",
+    "text40": "Solo venderás comida de forma segura y de acuerdo a todas las leyes aplicables.",
+    "text41": "Para cada producto que vendas, indicarás todos los ingredientes que contiene.",
+    "text42": "Solo cocinarás en una ubicación en donde tengas permiso legal y de Kasera para cocinar.",
+    "text43": "Aceptas que podemos (pero no necesariamente será así) obtener información acerca de ti, incluyendo tu record policiaco y aceptas proveer cualquier otra autorización necesaria para facilitar nuestro acceso a esos registros mientras dure el Acuerdo;",
+    "text44": "Vas a pagar todos los impuestos aplicables a tus ingresos por la venta de Comidas en la jurisdicción donde operes. (Kasera podrá retener impuestos por tus ventas de alimentos en algunas situaciones).",
+    "text45": "Instalaciones de Vendedores: Adicionalmente a las restricciones de conducta anteriormente mencionadas, tu declaras y garantizas que tu uso de los Servicios para mercadear, publicitar y vender Comidas, no viola ninguna ley aplicable o regulación: Para vendedores en California: incluyendo pero no limitado al Retail Food Code (extraído de el código de salud y seguridad de California). Declaras y garantizas que preparas todas tus Comidas a Clientes utilizando una adecuada i) “Food Facility” (según lo definido en el Section 113789 of the California Retail Food Code); ii) “Food Processing Establishment” (según lo definido en el Section 111955 of the California Retail Food Code, y modificaciones); o (iii) “Cottage Food Operation” (según lo definido en el Section 111955 of the California Retail Food Code, y modificaciones). Si eres un Vendedor preparando y proveyendo Comidas desde una instalación de comida que clasifique únicamente como una “Microentreprise Home Kitchen”  (Según lo definido en la Section 113825 del California Retail Food Code, y modificaciones), tu declaras y garantizas en cumples con los términos del ",
+    "text46": "",
+    "text47": "Chapter 11.6 of the California Retail Food Code, y modificaciones, que requiere. Y para vendedores en Guatemala, incluyendo pero no limitado,  declaras y garantizas que cumples con los términos establecidos en el Decreto número 90-97 del Congreso de la República de Guatemala, los acuerdos gubernativos 249-2002, 969-99, 002-99, 72-2003, 8-2020, 787-97, las actas municipales 68-2019.4, 16.01.2001 o cualquier regulación pertinente al manejo de alimentos y venta de comida.",
+    "text48": "",
+    "text49": " ",
+    "text50": "",
+    "text51": "Ingredientes y alérgenos: Los Vendedores deberán proveer una lista completa de los ingredientes contenidos o utilizados en cada Comida posteada y/o vendida en el Servicio, incluyendo alérgenos conocidos. Kasera no es responsable por la exactitud de la información y etiqueta de Comidas entregadas a Clientes. Los Clientes deben ser alertados que las Comidas pueden ser preparadas en instalaciones usando el mismo equipo usado para preparar Comidas que contienen alérgenos, aún si el alérgeno no está contenido en la receta. Kasera no podrá ser demandada por ninguna enfermedad, problema de salud u otros daños que puedan resultar de cualquier orden o el consumo de cualquier de las Comidas o artículos relacionados comprados mediante el Servicio.",
+    "text52": "",
+    "text53": " ",
+    "text54": "",
+    "text55": "Seguros para Vendedores: Kasera no mantiene seguros por responsabilidades o demandas que puedan surgir de tu uso del Servicio tanto como Cliente o como Vendedor. Si eres un Vendedor, Kasera recomienda que obtengas un seguro adecuado para cubrir la operación de tu instalación de comida y la preparación y entrega de Comidas. ",
+    "text56": "Reglas para reseñas: En la medida que seas un cliente, Kasera podrá darte permisos para subir contenido y dejar reseñas relacionadas a tus compras de Comidas. Kasera podrá aceptar, rechazar o remover reseñas o cualquier contenido asociado de forma unilateral. Kasera no tiene ninguna obligación de moderar o borrar reseñas o contenido asociado, aún si alguien considera que la reseña es cuestionable o inexacta. Los clientes que publiquen reseñas deberán cumplir con los siguientes criterios: 1) deberán tener experiencia personal con el producto/persona del que escriben la reseña; 2) los reviews no deberán contener lenguaje ofensivo, de odio, profano, racista, discriminatorio, sexual, religioso, referente a actividades ilegales o político; 3) quienes hagan reseñas no pueden estar afiliados a competidores si publican reseñas negativas; 4) quienes hagan reseñas no deberán hacer ninguna conclusión sobre la legalidad de una conducta; y 5) quienes hagan reseñas no podrán postear declaraciones falsas u organizar campañas para motivar a otros a postear reseñas positivas o negativas. Las reseñas no son avaladas por Kasera y no representan el punto de vista de Kasera o cualquier afiliado o socio. Kasera no asume responsabilidad por ninguna reseña o sus contenidos, o las responsabilidades o pérdidas que se produzcan como resultado de una reseña. Cualquier reseña que publiques será considerada como contenido de usuarios (según lo definido abajo).",
+    "text57": "",
+    "text58": "Riesgo de mercado: Kasera no está afiliado o avalada por ningún Vendedor, restaurante u otros servicios de preparación de alimentos disponibles a través del Servicio. Más allá de su capacidad como mercado y plataforma tecnológica, Kasera no actúa como Cliente, Vendedor (o afiliado para un Cliente o Vendedor) o corredor (corretaje) respecto a ninguna transacción. Debes asumir que existen riesgos al lidiar con usuarios (incluyendo aquellos que puedan estar actuando en mala fé) y que todos los riesgos son tuyos y no de Kasera. Te recomendamos utilizados las diferentes funciones de el Servicio (perfiles, opciones de Comidas y reseñas) para ayudarte a evaluar al usuario con el que estás lidiando.",
+    "text59": "",
+    "text60": "Los Vendedores como dueños de negocios independientes / contratistas independientes: Los usuarios del Servicio actuando en capacidad de Vendedores lo hacen en su capacidad personal como negocios y contratistas independientes y no como empleados de Kasera. Como Vendedor, aceptas qué: i) eres un dueño o miembro de un negocio independiente y no un empleado de Kasera; ii) que eres el único responsable de determinar los medios y la manera en que crearás los productos que vendes a través de el Sitio Web; iii) Estos Términos y Condiciones no crean una asociación, empresa conjunta, sociedad, franquicia o relación de empleado/empleador entre tú y Kasera, y entre tú y un Cliente; iv) No te describirás como un empleado o agente de Kasera ante ningún cliente; v) No tendrás derecho a ninguno de los beneficios que Kasera provea a sus empleados, incluyendo, pero no limitados a: vacaciones pagas, baja por enfermedad, programas de seguros, seguros de salud grupales o beneficios de retiro; y vi) no eres elegible para cobrar beneficios o exigir pago o remuneración alguna en caso de una lesión. Como vendedor, nunca abordarás a un Cliente de manera que pueda comprometer tu estatus como un negocio independiente.",
+
+    "text61": "Por favor contáctanos al correo kaserafood@gmail.com para reportar cualquier violación a los Términos y Condiciones, o sobre cualquier duda que puedas tener sobre los mismos."
+  },
+  "privacyPolicy": {
+    "title": "Política de Privacidad",
+    "text1": "¿Quienes somos?",
+    "text2": "Puedes encontrar información sobre Kasera en la página web   www.kaserafood.com",
+    "text3": "",
+    "text4": "Comentarios",
+    "text5": "Cuando los visitantes dejan comentarios en el sitio web, recolectamos la información mostrada en los comentarios, así como la dirección IP del visitando y otra información del navegador para apoyar a la detección de spam. ",
+    "text6": "",
+    "text7": "Medios",
+    "text8": "Si subes imágenes al sitio web, deberás evitar imágenes que tengan información de tu ubicación. (EXIF GPS) Los visitantes del sitio web pueden descargar y extraer cualquier información sobre tu ubicación del sitio web.",
+    "text9": "",
+    "text10": "Cookies",
+    "text11": "Si dejas un comentario en nuestro sitio podrás optar por grabar tu correo y nombre en las “cookies”. Esto es por tu conveniencia, para que no debas volver a llenar la información otra vez cuando dejes otro comentario. Estas “cookies” durarán 1 año. ",
+    "text12": "",
+    "text13": "Si visitas nuestra página de inicio, crearemos una “cookie” temporal para determinar si tu navegador acepta “cookies”. Esta “cookie” no contiene información personal y es desechada cuando cierras tu navegador.",
+    "text14": "",
+    "text15": "Cuando inicias sesión, creamos varias “cookies” para grabar tu información de inicio y tus preferencias visuales. Las “cookies” de inicio de sesión duran 2 días y las “cookies” de tus preferencias visuales duran 1 año. Si seleccionas “recuérdame”, tu inicio de sesión durará por 2 semanas. Si cierras la sesión de tu cuenta, las “cookies” se borrarán.",
+    "text16": "",
+    "text17": "Si editas o publicas una receta o un artículo una “cookie” adicional será grabada en tu navegador. Esta “cookie” no contiene información personal y simplemente indica el “ID” de la publicación que editaste y expira en 1 día.",
+    "text18": "",
+    "text19": "Contenido insertado desde otros sitios web",
+    "text20": "Artículos en este sitio web pueden incluir contenido insertado (por ejemplo, videos, imágenes, artículos, etc.) El contenido insertado de otros sitios web se comporta de la misma exacta manera a que si el visitante estuviese visitando el otro sitio web.",
+    "text21": "",
+    "text22": "Estos sitios pueden recolectar información acerca de ti, usar “cookies”, insertar otros servicios de rastreo, monitorear tu interacción con el contenido insertado, incluyendo, rastrear tu interacción con el contenido insertado si tienes una cuenta o tienes una sesión iniciada en ese sitio web.",
+    "text23": "",
+    "text24": "¿Con quién compartimos tu información?",
+    "text25": "Tu información será compartida con proveedores estratégicos de Kasera para poder cumplir con el funcionamiento normal de la plataforma. Estos proveedores, incluyen, pero no están limitados a: proveedores de servicios de entrega, instituciones financieras, pasarelas de pago, servicios de marketing y otros proveedores de servicios de información. ",
+    "text26": "",
+    "text27": "Toda tu información vivirá en servidores de plataformas como Google Cloud o Amazon Web Services.",
+    "text28": "",
+    "text29": "Kasera hará todo lo posible para proteger tu información utilizando tecnologías de encriptación razonables, así como limitando el acceso físico sin autorización a la misma. También reconocemos que ningún sistema es perfecto por lo que no podemos garantizar al 100% que la información nunca será verá comprometida. Si acaso existiera un compromiso a tu información Kasera se compromete a investigar y tomar las acciones legales pertinentes, así como notificarte si tu información se viese afectada.",
+    "text30": "",
+    "text31": "¿Por cuánto tiempo retenemos tu información? ",
+    "text32": "Para usuarios que se registran en nuestra plataforma, almacenamos la información personal que provean a su perfil de usuario. Todos los usuarios pueden ver, editar o borrar su información personal en cualquier momento. (A excepción de su usuario). Los administradores del sitio también podrán ver y borrar esa información.",
+    "text33": "",
+    "text34": "¿Qué derechos tienes sobre tu información?",
+    "text35": "Si tienes una cuenta en esta plataforma, o has dejado comentarios, pueden solicitar que te enviemos un archivo exportado de la información personal que almacenamos sobre ti, incluyendo cualquier información que nos hayas proveído. También podrás solicitar borrar cualquier información personal que guardemos sobre ti. Esto no incluye cualquier información que estamos obligados a guardar para fines administrativos, legales o de seguridad. ",
+    "text36": "",
+    "text37": "¿A dónde enviamos tu información?",
+    "text38": " Tu información podrá ser enviada a proveedores de servicios independientes y siempre haremos el esfuerzo más razonable por mantener una lista actualizada y publicada de estos proveedores. ",
+    "text39": "",
+    "text40": "¿Cómo manejamos la información de tus tarjetas de crédito?",
+    "text41": "Kasera no almacenará ninguna información de tus tarjetas de créditos de forma directa sino utilizará proveedores “PCI Compliant” como Pagadito, QPay Pro, Págalo, Visanet, Credomatic, 2Checkout o Stripe. Kasera solo almacenará “tokens” para que puedas realizar nuevas compras sin deber ingresar todos los datos. Podrás borrar cualquier información de tus tarjetas en tu perfil de la plataforma.",
+    "text42": "",
+    "text43": "Contacto legal:",
+    "text44": "Escríbenos al correo kaserafood@gmail.com para cualquier consulta o solicitud relacionada al manejo de tus datos."
+  },
+
+  "registerPagerScreen": {
+    "page1": {
+      "title": "Homemade food that you can't find in restaurants.",
+      "description": "Taste authentic dishes from local chefs and cooks and support artisan gastronomy."
+    },
+    "page2": {
+      "title": "Dishes worth reserving",
+      "description": "Order ahead so the chefs can source fresh ingredients."
+    },
+    "page3": {
+      "title": "Receive your food ready to heat",
+      "description": "Receive your food fresh and ready to heat when you decide to eat it."
+    },
+    "skip": "Skip",
+    "next": "Next"
+  },
+  "loginFormScreen": {
+    "title": "Log In",
+    "email": "Email",
+    "password": "Password",
+    "continue": "Continue",
+    "info": "Log in into your account:",
+    "recoverPassword": "I forgot my password"
+  },
+  "mainScreen": {
+    "why": "Why?",
+    "home": "Home",
+    "chefs": "Chefs",
+    "search": "Search",
+    "more": "More",
+    "dayShipping": "Day of delivery",
+    "delivery": "Delivery"
+  },
+
+  "bottomNavigation": {
+    "home": "Inicio",
+    "chefs": "Chefs",
+    "search": "Buscar",
+    "more": "Más"
+  },
+  "modalLocation": {
+    "title": "Choose an address",
+    "addAddress": "Enter an address",
+    "useCurrentLocation": "Use current location",
+    "cannotGetLocation": "Could not get your location"
+  },
+
+  "modalDeliveryDay": {
+    "title": "Order ahead",
+    "description": "The dishes at Kasera are made by hand in small kitchens, so the cooks do not have inventories and must source fresh ingredients every time they have an order.",
+    "continue": "COntinue"
+  },
+  "categories": {
+    "title": "Categories"
+  },
+  "chefs": {
+    "delivery": "Delivery"
+  },
+  "dishDetailScreen": {
+    "title": "Dishes",
+    "unities": "Unities",
+    "commentChef": "Comment to the chef:",
+    "moreProductsChef": "More chef's products",
+    "addToOrder": "Add to order",
+    "updateOrder": "Update order",
+    "pay": "Pay",
+    "placeHolderCommetChef": "For example: Allergies, instructions."
+  },
+  "menuChefScreen": {
+    "title": "Menu",
+    "dayDelivery": "Chef delivery days:",
+    "chefMenu": "Chef's menu",
+    "watchCart": "View cart",
+    "leave": "Do you want to exit?",
+    "leaveDescription": "You will lose the dishes you added from this chef",
+    "yesLeave": "Yes, get out",
+    "noLeave": "Go back",
+    "why": "Why?",
+    "whyTitle": "Why?",
+    "whyDescription": "In Kasera, different chefs from the city have their own store in the app. Each chef is in a different location, has different hours and delivery rate. For this reason, you need to complete an order from one chef before ordering from another.",
+    "commentChef": "Comment to the chef:"
+  },
+  "checkoutScreen": {
+    "title": "Delivery details",
+    "info": "Delivery information",
+    "address": "Address",
+    "addressPlaceholder": "Select your address",
+    "deliveryNote": "Delivery note",
+    "deliveryNotePlaceholder": "References, access code, etc.",
+    "deliveryDate": "Date of delivery",
+    "deliveryDatePlaceholder": "Select a date",
+    "deliveryTime": "Choose the delivery range",
+    "paymentMethod": "Payment method",
+    "paymentMethods": "Payment methods",
+    "paymentCard": "Add card",
+    "delivery": "Delivery:",
+    "errorDayDelivery": "Select a delivery day",
+    "errorTimeDelivery": "Select a delivery range",
+    "errorOrder": "We're sorry, we haven't been able to process your order.",
+    "errorOrderPayment": "We're sorry, we haven't been able to process the payment.",
+    "nitPlaceholder": "Enter your EIN for the invoice.",
+    "nit": "Enter your EIN (Optional)",
+    "uponDelivery": "Payment upon delivery.",
+    "errorCard": "You haven't entered all the details of your credit card.",
+    "errorPayment": "Select a payment method",
+    "paymentCash": "Cash payment",
+    "makeOrder": "Make an order",
+    "useCoupon": "Use coupon",
+    "pay": "Pay",
+    "addPayment": "Add card",
+    "paymentMethodUpdated": "Payment method updated",
+    "paymentMethodNotUpdated": "We haven't been able to update the payment method",
+    "paymentMethodAdded": "Payment method added",
+    "paymentMethodError": "We haven't been able to add the payment method",
+    "paymentMethodErrorUnknown": "The card must be Visa or MasterCard",
+    "paymentCashDescription": "You pay when you receive",
+    "paymentMethodErrorEmptyFields": "You have not entered all your card details"
+  },
+  "endOrderScreen": {
+    "title": "Order placed",
+    "deliveryOn": "Deliver to:",
+    "deliveryDate": "Delivery date:",
+    "info": "We will send you a confirmation to your email",
+    "order": "Order",
+    "thankYou": "Thank you for your support",
+    "cookWithLove": "I will cook your dish with lots of love.",
+    "continueExplore": "Continue exploring"
+  },
+  "searchScreen": {
+    "title": "Search engine",
+    "somethingDiferent": "I want something different",
+    "searchPlaceholder": "Search..."
+  },
+  "mapScreen": {
+    "title": "Verify the location",
+    "disabledLocation": "To use this function, you need to enable location services on your device.",
+    "whereReciveFood": "Where would you like to receive your food?",
+    "addressRequired": "You must enter an address",
+    "addressPlaceholder": "Please enter an address",
+    "noLocation": "You need to adjust the pin",
+    "errorToGetLocation": "We're sorry, we couldn't retrieve the location",
+    "canNotGetLocation": "We couldn't retrieve your location",
+    "searchPlaceholder": "Search for a location or reference",
+    "cofirmUbication": "Confirm location"
+  },
+  "addressScreen": {
+    "title": "Confirm address",
+    "addressComplete": "Full address",
+    "addressPlaceholder": "Please enter the complete address",
+    "addressCompleteRequired": "You must enter the complete address",
+    "houseApartmentNumber": "House or apartment number (Optional)",
+    "houseApartmentNumberPlaceholder": "Please enter it here",
+    "houseApartmentNumberRequired": "You must enter the house or apartment number",
+    "instructionsDelivery": "Delivery instructions, references, access code (Optional)",
+    "instructionsDeliveryPlaceholder": "Please write it here",
+    "howSaveThisAddress": "How would you like to save this address? (Optional)",
+    "howSaveThisAddressPlaceholder": "For example: My home, the office",
+    "howSaveThisAddressRequired": "You must enter the name for the address",
+    "phoneDelivery": "Delivery phone number (Optional)",
+    "phoneDeliveryPlaceholder": "1234-5678",
+    "phoneDeliveryRequired": "You must enter a delivery phone number",
+    "phoneFormatIncorrect": "It seems that your number is incorrect. Please enter the area code",
+    "addressSaved": "Your address has been saved",
+    "checkYourAddress": "*Please review if your address is correct"
+  },
+  "modalDeliveryDate": {
+    "deliveryDate": "Delivery date",
+    "why": "Why?"
+  },
+  "paymentCard": {
+    "name": "Name",
+    "namePlaceholder": "Enter the name on the card",
+    "nameRequired": "You must enter the name on the card",
+    "number": "Card number",
+    "numberPlaceholder": "Please enter the card numbers",
+    "numberRequired": "You must enter the card number",
+    "expirationDate": "Expiration date",
+    "expirationDatePlaceholder": "MM/AA",
+    "expirationDateRequired": "Required date",
+    "cvv": "CVV",
+    "cvvPlaceholder3": "3-digit code",
+    "cvvPlaceholder4": "4-digit code",
+    "cvvRequired": "CVV required",
+    "alias": "Alias",
+    "aliasPlaceholder": "Example: company card",
+    "aliasRequired": "You must enter the alias",
+    "numberMinLength": "The card number is invalid"
+  },
+  "drawerContent": {
+    "closeSession": "Sign off",
+    "myOrdres": "My orders",
+    "removeAccount": "Delete account",
+    "myAccount": "My account",
+    "termsConditions": "Terms and Conditions",
+    "loginRegister": "Login / Register",
+    "bugReport": "Report a bug",
+    "support": "Support",
+    "whatsAppMessage": "Hello, I have a question"
+  },
+  "tabMainNavigation": {
+    "home": "Home",
+    "chefs": "Chefs",
+    "search": "Search",
+    "more": "More",
+    "packages": "Packages",
+    "new": "New"
+  },
+  "ordersScreen": {
+    "title": "My orders",
+    "inProgress": "In progress",
+    "previous": "Previous",
+    "articlesPlural": "Articles",
+    "articlesSingular": "Article"
+  },
+  "recoverPasswordScreen": {
+    "title": "Recover password",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "emailRequired": "You must enter your email",
+    "emailFormatIncorrect": "The email format is incorrect",
+    "send": "Send email",
+    "errorSend": "Sorry, the email could not be sent",
+    "info": "Enter your email to recover your password",
+    "emailSended": "We have sent you an email, with a token to change your password",
+    "sendAgain": "Resend mail",
+    "ready": "Ready!"
+  },
+  "recoverPasswordTokenScreen": {
+    "title": "Token",
+    "info": "Enter the token we have sent you by email"
+  },
+  "newPasswordScreen": {
+    "title": "New Password",
+    "info": "Enter your new password, it must have at least 4 characters",
+    "passwordPlaceholder": "Enter your password",
+    "passwordRequired": "You must enter your password",
+    "passwordConfirmRequired": "You must confirm your password",
+    "passwordMinLength": "You must enter at least 4 characters",
+    "passwordConfirmPlaceholder": "Confirm your password",
+    "save": "Save",
+    "infoChanged": "Your password has been changed, now you can login with your new password",
+    "login": "Log in",
+    "passwordNotMatch": "Passwords do not match"
+  },
+  "calendar": {
+    "today": "Today",
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "monthsShort": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "daysShort": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    }
+  },
+  "modalRequestDish": {
+    "tellUsWhatYouNeed": "Tell us what you need",
+    "weSarchBetter": "We will look for the best for you",
+    "dishName": "What dish do you want?",
+    "dishNamePlaceholder": "Example: Grilled chicken",
+    "dishNameRequired": "You must enter the name of the dish",
+    "peopleCount": "For how many people? (optional)",
+    "whenYouNeed": "For when you need it?",
+    "dateNotSpecific": "No specific date",
+    "selectDate": "Choose date",
+    "request": "Request",
+    "changeDate": "Change date",
+    "writeHere": "Write here",
+    "requestDish": "Request dish",
+    "ready": "Ready!",
+    "confirmationInfo": "We will send you an email when we find the right chef for your request.",
+    "continue": "Continue"
+  },
+  "addons": {
+    "chooseYourAddons": "Choose your addons",
+    "choice": "Choose",
+    "options": "options",
+    "option": "option",
+    "each": "each",
+    "obligatory": "Obligatory"
+  },
+  "location": {
+    "canNotOpenSettings": "Failed to open settings",
+    "necessaryAcceptPermission": "It is necessary to accept the permission to be able to use Kasera",
+    "enableServices": "Enable location services to allow Kasera to determine your location.",
+    "goToSettings": "Go to settings",
+    "dontUseLocation": "Do not use location"
+  },
+  "accountScreen": {
+    "title": "My account",
+    "removeAccount": "Delete account",
+    "removeAccountConfirmation": "Are you sure to delete your account?",
+    "removeAccountConfirmationInfo": "If you delete your account, you will not be able to access it again",
+    "removeAccountConfirmationYes": "Yes, delete",
+    "removeAccountConfirmationNo": "No, cancel",
+    "removeAccountSuccess": "Your account has been deleted",
+    "removeAccountError": "Unable to delete your account",
+    "logout": "Sign off"
+  },
+  "banner": {
+    "whatIsKasera": "What is Kasera?",
+    "whatIsKaseraDescription1": "Kasera is a marketplace where you can reserve the best dishes from talented home chefs in your community.",
+    "whatIsKaseraDescription2": "Find authentic traditional recipes, lunch packs for the week, food for holidays and events.",
+    "whatIsKaseraDescription3": "Reserve in advance to give the chef time to search for fresh ingredients and cook by hand.",
+    "whatIsKaseraDescription4": "The artisan kitchen is elaborated and with love, for that reason the dish will not arrive immediately but from the next day. It will arrive 100% at home and ready to heat.",
+    "welcome": "Welcome to",
+    "kasera": "Kasera",
+    "whatIsIt": "What is it?",
+    "seasonal": "Seasonal",
+    "seasonalDescription": "Explore seasonal dishes",
+    "explore": "Explore",
+    "tryNewFlavors": "Try new flavors",
+    "newChefs": "New chefs",
+    "toKnow": "Know",
+    "kaseraFavorites": "Favorites",
+    "kaseraFavoritesDescription": "Discover our recommended dishes",
+    "discover": "Discover"
+  },
+  "newChefsScreen": {
+    "title": "New chefs"
+  },
+  "favoriteScreen": {
+    "title": "Kasera Favorites"
+  },
+  "orderDetailScreen": {
+    "title": "Order",
+    "pending": "Pending",
+    "paymentMethod": "Payment method",
+    "orderStatus": "Order status",
+    "waiting": "On old",
+    "processing": "Processing",
+    "completed": "Completed",
+    "order": "Order"
+  },
+  "modalNecessaryLocation": {
+    "title": "Enter a location to search for nearby chefs.",
+    "order": "Order"
+  },
+  "modalAutocomplete": {
+    "title": "Please enter a location",
+    "placeholderSearch": "Please write the location or reference"
+  },
+  "modalWithoutCoverage": {
+    "title": "Out of coverage",
+    "info": "We're sorry, we don't have coverage in the selected location"
+  },
+  "reportBugScreen": {
+    "title": "Report an error",
+    "description": "If you encounter any errors in the application, please report them, and we will fix them as soon as possible.",
+    "titlePlaceholder": "Enter a title",
+    "descriptionPlaceholder": "Please describe the error in detail",
+    "titleRequired": "You must enter a title",
+    "descriptionRequired": "You must enter a description",
+    "minLength": "You must enter at least 3 characters",
+    "titleError": "Title",
+    "descriptionError": "Description",
+    "errorToSendBug": "We're sorry, the data couldn't be sent",
+    "successToSendBug": "Error reported"
+  },
+  "modalReportBug": {
+    "title": "Error reported",
+    "info": "Thank you for submitting the information. We will review it as soon as possible."
+  },
+  "modalCoupon": {
+    "title": "Use coupon",
+    "placeholderCoupon": "Enter the coupon code",
+    "couponRequired": "You must enter a coupon code",
+    "labelCoupon": "Coupon",
+    "couponInvalid": "The coupon is invalid",
+    "use": "Apply",
+    "discountApply": "{{percent}} discount applied"
+  },
+  "plansScreen": {
+    "title": "Weekly lunch packages",
+    "benefits": {
+      "title": "Benefits",
+      "benefit1": "New options every week",
+      "benefit2": "You will save time and eat without having to cook",
+      "benefit3": "Healthy and homemade lunches made by kitchen lovers",
+      "benefit4": "Fresh ingredients in every dish",
+      "benefit5": "Shipping to the door of your house",
+      "benefit6": "Easy to heat in microwave, oven or pan"
+    },
+    "moreInfo": "More information",
+    "messageWhatsApp": "Hello, I want more information about the weekly lunch packages"
   }
 }

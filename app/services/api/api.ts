@@ -15,7 +15,6 @@ import {
   CommonResponse,
   CountryResponse,
   CuponResponse,
-  CoverageResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
@@ -29,6 +28,11 @@ import { loadString } from "../../utils/storage"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
+let locale: string
+
+export function setLocale(localeCode: string) {
+  locale = localeCode
+}
 
 export function setCountryId(id: number) {
   countryId = id
@@ -71,7 +75,7 @@ export class Api {
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
-        "Accept-Language": "es",
+        "Accept-Language": locale,
       },
     })
 
@@ -80,6 +84,10 @@ export class Api {
       async function (config) {
         if (!countryId) {
           countryId = await loadString("countryId")
+        }
+
+        if (!locale) {
+          locale = await loadString("locale")
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         config.headers["country-id"] = parseInt(countryId || -1)

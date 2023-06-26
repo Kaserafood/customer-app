@@ -41,6 +41,7 @@ import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
 import RNUxcam from "react-native-ux-cam"
+import { GUATEMALA, MEXICO } from "../../utils/constants"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -95,6 +96,15 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return null
     }
 
+    const getAddressLabel = () => {
+      let label = addressStore.current.address
+
+      if (addressStore.current.numHouseApartment) {
+        label += `, ${addressStore.current.numHouseApartment}`
+      }
+
+      return label
+    }
     const onError: SubmitErrorHandler<any> = (errors) => {
       RNUxcam.logEvent("checkout: errorSubmit", { errors })
       __DEV__ && console.log({ errors })
@@ -120,7 +130,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       const order: Order = {
         id: 0,
         customerId: userStore.userId,
-        address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
+        address: getAddressLabel(),
         country: addressStore.current.country,
         city: addressStore.current.city,
         region: addressStore.current.region,
@@ -413,8 +423,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <InputText
               name="taxId"
               preset="card"
-              placeholderTx="checkoutScreen.nitPlaceholder"
-              labelTx="checkoutScreen.nit"
+              placeholderTx={
+                userStore.countryId === MEXICO
+                  ? "checkoutScreen.rfcPlaceholder"
+                  : "checkoutScreen.nitPlaceholder"
+              }
+              labelTx={userStore.countryId === MEXICO ? "checkoutScreen.rfc" : "checkoutScreen.nit"}
               styleContainer={[utilSpacing.my3]}
               maxLength={100}
             ></InputText>

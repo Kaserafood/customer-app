@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
@@ -14,11 +14,12 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { spacing } from "../../theme"
 import { color } from "../../theme/color"
-import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
 import RNUxcam from "react-native-ux-cam"
 import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+import { GUATEMALA } from "../../utils/constants"
 
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
@@ -31,6 +32,7 @@ export const RegisterFormScreen: FC<
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
   const { userStore, commonStore, addressStore, messagesStore, countryStore } = useStores()
+  const fieldPhone = useRef(null)
 
   const goTerms = () => navigation.navigate("termsConditions")
   const goPrivacy = () => navigation.navigate("privacyPolicy")
@@ -152,6 +154,7 @@ export const RegisterFormScreen: FC<
               ></InputText>
               <InputText
                 name="phone"
+                forwardedRef={fieldPhone}
                 keyboardType="phone-pad"
                 placeholderTx="registerFormScreen.phone"
                 styleContainer={styles.input}
@@ -159,10 +162,26 @@ export const RegisterFormScreen: FC<
                   required: "registerFormScreen.phoneRequired",
                   minLength: {
                     value: getMaskLength(countryStore.selectedCountry.maskPhone),
-                    message: "registerFormScreen.phoneFormatIncorrect",
+                    message:
+                      userStore.countryId === GUATEMALA
+                        ? "registerFormScreen.phoneFormatIncorrectGt"
+                        : "registerFormScreen.phoneFormatIncorrect",
                   },
                 }}
                 mask={countryStore.selectedCountry.maskPhone}
+                prefix={
+                  <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                      fieldPhone?.current.focus()
+                    }}
+                  >
+                    <Text
+                      style={[utilSpacing.ml3, utilText.textGray]}
+                      text={countryStore.selectedCountry.prefixPhone}
+                    ></Text>
+                  </TouchableOpacity>
+                }
               ></InputText>
               <InputText
                 name="email"

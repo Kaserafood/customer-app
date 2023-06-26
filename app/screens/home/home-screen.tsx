@@ -36,7 +36,6 @@ import { Banner } from "./banner"
 import { ModalWelcome } from "./modal-welcome"
 import RNUxcam from "react-native-ux-cam"
 import { DishParams } from "./dish.types"
-import { async } from "validate.js"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -52,8 +51,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const [refreshing, setRefreshing] = useState(false)
     const [fetchData, setFetchData] = useState(true)
     const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [isFirstTime, setIsFirstTime] = useState(true)
     const {
       dishStore,
       dayStore,
@@ -62,7 +59,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       userStore,
       cartStore,
       messagesStore,
-      deliveryStore,
       addressStore,
     } = useStores()
     const { currentDay } = dayStore
@@ -71,7 +67,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       if (addressStore.current?.latitude && addressStore.current?.longitude) {
         fetch(false, null)
       }
-    }, [addressStore.current.id])
+    }, [userStore.addressId, addressStore.current?.latitude, addressStore.current?.longitude])
 
     const toCategory = (category: Category) => {
       RNUxcam.logEvent("categoryTap", {
@@ -153,8 +149,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         tokenPagination: null,
       }
 
-      setIsLoading(true)
-      setIsFirstTime(false)
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       RNUxcam.logEvent("changeDate", {
@@ -227,7 +221,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           if (dayStore.days?.length > 0) {
             if (useCurrentDate) dayStore.setCurrentDay(dayStore.currentDay)
             else {
-              setIsFirstTime(true)
               dayStore.setCurrentDay(dayStore.days[0])
             }
           }

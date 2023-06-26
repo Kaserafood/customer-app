@@ -15,9 +15,12 @@ import ItemBenefit from "./item-benefit"
 import { TxKeyPath } from "../../i18n"
 import { openWhatsApp } from "../../utils/linking"
 import RNUxcam from "react-native-ux-cam"
+import { useStores } from "../../models"
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen() {
+    const { commonStore, messagesStore } = useStores()
+
     useEffect(() => {
       RNUxcam.tagScreenName("plans")
     }, [])
@@ -58,9 +61,20 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
       },
     ]
 
-    const toWhatsApp = () => {
+    const toWhatsApp = async () => {
       RNUxcam.logEvent("openWhatsAppPlans")
-      openWhatsApp("plansScreen.messageWhatsApp")
+
+      commonStore.setVisibleLoading(true)
+
+      await commonStore
+        .getPhoneSupport()
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
+        })
+        .finally(() => {
+          commonStore.setVisibleLoading(false)
+        })
+      openWhatsApp(commonStore.phoneNumber, "plansScreen.messageWhatsApp")
     }
 
     return (

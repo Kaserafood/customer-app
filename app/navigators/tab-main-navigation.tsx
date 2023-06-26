@@ -4,14 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
 
-import { Icon, Text, Image } from "../components"
+import { Icon, Text } from "../components"
 import { ChefsScreen, HomeScreen, SearchScreen, PlansScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
-import { utilFlex, utilSpacing, utilText } from "../theme/Util"
+import { utilSpacing, utilText } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
 import RNUxcam from "react-native-ux-cam"
 import { View, StyleSheet } from "react-native"
-import images from "../assets/images"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()

@@ -26,7 +26,7 @@ export const DeliveryTimeList = observer(({ onSelectItem, chefId }: Props) => {
       const current = dayStore.deliveryTime.find((item) => getLabel(item) === time)
 
       if (current) {
-        changeValue(current.value, dayStore.deliveryTime.indexOf(current), getLabel(current))
+        changeValue(true, dayStore.deliveryTime.indexOf(current), getLabel(current))
       }
     })()
   }, [])

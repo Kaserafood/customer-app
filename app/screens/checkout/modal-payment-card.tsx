@@ -84,7 +84,7 @@ export const ModalPaymentCard = forwardRef(
         city: addressStore.current.city,
         state: addressStore.current.region,
         country: addressStore.current.country,
-        customerName: `${userStore.name} ${userStore.lastName}`,
+        customerName: `${userStore.displayName}`,
       }
       __DEV__ && console.log({ model })
       await userStore
