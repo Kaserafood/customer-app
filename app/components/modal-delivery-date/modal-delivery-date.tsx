@@ -65,7 +65,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
 
   return (
     <>
-      <Modal modal={modal} style={style} position="bottom">
+      <Modal state={modal} style={style} position="bottom">
         <View>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Text

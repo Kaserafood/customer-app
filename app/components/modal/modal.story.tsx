@@ -30,17 +30,17 @@ storiesOf("Modal", module)
           text="Bottom modal"
           onPress={() => modalState2.setVisible(true)}
         ></Button>
-        <Modal modal={modalState}>
+        <Modal state={modalState}>
           <View>
             <Text text="Body modal"></Text>
           </View>
         </Modal>
-        <Modal modal={modalState1} isVisibleIconClose={false}>
+        <Modal state={modalState1} isVisibleIconClose={false}>
           <View>
             <Text text="Body modal"></Text>
           </View>
         </Modal>
-        <Modal modal={modalState2} position="bottom" isVisibleIconClose={false}>
+        <Modal state={modalState2} position="bottom" isVisibleIconClose={false}>
           <View>
             <Text text="Body modal"></Text>
           </View>

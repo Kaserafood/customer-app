@@ -11,7 +11,7 @@ interface ModalNecessaryLocationProps {
 
 const ModalNecessaryLocation = ({ modalState }: ModalNecessaryLocationProps) => {
   return (
-    <Modal position="bottom" modal={modalState}>
+    <Modal position="bottom" state={modalState}>
       <View>
         <Text
           preset="bold"

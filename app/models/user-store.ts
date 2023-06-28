@@ -9,6 +9,7 @@ import { categoryStore } from "./category-store"
 import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
 import { GUATEMALA } from "../utils/constants"
+import { SetupIntent } from "../screens/checkout/modal-payment-stripe"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybeNull(types.number),
@@ -240,5 +241,26 @@ export const UserRegisterModel = userRegister
         } else if (result.data.value) return true
       }
       return false
+    }),
+    addSetupIntent: flow(function* (dataIntent: SetupIntent) {
+      const api = new Api()
+      const result = yield api.createSetupIntent(self.userId, self.email, dataIntent)
+
+      if (result.kind === "ok") {
+        if (result.data.clientSecret) return result.data.clientSecret
+        return null
+      }
+      return null
+    }),
+
+    getPublishableKey: flow(function* () {
+      const api = new Api()
+      const result = yield api.getPublishableKey()
+
+      if (result.kind === "ok") {
+        if (result.data.value) return result.data.value
+        return null
+      }
+      return null
     }),
   }))

@@ -102,7 +102,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
   return (
     <>
       <Modal
-        modal={modalState}
+        state={modalState}
         style={styles.modal}
         styleBody={styles.noRadius}
         position="bottom"

@@ -23,4 +23,5 @@ export const palette = {
   grayLoader: "#ffffff66",
   redLight: "#ffebee",
   redRequired: "#f44336",
+  grayPlaceHolder: "#939AA4",
 }

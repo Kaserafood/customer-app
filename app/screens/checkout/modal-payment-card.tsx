@@ -113,7 +113,7 @@ export const ModalPaymentCard = forwardRef(
 
     return (
       <>
-        <Modal modal={modalState} position="bottom">
+        <Modal state={modalState} position="bottom">
           <ScrollView keyboardShouldPersistTaps={"handled"}>
             <Text
               preset="bold"

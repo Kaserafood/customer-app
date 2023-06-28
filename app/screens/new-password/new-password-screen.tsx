@@ -133,7 +133,7 @@ const ModalPasswordChanged = (props: {
 }) => {
   return (
     <Modal
-      modal={modalState}
+      state={modalState}
       styleBody={styles.w80}
       hideOnBackdropPress={false}
       isVisibleIconClose={false}

@@ -14,7 +14,7 @@ export const ModalReportBug = (props: { modalState: ModalState }) => {
   const { modalState } = props
 
   return (
-    <Modal modal={modalState} size="md" onHide={() => goBack()}>
+    <Modal state={modalState} size="md" onHide={() => goBack()}>
       <View style={utilSpacing.px3}>
         <Image source={images.bug} style={[styles.bug, utilFlex.selfCenter]}></Image>
         <Text

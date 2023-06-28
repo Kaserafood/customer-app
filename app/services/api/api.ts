@@ -20,11 +20,14 @@ import {
   GeneralApiResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
+  SetupIntentResponse,
   UserLoginResponse,
+  ValueResponse,
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
 import { loadString } from "../../utils/storage"
+import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
@@ -514,5 +517,23 @@ export class Api {
    */
   async getDeliveryTime(chefId: number, date: string): Promise<CountryResponse> {
     return await this.request({ chefId, date }, `/deliveries/delivery-time`, "GET")
+  }
+
+  /**
+   * @description Create payment setup for Stripe
+   */
+  async createSetupIntent(
+    userId: number,
+    email: string,
+    card: SetupIntent,
+  ): Promise<SetupIntentResponse> {
+    return await this.request({ userId, email, ...card }, `/stripe/payment-intent-setup/`, "POST")
+  }
+
+  /**
+   * @description Get publishable key from Stripe
+   */
+  async getPublishableKey(): Promise<ValueResponse> {
+    return await this.request({}, `/stripe/publishable-key`, "GET")
   }
 }

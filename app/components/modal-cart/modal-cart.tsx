@@ -141,7 +141,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
     onContinue()
   }
   return (
-    <Modal modal={modal} position="bottom">
+    <Modal state={modal} position="bottom">
       <View style={styles.body}>
         <View style={[utilFlex.flexRow, utilSpacing.mb4, utilSpacing.ml4]}>
           <Image source={{ uri: chef.image }} style={styles.imageChef}></Image>
@@ -218,7 +218,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
           block
           tx="common.continue"
         ></Button>
-          <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
+        <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
       </View>
     </Modal>
   )

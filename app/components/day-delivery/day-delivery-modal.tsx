@@ -24,7 +24,7 @@ export interface DayDeliveryProps {
 export const DayDeliveryModal = observer(function DayDelivery(props: DayDeliveryProps) {
   const { modal } = props
   return (
-    <Modal modal={modal} style={styles.modal}>
+    <Modal state={modal} style={styles.modal}>
       <View style={utilSpacing.p4}>
         <Text preset="bold" size="lg" tx="modalDeliveryDay.title" style={utilSpacing.mb5}></Text>
         <Text tx="modalDeliveryDay.description"></Text>

@@ -116,7 +116,7 @@ export const ModalAutocomplete = (props: ModalAutocompleteProps) => {
 
   return (
     <Modal
-      modal={modalState}
+      state={modalState}
       style={styles.modal}
       styleBody={styles.noRadius}
       position="bottom"

@@ -41,7 +41,9 @@ import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
 import RNUxcam from "react-native-ux-cam"
-import { GUATEMALA, MEXICO } from "../../utils/constants"
+import { MEXICO } from "../../utils/constants"
+import { ModalPaymentStripe } from "./modal-payment-stripe"
+import { CardField } from "@stripe/stripe-react-native"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()

@@ -41,6 +41,7 @@
     "@react-navigation/native": "~6.0.1",
     "@react-navigation/native-stack": "^6.0.2",
     "@react-navigation/stack": "~6.0.1",
+    "@stripe/stripe-react-native": "0.16.0",
     "apisauce": "2.0.0",
     "axios": "^0.27.2",
     "expo": "~44.0.6",

@@ -41,7 +41,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
 
   return (
     <>
-      <Modal modal={modalState} style={styles.modal}>
+      <Modal state={modalState} style={styles.modal}>
         <View style={utilSpacing.p4}>
           <Text
             preset="bold"
@@ -86,7 +86,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
 export const ModalWhy = (props: { modalState: ModalStateHandler }) => {
   const { modalState } = props
   return (
-    <Modal modal={modalState} style={styles.modal}>
+    <Modal state={modalState} style={styles.modal}>
       <View style={utilSpacing.p4}>
         <Text
           preset="bold"

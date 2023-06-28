@@ -63,6 +63,12 @@ export type CommonResponse = {
   }
 } & kind
 
+export type ValueResponse = {
+  data: {
+    value: string
+  }
+} & kind
+
 export type OrderOverviewResponse = {
   data: OrderOverview[]
 } & kind
@@ -91,6 +97,12 @@ export type CountryResponse = {
   data: Country[]
 } & kind
 
-export type DeliveryTimeReponse = {
+export type DeliveryTimeResponse = {
   data: DeliveryTime[]
+} & kind
+
+export type SetupIntentResponse = {
+  data: {
+    customerSecret: string
+  }
 } & kind

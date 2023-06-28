@@ -10,6 +10,7 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Icon } from "../icon/icon"
 import { Image } from "../image/image"
+import Ripple from "react-native-material-ripple"
 
 interface ModalState {
   isVisible: boolean
@@ -35,7 +36,7 @@ interface ModalProperties {
   /**
    * Mutable class for managing component visivility.
    */
-  modal: ModalState
+  state: ModalState
 
   /**
    * Body of the modal
@@ -90,7 +91,7 @@ interface ModalProperties {
 export const Modal = observer(function Modal(props: ModalProperties) {
   const {
     style,
-    modal,
+    state: modal,
     children,
     styleContainer,
     styleBody,
@@ -187,9 +188,9 @@ export const Modal = observer(function Modal(props: ModalProperties) {
           )}
 
           {isFullScreen && (
-            <TouchableOpacity onPress={() => modal.setVisible(false)}>
+            <Ripple style={styles.btnClose} onPress={() => modal.setVisible(false)}>
               <Icon name="xmark" size={30} color={color.text}></Icon>
-            </TouchableOpacity>
+            </Ripple>
           )}
 
           {children}
@@ -221,6 +222,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     margin: 0,
   },
+  btnClose: {
+    width: 50,
+  },
+
   center: {
     margin: "auto",
   },
@@ -233,7 +238,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     display: "flex",
   },
-
   content: {
     display: "flex",
     justifyContent: "flex-start",

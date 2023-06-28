@@ -34,7 +34,7 @@ export const ModalCoupon = observer(function ModalCoupon() {
 
   return (
     <Modal
-      modal={modalStateCoupon}
+      state={modalStateCoupon}
       isVisibleIconClose={false}
       position="bottom"
       onHide={() => couponModalStore.setVisible(false)}

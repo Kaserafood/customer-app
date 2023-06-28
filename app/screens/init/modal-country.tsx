@@ -47,7 +47,7 @@ export const ModalCountry = observer(({ modalState }: ModalCountryProps) => {
   }
 
   return (
-    <Modal modal={modalState} position="bottom" backdropColor="rgba(0,0,0,.75)">
+    <Modal state={modalState} position="bottom" backdropColor="rgba(0,0,0,.75)">
       <View style={utilSpacing.mb5}>
         <Text
           preset="bold"

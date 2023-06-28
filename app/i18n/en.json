@@ -296,7 +296,7 @@
     "deliveryTime": "Choose the delivery range",
     "paymentMethod": "Payment method",
     "paymentMethods": "Payment methods",
-    "paymentCard": "Add card",
+    "paymentCard": "Add the card information",
     "delivery": "Delivery:",
     "errorDayDelivery": "Select a delivery day",
     "errorTimeDelivery": "Select a delivery range",
@@ -373,13 +373,13 @@
   },
   "paymentCard": {
     "name": "Name",
-    "namePlaceholder": "Enter the name on the card",
-    "nameRequired": "You must enter the name on the card",
+    "namePlaceholder": "Enter the name of the card",
+    "nameRequired": "You must enter the name of the card",
     "number": "Card number",
     "numberPlaceholder": "Please enter the card numbers",
     "numberRequired": "You must enter the card number",
     "expirationDate": "Expiration date",
-    "expirationDatePlaceholder": "MM/AA",
+    "expirationDatePlaceholder": "MM/YY",
     "expirationDateRequired": "Required date",
     "cvv": "CVV",
     "cvvPlaceholder3": "3-digit code",
@@ -388,7 +388,9 @@
     "alias": "Alias",
     "aliasPlaceholder": "Example: company card",
     "aliasRequired": "You must enter the alias",
-    "numberMinLength": "The card number is invalid"
+    "numberMinLength": "The card number is invalid",
+    "paymentAdded": "Payment method added",
+    "cardInvalid": "The card information is invalid"
   },
   "drawerContent": {
     "closeSession": "Sign off",
