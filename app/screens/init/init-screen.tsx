@@ -17,11 +17,15 @@ import { ModalCountry } from "./modal-country"
 import { ModalStateHandler } from "../../utils/modalState"
 import RNUxcam from "react-native-ux-cam"
 import { setCountryId } from "../../services/api"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
+    const insets = useSafeAreaInsets()
+
+    
     const toRegister = () => {
       userStore.setUserId(0)
       navigation.navigate("registerPager")
@@ -66,7 +70,12 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
 
     return (
       <ScrollView contentContainerStyle={styles.root}>
-        <StatusBar backgroundColor={color.primary} barStyle="light-content" />
+
+        <StatusBar
+          backgroundColor={color.primary}
+          barStyle={"light-content"}
+        />
+
         {countryStore.selectedCountry && (
           <TouchableOpacity
             activeOpacity={0.5}
@@ -76,6 +85,10 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
               utilSpacing.py3,
               utilFlex.flexRow,
               utilFlex.flexCenterVertical,
+              {
+                marginTop: insets.top
+              }
+              
             ]}
             onPress={() => modalCountry.setVisible(true)}
           >
