@@ -289,6 +289,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const onPressAddress = () => {
+      console.log("on press address")
       modalStateLocation.setVisible(true)
       RNUxcam.logEvent("checkout: onPressAddress")
     }
@@ -320,7 +321,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
           <FormProvider {...methods}>
-            <TouchableOpacity activeOpacity={1} onPress={onPressAddress}>
+            <Ripple    rippleOpacity={0.2}
+      rippleDuration={400} onPress={onPressAddress}>
               <InputText
                 name="address"
                 preset="card"
@@ -330,7 +332,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 value={getAddressText()}
                 iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
               ></InputText>
-            </TouchableOpacity>
+            </Ripple>
 
             <InputText
               name="customerNote"
@@ -340,7 +342,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               value={addressStore.current.instructionsDelivery}
             ></InputText>
 
-            <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
+            <Ripple rippleOpacity={0.2}
+      rippleDuration={400} onPress={() => modalDelivery.setVisible(true)}>
               <InputText
                 name="diveryDate"
                 preset="card"
@@ -350,7 +353,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 value={getNameDayDelivery()}
                 iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
               ></InputText>
-            </TouchableOpacity>
+            </Ripple>
 
             <DeliveryTimeList
               onSelectItem={(value) => setLabelDeliveryTime(value)}
@@ -365,7 +368,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             ></Text>
 
             <Card
-              style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}
+              style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mt4, utilSpacing.mx4, utilSpacing.px1, utilSpacing.py3]}
             >
               {userStore.currentCard?.id ? (
                 <Ripple
@@ -409,8 +412,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 >
                   <View style={[utilFlex.flex1, utilSpacing.ml4]}>
                     <View style={utilFlex.felxColumn}>
-                      <Text tx="checkoutScreen.paymentCash" preset="semiBold"></Text>
-                      <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
+                      <Text tx="checkoutScreen.paymentCash" preset="semiBold" style={utilSpacing.mb1}></Text>
+                      <Text tx="checkoutScreen.paymentCashDescription" caption   size="sm"></Text>
                     </View>
                   </View>
 
@@ -504,7 +507,7 @@ const styles = StyleSheet.create({
   },
 
   containerPayment: {
-    borderColor: palette.whiteGray,
+    borderColor: palette.green,
     borderWidth: 1,
   },
   coupon: {

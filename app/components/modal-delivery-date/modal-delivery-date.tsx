@@ -9,13 +9,14 @@ import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState, ModalStateHandler } from "../../utils/modalState"
-import { Button } from "../button/button"
+
 import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
 import { Chip } from "../chip/chip"
 import { DayDeliveryModal } from "../day-delivery/day-delivery-modal"
 import { Modal } from "../modal/modal"
 import { Text } from "../text/text"
+import { ButtonFooter } from ".."
 
 const modalState = new ModalStateHandler()
 
@@ -87,15 +88,11 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
             ></ListDay>
           </ScrollView>
           {isVisibleContinue && (
-            <View style={[styles.containerButton, utilFlex.selfCenter]}>
-              <Button
-                onPress={() => modal.setVisible(false)}
-                style={utilSpacing.mt5}
-                block
-                preset="primary"
-                tx="common.continue"
-              ></Button>
-            </View>
+            
+<ButtonFooter
+onPress={() => modal.setVisible(false)}
+tx="common.continue"
+></ButtonFooter>
           )}
         </View>
       </Modal>
