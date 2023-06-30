@@ -1,25 +1,25 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import OneSignal from "react-native-onesignal"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
 import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { spacing } from "../../theme"
-import { color } from "../../theme/color"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { color } from "../../theme/color"
+import { GUATEMALA } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
-import RNUxcam from "react-native-ux-cam"
-import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
-import { GUATEMALA } from "../../utils/constants"
 
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
@@ -43,7 +43,7 @@ export const RegisterFormScreen: FC<
 
   useEffect(
     () =>
-      navigation.addListener("beforeRemove", (e) => {
+      navigation.addListener("beforeRemove", () => {
         RNUxcam.removeOcclusion(hideTextFields)
       }),
     [navigation],

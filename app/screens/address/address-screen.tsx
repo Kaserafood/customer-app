@@ -1,20 +1,20 @@
-import React, { FC, useEffect, useRef } from "react"
-import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { StyleSheet, TouchableOpacity, View } from "react-native"
-import { ScrollView } from "react-native-gesture-handler"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useRef } from "react"
+import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
+import { StyleSheet, View } from "react-native"
+import { ScrollView } from "react-native-gesture-handler"
 
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Button, Header, InputText, Screen } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
-import { saveString } from "../../utils/storage"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { GUATEMALA } from "../../utils/constants"
+import { getMaskLength } from "../../utils/mask"
+import { saveString } from "../../utils/storage"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {

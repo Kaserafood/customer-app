@@ -32,7 +32,6 @@ export const MessagesModel = types
 
       if (value) {
         setTimeout(() => {
-          __DEV__ && console.log("hide success")
           self.hideSuccess()
         }, timeShow)
       }
@@ -41,7 +40,6 @@ export const MessagesModel = types
       self.isVisibleError = value
       if (value) {
         setTimeout(() => {
-          __DEV__ && console.log("hide error")
           self.hideError()
         }, timeShow)
       }
@@ -50,7 +48,6 @@ export const MessagesModel = types
       self.isVisibleInfo = value
       if (value) {
         setTimeout(() => {
-          __DEV__ && console.log("hide info")
           self.hideInfo()
         }, timeShow)
       }
@@ -61,7 +58,6 @@ export const MessagesModel = types
   }))
   .actions((self) => ({
     showSuccess: (text: TxKeyPath | string, isI18n?: boolean) => {
-      __DEV__ && console.log("show error", text)
       let msg = ""
       if (isI18n) msg = getI18nText(text as TxKeyPath)
       else msg = text ?? getI18nText("common.operationSuccess")
@@ -70,7 +66,6 @@ export const MessagesModel = types
       self.setVisibleSuccess(true)
     },
     showError: (text?: TxKeyPath | string, isI18n?: boolean) => {
-      __DEV__ && console.log("show error", text)
       let msg = ""
       if (isI18n) msg = getI18nText(text as TxKeyPath)
       else {
@@ -82,7 +77,6 @@ export const MessagesModel = types
       self.setVisibleError(true)
     },
     showInfo: (text: TxKeyPath | string, isI18n?: boolean) => {
-      __DEV__ && console.log("show error", text)
       let msg = ""
       if (isI18n) msg = getI18nText(text as TxKeyPath)
       else msg = text ?? getI18nText("common.operationExecuted")

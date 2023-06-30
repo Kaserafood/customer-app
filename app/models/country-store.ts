@@ -1,6 +1,5 @@
 import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 import { Api } from "../services/api"
-import * as RNLocalize from "react-native-localize"
 
 const country = types.model("Country").props({
   id: types.number,
@@ -27,21 +26,21 @@ export const CountryStoreModel = types
       const result = yield api.getCountries()
       if (result && result.kind === "ok") {
         applySnapshot(self.countries, result.data)
-        const deviceCountry = RNLocalize.getCountry()
-
-        if (result.data?.length > 0) {
-          if (
-            result.data.find(
-              (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
-            )
-          ) {
-            self.selectedCountry = result.data.find(
-              (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
-            )
-          } else {
-            self.selectedCountry = result.data[0]
-          }
-        }
+        // const deviceCountry = RNLocalize.getCountry()
+        self.selectedCountry = result.data[0]
+        // if (result.data?.length > 0) {
+        //   if (
+        //     result.data.find(
+        //       (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
+        //     )
+        //   ) {
+        //     self.selectedCountry = result.data.find(
+        //       (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
+        //     )
+        //   } else {
+        //     self.selectedCountry = result.data[0]
+        //   }
+        // }
       }
     }),
 

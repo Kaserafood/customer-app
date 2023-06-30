@@ -1,31 +1,29 @@
-import React, { FC, useLayoutEffect, useEffect } from "react"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import OneSignal from "react-native-onesignal"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
-import { Button, Icon, Text } from "../../components"
+import RNUxcam from "react-native-ux-cam"
+import { Button, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
+import { setCountryId } from "../../services/api"
+import { utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
-import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { ModalCountry } from "./modal-country"
 import { ModalStateHandler } from "../../utils/modalState"
-import RNUxcam from "react-native-ux-cam"
-import { setCountryId } from "../../services/api"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { ModalCountry } from "./modal-country"
 
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
-    const insets = useSafeAreaInsets()
+    // const insets = useSafeAreaInsets()
 
-    
     const toRegister = () => {
       userStore.setUserId(0)
       navigation.navigate("registerPager")
@@ -43,7 +41,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }
 
     useEffect(() => {
-      modalCountry.setVisible(true)
+      // modalCountry.setVisible(true)
     }, [])
 
     useEffect(() => {
@@ -70,13 +68,9 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
 
     return (
       <ScrollView contentContainerStyle={styles.root}>
+        <StatusBar backgroundColor={color.primary} barStyle={"light-content"} />
 
-        <StatusBar
-          backgroundColor={color.primary}
-          barStyle={"light-content"}
-        />
-
-        {countryStore.selectedCountry && (
+        {/* {countryStore.selectedCountry && (
           <TouchableOpacity
             activeOpacity={0.5}
             style={[
@@ -99,7 +93,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             <Text text={countryStore.selectedCountry.name}></Text>
             <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
           </TouchableOpacity>
-        )}
+        )} */}
 
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>

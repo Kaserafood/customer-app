@@ -1,11 +1,11 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
+import { Keyboard, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import {
@@ -35,13 +35,13 @@ import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
+import RNUxcam from "react-native-ux-cam"
+import { MEXICO } from "../../utils/constants"
 import { DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
-import RNUxcam from "react-native-ux-cam"
-import { MEXICO } from "../../utils/constants"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -319,8 +319,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
           <FormProvider {...methods}>
-            <Ripple    rippleOpacity={0.2}
-      rippleDuration={400} onPress={onPressAddress}>
+            <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPressAddress}>
               <InputText
                 name="address"
                 preset="card"
@@ -340,8 +339,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               value={addressStore.current.instructionsDelivery}
             ></InputText>
 
-            <Ripple rippleOpacity={0.2}
-      rippleDuration={400} onPress={() => modalDelivery.setVisible(true)}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => modalDelivery.setVisible(true)}
+            >
               <InputText
                 name="diveryDate"
                 preset="card"
@@ -366,7 +368,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             ></Text>
 
             <Card
-              style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mt4, utilSpacing.mx4, utilSpacing.px1, utilSpacing.py3]}
+              style={[styles.containerPayment, utilSpacing.m4, utilSpacing.px1, utilSpacing.p0]}
             >
               {userStore.currentCard?.id ? (
                 <Ripple
@@ -375,7 +377,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   onPress={() => {
                     modalStatePaymentList.setVisible(true)
                   }}
-                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                  style={[
+                    utilSpacing.p2,
+                    utilSpacing.py3,
+                    utilFlex.flexRow,
+                    utilFlex.flexCenterVertical,
+                  ]}
                 >
                   <View style={[utilFlex.flex1, utilSpacing.ml4]}>
                     <Text text={userStore.currentCard.name} preset="semiBold"></Text>
@@ -406,12 +413,21 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   onPress={() => {
                     modalStatePaymentList.setVisible(true)
                   }}
-                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                  style={[
+                    utilSpacing.p2,
+                    utilSpacing.py3,
+                    utilFlex.flexRow,
+                    utilFlex.flexCenterVertical,
+                  ]}
                 >
                   <View style={[utilFlex.flex1, utilSpacing.ml4]}>
                     <View style={utilFlex.felxColumn}>
-                      <Text tx="checkoutScreen.paymentCash" preset="semiBold" style={utilSpacing.mb1}></Text>
-                      <Text tx="checkoutScreen.paymentCashDescription" caption   size="sm"></Text>
+                      <Text
+                        tx="checkoutScreen.paymentCash"
+                        preset="semiBold"
+                        style={utilSpacing.mb1}
+                      ></Text>
+                      <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
                     </View>
                   </View>
 
