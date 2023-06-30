@@ -1,10 +1,12 @@
 import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
-import { ScrollView, StyleSheet, TextInput, View } from "react-native"
+import { ScrollView, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Image, Modal, Separator, Text } from "../../components"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -12,9 +14,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getImageByType, paymentType, typeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
 import { ModalPaymentCard } from "./modal-payment-card"
-import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { ModalPaymentStripe } from "./modal-payment-stripe"
 
 interface ModalPaymentListProps {

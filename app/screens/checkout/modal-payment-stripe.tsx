@@ -94,6 +94,8 @@ export const ModalPaymentStripe = ({ stateModal, onGetCards }: Props) => {
       return
     }
 
+    userStore.addStripePaymentId(paymentMethod.id, nameCard)
+
     const { error, setupIntent: setupIntentResult } = await confirmSetupIntent(clientSecret, {
       paymentMethodType: "Card",
       paymentMethodData: {
@@ -169,8 +171,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: color.text,
     fontSize: 18,
+    height: 48,
     marginTop: 32,
     paddingHorizontal: 24,
-    height:48
   },
 })

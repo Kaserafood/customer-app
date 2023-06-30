@@ -263,4 +263,14 @@ export const UserRegisterModel = userRegister
       }
       return null
     }),
+
+    addStripePaymentId: async (stripePaymentId: string, name: string) => {
+      const userApi = new Api()
+      const result = await userApi.addPaymentMethodId(stripePaymentId, name)
+
+      if (result && result.kind === "ok") {
+        return result.data.value
+      }
+      return 0
+    },
   }))

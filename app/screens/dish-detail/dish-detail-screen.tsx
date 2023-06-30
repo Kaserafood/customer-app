@@ -220,7 +220,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total,
       })
 
-      navigation.navigate("menuChef", { ...params.chef, showModalCart: true })
+      navigation.navigate("menuChef", { ...params.chef, showModalCart: false })
     }
 
     const isValidAddons = (): boolean => {

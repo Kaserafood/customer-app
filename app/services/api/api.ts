@@ -536,4 +536,11 @@ export class Api {
   async getPublishableKey(): Promise<ValueResponse> {
     return await this.request({}, `/stripe/publishable-key`, "GET")
   }
+
+  /**
+   * @description Insert the name and stripe payment method id
+   */
+  async addPaymentMethodId(stripePaymentId: string, name: string): Promise<ValueResponse> {
+    return await this.request({ stripePaymentId, name }, `/stripe/add-payment-method-id`, "POST")
+  }
 }
