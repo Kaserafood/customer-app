@@ -2,13 +2,13 @@ import React, { useEffect } from "react"
 import { View } from "react-native"
 import Ripple from "react-native-material-ripple"
 
-import { Card, Checkbox, Separator, Text } from "../../components"
-import { utilSpacing } from "../../theme/Util"
-import { useStores } from "../../models"
-import { loadString } from "../../utils/storage"
-import { DeliveryTime } from "../../models/day-store"
 import { observer } from "mobx-react-lite"
 import { useEffectAsync } from "react-native-text-input-mask"
+import { Card, Checkbox, Separator, Text } from "../../components"
+import { useStores } from "../../models"
+import { DeliveryTime } from "../../models/day-store"
+import { utilSpacing } from "../../theme/Util"
+import { loadString } from "../../utils/storage"
 
 interface Props {
   onSelectItem: (item: string) => void

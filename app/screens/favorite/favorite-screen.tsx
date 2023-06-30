@@ -1,9 +1,10 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
+import RNUxcam from "react-native-ux-cam"
 
 import { Dish, Header, Screen, Separator } from "../../components"
 import { useStores } from "../../models"
@@ -11,7 +12,6 @@ import { DishChef } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
-import RNUxcam from "react-native-ux-cam"
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(
   function FavoriteScreen({ navigation }) {

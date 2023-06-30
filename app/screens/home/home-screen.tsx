@@ -1,11 +1,13 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import LottieView from "lottie-react-native"
+import RNUxcam from "react-native-ux-cam"
 import {
   Categories,
   Chip,
@@ -31,11 +33,9 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString, saveString } from "../../utils/storage"
-import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
-import { ModalWelcome } from "./modal-welcome"
-import RNUxcam from "react-native-ux-cam"
 import { DishParams } from "./dish.types"
+import { ModalWelcome } from "./modal-welcome"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
