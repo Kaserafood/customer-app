@@ -1138,13 +1138,13 @@
 				CODE_SIGN_ENTITLEMENTS = ClientApp/ClientApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.9.41;
+				MARKETING_VERSION = 0.9.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1170,12 +1170,12 @@
 				CODE_SIGN_ENTITLEMENTS = ClientApp/ClientApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 67;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_TEAM = 7XA49Z6FU4;
 				INFOPLIST_FILE = ClientApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.9.41;
+				MARKETING_VERSION = 0.9.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
