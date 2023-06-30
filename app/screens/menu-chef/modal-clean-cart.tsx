@@ -3,11 +3,11 @@ import { StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 
+import RNUxcam from "react-native-ux-cam"
 import { Button, Modal, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import RNUxcam from "react-native-ux-cam"
 
 const modalStateWhy = new ModalStateHandler()
 export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave: () => void }) => {
@@ -112,7 +112,7 @@ export const ModalWhy = (props: { modalState: ModalStateHandler }) => {
 
 const styles = StyleSheet.create({
   btnInfo: {
-    borderColor: color.palette.grayLigth,
+    borderColor: color.palette.grayLight,
     borderRadius: 8,
     borderWidth: 1,
     marginVertical: spacing[4],

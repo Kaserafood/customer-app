@@ -169,14 +169,14 @@ const PaymentMethodItem = ({
   type,
   selected,
   showPrefixCard,
-  subType: subtType,
+  subType,
 }: PaymentMethodItemProps) => {
   return (
     <Ripple key={id} onPress={onSelected}>
       <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
         <Image
           style={[styles.imageCard, utilSpacing.mr4]}
-          source={getImageByType(type as paymentType, subtType)}
+          source={getImageByType(type as paymentType, subType)}
         ></Image>
         <View style={utilFlex.flex1}>
           <Text text={name} preset="semiBold" style={utilSpacing.pb1}></Text>

@@ -1,11 +1,11 @@
 import * as React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { color, typographySize } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { Button } from "../button/button"
 import { ButtonProps } from "../button/button.props"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export interface ButtonFooterProps extends ButtonProps {
   /**
@@ -42,7 +42,7 @@ export const ButtonFooter = function ButtonFooter(props: ButtonFooterProps) {
 }
 
 const styles = StyleSheet.create({
-  bordeTop: { borderTopColor: color.palette.grayLigth, borderTopWidth: 1 },
+  bordeTop: { borderTopColor: color.palette.grayLight, borderTopWidth: 1 },
   buttonText: {
     fontSize: typographySize.lg,
   },

@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
 
 import { color } from "../../theme"
 
@@ -27,7 +27,7 @@ export const Dot = observer(function Dot(props: DotProps) {
   if (active) {
     DOT.backgroundColor = color.palette.grayDark
   } else {
-    DOT.backgroundColor = color.palette.grayLigth
+    DOT.backgroundColor = color.palette.grayLight
   }
   const styles = Object.assign({}, DOT, style)
 

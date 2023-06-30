@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { Platform, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Platform, StyleSheet, TextStyle, View, ViewStyle } from "react-native"
 import * as Animatable from "react-native-animatable"
 import TextInputMask from "react-native-text-input-mask"
 
@@ -23,7 +23,7 @@ const TEXT_STYLES: TextStyle = {
 }
 const BORDER_BOTTOM = {
   borderBottomWidth: 1,
-  borderBottomColor: color.palette.grayLigth,
+  borderBottomColor: color.palette.grayLight,
 }
 const TEXT_ERROR: TextStyle = {
   color: color.error,
@@ -34,7 +34,7 @@ const CONTAINER_ERROR: ViewStyle = {
   bottom: -18,
 }
 const CONTAINER_INPUT: ViewStyle = {
-  backgroundColor: color.palette.grayLigth,
+  backgroundColor: color.palette.grayLight,
   borderRadius: spacing[2],
 }
 
@@ -137,7 +137,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
             selectionColor={color.palette.grayDark}
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
-            underlineColorAndroid={color.palette.grayLigth}
+            underlineColorAndroid={color.palette.grayLight}
             style={[stylesInput, isIos && BORDER_BOTTOM]}
             ref={forwardedRef}
             onChangeText={field.onChange}

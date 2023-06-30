@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React, { useContext, useEffect, useState } from "react"
 import { StyleSheet, TouchableOpacity, View } from "react-native"
 import Animated, {
@@ -8,7 +9,6 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { observer } from "mobx-react-lite"
 
 import { AddonItem } from "../../models/addons/addon"
 import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
@@ -159,7 +159,7 @@ export const PriceOption = (props: {
 
 const styles = StyleSheet.create({
   btnRounded: {
-    backgroundColor: color.palette.grayLigth,
+    backgroundColor: color.palette.grayLight,
     borderRadius: 24,
     height: 30,
     width: 30,

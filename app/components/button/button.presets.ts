@@ -45,7 +45,7 @@ export const viewPresets: Record<string, ViewStyle> = {
   /**
    * Button gray background.
    */
-  gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLigth } as ViewStyle,
+  gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLight } as ViewStyle,
 
   /**
    * Like a link.

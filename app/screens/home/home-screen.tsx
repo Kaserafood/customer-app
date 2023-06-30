@@ -119,23 +119,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       RNUxcam.tagScreenName("Inicio")
     }, [])
 
-    // useEffect(() => {
-    //   if (!isFirstTime) {
-    //     __DEV__ && console.log("Home  useEffect date", dayStore.currentDay.date)
-    //     dishStore
-    //       .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
-    //       .catch((error: Error) => {
-    //         messagesStore.showError(error.message)
-    //       })
-    //       .finally(() => {
-    //         if (isLoading) {
-    //           commonStore.setVisibleLoading(false)
-    //           setIsLoading(false)
-    //         }
-    //       })
-    //   } else setIsFirstTime(false)
-    // }, [dayStore.currentDay.date])
-
     const onChangeDay = async (day: Day) => {
       const { latitude, longitude } = addressStore.current
       const params: DishParams = {
@@ -197,7 +180,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
       commonStore.setVisibleLoading(true)
       /*
-       * When is in development environment, not is nessesary clean items from cart because will be producess an error when is in the checkout screen and others screens
+       * When is in environment development, not is necessary clean items in the cart because it produce an error  in checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
       if (tokenPagination) setIsFetchingMoreData(true)

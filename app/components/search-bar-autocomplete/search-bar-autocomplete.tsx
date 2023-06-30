@@ -95,7 +95,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (props) => 
           height={2}
           indeterminate
           backgroundColor={color.palette.grayDark}
-          trackColor={color.palette.grayLigth}
+          trackColor={color.palette.grayLight}
         />
       )}
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     color: color.text,
   },
   predictionRow: {
-    borderBottomColor: color.palette.grayLigth,
+    borderBottomColor: color.palette.grayLight,
     borderBottomWidth: 1,
   },
 })

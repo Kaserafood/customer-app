@@ -1,13 +1,12 @@
-import React, { FC, useEffect, useRef, useState } from "react"
-import { StyleSheet, View } from "react-native"
-import ProgressBar from "react-native-animated-progress"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import MapView, { Geojson, Region } from "react-native-maps"
-import Ripple from "react-native-material-ripple"
-import IconRN from "react-native-vector-icons/MaterialIcons"
 import { StackScreenProps } from "@react-navigation/stack"
 import { makeAutoObservable } from "mobx"
 import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useRef, useState } from "react"
+import { StyleSheet, View } from "react-native"
+import ProgressBar from "react-native-animated-progress"
+import MapView, { Geojson, Region } from "react-native-maps"
+import Ripple from "react-native-material-ripple"
+import IconRN from "react-native-vector-icons/MaterialIcons"
 
 import { Address, Location, useLocation } from "../../common/hooks/useLocation"
 import { Button, Header, Icon, Screen, Text } from "../../components"
@@ -22,7 +21,6 @@ import { getI18nText } from "../../utils/translate"
 import { ModalWithoutCoverage } from "./modal-without-coverage"
 
 import { isPointInPolygon } from "geolib"
-import ModalNecessaryLocation from "./modal-necessary-location"
 
 class LoadingState {
   loading = true
@@ -70,7 +68,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
     useEffect(() => {
       __DEV__ && console.log(`Map Screen`)
       loadingState.setLoading(true)
-      // Request permision to access the location and then enable the location from the device
+      // Request permission to access to the location and then enable the location from the device
       getCurrentPosition((location) => {
         if (location.locationAvailable) {
           setInitLocation(location)
@@ -102,7 +100,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
 
     const toAddress = () => {
       if ((location.latitude !== 0 || location.longitude !== 0) && address.formatted !== "") {
-        // Verificar si esta dentro del area de covertura
+        // Verify if the location is inside the coverage
 
         const geoJson = JSON.parse(coverageStore.coverage)
         let isPointInCoverage = false
@@ -250,7 +248,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
               height={5}
               indeterminate
               backgroundColor={color.primary}
-              trackColor={color.palette.grayLigth}
+              trackColor={color.palette.grayLight}
             />
           ) : (
             <View style={styles.heightProgress}></View>
@@ -297,7 +295,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   containerAddress: {
-    backgroundColor: color.palette.grayLigth,
+    backgroundColor: color.palette.grayLight,
     borderRadius: spacing[2],
     padding: spacing[4],
     paddingVertical: spacing[5],
