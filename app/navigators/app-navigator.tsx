@@ -72,8 +72,6 @@ const AppStack = observer(() => {
         </Stack.Group>
       ) : (
         <Stack.Group>
-          {!userStore.addressId && <Stack.Screen name="map" component={MapScreen} />}
-
           <Stack.Screen name="main">
             {(props) => <DrawerNavigation {...props} navigationRef={navigationRef} />}
           </Stack.Screen>
@@ -88,7 +86,7 @@ const AppStack = observer(() => {
           <Stack.Screen name="newChefs" component={NewChefsScreen} />
           <Stack.Screen name="favorite" component={FavoriteScreen} />
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
-          {userStore.addressId && <Stack.Screen name="map" component={MapScreen} />}
+          <Stack.Screen name="map" component={MapScreen} />
         </Stack.Group>
       )}
       <Stack.Group navigationKey={`${commonStore.isSignedIn}`}>

@@ -15,20 +15,27 @@ import {
   CommonResponse,
   CountryResponse,
   CuponResponse,
-  CoverageResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
+  SetupIntentResponse,
   UserLoginResponse,
+  ValueResponse,
 } from "./api.types"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
 import { loadString } from "../../utils/storage"
+import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
+let locale: string
+
+export function setLocale(localeCode: string) {
+  locale = localeCode
+}
 
 export function setCountryId(id: number) {
   countryId = id
@@ -71,7 +78,7 @@ export class Api {
       timeout: this.config.timeout,
       headers: {
         Accept: "application/json",
-        "Accept-Language": "es",
+        "Accept-Language": locale,
       },
     })
 
@@ -80,7 +87,10 @@ export class Api {
       async function (config) {
         if (!countryId) {
           countryId = await loadString("countryId")
-          __DEV__ && console.log({ countryId })
+        }
+
+        if (!locale) {
+          locale = await loadString("locale")
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         config.headers["country-id"] = parseInt(countryId || -1)
@@ -423,16 +433,6 @@ export class Api {
   }
 
   /**
-   * @description Get price delivery by city name
-   */
-  async getPriceDeliveryByCoordinates(
-    latitude: number,
-    longitude: number,
-  ): Promise<CommonResponse> {
-    return await this.request({ latitude, longitude }, `/deliveries/price/coordinates`, "GET")
-  }
-
-  /**
    * @description Remove account from user
    */
   async removeAccount(userId: number): Promise<CommonResponse> {
@@ -510,5 +510,37 @@ export class Api {
    */
   async addPaymentMethodStripe(userId: number, email: string, card: Card): Promise<CommonResponse> {
     return await this.request({ userId, email, ...card }, `/stripe/payment-methods/`, "POST")
+  }
+
+  /**
+   * @description Get delivery time for chef
+   */
+  async getDeliveryTime(chefId: number, date: string): Promise<CountryResponse> {
+    return await this.request({ chefId, date }, `/deliveries/delivery-time`, "GET")
+  }
+
+  /**
+   * @description Create payment setup for Stripe
+   */
+  async createSetupIntent(
+    userId: number,
+    email: string,
+    card: SetupIntent,
+  ): Promise<SetupIntentResponse> {
+    return await this.request({ userId, email, ...card }, `/stripe/payment-intent-setup/`, "POST")
+  }
+
+  /**
+   * @description Get publishable key from Stripe
+   */
+  async getPublishableKey(): Promise<ValueResponse> {
+    return await this.request({}, `/stripe/publishable-key`, "GET")
+  }
+
+  /**
+   * @description Insert the name and stripe payment method id
+   */
+  async addPaymentMethodId(stripePaymentId: string, name: string): Promise<ValueResponse> {
+    return await this.request({ stripePaymentId, name }, `/stripe/add-payment-method-id`, "POST")
   }
 }

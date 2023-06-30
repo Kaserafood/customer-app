@@ -1,11 +1,13 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useCallback, useEffect, useLayoutEffect, useState } from "react"
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import LottieView from "lottie-react-native"
+import RNUxcam from "react-native-ux-cam"
 import {
   Categories,
   Chip,
@@ -31,12 +33,9 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString, saveString } from "../../utils/storage"
-import LottieView from "lottie-react-native"
 import { Banner } from "./banner"
-import { ModalWelcome } from "./modal-welcome"
-import RNUxcam from "react-native-ux-cam"
 import { DishParams } from "./dish.types"
-import { async } from "validate.js"
+import { ModalWelcome } from "./modal-welcome"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -52,8 +51,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const [refreshing, setRefreshing] = useState(false)
     const [fetchData, setFetchData] = useState(true)
     const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [isFirstTime, setIsFirstTime] = useState(true)
     const {
       dishStore,
       dayStore,
@@ -62,7 +59,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       userStore,
       cartStore,
       messagesStore,
-      deliveryStore,
       addressStore,
     } = useStores()
     const { currentDay } = dayStore
@@ -71,7 +67,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       if (addressStore.current?.latitude && addressStore.current?.longitude) {
         fetch(false, null)
       }
-    }, [addressStore.current.id])
+    }, [userStore.addressId, addressStore.current?.latitude, addressStore.current?.longitude])
 
     const toCategory = (category: Category) => {
       RNUxcam.logEvent("categoryTap", {
@@ -123,23 +119,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       RNUxcam.tagScreenName("Inicio")
     }, [])
 
-    // useEffect(() => {
-    //   if (!isFirstTime) {
-    //     __DEV__ && console.log("Home  useEffect date", dayStore.currentDay.date)
-    //     dishStore
-    //       .getAll(dayStore.currentDay.date, RNLocalize.getTimeZone(), userStore.userId, null)
-    //       .catch((error: Error) => {
-    //         messagesStore.showError(error.message)
-    //       })
-    //       .finally(() => {
-    //         if (isLoading) {
-    //           commonStore.setVisibleLoading(false)
-    //           setIsLoading(false)
-    //         }
-    //       })
-    //   } else setIsFirstTime(false)
-    // }, [dayStore.currentDay.date])
-
     const onChangeDay = async (day: Day) => {
       const { latitude, longitude } = addressStore.current
       const params: DishParams = {
@@ -153,8 +132,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         tokenPagination: null,
       }
 
-      setIsLoading(true)
-      setIsFirstTime(false)
       commonStore.setVisibleLoading(true)
       dayStore.setCurrentDay(day)
       RNUxcam.logEvent("changeDate", {
@@ -203,7 +180,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
       commonStore.setVisibleLoading(true)
       /*
-       * When is in development environment, not is nessesary clean items from cart because will be producess an error when is in the checkout screen and others screens
+       * When is in environment development, not is necessary clean items in the cart because it produce an error  in checkout screen and others screens
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
       if (tokenPagination) setIsFetchingMoreData(true)
@@ -227,7 +204,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           if (dayStore.days?.length > 0) {
             if (useCurrentDate) dayStore.setCurrentDay(dayStore.currentDay)
             else {
-              setIsFirstTime(true)
               dayStore.setCurrentDay(dayStore.days[0])
             }
           }

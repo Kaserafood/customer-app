@@ -62,7 +62,7 @@ export const ModalCoupon = (props: ModalCouponProps) => {
   }
 
   return (
-    <Modal modal={stateModal} size="md" onHide={hide}>
+    <Modal state={stateModal} size="md" onHide={hide}>
       <View>
         <Text
           tx="modalCoupon.title"

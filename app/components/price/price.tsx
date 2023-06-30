@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
 
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -10,7 +10,7 @@ import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-end",
-  backgroundColor: color.palette.greenLigth,
+  backgroundColor: color.palette.greenLight,
   borderRadius: 100,
   paddingHorizontal: spacing[4],
   paddingBottom: spacing[1],

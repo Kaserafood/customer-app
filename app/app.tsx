@@ -16,7 +16,6 @@ import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
 import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
 
-import "./i18n"
 import "./utils/ignore-warnings"
 
 import { ToggleStorybook } from "../storybook/toggle-storybook"
@@ -31,6 +30,8 @@ import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { AppNavigator, useNavigationPersistence } from "./navigators"
 import RNUxcam from "react-native-ux-cam"
 import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+import { setLocale } from "./services/api"
+import { setLocaleI18n } from "./i18n"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -39,6 +40,13 @@ enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
 function App() {
+  loadString("locale").then((locale) => {
+    if (locale && locale.length > 0) {
+      setLocale(locale)
+      setLocaleI18n(locale)
+    }
+  })
+
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
   const {
     initialNavigationState,

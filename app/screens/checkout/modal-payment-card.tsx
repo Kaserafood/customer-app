@@ -1,4 +1,4 @@
-import React, { forwardRef, MutableRefObject, useEffect, useImperativeHandle } from "react"
+import React, { forwardRef, MutableRefObject, useImperativeHandle } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, View } from "react-native"
 
@@ -6,8 +6,8 @@ import { Button, Modal, PaymentCard, Text } from "../../components"
 import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getCardType } from "../../utils/card"
-import { ModalState } from "../../utils/modalState"
 import { GUATEMALA } from "../../utils/constants"
+import { ModalState } from "../../utils/modalState"
 import { encrypt } from "../../utils/security"
 
 interface PropsModalPaymentCard {
@@ -84,7 +84,7 @@ export const ModalPaymentCard = forwardRef(
         city: addressStore.current.city,
         state: addressStore.current.region,
         country: addressStore.current.country,
-        customerName: `${userStore.name} ${userStore.lastName}`,
+        customerName: `${userStore.displayName}`,
       }
       __DEV__ && console.log({ model })
       await userStore
@@ -113,7 +113,7 @@ export const ModalPaymentCard = forwardRef(
 
     return (
       <>
-        <Modal modal={modalState} position="bottom">
+        <Modal state={modalState} position="bottom">
           <ScrollView keyboardShouldPersistTaps={"handled"}>
             <Text
               preset="bold"

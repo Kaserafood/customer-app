@@ -1,27 +1,27 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useRef } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { Button, Header, InputText, Screen } from "../../components"
 import { useStores } from "../../models"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getFormatMaskPhone, getMaskLength } from "../../utils/mask"
+import { GUATEMALA } from "../../utils/constants"
+import { getMaskLength } from "../../utils/mask"
 import { saveString } from "../../utils/storage"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
-    const { addressStore, commonStore, userStore, messagesStore, deliveryStore } = useStores()
+    const { addressStore, commonStore, userStore, messagesStore, countryStore } = useStores()
     const fieldAddress = useRef(null)
     const insets = useSafeAreaInsets()
-    const address = methods.watch("address")
 
     useEffect(() => {
       fieldAddress.current.focus()
@@ -116,17 +116,20 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               <InputText
                 preset="card"
                 name="phone"
-                placeholderTx="addressScreen.phoneDeliveryPlaceholder"
+                keyboardType="phone-pad"
+                placeholderTx="registerFormScreen.phone"
+                styleContainer={utilSpacing.mb6}
                 rules={{
                   minLength: {
-                    value: getMaskLength(getFormatMaskPhone()),
-                    message: "addressScreen.phoneFormatIncorrect",
+                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
+                    message:
+                      userStore.countryId === GUATEMALA
+                        ? "registerFormScreen.phoneFormatIncorrectGt"
+                        : "registerFormScreen.phoneFormatIncorrect",
                   },
                 }}
                 labelTx="addressScreen.phoneDelivery"
-                styleContainer={utilSpacing.mb6}
-                keyboardType="phone-pad"
-                mask={getFormatMaskPhone()}
+                mask={countryStore.selectedCountry.maskPhone}
               ></InputText>
             </FormProvider>
           </View>
@@ -140,7 +143,6 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               style={[utilFlex.flex1, utilSpacing.ml2]}
               onPress={methods.handleSubmit(onSubmit, onError)}
             ></Button>
-             
           </View>
           <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
         </View>

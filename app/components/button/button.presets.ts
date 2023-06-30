@@ -19,6 +19,8 @@ const BASE_VIEW: ViewStyle = {
   shadowOpacity: 0.25,
   shadowRadius: 3.84,
   elevation: 5,
+  display: "flex",
+  flexDirection: "row",
 }
 
 const BASE_TEXT: TextStyle = {
@@ -43,7 +45,7 @@ export const viewPresets: Record<string, ViewStyle> = {
   /**
    * Button gray background.
    */
-  gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLigth } as ViewStyle,
+  gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLight } as ViewStyle,
 
   /**
    * Like a link.

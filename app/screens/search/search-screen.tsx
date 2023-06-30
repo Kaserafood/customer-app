@@ -98,6 +98,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         statusBar="dark-content"
         statusBarBackgroundColor={color.palette.white}
       >
+        <StatusBar barStyle="dark-content" backgroundColor={"transparent"} translucent></StatusBar>
         <ScrollView style={styles.body}>
           <View style={utilSpacing.mb5}>
             <TouchableOpacity

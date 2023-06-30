@@ -92,7 +92,7 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
           </View>
         </ScrollView>
 
-        <Modal modal={modalState} style={styles.modal}>
+        <Modal state={modalState} style={styles.modal}>
           <View style={utilSpacing.p4}>
             <Text
               preset="bold"

@@ -7,8 +7,8 @@
     "total": "Total",
     "deliveryAmount": "Costo de envío",
     "someError": "Lo sentimos, ha ocurrido un error inesperado",
-    "operationSuccess": "Procceso realizado con éxito",
-    "operationExecuted": "Procceso ejectuado",
+    "operationSuccess": "Proceso realizado con éxito",
+    "operationExecuted": "Proceso ejecutado",
     "notFound": {
       "dishes": "No se han encontrado resultados",
       "tellUsWhatNeed": "Cuéntanos lo que necesitas y encontraremos la mejor opción."
@@ -52,9 +52,10 @@
     "phoneRequired": "Debes ingresar tu número de teléfono",
     "emailFormat": "Debes ingresar un correo electrónico válido",
     "acceptsTerms": "Debes aceptar los términos y condiciones",
-    "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
+    "phoneFormatIncorrect": "Parece que tu número es incorrecto. Ingresa el código de area",
     "passwordMinLength": "La contraseña debe tener al menos 4 caracteres",
-    "logIn": "Iniciar sesión"
+    "logIn": "Iniciar sesión",
+    "phoneFormatIncorrectGt": "Número de teléfono inválido"
   },
   "errorScreen": {
     "title": "Error",
@@ -224,47 +225,16 @@
     "password": "Contraseña",
     "continue": "Continuar",
     "info": "Accede a tu cuenta:",
-    "recoverPassword": "Olvidé mi contaseña"
+    "recoverPassword": "Olvidé mi contraseña"
   },
   "mainScreen": {
-    "address": "Ciudad de Guatemala, Guatemala, Guatemala",
-    "dayShipping": "Día de entrega",
-    "tomorrow": "Mañana",
-    "mondayShort": "Lun.",
-    "tuesdayShort": "Mar.",
-    "wednesdayShort": "Mié.",
-    "thursdayShort": "Jue.",
-    "fridayShort": "Vie.",
-    "saturdayShort": "Sáb.",
-    "sundayShort": "Dom.",
-    "categories": "Categorías",
-    "delivery": "Entrega",
-    "monday": "lunes",
-    "tuesday": "martes",
-    "wednesday": "miércoles",
-    "thursday": "jueves",
-    "friday": "viernes",
-    "saturday": "sábado",
-    "sunday": "domingo",
-    "favoriteTomorrow": "Favoritos para mañana",
-    "of": "De ",
-    "toShare": "Para compartir",
     "why": "¿Por qué?",
-
-    "nikkei": "Nikkei",
-    "pizza": "Pizza",
-    "hamburguer": "Hamburguesa",
-    "priceExample": "Q14",
-
-    "itemTitle": "Sopa de calabaza",
-    "itemDescription": "Sopa de calabaza con queso, tomate, lechuga, cebolla, aceitunas, pimientos y salsa de tomate",
-    "chef": "Karla y Mario",
-    "price": "Q15",
-
     "home": "Inicio",
     "chefs": "Chefs",
     "search": "Buscar",
-    "more": "Más"
+    "more": "Más",
+    "dayShipping": "Día de entrega",
+    "delivery": "Entrega"
   },
   "placeholder": {
     "dishTitle": "Costillas con barcaboo de pollo",
@@ -328,20 +298,22 @@
     "address": "Dirección",
     "addressPlaceholder": "Selecciona tu dirección",
     "deliveryNote": "Nota de entrega",
-    "deliveryNotePlaceholder": "Referencias, código de accesso, etc",
+    "deliveryNotePlaceholder": "Referencias, código de acceso, etc",
     "deliveryDate": "Fecha de entrega",
     "deliveryDatePlaceholder": "Selecciona una fecha",
     "deliveryTime": "Elige el rango de entrega",
     "paymentMethod": "Método de pago",
     "paymentMethods": "Métodos de pago",
-    "paymentCard": "Agregar tarjeta",
+    "paymentCard": "Agrega los datos de la tarjeta",
     "delivery": "Entrega:",
     "errorDayDelivery": "Selecciona un día de entrega",
     "errorTimeDelivery": "Selecciona un rango de entrega",
     "errorOrder": "Lo sentimos, no se la logrado realizar tu pedido",
     "errorOrderPayment": "Lo sentimos, no se ha logrado procesar el pago",
     "nitPlaceholder": "Ingresa tu NIT o DPI para la factura",
+    "rfcPlaceholder": "Ingresa tu RFC para la factura",
     "nit": "Ingresa tu NIT (Opcional)",
+    "rfc": "Ingresa tu RFC (Opcional)",
     "uponDelivery": "Pago contra-entrega",
     "errorCard": "No has ingresado todos los datos de tu tarjeta",
     "errorPayment": "Selecciona un método de pago",
@@ -401,7 +373,8 @@
     "phoneDelivery": "Teléfono de entrega (Opcional)",
     "phoneDeliveryPlaceholder": "1234-5678",
     "phoneDeliveryRequired": "Debes ingresar un teléfono de entrega",
-    "phoneFormatIncorrect": "El formato del teléfono es incorrecto",
+    "phoneFormatIncorrect": "Parece que tu número es incorrecto. Ingresa el código de area",
+    "phoneFormatIncorrectGt": "Número de teléfono inválido",
     "addressSaved": "Se ha guardado tu dirección",
     "checkYourAddress": "*Revisa si es correcta tu dirección"
   },
@@ -443,7 +416,9 @@
     "home": "Inicio",
     "chefs": "Chefs",
     "search": "Buscar",
-    "more": "Más"
+    "more": "Más",
+    "packages": "Paquetes",
+    "new": "Nuevo"
   },
   "ordersScreen": {
     "title": "Mis pedidos",
@@ -647,5 +622,19 @@
     "couponInvalid": "El cupón no es válido",
     "use": "Aplicar",
     "discountApply": "Descuento del {{percent}} aplicado"
+  },
+  "plansScreen": {
+    "title": "Paquetes de almuerzos semanales",
+    "benefits": {
+      "title": "Beneficios",
+      "benefit1": "Nuevas opciones cada semana",
+      "benefit2": "Ahorrarás tiempo y comerás sin tener que cocinar",
+      "benefit3": "Almuerzos saludables y caseros hechos por amantes de la cocina",
+      "benefit4": "Ingredientes frescos en cada platillo",
+      "benefit5": "Envío hasta la puerta de tu casa",
+      "benefit6": "Fácil de calentar en microondas, horno o sartén"
+    },
+    "moreInfo": "Más información",
+    "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales"
   }
 }

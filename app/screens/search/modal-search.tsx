@@ -1,10 +1,11 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { BackHandler, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
 import { useDebounce } from "../../common/hooks/useDebounce"
 import {
   DayDelivery,
@@ -22,7 +23,6 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
 
 interface ModalSearchProps {
   modalState: ModalStateHandler
@@ -102,7 +102,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
   return (
     <>
       <Modal
-        modal={modalState}
+        state={modalState}
         style={styles.modal}
         styleBody={styles.noRadius}
         position="bottom"
@@ -130,7 +130,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
                 height={2}
                 indeterminate
                 backgroundColor={color.palette.grayDark}
-                trackColor={color.palette.grayLigth}
+                trackColor={color.palette.grayLight}
               />
             )}
           </View>

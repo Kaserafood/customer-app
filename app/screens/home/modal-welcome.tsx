@@ -10,7 +10,7 @@ interface PropsModalWelcome {
 }
 export const ModalWelcome = (props: PropsModalWelcome) => {
   return (
-    <Modal modal={props.modalState}>
+    <Modal state={props.modalState}>
       <View style={utilSpacing.px6}>
         <Text tx="banner.whatIsKasera" preset="bold" size="lg" style={utilSpacing.mb5}></Text>
         <Text tx="banner.whatIsKaseraDescription1" style={utilSpacing.mb4}></Text>

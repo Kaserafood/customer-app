@@ -99,7 +99,7 @@ export const ModalRequestDish = observer(function ModalRequestDish(props: ModalR
 
   return (
     <>
-      <Modal modal={modalState} style={style} position="center">
+      <Modal state={modalState} style={style} position="center">
         <View>
           <View style={utilSpacing.mx4}>
             <Text
@@ -212,7 +212,7 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
     __DEV__ && console.log(initialDate)
   }
   return (
-    <Modal modal={modalStateCalendar}>
+    <Modal state={modalStateCalendar}>
       <Calendar
         initialDate={initialDate}
         minDate={dayStore.days[1]?.date}
@@ -234,7 +234,7 @@ const CalendarPicker = (props: { onDayPress: (date: string) => void; initialDate
 
 const ModalConfirmation = () => {
   return (
-    <Modal modal={modalStateConfirmation}>
+    <Modal state={modalStateConfirmation}>
       <View style={utilSpacing.p4}>
         <Text
           size="lg"

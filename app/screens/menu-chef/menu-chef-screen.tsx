@@ -43,15 +43,7 @@ const modalStateLeave = new ModalStateHandler()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const {
-      dayStore,
-      commonStore,
-      dishStore,
-      cartStore,
-      deliveryStore,
-      userStore,
-      messagesStore,
-    } = useStores()
+    const { dayStore, commonStore, dishStore, cartStore, userStore, messagesStore } = useStores()
     const [currentAction, setCurrentAction] = useState<any>()
     const [dishes, setDishes] = useState<DishChef[]>([])
 
@@ -97,15 +89,6 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         })()
       }
     }, [])
-
-    useEffect(() => {
-      // if (params.id) {
-      //   RNUxcam.logEvent("menuChef", {
-      //     chef: params.name,
-      //     chefId: params.id,
-      //   })
-      // }
-    }, [params])
 
     useEffect(
       () =>

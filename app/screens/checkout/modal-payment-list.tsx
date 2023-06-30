@@ -5,6 +5,8 @@ import Ripple from "react-native-material-ripple"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Image, Modal, Separator, Text } from "../../components"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -12,15 +14,14 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getImageByType, paymentType, typeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
 import { ModalPaymentCard } from "./modal-payment-card"
-import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+import { ModalPaymentStripe } from "./modal-payment-stripe"
 
 interface ModalPaymentListProps {
   stateModal: ModalStateHandler
 }
 const modalStatePaymentQPayPro = new ModalStateHandler()
-// const modalStatePaymentStripe = new ModalStateHandler()
+const modalStatePaymentStripe = new ModalStateHandler()
 
 export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps) => {
   const { userStore, messagesStore } = useStores()
@@ -87,14 +88,14 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       })
   }
 
-  // const addPaymentMethod = () => {
-  //   if (userStore.countryId === 1) modalStatePaymentQPayPro.setVisible(true)
-  //   else if (userStore.countryId === 2) modalStatePaymentStripe.setVisible(true)
-  // }
+  const addPaymentMethod = () => {
+    if (userStore.countryId === 1) modalStatePaymentQPayPro.setVisible(true)
+    else modalStatePaymentStripe.setVisible(true)
+  }
 
   return (
     <>
-      <Modal modal={stateModal} isFullScreen styleBody={utilSpacing.p5}>
+      <Modal state={stateModal} isFullScreen styleBody={utilSpacing.p5}>
         <View>
           <Text
             size="xl"
@@ -128,18 +129,22 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
               </View>
             ))}
           </ScrollView>
+
           <Button
             preset="white"
             tx="checkoutScreen.addPayment"
             style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
-            onPress={() => modalStatePaymentQPayPro.setVisible(true)}
+            onPress={addPaymentMethod}
           ></Button>
         </View>
         <ModalPaymentCard
           modalState={modalStatePaymentQPayPro}
           onGetCards={() => fetch()}
         ></ModalPaymentCard>
-        {/* <ModalPaymentStripe modalState={modalStatePaymentQPayPro}></ModalPaymentStripe> */}
+        <ModalPaymentStripe
+          stateModal={modalStatePaymentStripe}
+          onGetCards={() => fetch()}
+        ></ModalPaymentStripe>
       </Modal>
     </>
   )
@@ -164,14 +169,14 @@ const PaymentMethodItem = ({
   type,
   selected,
   showPrefixCard,
-  subType: subtType,
+  subType,
 }: PaymentMethodItemProps) => {
   return (
     <Ripple key={id} onPress={onSelected}>
       <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
         <Image
           style={[styles.imageCard, utilSpacing.mr4]}
-          source={getImageByType(type as paymentType, subtType)}
+          source={getImageByType(type as paymentType, subType)}
         ></Image>
         <View style={utilFlex.flex1}>
           <Text text={name} preset="semiBold" style={utilSpacing.pb1}></Text>

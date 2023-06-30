@@ -2,7 +2,7 @@ import { Address, Coupon, Coverage, OrderDetail, OrderOverview } from "../../mod
 import { Banner } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Country } from "../../models/country-store"
-import { Day } from "../../models/day-store"
+import { Day, DeliveryTime } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
 import { Card, UserChef } from "../../models/user-store"
 
@@ -63,6 +63,12 @@ export type CommonResponse = {
   }
 } & kind
 
+export type ValueResponse = {
+  data: {
+    value: string
+  }
+} & kind
+
 export type OrderOverviewResponse = {
   data: OrderOverview[]
 } & kind
@@ -91,3 +97,12 @@ export type CountryResponse = {
   data: Country[]
 } & kind
 
+export type DeliveryTimeResponse = {
+  data: DeliveryTime[]
+} & kind
+
+export type SetupIntentResponse = {
+  data: {
+    customerSecret: string
+  }
+} & kind

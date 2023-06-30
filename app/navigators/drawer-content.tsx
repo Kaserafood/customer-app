@@ -8,10 +8,10 @@ import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
 import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
-import { getI18nText } from "../utils/translate"
+import { openWhatsApp } from "../utils/linking"
 
 export default function DrawerContent(props) {
-  const { userStore, commonStore } = useStores()
+  const { userStore, commonStore, messagesStore } = useStores()
   const navigation = useNavigation()
 
   const order = () => {
@@ -30,18 +30,22 @@ export default function DrawerContent(props) {
     commonStore.setIsSignedIn(false)
   }
 
-  const openWhatsApp = () => {
-    const phoneWithCountryCode = "50245680417"
-
-    const mobile = Platform.OS === "ios" ? phoneWithCountryCode : `+${phoneWithCountryCode}`
-    const message = getI18nText("drawerContent.whatsAppMessage")
-    Linking.openURL(`whatsapp://send?text=${message}&phone=${mobile}`).catch(() => {
-      alert("Asegúrese de que WhatsApp esté instalado en su dispositivo")
-    })
-  }
-
   const toReportBug = () => {
     navigation.navigate("reportBug" as never)
+  }
+
+  const handleSupport = async () => {
+    commonStore.setVisibleLoading(true)
+
+    await commonStore
+      .getPhoneSupport()
+      .catch((error: Error) => {
+        messagesStore.showError(error.message)
+      })
+      .finally(() => {
+        commonStore.setVisibleLoading(false)
+      })
+    openWhatsApp(commonStore.phoneNumber, "drawerContent.whatsAppMessage")
   }
 
   return (
@@ -124,7 +128,7 @@ export default function DrawerContent(props) {
         rippleOpacity={0.2}
         rippleDuration={400}
         style={utilSpacing.m3}
-        onPress={openWhatsApp}
+        onPress={() => handleSupport()}
       >
         <Card style={[utilSpacing.px4, utilSpacing.py5]}>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>

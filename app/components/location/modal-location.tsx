@@ -1,3 +1,7 @@
+import { useNavigation } from "@react-navigation/native"
+import { StackNavigationProp } from "@react-navigation/stack"
+import { makeAutoObservable } from "mobx"
+import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
@@ -6,11 +10,8 @@ import Modal from "react-native-modal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import Animated, { ZoomIn, ZoomOut } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
-import { useNavigation } from "@react-navigation/native"
-import { StackNavigationProp } from "@react-navigation/stack"
-import { makeAutoObservable } from "mobx"
-import { observer } from "mobx-react-lite"
 
+import { Card, Icon, Image, Text } from ".."
 import images from "../../assets/images"
 import { useLocation } from "../../common/hooks/useLocation"
 import { Address, useStores } from "../../models"
@@ -18,7 +19,6 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import { Card, Icon, Image, Text } from ".."
 
 import { ModalNecessaryLocation } from "./modal-necessary-location"
 
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     width: "90%",
   },
   btnAddressAdd: {
-    borderColor: color.palette.grayLigth,
+    borderColor: color.palette.grayLight,
     borderRadius: 8,
     borderWidth: 1,
     marginVertical: spacing[4],

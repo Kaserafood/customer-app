@@ -12,7 +12,7 @@ import images from "../../assets/images"
 
 export const ModalNecessaryLocation = (props: { modalState: ModalState }) => {
   return (
-    <Modal modal={props.modalState} size="md">
+    <Modal state={props.modalState} size="md">
       <View style={utilSpacing.px3}>
         <Image style={[styles.image, utilSpacing.mb5]} source={images.map}></Image>
 

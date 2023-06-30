@@ -5,20 +5,11 @@ export async function getCountryCode(): Promise<string> {
     .then((result) => {
       // {"code": "BY", "type": "telephony"}
       __DEV__ && console.log(result)
-      return result.code.toUpperCase()
+      return result.code.toLowerCase()
     })
 
     .catch((e) => {
       __DEV__ && console.log(e)
       return ""
     })
-}
-
-export function getCurrencyCode(countryCode: string): string {
-  // Guatemala
-  if (countryCode === "GT") {
-    return "GTQ"
-  }
-  // Mexico
-  return "MXN"
 }

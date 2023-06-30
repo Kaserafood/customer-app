@@ -1,15 +1,16 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect, useState } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import Ripple from "react-native-material-ripple"
-import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState, ModalStateHandler } from "../../utils/modalState"
-import { Button } from "../button/button"
+
+import { ButtonFooter } from ".."
 import { Card } from "../card/card"
 import { Checkbox } from "../checkbox/checkbox"
 import { Chip } from "../chip/chip"
@@ -65,7 +66,7 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
 
   return (
     <>
-      <Modal modal={modal} style={style} position="bottom">
+      <Modal state={modal} style={style} position="bottom">
         <View>
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Text
@@ -87,15 +88,10 @@ export const ModalDeliveryDate = function ModalDeliveryDate(props: ModalDelivery
             ></ListDay>
           </ScrollView>
           {isVisibleContinue && (
-            <View style={[styles.containerButton, utilFlex.selfCenter]}>
-              <Button
-                onPress={() => modal.setVisible(false)}
-                style={utilSpacing.mt5}
-                block
-                preset="primary"
-                tx="common.continue"
-              ></Button>
-            </View>
+            <ButtonFooter
+              onPress={() => modal.setVisible(false)}
+              tx="common.continue"
+            ></ButtonFooter>
           )}
         </View>
       </Modal>

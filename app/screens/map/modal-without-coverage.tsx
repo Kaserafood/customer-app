@@ -7,7 +7,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 export const ModalWithoutCoverage = (props: { modalState: ModalStateHandler }) => {
   const { modalState } = props
   return (
-    <Modal modal={modalState} size="md">
+    <Modal state={modalState} size="md">
       <View style={utilSpacing.p3}>
         <Text
           preset="bold"

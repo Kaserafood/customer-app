@@ -103,7 +103,7 @@ const ModalSendedEmail = (props: {
   }
 
   return (
-    <Modal modal={modalState} styleBody={styles.w80}>
+    <Modal state={modalState} styleBody={styles.w80}>
       <View>
         <Text
           tx="recoverPasswordScreen.ready"

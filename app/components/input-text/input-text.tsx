@@ -19,10 +19,11 @@ const TEXT_STYLES: TextStyle = {
   fontSize: typographySize.md,
   color: color.text,
   minHeight: 50,
+  flex: 1,
 }
 const BORDER_BOTTOM = {
   borderBottomWidth: 1,
-  borderBottomColor: color.palette.grayLigth,
+  borderBottomColor: color.palette.grayLight,
 }
 const TEXT_ERROR: TextStyle = {
   color: color.error,
@@ -33,7 +34,7 @@ const CONTAINER_ERROR: ViewStyle = {
   bottom: -18,
 }
 const CONTAINER_INPUT: ViewStyle = {
-  backgroundColor: color.palette.grayLigth,
+  backgroundColor: color.palette.grayLight,
   borderRadius: spacing[2],
 }
 
@@ -79,6 +80,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
     iconRight,
     required,
     helperText,
+    prefix,
     ...rest
   } = props
 
@@ -87,18 +89,19 @@ const ControlledInput = function InputText(props: InputTextProps) {
   const stylesInput = Object.assign({}, TEXT_STYLES, style)
   const container = Object.assign({}, CONTAINER, styleContainer)
   const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
-  const [strLenght, setStrLenght] = useState(0)
+  const [strLength, setStrLength] = useState(0)
 
   useEffect(() => {
     if (counter) {
-      setStrLenght(field?.value?.length || 0)
+      setStrLength(field?.value?.length || 0)
     }
   }, [field.value])
 
   if (preset === "normal") {
     return (
       <View style={container}>
-        <View style={CONTAINER_INPUT}>
+        <View style={[CONTAINER_INPUT, utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+          {prefix}
           <TextInputMask
             selectionColor={color.palette.grayDark}
             placeholder={actualPlaceholder}
@@ -134,7 +137,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
             selectionColor={color.palette.grayDark}
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
-            underlineColorAndroid={color.palette.grayLigth}
+            underlineColorAndroid={color.palette.grayLight}
             style={[stylesInput, isIos && BORDER_BOTTOM]}
             ref={forwardedRef}
             onChangeText={field.onChange}
@@ -151,7 +154,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
       </View>
       {counter && (
         <View style={styles.containerCounter}>
-          <Text size="sm" style={styles.counter} text={`${strLenght}/${counter}`}></Text>
+          <Text size="sm" style={styles.counter} text={`${strLength}/${counter}`}></Text>
         </View>
       )}
     </Card>

@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from "react"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StyleSheet, TouchableOpacity, View, Platform } from "react-native"
+import { Keyboard, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import {
@@ -35,12 +35,13 @@ import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
-import { deliverySlotTime, DeliveryTimeList } from "./delivery-time-list"
+import RNUxcam from "react-native-ux-cam"
+import { MEXICO } from "../../utils/constants"
+import { DeliveryTimeList } from "./delivery-time-list"
 import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import { Totals } from "./totals"
-import RNUxcam from "react-native-ux-cam"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -48,7 +49,7 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation, route: { params } }) => {
+  ({ navigation }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const {
       addressStore,
@@ -61,7 +62,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
-    const refDeliveryTimeList = useRef(null)
     const [coupon, setCoupon] = useState<Coupon>()
 
     useEffect(() => {
@@ -73,11 +73,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         methods.setValue("taxId", taxId ?? "")
         methods.setValue("deliveryNote", customerNote ?? "")
         setLabelDeliveryTime(deliveryTime ?? "")
-
-        const slotTime = deliverySlotTime.find((slotTime) => slotTime.label === deliveryTime)
-
-        if (slotTime)
-          refDeliveryTimeList.current?.changeValue(true, deliverySlotTime.indexOf(slotTime))
       }
       loadSavedStrings()
 
@@ -101,6 +96,15 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return null
     }
 
+    const getAddressLabel = () => {
+      let label = addressStore.current.address
+
+      if (addressStore.current.numHouseApartment) {
+        label += `, ${addressStore.current.numHouseApartment}`
+      }
+
+      return label
+    }
     const onError: SubmitErrorHandler<any> = (errors) => {
       RNUxcam.logEvent("checkout: errorSubmit", { errors })
       __DEV__ && console.log({ errors })
@@ -126,7 +130,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       const order: Order = {
         id: 0,
         customerId: userStore.userId,
-        address: `${addressStore.current.address}, ${addressStore.current.numHouseApartment}`,
+        address: getAddressLabel(),
         country: addressStore.current.country,
         city: addressStore.current.city,
         region: addressStore.current.region,
@@ -193,16 +197,14 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getProducts = (): Products[] => {
-      return cartStore.cart.map((item) => {
-        return {
-          productId: item.dish.id,
-          quantity: item.quantity,
-          price: item.total,
-          name: item.dish.title,
-          noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
-          metaData: item.metaData,
-        }
-      })
+      return cartStore.cart.map((item) => ({
+        productId: item.dish.id,
+        quantity: item.quantity,
+        price: item.total,
+        name: item.dish.title,
+        noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
+        metaData: item.metaData,
+      }))
     }
 
     const getMetaData = (taxId: string): MetaData[] => {
@@ -285,6 +287,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const onPressAddress = () => {
+      console.log("on press address")
       modalStateLocation.setVisible(true)
       RNUxcam.logEvent("checkout: onPressAddress")
     }
@@ -316,7 +319,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
           <FormProvider {...methods}>
-            <TouchableOpacity activeOpacity={1} onPress={onPressAddress}>
+            <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPressAddress}>
               <InputText
                 name="address"
                 preset="card"
@@ -326,7 +329,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 value={getAddressText()}
                 iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
               ></InputText>
-            </TouchableOpacity>
+            </Ripple>
 
             <InputText
               name="customerNote"
@@ -335,9 +338,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               placeholderTx="checkoutScreen.deliveryNotePlaceholder"
               value={addressStore.current.instructionsDelivery}
             ></InputText>
-            <Separator style={[utilSpacing.mt3, utilSpacing.mb5, utilSpacing.mx4]}></Separator>
 
-            <TouchableOpacity activeOpacity={1} onPress={() => modalDelivery.setVisible(true)}>
+            <Ripple
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              onPress={() => modalDelivery.setVisible(true)}
+            >
               <InputText
                 name="diveryDate"
                 preset="card"
@@ -347,16 +353,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                 value={getNameDayDelivery()}
                 iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
               ></InputText>
-            </TouchableOpacity>
+            </Ripple>
 
-            <Text
-              preset="bold"
-              style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt5]}
-              tx="checkoutScreen.deliveryTime"
-            ></Text>
             <DeliveryTimeList
-              ref={refDeliveryTimeList}
               onSelectItem={(value) => setLabelDeliveryTime(value)}
+              chefId={commonStore.currentChefId}
             ></DeliveryTimeList>
             <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
             <Text
@@ -367,7 +368,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             ></Text>
 
             <Card
-              style={[styles.containerPayment, utilSpacing.mb4, utilSpacing.mx4, utilSpacing.p1]}
+              style={[styles.containerPayment, utilSpacing.m4, utilSpacing.px1, utilSpacing.p0]}
             >
               {userStore.currentCard?.id ? (
                 <Ripple
@@ -376,7 +377,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   onPress={() => {
                     modalStatePaymentList.setVisible(true)
                   }}
-                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                  style={[
+                    utilSpacing.p2,
+                    utilSpacing.py3,
+                    utilFlex.flexRow,
+                    utilFlex.flexCenterVertical,
+                  ]}
                 >
                   <View style={[utilFlex.flex1, utilSpacing.ml4]}>
                     <Text text={userStore.currentCard.name} preset="semiBold"></Text>
@@ -407,11 +413,20 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   onPress={() => {
                     modalStatePaymentList.setVisible(true)
                   }}
-                  style={[utilSpacing.p2, utilFlex.flexRow, utilFlex.flexCenterVertical]}
+                  style={[
+                    utilSpacing.p2,
+                    utilSpacing.py3,
+                    utilFlex.flexRow,
+                    utilFlex.flexCenterVertical,
+                  ]}
                 >
                   <View style={[utilFlex.flex1, utilSpacing.ml4]}>
                     <View style={utilFlex.felxColumn}>
-                      <Text tx="checkoutScreen.paymentCash" preset="semiBold"></Text>
+                      <Text
+                        tx="checkoutScreen.paymentCash"
+                        preset="semiBold"
+                        style={utilSpacing.mb1}
+                      ></Text>
                       <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
                     </View>
                   </View>
@@ -427,8 +442,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <InputText
               name="taxId"
               preset="card"
-              placeholderTx="checkoutScreen.nitPlaceholder"
-              labelTx="checkoutScreen.nit"
+              placeholderTx={
+                userStore.countryId === MEXICO
+                  ? "checkoutScreen.rfcPlaceholder"
+                  : "checkoutScreen.nitPlaceholder"
+              }
+              labelTx={userStore.countryId === MEXICO ? "checkoutScreen.rfc" : "checkoutScreen.nit"}
               styleContainer={[utilSpacing.my3]}
               maxLength={100}
             ></InputText>
@@ -502,7 +521,7 @@ const styles = StyleSheet.create({
   },
 
   containerPayment: {
-    borderColor: palette.whiteGray,
+    borderColor: palette.green,
     borderWidth: 1,
   },
   coupon: {

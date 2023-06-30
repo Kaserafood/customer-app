@@ -4,12 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
 
-import { Icon } from "../components"
-import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
+import { Icon, Text } from "../components"
+import { ChefsScreen, HomeScreen, SearchScreen, PlansScreen } from "../screens"
 import { color, spacing, typographySize } from "../theme"
-import { utilSpacing } from "../theme/Util"
+import { utilSpacing, utilText } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
 import RNUxcam from "react-native-ux-cam"
+import { View, StyleSheet } from "react-native"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
@@ -51,7 +52,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="house" size={30} color={color} />
+            return <Icon style={utilSpacing.mt1} name="house" size={26} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.home")}
@@ -71,7 +72,39 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="hat-chef" size={30} color={color} />
+            return (
+              <>
+                <View style={styles.badge}>
+                  <Text
+                    size="sm"
+                    style={utilText.textWhite}
+                    preset="semiBold"
+                    tx="tabMainNavigation.new"
+                  ></Text>
+                </View>
+                <Icon style={utilSpacing.mt1} name="utensils" size={26} color={color} />
+              </>
+            )
+          },
+        }}
+        name={getI18nText("tabMainNavigation.packages")}
+        component={PlansScreen}
+        listeners={{
+          tabPress: () => {
+            RNUxcam.logEvent("tabPress", { name: "Packages" })
+            AppEventsLogger.logEvent("tabPress", 1, {
+              name: "Packages",
+              description: "El usuario presionó la opción 'Paquetes' en el menu principal",
+            })
+          },
+        }}
+      />
+
+      <Tab.Screen
+        options={{
+          // eslint-disable-next-line react/display-name
+          tabBarIcon: ({ color }) => {
+            return <Icon style={utilSpacing.mt1} name="hat-chef" size={26} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.chefs")}
@@ -91,7 +124,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="magnifying-glass" size={30} color={color} />
+            return <Icon style={utilSpacing.mt1} name="magnifying-glass" size={26} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.search")}
@@ -111,7 +144,7 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt2} name="bars-1" size={30} color={color} />
+            return <Icon style={utilSpacing.mt2} name="bars-1" size={26} color={color} />
           },
         }}
         name={getI18nText("tabMainNavigation.more")}
@@ -131,3 +164,14 @@ export function TabMainNavigation({ navigationRef }) {
     </Tab.Navigator>
   )
 }
+
+const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: color.palette.green,
+    borderRadius: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    position: "absolute",
+    top: -8,
+  },
+})
