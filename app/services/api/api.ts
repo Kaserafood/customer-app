@@ -183,8 +183,8 @@ export class Api {
    *
    * @description Get dish by id
    */
-  async getDish(dishId: number): Promise<DishResponse> {
-    return await this.request({}, `/dishes/${dishId}`, "GET")
+  async getDish(dishId: number, latitude: number, longitude: number): Promise<DishResponse> {
+    return await this.request({ latitude, longitude }, `/dishes/${dishId}`, "GET")
   }
 
   /**

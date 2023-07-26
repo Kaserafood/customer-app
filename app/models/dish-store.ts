@@ -140,9 +140,13 @@ export const DishStoreModel = types
         self.dishesFavorites.replace(result.data)
       }
     }),
-    getDish: flow(function* getDish(dishId: number): Generator<any, DishChef, DishResponse> {
+    getDish: flow(function* getDish(
+      dishId: number,
+      latitude: number,
+      longitude: number,
+    ): Generator<any, DishChef, DishResponse> {
       const api = new Api()
-      const result = yield api.getDish(dishId)
+      const result = yield api.getDish(dishId, latitude, longitude)
 
       if (result && result.kind === "ok") {
         return result.data as DishChef

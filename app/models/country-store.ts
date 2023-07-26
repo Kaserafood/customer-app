@@ -1,5 +1,6 @@
 import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
-import { Api } from "../services/api"
+import { setLocaleI18n } from "../i18n"
+import { Api, setLocale } from "../services/api"
 
 const country = types.model("Country").props({
   id: types.number,
@@ -28,6 +29,8 @@ export const CountryStoreModel = types
         applySnapshot(self.countries, result.data)
         // const deviceCountry = RNLocalize.getCountry()
         self.selectedCountry = result.data[0]
+        setLocaleI18n("es")
+        setLocale("es")
         // if (result.data?.length > 0) {
         //   if (
         //     result.data.find(
