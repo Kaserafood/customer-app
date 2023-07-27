@@ -37,6 +37,5 @@ type RecursiveKeyOf<TObj extends Record<string, any>> = {
 }[keyof TObj & string]
 
 export function setLocaleI18n(locale: string) {
-  console.log("setLocaleI18n", locale)
   i18n.locale = locale
 }

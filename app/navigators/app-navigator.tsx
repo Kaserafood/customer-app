@@ -131,7 +131,7 @@ export const AppNavigator = (props: NavigationProps) => {
   }
 
   const linking = {
-    prefixes: ["kasera://"],
+    prefixes: ["kasera://", "https://kaserafood.com"],
     config,
   }
 
