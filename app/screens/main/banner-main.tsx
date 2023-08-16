@@ -4,8 +4,10 @@ import images from "../../assets/images"
 import { Button, Image, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { useNavigation } from "@react-navigation/native"
 
 const BannerMain = () => {
+  const navigation = useNavigation()
   return (
     <View style={[utilFlex.flex, utilFlex.flexRow, styles.banner]}>
       <View style={[utilFlex.flex1, utilSpacing.py6, utilSpacing.pl5]}>
@@ -19,6 +21,7 @@ const BannerMain = () => {
           tx="mainScreen.requestDish"
           block
           style={[utilSpacing.mt4, utilSpacing.px2, utilSpacing.py4]}
+          onPress={() => navigation.navigate("plans" as never)}
         ></Button>
       </View>
 

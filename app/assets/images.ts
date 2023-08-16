@@ -61,6 +61,10 @@ const images = {
   knife: require("./images/knife.png"),
   plans: require("./images/plans_dish.png"),
   dish: require("./images/dish.png"),
+  personCook: require("./images/chef.png"),
+  delivery: require("./images/delivery.png"),
+  food: require("./images/food.png"),
+  schedule: require("./images/schedule.png"),
 }
 
 export default images

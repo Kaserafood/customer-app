@@ -27,6 +27,7 @@ import {
   NewPasswordScreen,
   OrderDetailScreen,
   OrdersScreen,
+  PlansScreen,
   PrivacyPolicyScreen,
   RecoverPasswordScreen,
   RecoverPasswordTokenScreen,
@@ -100,6 +101,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
         <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+        <Stack.Screen name="plans" component={PlansScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )

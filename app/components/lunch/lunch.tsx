@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   },
   image: {
     borderRadius: spacing[3],
-    height: 110,
-    width: 150,
+    height: 105,
+    width: 140,
   },
   tag: {
     alignSelf: "flex-start",

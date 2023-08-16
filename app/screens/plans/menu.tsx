@@ -1,11 +1,10 @@
 import React from "react"
-import { StyleSheet, View } from "react-native"
-import { Button, Card, Chip, Text } from "../../components"
+import { View } from "react-native"
+import { Chip, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
-import { color } from "../../theme"
-import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { utilSpacing, utilText } from "../../theme/Util"
 
-const Lunches = () => {
+const Menu = () => {
   const lunches = [
     {
       id: 23,
@@ -101,51 +100,26 @@ const Lunches = () => {
   ]
 
   return (
-    <View style={[styles.containerDishes, utilSpacing.mt5]}>
-      <View style={utilSpacing.p5}>
-        <View style={styles.containerTitle}>
-          <Text tx="mainScreen.knowLunchPackages" preset="bold" size="lg"></Text>
-          <View style={styles.bar}></View>
-        </View>
+    <View style={utilSpacing.p5}>
+      <Text
+        style={utilSpacing.py5}
+        tx="mainScreen.exploreAvailableMenus"
+        preset="bold"
+        size="lg"
+      ></Text>
+      <Chip
+        style={utilSpacing.mb5}
+        textstyle={utilText.semiBold}
+        text={`Lunes 24 de agosto`}
+      ></Chip>
+      <Text style={utilSpacing.pb2} tx="mainScreen.dinnerLunch" preset="semiBold" size="lg"></Text>
+      <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb5}></Text>
 
-        <View style={[utilFlex.flexRow, utilSpacing.my4, utilFlex.flexCenterVertical]}>
-          <Text tx="mainScreen.exploreDailyMenu" style={utilFlex.flex1}></Text>
-          <Chip textstyle={utilText.semiBold} text={`Lunes 24 de agosto`}></Chip>
-        </View>
-      </View>
-      <View style={[utilSpacing.px5, utilSpacing.pb5]}>
-        {lunches.map((lunch) => (
-          <Lunch {...lunch} key={lunch.id}></Lunch>
-        ))}
-
-        <Card style={utilSpacing.p5}>
-          <Text tx="mainScreen.pickOptions" style={[utilSpacing.mb5, utilText.textCenter]}></Text>
-          <Button style={[utilFlex.selfCenter, styles.btnMore]} tx="common.moreInfo"></Button>
-        </Card>
-      </View>
+      {lunches.map((lunch) => (
+        <Lunch {...lunch} key={lunch.id}></Lunch>
+      ))}
     </View>
   )
 }
 
-const styles = StyleSheet.create({
-  bar: {
-    alignSelf: "flex-end",
-    backgroundColor: color.primary,
-    display: "flex",
-    height: 2,
-    width: 70,
-  },
-  btnMore: {
-    minWidth: 230,
-  },
-  containerDishes: {
-    backgroundColor: color.palette.whiteGray,
-  },
-  containerTitle: {
-    alignContent: "flex-start",
-    alignSelf: "flex-start",
-    display: "flex",
-  },
-})
-
-export default Lunches
+export default Menu
