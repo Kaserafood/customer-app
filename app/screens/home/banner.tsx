@@ -55,7 +55,7 @@ export const Banner = (props: PropsBanner) => {
         {bannerStore.showWelcome && (
           <TouchableOpacity
             activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml4]}
+            style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
             onPress={onPressWelcomeBanner}
           >
             <Image
@@ -82,7 +82,7 @@ export const Banner = (props: PropsBanner) => {
           <TouchableOpacity
             key={banner.id}
             activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml4]}
+            style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml5]}
             onPress={() => onBannerPress(banner)}
           >
             <Image style={[styles.image, utilSpacing.mr3]} source={{ uri: banner.image }}></Image>

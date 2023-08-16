@@ -1,9 +1,9 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import PagerView from "react-native-pager-view"
 import Icon from "react-native-vector-icons/FontAwesome"
-import { observer } from "mobx-react-lite"
 
 import { Price, Text } from "../../components"
 import { UserChef } from "../../models/user-store"
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   dish: {
     borderRadius: spacing[2],
     flex: 1,
-    height: 200,
+    height: 150,
   },
   flex: {
     display: "flex",
@@ -178,15 +178,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
-    height: 200,
+    height: 150,
     width: "100%",
   },
 
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: spacing[2],
-    borderWidth: 2,
+    borderWidth: 3,
     height: 94,
+    marginRight: spacing[2],
     width: 90,
   },
   imageDish: {

@@ -1,7 +1,7 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
-import { observer } from "mobx-react-lite"
 
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
@@ -72,7 +72,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
         <Text
           tx={titleTx || "mainScreen.dayShipping"}
           preset="semiBold"
-          style={[styles.dayShipping, utilSpacing.ml4]}
+          style={styles.dayShipping}
         ></Text>
         {!hideWhyButton && (
           <Chip tx="mainScreen.why" style={styles.chip} onPressIn={() => onWhyPress(true)}></Chip>
@@ -125,7 +125,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
             <Chip
               active={day.date === dayStore.currentDay.date}
               text={day.dayName}
-              style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
+              style={[styles.chip, utilSpacing.my2]}
               onPress={() => {
                 onPress(day)
                 dayStore.setCurrentDay(day)

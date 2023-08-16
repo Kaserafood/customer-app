@@ -22,7 +22,8 @@
     "discount": "Descuento",
     "ready": "Listo",
     "understand": "Entendido",
-    "omit": "Omitir"
+    "omit": "Omitir",
+    "moreInfo": "Más información"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -234,7 +235,24 @@
     "search": "Buscar",
     "more": "Más",
     "dayShipping": "Día de entrega",
-    "delivery": "Entrega"
+    "delivery": "Entrega",
+    "new": "¡Nuevo!",
+    "eatHealthy": "Come sano todos los días con los paquetes Kasera",
+    "testDish": "¡Prueba tu primer platillo sin compromisos a solo Q40!",
+    "requestDish": "Pedir platillo de prueba",
+    "whatDoYouNeed": "¡Hey! ¿Qué necesitas?",
+    "packageFoodHealthy": "Paquetes de comida saludable",
+    "dailyDeliveryFree": "Recibe a diario comida sana con envío gratis.",
+    "dishesAndMore": "Platillos típicos, postres y más",
+    "knowLunchPackages": "Conoce los paquetes de almuerzos",
+    "exploreDailyMenu": "Explora los menús diarios",
+    "menuFrom": "Menu del",
+    "pickOptions": "Elige entre 3 opciones de menús para cada día desde Q42 x platillo",
+    "homemadeDishes": "Reserva platillos caseros de chefs locales",
+    "seeMoreDishes": "Ver más platillos así  :)",
+    "homemadeStuff": "Cositas 100% caseras para ti",
+    "someChefsForYou": "Algunos chefs para ti",
+    "seeMore": "Ver más"
   },
   "placeholder": {
     "dishTitle": "Costillas con barcaboo de pollo",

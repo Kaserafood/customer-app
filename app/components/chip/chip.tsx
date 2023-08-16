@@ -14,11 +14,12 @@ import { SHADOW } from "../../theme/Util"
 import { Text } from "../text/text"
 
 const CONTAINER: ViewStyle = {
-  paddingHorizontal: spacing[2],
-  paddingVertical: spacing[0],
-  borderRadius: 100,
   alignSelf: "flex-start",
   minHeight: 25,
+  borderRadius: spacing[3],
+  marginRight: spacing[2],
+  paddingHorizontal: spacing[3],
+  paddingVertical: spacing[1],
   ...SHADOW,
 }
 

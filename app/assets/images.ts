@@ -59,6 +59,8 @@ const images = {
   microwave: require("./images/microwave.png"),
   trunkFood: require("./images/trunkFood.png"),
   knife: require("./images/knife.png"),
+  plans: require("./images/plans_dish.png"),
+  dish: require("./images/dish.png"),
 }
 
 export default images

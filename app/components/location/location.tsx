@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
-import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -29,13 +29,13 @@ export const Location = observer(function Location(props: LocationProps) {
   return (
     <View style={[styles.containerAddress, style]}>
       <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
-        <Icon name="location-dot" size={24} color={color.palette.white} />
+        <Icon name="location-dot" size={24} color={color.primary} />
         <Text
           numberOfLines={1}
           style={styles.textAddress}
           text={addressStore.current.address}
         ></Text>
-        <Icon name="angle-down" size={24} color={color.palette.white} />
+        <Icon name="angle-down" size={24} color={color.primary} />
       </TouchableOpacity>
     </View>
   )
@@ -43,13 +43,13 @@ export const Location = observer(function Location(props: LocationProps) {
 
 const styles = StyleSheet.create({
   btnAddress: {
-    backgroundColor: color.primary,
+    backgroundColor: color.palette.white,
     borderRadius: 8,
     display: "flex",
     flexDirection: "row",
     flex: 1,
     paddingHorizontal: spacing[4],
-    paddingVertical: spacing[3],
+    paddingVertical: spacing[2],
     alignItems: "center",
   },
 
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 
   textAddress: {
-    color: color.palette.white,
+    color: color.text,
     flex: 1,
     marginBottom: 0,
     marginLeft: spacing[2],

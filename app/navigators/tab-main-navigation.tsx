@@ -11,6 +11,7 @@ import { utilSpacing, utilText } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
 import RNUxcam from "react-native-ux-cam"
 import { View, StyleSheet } from "react-native"
+import { MainScreen } from "../screens/main/main-screen"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
@@ -56,7 +57,7 @@ export function TabMainNavigation({ navigationRef }) {
           },
         }}
         name={getI18nText("tabMainNavigation.home")}
-        component={HomeScreen}
+        component={MainScreen}
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "Home" })
