@@ -23,7 +23,8 @@
     "ready": "Listo",
     "understand": "Entendido",
     "omit": "Omitir",
-    "moreInfo": "Más información"
+    "moreInfo": "Más información",
+    "select": "Seleccionar"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -679,5 +680,37 @@
     "markOptionsIdentifyYou": "Marca las opciones que te identifican",
     "allergy": "¿Tienes alguna alergia?",
     "hop": "Saltar"
+  },
+  "subscriptionScreen": {
+    "description": "Selecciona la cantidad de platillos que deseas",
+    "happy": "Feliz",
+    "prime": "Prime",
+    "happyDescription": "20 platillos (créditos)",
+    "primeDescription": "40 platillos (créditos)",
+    "threePerDay": "3 opciones por día",
+    "freeDelivery": "Envío gratis",
+    "monthForUse": "1 mes para usar",
+    "priceHappy": "Q850",
+    "pricePrime": "Q1,600",
+    "priceHappyDishes": "(Q45 por platillo)",
+    "pricePrimeDishes": "(Q42 por platillo)",
+    "packages": "Paquetes",
+    "fourPerDay": "4 opciones por día",
+    "threeMonthsForUse": "3 meses para usar",
+    "snacksDrink": "Snacks y bebidas",
+    "youAreNotSure": "¿No estás listo para el compromiso?",
+    "testFirstDish": "Prueba tu primer platillo",
+    "withFreeDelivery": " con envío gratis ",
+    "withoutCommitment": "y sin compromiso",
+    "forOnly": "Por solo Q40",
+    "whatAreCredits": "¿Qué son los créditos?",
+    "creditIsDish": "Un crédito es igual a un platillo ",
+    "creditDescription": "en la mayoría de los casos. Pero, algunos días podrás elegir platillos premium que consumen más créditos, o postres, que consumen menos.",
+    "howWorksPayment": "¿Como funcionan los pagos?",
+    "paymentDescription": {
+      "part1": "Paga cada vez que compres un paquete o",
+      "part2": " activa un plan mensual ",
+      "part3": "con cobro automático (como Netflix 😜) para obtener mejores precios."
+    }
   }
 }

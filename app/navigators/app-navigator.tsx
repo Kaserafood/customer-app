@@ -41,6 +41,7 @@ import { FormPlans } from "../screens/form-plans/form-plans-screen"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
+import { Subscription } from "../screens/subscription/subscription-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -104,6 +105,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="registerForm" component={RegisterFormScreen} />
         <Stack.Screen name="plans" component={PlansScreen} />
         <Stack.Screen name="formPlans" component={FormPlans} />
+        <Stack.Screen name="subscription" component={Subscription} />
       </Stack.Group>
     </Stack.Navigator>
   )

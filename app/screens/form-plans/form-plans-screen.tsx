@@ -116,14 +116,14 @@ export const FormPlans: FC<StackScreenProps<NavigatorParamList, "formPlans">> = 
       if (currentStep === 1) {
         setCurrentStep(2)
       } else {
-        // navigation.navigate("formPlansTwo")
+        navigation.navigate("subscription")
       }
     }
 
     return (
       <Screen
         preset="fixed"
-        statusBarBackgroundColor={color.palette.grayPlaceHolder}
+        statusBarBackgroundColor={color.palette.white}
         statusBar="dark-content"
       >
         <ScrollView style={utilSpacing.p5}>
@@ -138,13 +138,13 @@ export const FormPlans: FC<StackScreenProps<NavigatorParamList, "formPlans">> = 
             style={[utilSpacing.mt3, utilSpacing.mb6]}
           ></Text>
 
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb5]}>
             <View style={utilFlex.flex1}>
               <ProgressBar
                 progress={currentStep === 1 ? 50 : 100}
-                height={7}
+                height={12}
                 backgroundColor={color.primary}
-                trackColor={color.palette.grayLight}
+                trackColor={color.palette.whiteGray}
                 progressDuration={450}
               />
             </View>

@@ -65,6 +65,9 @@ const images = {
   delivery: require("./images/delivery.png"),
   food: require("./images/food.png"),
   schedule: require("./images/schedule.png"),
+  prime: require("./images/prime.png"),
+  happy: require("./images/happy.png"),
+  credit: require("./images/credit.png"),
 }
 
 export default images

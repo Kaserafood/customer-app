@@ -85,4 +85,5 @@ export type NavigatorParamList = {
   reportBug: undefined
   plans: undefined
   formPlans: undefined
+  subscription: undefined
 }
