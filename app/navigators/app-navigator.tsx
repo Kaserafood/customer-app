@@ -37,6 +37,7 @@ import {
   TermsConditionsScreen,
 } from "../screens"
 
+import { FormPlans } from "../screens/form-plans/form-plans-screen"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
@@ -102,6 +103,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
         <Stack.Screen name="registerForm" component={RegisterFormScreen} />
         <Stack.Screen name="plans" component={PlansScreen} />
+        <Stack.Screen name="formPlans" component={FormPlans} />
       </Stack.Group>
     </Stack.Navigator>
   )

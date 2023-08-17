@@ -28,7 +28,7 @@ const Banner = ({ variant }: Props) => {
               tx="mainScreen.seeMenuAndPrices"
               block
               style={[utilSpacing.mt6, utilSpacing.px2, utilSpacing.py4]}
-              onPress={() => navigation.navigate("plans" as never)}
+              onPress={() => navigation.navigate("formPlans" as never)}
             ></Button>
           </View>
 
@@ -53,7 +53,7 @@ const Banner = ({ variant }: Props) => {
               tx="mainScreen.iWantTest"
               block
               style={[utilSpacing.mt6, utilSpacing.px2, utilSpacing.py4]}
-              onPress={() => navigation.navigate("plans" as never)}
+              onPress={() => navigation.navigate("formPlans" as never)}
             ></Button>
           </View>
 

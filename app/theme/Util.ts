@@ -46,10 +46,13 @@ export const utilText = StyleSheet.create({
     color: color.palette.grayDark,
   },
 
+  textPrimary: {
+    color: color.primary,
+  },
+
   textSm: {
     fontSize: typographySize.sm,
   },
-
   textWhite: {
     color: color.palette.white,
   },

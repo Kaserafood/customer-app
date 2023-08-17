@@ -6,6 +6,7 @@ import { Icon, Location, Screen, Text } from "../../components"
 import { NavigatorParamList, goBack } from "../../navigators"
 
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
 import RNUxcam from "react-native-ux-cam"
 import { ModalLocation } from "../../components/location/modal-location"
 import { color } from "../../theme"
@@ -21,6 +22,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
   function PlansScreen() {
     useEffect(() => {
       RNUxcam.tagScreenName("plans")
+      changeNavigationBarColor(color.palette.black, false, true)
     }, [])
 
     return (

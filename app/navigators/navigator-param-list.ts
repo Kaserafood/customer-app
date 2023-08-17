@@ -84,4 +84,5 @@ export type NavigatorParamList = {
   orderDetail: OrderOverview
   reportBug: undefined
   plans: undefined
+  formPlans: undefined
 }

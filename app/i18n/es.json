@@ -672,5 +672,12 @@
     },
     "moreInfo": "Más información",
     "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales"
+  },
+  "formPlansScreen": {
+    "knowYou": "Ayúdanos a conocerte mejor",
+    "protein": "Presiona las proteínas que te gusten",
+    "markOptionsIdentifyYou": "Marca las opciones que te identifican",
+    "allergy": "¿Tienes alguna alergia?",
+    "hop": "Saltar"
   }
 }
