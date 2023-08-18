@@ -24,7 +24,11 @@
     "understand": "Entendido",
     "omit": "Omitir",
     "moreInfo": "Más información",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "credit": "crédito",
+    "credits": "créditos",
+    "writeHere": "Escribe aquí",
+    "confirm": "Confirmar"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -723,5 +727,15 @@
   "lunch": {
     "credit": "crédito",
     "credits": "créditos"
+  },
+  "menuSummary": {
+    "title": "Resumen",
+    "remainingCredits": "Créditos restantes",
+    "expiresOn": "Vence el",
+    "consumption": "Consumo",
+    "totalConsumption": "Total consumo",
+    "scheduledDeliveries": "Entregas programadas",
+    "rememberDeliveryTime": "¡Recuerda! Las entregas son de 10 AM a 1 PM",
+    "commentChef": "¿Deseas agregar una nota al chef?"
   }
 }

@@ -16,7 +16,7 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
     return (
       <Screen
         preset="fixed"
-        statusBarBackgroundColor={color.palette.white}
+        statusBarBackgroundColor={color.palette.black}
         statusBar="dark-content"
       >
         <ScrollView>

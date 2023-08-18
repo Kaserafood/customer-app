@@ -87,4 +87,5 @@ export type NavigatorParamList = {
   formPlans: undefined
   subscription: undefined
   menu: undefined
+  menuSummary: undefined
 }

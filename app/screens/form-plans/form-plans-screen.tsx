@@ -123,7 +123,7 @@ export const FormPlans: FC<StackScreenProps<NavigatorParamList, "formPlans">> = 
     return (
       <Screen
         preset="fixed"
-        statusBarBackgroundColor={color.palette.white}
+        statusBarBackgroundColor={color.palette.black}
         statusBar="dark-content"
       >
         <ScrollView style={utilSpacing.p5}>

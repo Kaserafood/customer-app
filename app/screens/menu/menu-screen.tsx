@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { Header, Screen, Text } from "../../components"
+import { ButtonFooter, Header, Screen, Text } from "../../components"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { utilSpacing } from "../../theme/Util"
 import Days from "./days"
@@ -34,6 +34,10 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
 
           <Lunches></Lunches>
         </ScrollView>
+        <ButtonFooter
+          text="Usar créditos (10)"
+          onPress={() => navigation.push("menuSummary")}
+        ></ButtonFooter>
       </Screen>
     )
   },
