@@ -28,7 +28,8 @@
     "credit": "crédito",
     "credits": "créditos",
     "writeHere": "Escribe aquí",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "free": "Gratis"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -369,7 +370,25 @@
     "paymentMethodError": "No se ha logrado agregar el método de pago",
     "paymentMethodErrorUnknown": "La tarjeta debe ser Visa o MasterCard",
     "paymentCashDescription": "Pagas al recibir",
-    "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta"
+    "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta",
+
+    "deliveryInfo": "Información de entrega",
+
+    "noteDelivery": "Nota de entrega",
+    "noteDeliveryPlaceholder": "Referencias, código de acceso, etc.",
+
+    "paymentAutomatic": "Plan mensual (cobro automático)",
+    "offOrder": "Ahorra 5% de tu orden ({{total}})",
+    "paymentAutomaticDescription": {
+      "part1": "Se cobrará tu tarjeta cada ",
+      "part2": ". Puedes cancelar el plan cuando desees."
+    },
+
+    "taxId": "Ingresa tu NIT (opcional)",
+    "taxIdPlaceholder": "Escribe el NIT",
+    "datesDelivery": "Recibirás platillos en estas fechas:",
+    "discount": "Descuento",
+    "deliveryPrice": "Precio de envío"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",
@@ -737,5 +756,23 @@
     "scheduledDeliveries": "Entregas programadas",
     "rememberDeliveryTime": "¡Recuerda! Las entregas son de 10 AM a 1 PM",
     "commentChef": "¿Deseas agregar una nota al chef?"
+  },
+  "checkoutPlanScreen": {
+    "title": "Detalles de entrega",
+    "deliveryInfo": "Información de entrega",
+    "address": "Dirección",
+    "noteDelivery": "Nota de entrega",
+    "noteDeliveryPlaceholder": "Referencias, código de acceso, etc.",
+    "paymentMethod": "Selecciona el método de pago",
+    "paymentAutomatic": "Plan mensual (cobro automático)",
+    "offOrder": "Ahorra 5% de tu orden ({{total}})",
+    "paymentAutomaticDescription": "Se cobrará tu tarjeta cada 18 de agosto. Puedes cancelar el plan cuando desees.",
+    "paymentCard": "Tarjeta de débito o crédito",
+    "paymentCash": "Efectivo -  contra entrega",
+    "taxId": "Ingresa tu NIT (opcional)",
+    "taxIdPlaceholder": "Escribe el NIT",
+    "datesDelivery": "Recibirás platillos en estas fechas:",
+    "discount": "Descuento",
+    "deliveryPrice": "Precio de envío"
   }
 }

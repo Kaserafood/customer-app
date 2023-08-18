@@ -7,6 +7,7 @@ import { ButtonFooter, Header, InputText, Screen } from "../../components/"
 
 import { FormProvider, useForm } from "react-hook-form"
 import { NavigatorParamList, goBack } from "../../navigators"
+import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import Consumption from "./consumption"
 import CreditSummary from "./credit-summary"
@@ -19,6 +20,10 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
         note: "",
       },
     })
+
+    const handleContinue = () => {
+      navigation.navigate("checkout", { isPlan: true })
+    }
 
     return (
       <Screen preset="fixed">
@@ -38,7 +43,7 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
               ></InputText>
             </View>
           </ScrollView>
-          <ButtonFooter tx="common.confirm"></ButtonFooter>
+          <ButtonFooter onPress={handleContinue} tx="common.confirm"></ButtonFooter>
         </FormProvider>
       </Screen>
     )
@@ -47,6 +52,6 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
 
 const styles = StyleSheet.create({
   containerInput: {
-    backgroundColor: "#cccccc30",
+    backgroundColor: color.palette.whiteGray,
   },
 })

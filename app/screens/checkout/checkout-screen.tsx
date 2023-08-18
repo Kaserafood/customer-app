@@ -11,6 +11,7 @@ import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
+  Checkbox,
   Header,
   Icon,
   Image,
@@ -37,11 +38,11 @@ import { getI18nText } from "../../utils/translate"
 
 import RNUxcam from "react-native-ux-cam"
 import { MEXICO } from "../../utils/constants"
+import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
-import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
-import { Totals } from "./totals"
+import Summary from "./summay"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -49,8 +50,9 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
+    const isPlan = params?.isPlan
     const {
       addressStore,
       dayStore,
@@ -84,7 +86,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }, [])
 
     useEffect(() => {
-      if (!cartStore.hasItems) {
+      if (!cartStore.hasItems && !isPlan) {
         console.log("to main screen")
         navigation.navigate("main")
       }
@@ -110,7 +112,19 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       __DEV__ && console.log({ errors })
     }
 
-    const onSubmit = async (data) => {
+    const sendOrder = (data) => {
+      if (isPlan) {
+        createOrderPlan()
+      } else {
+        createOrderDish(data)
+      }
+    }
+
+    const createOrderPlan = () => {
+      navigation.navigate("endOrder", {} as never)
+    }
+
+    const createOrderDish = async (data) => {
       Keyboard.dismiss()
       if (!dayStore.currentDay) {
         messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
@@ -118,7 +132,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         return
       }
 
-      if (labelDeliveryTime.length === 0) {
+      if (labelDeliveryTime.length === 0 && !isPlan) {
         messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
         RNUxcam.logEvent("checkout: errorTimeDelivery")
         return
@@ -339,26 +353,31 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               value={addressStore.current.instructionsDelivery}
             ></InputText>
 
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              onPress={() => modalDelivery.setVisible(true)}
-            >
-              <InputText
-                name="diveryDate"
-                preset="card"
-                labelTx="checkoutScreen.deliveryDate"
-                placeholderTx="checkoutScreen.deliveryDatePlaceholder"
-                editable={false}
-                value={getNameDayDelivery()}
-                iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
-              ></InputText>
-            </Ripple>
+            {!params?.isPlan && (
+              <View>
+                <Ripple
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
+                  onPress={() => modalDelivery.setVisible(true)}
+                >
+                  <InputText
+                    name="diveryDate"
+                    preset="card"
+                    labelTx="checkoutScreen.deliveryDate"
+                    placeholderTx="checkoutScreen.deliveryDatePlaceholder"
+                    editable={false}
+                    value={getNameDayDelivery()}
+                    iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
+                  ></InputText>
+                </Ripple>
 
-            <DeliveryTimeList
-              onSelectItem={(value) => setLabelDeliveryTime(value)}
-              chefId={commonStore.currentChefId}
-            ></DeliveryTimeList>
+                <DeliveryTimeList
+                  onSelectItem={(value) => setLabelDeliveryTime(value)}
+                  chefId={commonStore.currentChefId}
+                ></DeliveryTimeList>
+              </View>
+            )}
+
             <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
             <Text
               preset="bold"
@@ -439,6 +458,32 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               )}
             </Card>
 
+            {isPlan && !!userStore?.currentCard?.id && (
+              <Card
+                style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
+              >
+                <Ripple style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.p3]}>
+                  <View>
+                    <Checkbox rounded value={false} preset="default"></Checkbox>
+                  </View>
+
+                  <View style={utilFlex.flex1}>
+                    <Text
+                      tx="checkoutScreen.paymentAutomatic"
+                      preset="semiBold"
+                      size="md"
+                      style={utilSpacing.mb1}
+                    ></Text>
+                    <Text>
+                      <Text tx="checkoutScreen.paymentAutomaticDescription.part1"></Text>
+                      <Text text="18 de agosto" preset="semiBold"></Text>
+                      <Text tx="checkoutScreen.paymentAutomaticDescription.part2"></Text>
+                    </Text>
+                  </View>
+                </Ripple>
+              </Card>
+            )}
+
             <InputText
               name="taxId"
               preset="card"
@@ -469,28 +514,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
           <View style={utilSpacing.mx4}>
             <Separator style={utilSpacing.my6}></Separator>
-            <View style={utilFlex.flexRow}>
-              <Text style={utilSpacing.mr2} preset="semiBold" tx="checkoutScreen.delivery"></Text>
-              <Text
-                preset="semiBold"
-                caption
-                text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
-                style={[utilSpacing.mb6, utilFlex.flex1]}
-              ></Text>
-            </View>
+            <DeliveryLabel labelDeliveryTime={labelDeliveryTime} isPlan={isPlan}></DeliveryLabel>
 
             {/* Resume order */}
-            <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
-              <DishesList></DishesList>
-              <Separator style={styles.separator}></Separator>
-              <Totals priceDelivery={priceDelivery()} coupon={coupon}></Totals>
-            </Card>
+            <Summary priceDelivery={priceDelivery()} coupon={coupon} isPlan={isPlan}></Summary>
           </View>
         </ScrollView>
 
-        {cartStore.hasItems && (
+        {(cartStore.hasItems || isPlan) && (
           <ButtonFooter
-            onPress={methods.handleSubmit(onSubmit, onError)}
+            onPress={methods.handleSubmit(sendOrder, onError)}
             text={getTextButtonFooter()}
           ></ButtonFooter>
         )}
@@ -532,6 +565,14 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: spacing[1],
     width: 35,
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  paymentAutomatic: {
+    backgroundColor: "#eefcf6",
+    borderColor: color.palette.green,
+    borderRadius: spacing[2],
+    borderWidth: 1,
+    ...SHADOW,
   },
   price: {
     backgroundColor: color.transparent,

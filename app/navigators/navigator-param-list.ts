@@ -24,6 +24,7 @@ interface endOrderParams {
   deliveryTime: string
   deliveryAddress: string
   imageChef: string
+  isPlan?: boolean
 }
 
 interface mapScreenParams {
@@ -54,7 +55,9 @@ interface menuChefProps extends MenuChef {
   showModalCart?: boolean
 }
 
-interface checkoutProps {}
+interface checkoutProps {
+  isPlan?: boolean
+}
 
 export type NavigatorParamList = {
   init: undefined
@@ -88,4 +91,5 @@ export type NavigatorParamList = {
   subscription: undefined
   menu: undefined
   menuSummary: undefined
+  checkoutPlan: undefined
 }

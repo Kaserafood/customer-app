@@ -1,17 +1,18 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
+import images from "../../assets/images"
 import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
-import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { spacing } from "../../theme/spacing"
 import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
@@ -20,6 +21,7 @@ const ROOT: ViewStyle = {
 
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
+    const { orderId, isPlan } = params
     const toMain = () => {
       RNUxcam.logEvent("endOrderContinue")
       navigation.navigate("main")
@@ -30,7 +32,7 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
     const { userStore, cartStore } = useStores()
     useEffect(() => {
       cartStore.cleanItems()
-      setOrder(`${getI18nText("endOrderScreen.order")} #${params.orderId}`)
+      if (orderId) setOrder(`${getI18nText("endOrderScreen.order")} #${params.orderId}`)
       setThankYou(`¡${getI18nText("endOrderScreen.thankYou")} ${userStore.displayName}!`)
     }, [])
 
@@ -46,16 +48,23 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
             <Text caption text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
           </Card>
           <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
-          <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
-            <Text size="lg" text={order} preset="bold"></Text>
-          </View>
+          {isPlan && (
+            <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
+              <Text size="lg" text={order} preset="bold"></Text>
+            </View>
+          )}
           <View>
             <View style={[utilFlex.flexCenter, styles.content, utilSpacing.py5, utilSpacing.mb7]}>
               <View style={[styles.body, utilFlex.flexCenter]}>
                 <View></View>
                 <Text style={utilSpacing.my5} size="lg" text={thankYou} preset="bold"></Text>
 
-                <Image style={styles.imageChef} source={{ uri: params.imageChef }}></Image>
+                {isPlan ? (
+                  <Image style={styles.imageChef} source={images.chef2}></Image>
+                ) : (
+                  <Image style={styles.imageChef} source={{ uri: params.imageChef }}></Image>
+                )}
+
                 <Text
                   style={utilSpacing.my5}
                   size="lg"
