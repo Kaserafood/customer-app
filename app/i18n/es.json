@@ -712,5 +712,16 @@
       "part2": " activa un plan mensual ",
       "part3": "con cobro automático (como Netflix 😜) para obtener mejores precios."
     }
+  },
+  "menuScreen": {
+    "title": "Menú",
+    "scheduleThisWeek": "Programa los platillos que desees esta semana",
+    "lunchDinner": "Almuerzos y cenas",
+    "deliveryTime": "Las entregas son de 10 AM a 1 PM",
+    "importantAnnouncement": "Anuncio importante"
+  },
+  "lunch": {
+    "credit": "crédito",
+    "credits": "créditos"
   }
 }

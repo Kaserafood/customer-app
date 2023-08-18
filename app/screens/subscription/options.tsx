@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
@@ -6,6 +7,11 @@ import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 
 const Options = () => {
+  const navigation = useNavigation()
+
+  const handleSelect = () => {
+    navigation.navigate("menu" as never)
+  }
   return (
     <View style={[utilFlex.flexRow, utilSpacing.pb5, utilSpacing.px5]}>
       <View style={[utilFlex.flex1, utilSpacing.mr3, utilSpacing.pb5, styles.containerOption]}>
@@ -47,6 +53,7 @@ const Options = () => {
               utilSpacing.px1,
               utilSpacing.mt5,
             ]}
+            onPress={handleSelect}
           ></Button>
         </View>
       </View>
@@ -93,6 +100,7 @@ const Options = () => {
             utilSpacing.px1,
             utilSpacing.mt5,
           ]}
+          onPress={handleSelect}
         ></Button>
       </View>
     </View>

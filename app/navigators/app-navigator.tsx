@@ -42,6 +42,7 @@ import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
 import { Subscription } from "../screens/subscription/subscription-screen"
+import MenuScreen from "../screens/menu/menu-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -106,6 +107,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="plans" component={PlansScreen} />
         <Stack.Screen name="formPlans" component={FormPlans} />
         <Stack.Screen name="subscription" component={Subscription} />
+        <Stack.Screen name="menu" component={MenuScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )
