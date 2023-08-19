@@ -100,20 +100,27 @@ const Menu = () => {
   ]
 
   return (
-    <View style={utilSpacing.p5}>
-      <Text
-        style={utilSpacing.py5}
-        tx="mainScreen.exploreAvailableMenus"
-        preset="bold"
-        size="lg"
-      ></Text>
-      <Chip
-        style={utilSpacing.mb5}
-        textstyle={utilText.semiBold}
-        text={`Lunes 24 de agosto`}
-      ></Chip>
-      <Text style={utilSpacing.pb2} tx="mainScreen.dinnerLunch" preset="semiBold" size="lg"></Text>
-      <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb5}></Text>
+    <View style={utilSpacing.py5}>
+      <View style={utilSpacing.px5}>
+        <Text
+          style={utilSpacing.py5}
+          tx="mainScreen.exploreAvailableMenus"
+          preset="bold"
+          size="lg"
+        ></Text>
+        <Chip
+          style={utilSpacing.mb5}
+          textstyle={utilText.semiBold}
+          text={`Lunes 24 de agosto`}
+        ></Chip>
+        <Text
+          style={utilSpacing.pb2}
+          tx="mainScreen.dinnerLunch"
+          preset="semiBold"
+          size="lg"
+        ></Text>
+        <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb5}></Text>
+      </View>
 
       {lunches.map((lunch) => (
         <Lunch {...lunch} key={lunch.id}></Lunch>

@@ -2,11 +2,10 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
-import { Icon, Location, Screen, Text } from "../../components"
-import { NavigatorParamList, goBack } from "../../navigators"
+import { Location, Screen, Text } from "../../components"
+import { NavigatorParamList } from "../../navigators"
 
-import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
+import { ScrollView } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
 import { ModalLocation } from "../../components/location/modal-location"
 import { color } from "../../theme"
@@ -22,32 +21,19 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
   function PlansScreen() {
     useEffect(() => {
       RNUxcam.tagScreenName("plans")
-      changeNavigationBarColor(color.palette.black, false, true)
     }, [])
 
     return (
       <Screen preset="fixed" style={styles.container}>
+        <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
+          <Location
+            onPress={() => {
+              modalStateLocation.setVisible(true)
+            }}
+            style={utilSpacing.px5}
+          ></Location>
+        </View>
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
-          <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
-            <TouchableOpacity
-              style={[styles.btnBack, utilSpacing.ml5, utilSpacing.mr3]}
-              onPress={goBack}
-              activeOpacity={0.5}
-            >
-              <Icon
-                name="angle-left-1"
-                style={utilSpacing.mr2}
-                size={24}
-                color={color.palette.white}
-              ></Icon>
-            </TouchableOpacity>
-            <Location
-              onPress={() => {
-                modalStateLocation.setVisible(true)
-              }}
-              style={utilSpacing.pr5}
-            ></Location>
-          </View>
           <Banner variant="light"></Banner>
           <Benefits></Benefits>
           <Menu></Menu>
@@ -79,5 +65,6 @@ const styles = StyleSheet.create({
   },
   containerLocation: {
     backgroundColor: color.primary,
+    height: 68,
   },
 })

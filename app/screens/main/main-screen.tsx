@@ -4,12 +4,13 @@ import React, { FC } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
+import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { SHADOW, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Banner } from "../home/banner"
 import BannerMain from "./banner-main"
@@ -21,6 +22,7 @@ import ValuePrepositions from "./value-prepositions"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
+const modalStateWhy = new ModalStateHandler()
 const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
@@ -55,25 +57,25 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
     return (
       <Screen
         preset="fixed"
-        style={styles.container}
+        // style={styles.container}
         statusBar="dark-content"
         statusBarBackgroundColor={color.primary}
       >
-        <ScrollView style={styles.container}>
-          <View style={[styles.containerLocation, utilSpacing.py4]}>
-            <Location
-              onPress={() => {
-                modalStateLocation.setVisible(true)
-              }}
-              style={utilSpacing.px5}
-            ></Location>
-          </View>
+        <View style={[styles.containerLocation, utilSpacing.py4]}>
+          <Location
+            onPress={() => {
+              modalStateLocation.setVisible(true)
+            }}
+            style={utilSpacing.px5}
+          ></Location>
+        </View>
 
+        <ScrollView style={styles.container}>
           <BannerMain></BannerMain>
           <ValuePrepositions></ValuePrepositions>
           {/* <Separator style={[utilSpacing.mx5, utilSpacing.mt3]}></Separator> */}
           <Lunches></Lunches>
-          <Dishes></Dishes>
+          <Dishes onWhyPress={(state) => modalStateWhy.setVisible(state)}></Dishes>
           <View style={utilSpacing.mt5}>
             <Banner
               onPressWelcome={() => modalStateWelcome.setVisible(true)}
@@ -86,6 +88,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           <BannerMain></BannerMain>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
+        <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
       </Screen>
     )
   },
@@ -98,6 +101,8 @@ const styles = StyleSheet.create({
   },
   containerLocation: {
     backgroundColor: color.primary,
+    ...SHADOW,
+    height: 68,
   },
   location: {
     backgroundColor: color.palette.white,

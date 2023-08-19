@@ -80,8 +80,11 @@ const Categories = () => {
                 </View>
               ) : (
                 <View>
-                  <Image style={styles.imgCategory} source={images.bug}></Image>
-                  <Text style={utilSpacing.mt3} tx="mainScreen.seeMore"></Text>
+                  <Image style={styles.imgCategory} source={images.searching}></Image>
+                  <Text
+                    style={[utilSpacing.mt3, utilFlex.selfCenter]}
+                    tx="mainScreen.seeMore"
+                  ></Text>
                 </View>
               )}
             </View>
@@ -101,11 +104,21 @@ const styles = StyleSheet.create({
   },
   containerCategoryItem: {
     alignItems: "center",
-    borderColor: color.palette.gray300,
+    backgroundColor: color.background,
+    borderColor: color.palette.white,
     borderRadius: spacing[2],
     borderWidth: 1,
+
     display: "flex",
-    justifyContent: "center",
+
+    elevation: 12,
+    shadowColor: color.palette.grayDark,
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.43,
+    shadowRadius: 9.51,
   },
 
   containerTitle: {
@@ -114,8 +127,8 @@ const styles = StyleSheet.create({
     display: "flex",
   },
   imgCategory: {
-    height: 65,
-    width: 65,
+    height: 60,
+    width: 60,
   },
 })
 

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import { Button, Card, Chip, Text } from "../../components"
@@ -100,6 +101,8 @@ const Lunches = () => {
     },
   ]
 
+  const navigation = useNavigation()
+
   return (
     <View style={[styles.containerDishes, utilSpacing.mt5]}>
       <View style={utilSpacing.p5}>
@@ -113,14 +116,20 @@ const Lunches = () => {
           <Chip textstyle={utilText.semiBold} text={`Lunes 24 de agosto`}></Chip>
         </View>
       </View>
-      <View style={[utilSpacing.px5, utilSpacing.pb5]}>
+      <View style={utilSpacing.pb5}>
         {lunches.map((lunch) => (
-          <Lunch {...lunch} key={lunch.id}></Lunch>
+          <View key={lunch.id}>
+            <Lunch {...lunch}></Lunch>
+          </View>
         ))}
 
-        <Card style={utilSpacing.p5}>
+        <Card style={[utilSpacing.p5, utilSpacing.m5]}>
           <Text tx="mainScreen.pickOptions" style={[utilSpacing.mb5, utilText.textCenter]}></Text>
-          <Button style={[utilFlex.selfCenter, styles.btnMore]} tx="common.moreInfo"></Button>
+          <Button
+            style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py4, utilSpacing.px0]}
+            tx="common.moreInfo"
+            onPress={() => navigation.navigate("plans" as never)}
+          ></Button>
         </Card>
       </View>
     </View>

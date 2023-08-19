@@ -1,5 +1,7 @@
+import { useNavigation } from "@react-navigation/native"
 import React, { useState } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import Ripple from "react-native-material-ripple"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Icon } from "../icon/icon"
@@ -20,8 +22,15 @@ interface Props {
 const Lunch = ({ name, description, tags, image, showButtons }: Props) => {
   const [total, setTotal] = useState(0)
 
+  const navigation = useNavigation()
+
   return (
-    <View style={utilFlex.flexRow}>
+    <Ripple
+      rippleOpacity={0.2}
+      rippleDuration={400}
+      style={[utilFlex.flexRow, utilSpacing.px5, utilSpacing.py3]}
+      onPress={() => navigation.navigate("plans" as never)}
+    >
       <Image resizeMode="cover" style={styles.image} source={{ uri: image }}></Image>
       <View style={[utilFlex.flex1, utilSpacing.ml4]}>
         <View>
@@ -79,7 +88,7 @@ const Lunch = ({ name, description, tags, image, showButtons }: Props) => {
           </View>
         )}
       </View>
-    </View>
+    </Ripple>
   )
 }
 

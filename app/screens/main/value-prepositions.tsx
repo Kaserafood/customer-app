@@ -1,16 +1,29 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Card, Image, Text } from "../../components"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 
 const ValuePrepositions = () => {
+  const navigation = useNavigation()
+
+  const toPlans = () => {
+    navigation.navigate("plans" as never)
+  }
+
   return (
     <View style={utilSpacing.p5}>
       <Text size="lg" preset="semiBold" tx="mainScreen.whatDoYouNeed"></Text>
       <View style={[utilFlex.flexRow, utilSpacing.pt5]}>
-        <Card style={[utilFlex.flex1, utilSpacing.px4, styles.cardPlans, utilSpacing.mr3]}>
+        <Card
+          onPress={() => {
+            navigation.navigate(getI18nText("tabMainNavigation.packages") as never)
+          }}
+          style={[utilFlex.flex1, utilSpacing.px4, styles.cardPlans, utilSpacing.mr3]}
+        >
           <Text size="lg" preset="bold" tx="mainScreen.packageFoodHealthy"></Text>
           <View style={utilSpacing.mt3}>
             <Text tx="mainScreen.dailyDeliveryFree" style={utilFlex.flex1}></Text>
@@ -20,7 +33,12 @@ const ValuePrepositions = () => {
             ></Image>
           </View>
         </Card>
-        <Card style={[utilFlex.flex1, styles.cardDishes, utilSpacing.ml3]}>
+        <Card
+          onPress={() => {
+            navigation.navigate(getI18nText("tabMainNavigation.dishes") as never)
+          }}
+          style={[utilFlex.flex1, styles.cardDishes, utilSpacing.ml3]}
+        >
           <Text
             style={utilText.textWhite}
             size="lg"

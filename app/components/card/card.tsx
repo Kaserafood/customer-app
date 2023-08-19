@@ -1,6 +1,7 @@
 import * as React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 
+import Ripple from "react-native-material-ripple"
 import { color, spacing } from "../../theme"
 import { SHADOW } from "../../theme/Util"
 
@@ -14,13 +15,31 @@ export interface CardProps {
    * Content card
    */
   children: React.ReactNode
+
+  /**
+   * onPress card
+   */
+  onPress?: () => void
 }
 
 /**
- * Describe your component here
+ * View with rounded corners and shadow
  */
 export const Card = function Card(props: CardProps) {
-  const { style, children } = props
+  const { style, children, onPress } = props
+
+  if (onPress) {
+    return (
+      <Ripple
+        onPress={onPress}
+        rippleOpacity={0.2}
+        rippleDuration={400}
+        style={[styles.card, style]}
+      >
+        {children}
+      </Ripple>
+    )
+  }
 
   return <View style={[styles.card, style]}>{children}</View>
 }

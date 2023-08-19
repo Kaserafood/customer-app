@@ -32,7 +32,7 @@ import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { setLocale } from "../../services/api"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString, saveString } from "../../utils/storage"
 import { Banner } from "./banner"
@@ -264,28 +264,32 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         preset="fixed"
         style={styles.container}
         statusBar="dark-content"
-        statusBarBackgroundColor={color.palette.white}
+        statusBarBackgroundColor={color.primary}
       >
+        <View style={[styles.containerLocation, utilSpacing.py4]}>
+          <Location
+            onPress={() => {
+              modalStateLocation.setVisible(true)
+            }}
+            style={utilSpacing.px5}
+          ></Location>
+        </View>
         <ScrollView
           style={styles.container}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           onScroll={onScroll}
         >
-          <Location
-            onPress={() => {
-              modalStateLocation.setVisible(true)
-            }}
-            style={utilSpacing.px4}
-          ></Location>
-          <DayDelivery
-            days={dayStore.days}
-            onWhyPress={(state) => modalStateWhy.setVisible(state)}
-            onPress={(day) => {
-              onChangeDay(day)
-            }}
-          ></DayDelivery>
+          <View style={utilSpacing.pl5}>
+            <DayDelivery
+              days={dayStore.days}
+              onWhyPress={(state) => modalStateWhy.setVisible(state)}
+              onPress={(day) => {
+                onChangeDay(day)
+              }}
+            ></DayDelivery>
+          </View>
 
-          <Separator style={utilSpacing.m4}></Separator>
+          <Separator style={utilSpacing.m5}></Separator>
           <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
@@ -389,7 +393,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.background,
     flex: 1,
-    paddingTop: spacing[2],
+  },
+  containerLocation: {
+    backgroundColor: color.primary,
+    ...SHADOW,
+    height: 68,
   },
   iconShipping: {
     height: 24,

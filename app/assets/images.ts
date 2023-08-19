@@ -39,10 +39,6 @@ const images = {
   cardVisa: require("./images/visa.png"),
   resetPassword: require("./json/reset-password.json"),
   soup: require("./images/soup.png"),
-  banner1: require("./images/banner-01.png"),
-  banner2: require("./images/banner-02.png"),
-  banner3: require("./images/banner-03.png"),
-  banner4: require("./images/banner-04.png"),
   bannerImage1: require("./images/banner-image-01.jpg"),
   bannerImage2: require("./images/banner-image-02.jpg"),
   cash: require("./images/money.png"),
@@ -68,6 +64,9 @@ const images = {
   prime: require("./images/prime.png"),
   happy: require("./images/happy.png"),
   credit: require("./images/credit.png"),
+  lunchHome: require("./images/lunchHome.png"),
+  searching: require("./images/search.png"),
+  shadow: require("./images/shadow.png"),
 }
 
 export default images

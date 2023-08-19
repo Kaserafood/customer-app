@@ -1,6 +1,6 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleSheet, View } from "react-native"
-import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
 import { spacing } from "../../theme"
@@ -33,7 +33,7 @@ export const DayDeliveryModal = observer(function DayDelivery(props: DayDelivery
         </View>
 
         <Button
-          tx="common.continue"
+          tx="common.understand"
           block
           style={utilSpacing.mb5}
           onPress={() => modal.setVisible(false)}

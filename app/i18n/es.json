@@ -478,7 +478,8 @@
     "search": "Buscar",
     "more": "Más",
     "packages": "Paquetes",
-    "new": "Nuevo"
+    "new": "Nuevo",
+    "dishes": "Platillos"
   },
   "ordersScreen": {
     "title": "Mis pedidos",

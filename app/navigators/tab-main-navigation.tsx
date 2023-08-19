@@ -1,17 +1,16 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { DrawerActions } from "@react-navigation/native"
 import React from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { DrawerActions } from "@react-navigation/native"
 
-import { Icon, Text } from "../components"
-import { ChefsScreen, HomeScreen, SearchScreen, PlansScreen } from "../screens"
-import { color, spacing, typographySize } from "../theme"
-import { utilSpacing, utilText } from "../theme/Util"
-import { getI18nText } from "../utils/translate"
 import RNUxcam from "react-native-ux-cam"
-import { View, StyleSheet } from "react-native"
+import { Icon } from "../components"
+import { HomeScreen, PlansScreen, SearchScreen } from "../screens"
 import { MainScreen } from "../screens/main/main-screen"
+import { color, spacing, typographySize } from "../theme"
+import { utilSpacing } from "../theme/Util"
+import { getI18nText } from "../utils/translate"
 
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
@@ -75,14 +74,14 @@ export function TabMainNavigation({ navigationRef }) {
           tabBarIcon: ({ color }) => {
             return (
               <>
-                <View style={styles.badge}>
+                {/* <View style={styles.badge}>
                   <Text
                     size="sm"
                     style={utilText.textWhite}
                     preset="semiBold"
                     tx="tabMainNavigation.new"
                   ></Text>
-                </View>
+                </View> */}
                 <Icon style={utilSpacing.mt1} name="utensils" size={26} color={color} />
               </>
             )
@@ -105,11 +104,11 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="hat-chef" size={26} color={color} />
+            return <Icon style={utilSpacing.mt1} name="Asset-8" size={26} color={color} />
           },
         }}
-        name={getI18nText("tabMainNavigation.chefs")}
-        component={ChefsScreen}
+        name={getI18nText("tabMainNavigation.dishes")}
+        component={HomeScreen}
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "chefs" })
@@ -120,7 +119,7 @@ export function TabMainNavigation({ navigationRef }) {
           },
         }}
       />
-
+      {/* 
       <Tab.Screen
         options={{
           // eslint-disable-next-line react/display-name
@@ -139,7 +138,7 @@ export function TabMainNavigation({ navigationRef }) {
             })
           },
         }}
-      />
+      /> */}
 
       <Tab.Screen
         options={{
@@ -166,13 +165,13 @@ export function TabMainNavigation({ navigationRef }) {
   )
 }
 
-const styles = StyleSheet.create({
-  badge: {
-    backgroundColor: color.palette.green,
-    borderRadius: 8,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    position: "absolute",
-    top: -8,
-  },
-})
+// const styles = StyleSheet.create({
+//   badge: {
+//     backgroundColor: color.palette.green,
+//     borderRadius: 8,
+//     paddingHorizontal: 6,
+//     paddingVertical: 2,
+//     position: "absolute",
+//     top: -8,
+//   },
+// })

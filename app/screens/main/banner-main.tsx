@@ -1,17 +1,18 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Button, Image, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { useNavigation } from "@react-navigation/native"
+import { getI18nText } from "../../utils/translate"
 
 const BannerMain = () => {
   const navigation = useNavigation()
   return (
     <View style={[utilFlex.flex, utilFlex.flexRow, styles.banner]}>
       <View style={[utilFlex.flex1, utilSpacing.py6, utilSpacing.pl5]}>
-        <View style={[styles.tag, utilSpacing.px4, utilSpacing.py3]}>
+        <View style={[styles.tag, utilSpacing.px3, utilSpacing.py2]}>
           <Text style={utilText.textWhite} preset="bold" tx="mainScreen.new"></Text>
         </View>
 
@@ -20,13 +21,14 @@ const BannerMain = () => {
         <Button
           tx="mainScreen.requestDish"
           block
-          style={[utilSpacing.mt4, utilSpacing.px2, utilSpacing.py4]}
-          onPress={() => navigation.navigate("plans" as never)}
+          textStyle={[utilSpacing.px2]}
+          style={[utilSpacing.mt4, utilSpacing.px1, utilSpacing.py3]}
+          onPress={() => navigation.navigate(getI18nText("tabMainNavigation.packages") as never)}
         ></Button>
       </View>
 
       <View style={[utilFlex.flex, utilFlex.flexCenterVertical]}>
-        <Image style={styles.image} source={images.plans}></Image>
+        <Image style={styles.image} source={images.lunchHome}></Image>
       </View>
     </View>
   )
@@ -39,8 +41,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.gray300,
   },
   image: {
-    height: 140,
-    width: 140,
+    height: 161,
+    width: 161,
   },
   tag: {
     alignSelf: "flex-start",

@@ -29,13 +29,13 @@ export const Location = observer(function Location(props: LocationProps) {
   return (
     <View style={[styles.containerAddress, style]}>
       <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
-        <Icon name="location-dot" size={24} color={color.primary} />
+        <Icon name="location-dot1" size={24} color={color.primary} />
         <Text
           numberOfLines={1}
           style={styles.textAddress}
           text={addressStore.current.address}
         ></Text>
-        <Icon name="angle-down" size={24} color={color.primary} />
+        <Icon name="angle-right1" style={styles.icon} size={24} color={color.primary} />
       </TouchableOpacity>
     </View>
   )
@@ -44,7 +44,7 @@ export const Location = observer(function Location(props: LocationProps) {
 const styles = StyleSheet.create({
   btnAddress: {
     backgroundColor: color.palette.white,
-    borderRadius: 8,
+    borderRadius: spacing[3],
     display: "flex",
     flexDirection: "row",
     flex: 1,
@@ -52,9 +52,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing[2],
     alignItems: "center",
   },
-
   containerAddress: {
     flex: 1,
+  },
+  icon: {
+    transform: [{ rotate: "90deg" }],
   },
 
   textAddress: {
