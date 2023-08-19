@@ -1,25 +1,58 @@
+import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useState } from "react"
 import { StyleSheet, View } from "react-native"
+import * as RNLocalize from "react-native-localize"
+import { useQuery } from "react-query"
 import { Button, DayDelivery, Dish, Separator, Text } from "../../components"
 import { useStores } from "../../models"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
+import { Api } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 
 interface Props {
   onWhyPress: (state: boolean) => void
+  onDishPress: (dish: DishChef) => void
 }
 
-const Dishes = ({ onWhyPress }: Props) => {
-  const { dayStore, dishStore } = useStores()
+interface DishResponse {
+  data: { dishes: DishChef[]; token: string }
+  kind: string
+}
+
+const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
+  const navigation = useNavigation()
+  const { dayStore, dishStore, userStore, addressStore, cartStore, commonStore } = useStores()
+  const [data, setData] = useState([])
+  const api = new Api()
+
+  useQuery(
+    ["dishes-main", dayStore?.currentDay?.date],
+    () =>
+      api.getAllDishes(
+        dayStore?.currentDay?.date || null,
+        RNLocalize.getTimeZone(),
+        userStore.userId,
+        null,
+        addressStore.current.latitude,
+        addressStore.current.longitude,
+        null,
+      ),
+    {
+      onSuccess: (data: DishResponse) => {
+        console.log("getting dat")
+        if (data.kind === "ok") setData(data.data?.dishes as DishChef[])
+      },
+      onError: (error) => {
+        console.log(error)
+      },
+    },
+  )
 
   const handleChangeDay = (day) => {
     console.log(day)
-  }
-
-  const toDetail = (dish: DishChef) => {
-    console.log(dish)
   }
 
   return (
@@ -38,23 +71,26 @@ const Dishes = ({ onWhyPress }: Props) => {
         ></DayDelivery>
       </View>
 
-      {dishStore.dishes.length > 0 && (
-        <ListDishes dishes={dishStore.dishes} toDetail={(dish) => toDetail(dish)}></ListDishes>
+      {data.length > 0 && (
+        <ListDishes dishes={dishStore.dishes} toDetail={onDishPress}></ListDishes>
       )}
 
       <Button
         tx="mainScreen.seeMoreDishes"
         style={[styles.button, utilFlex.selfCenter, utilSpacing.mt4, utilSpacing.py4]}
+        onPress={() => {
+          navigation.navigate(getI18nText("tabMainNavigation.dishes") as never)
+        }}
       ></Button>
     </View>
   )
-}
+})
 
 const ListDishes = observer(function ListDishes(props: {
   toDetail: (dish: DishModel) => void
   dishes: DishChef[]
 }) {
-  const { dishStore } = useStores()
+  const { dishStore, commonStore, cartStore } = useStores()
 
   const onPressDish = (dish: DishChef) => {
     props.toDetail(dish)

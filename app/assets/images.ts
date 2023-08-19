@@ -67,6 +67,8 @@ const images = {
   lunchHome: require("./images/lunchHome.png"),
   searching: require("./images/search.png"),
   shadow: require("./images/shadow.png"),
+  banner1: require("./images/banner-01.png"),
+  banner3: require("./images/banner-03.png"),
 }
 
 export default images

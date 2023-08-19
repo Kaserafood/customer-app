@@ -21,6 +21,7 @@ import "./utils/ignore-warnings"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 
 import RNUxcam from "react-native-ux-cam"
+import { QueryClient, QueryClientProvider } from "react-query"
 import { Loader, Messages, ModalCoupon } from "./components"
 import { setLocaleI18n } from "./i18n"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
@@ -37,7 +38,7 @@ import { loadString } from "./utils/storage"
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
 enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
-
+const queryClient = new QueryClient()
 function App() {
   loadString("locale").then((locale) => {
     if (locale && locale.length > 0) {
@@ -135,19 +136,21 @@ function App() {
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
-            <GestureHandlerRootView style={utilFlex.flex1}>
-              <AppNavigator
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
-              />
-              <Loader></Loader>
-              <ModalCoupon></ModalCoupon>
-            </GestureHandlerRootView>
-            <Messages></Messages>
-          </ErrorBoundary>
-        </SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <ErrorBoundary catchErrors={"always"}>
+              <GestureHandlerRootView style={utilFlex.flex1}>
+                <AppNavigator
+                  initialState={initialNavigationState}
+                  onStateChange={onNavigationStateChange}
+                />
+                <Loader></Loader>
+                <ModalCoupon></ModalCoupon>
+              </GestureHandlerRootView>
+              <Messages></Messages>
+            </ErrorBoundary>
+          </SafeAreaProvider>
+        </QueryClientProvider>
       </RootStoreProvider>
     </ToggleStorybook>
   )

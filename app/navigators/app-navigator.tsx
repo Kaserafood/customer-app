@@ -34,6 +34,7 @@ import {
   RegisterFormScreen,
   RegisterPagerScreen,
   ReportBugScreen,
+  SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
 
@@ -110,6 +111,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="subscription" component={Subscription} />
         <Stack.Screen name="menu" component={MenuScreen} />
         <Stack.Screen name="menuSummary" component={MenuSummaryScreen} />
+        <Stack.Screen name="search" component={SearchScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )

@@ -6,8 +6,10 @@ import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
+import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
+import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
 import { SHADOW, utilSpacing } from "../../theme/Util"
@@ -27,6 +29,8 @@ const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
+    const { cartStore, commonStore, dishStore } = useStores()
+
     const onBannerPress = (banner: BannerModel) => {
       const category: Category = {
         id: banner.categoryId,
@@ -54,6 +58,23 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       })
     }
 
+    const toDetail = (dish: DishModel) => {
+      if (cartStore.hasItems) cartStore.cleanItems()
+      /**
+       *the chef id is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
+      dishStore.setIsUpdate(false)
+      navigation.navigate("dishDetail", {
+        ...dish,
+        tempId: undefined,
+        quantity: undefined,
+        noteChef: undefined,
+        timestamp: undefined,
+      })
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -73,9 +94,11 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         <ScrollView style={styles.container}>
           <BannerMain></BannerMain>
           <ValuePrepositions></ValuePrepositions>
-          {/* <Separator style={[utilSpacing.mx5, utilSpacing.mt3]}></Separator> */}
           <Lunches></Lunches>
-          <Dishes onWhyPress={(state) => modalStateWhy.setVisible(state)}></Dishes>
+          <Dishes
+            onWhyPress={(state) => modalStateWhy.setVisible(state)}
+            onDishPress={toDetail}
+          ></Dishes>
           <View style={utilSpacing.mt5}>
             <Banner
               onPressWelcome={() => modalStateWelcome.setVisible(true)}
@@ -83,7 +106,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
               onBannerPress={onBannerPress}
             ></Banner>
           </View>
-          <Categories></Categories>
+          <Categories onPress={(category) => toCategory(category)}></Categories>
           <Chefs state={state}></Chefs>
           <BannerMain></BannerMain>
         </ScrollView>

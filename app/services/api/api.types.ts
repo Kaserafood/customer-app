@@ -44,9 +44,9 @@ export type CategoryResponse = {
   data: Category[] | Category
 } & kind
 
-export type DishResponse = {
-  data: DishChef[] | DishChef
-} & kind
+export interface DishResponse extends kind {
+  data: DishChef | { dishes: DishChef[]; token: string }
+}
 
 export type ChefResponse = {
   data: UserChef[] | UserChef

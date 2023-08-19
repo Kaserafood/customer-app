@@ -97,7 +97,7 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
 
   useEffect(() => {
     if (addressStore.current?.latitude && addressStore.current?.longitude) {
-      commonStore.setVisibleLoading(true)
+      // commonStore.setVisibleLoading(true)
 
       fetch()
     }

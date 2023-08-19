@@ -2,23 +2,43 @@ import React from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 
+import { useQuery } from "react-query"
 import images from "../../assets/images"
 import { Image } from "../../components/image/image"
 import { Text } from "../../components/text/text"
-import { useStores } from "../../models"
+import { Category } from "../../models/category-store"
+import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { useNavigation } from "@react-navigation/native"
+
+interface Props {
+  onPress: (category: Category) => void
+}
 
 /**
  * Categories food
  */
-const Categories = () => {
-  const {
-    categoryStore: { categories },
-  } = useStores()
+const Categories = ({ onPress }: Props) => {
+  const api = new Api()
+  const navigation = useNavigation()
+
+  const { data } = useQuery("categories-main", () => api.getAllCategories(), {
+    onSuccess: (data: { data: Category[]; kind: string }) => {
+      return data
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 
   const handleCategory = (category) => {
     console.log(category)
+    onPress(category)
+  }
+
+  const toSearch = () => {
+    navigation.navigate("search" as never)
   }
 
   return (
@@ -29,7 +49,7 @@ const Categories = () => {
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.my4]}>
-        {categories.slice(0, 3).map((category, index) => (
+        {data?.data?.slice(0, 3).map((category, index) => (
           <Ripple
             onPress={() => handleCategory(category)}
             rippleOpacity={0.2}
@@ -53,10 +73,10 @@ const Categories = () => {
         ))}
       </View>
       <View style={utilFlex.flexRow}>
-        {categories.slice(4, 7).map((category, index) => (
+        {data?.data?.slice(4, 7).map((category, index) => (
           <Ripple
             key={category.id}
-            onPress={() => handleCategory(category)}
+            onPress={() => (index !== 2 ? handleCategory(category) : toSearch())}
             rippleOpacity={0.2}
             rippleDuration={400}
             rippleContainerBorderRadius={16}

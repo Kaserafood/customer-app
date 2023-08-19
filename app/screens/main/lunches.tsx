@@ -5,6 +5,7 @@ import { Button, Card, Chip, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 
 const Lunches = () => {
   const lunches = [
@@ -128,7 +129,7 @@ const Lunches = () => {
           <Button
             style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py4, utilSpacing.px0]}
             tx="common.moreInfo"
-            onPress={() => navigation.navigate("plans" as never)}
+            onPress={() => navigation.navigate(getI18nText("tabMainNavigation.packages") as never)}
           ></Button>
         </Card>
       </View>

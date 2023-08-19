@@ -1,10 +1,10 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import {
   ButtonFooter,
@@ -34,8 +34,8 @@ import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
-import { ModalLeave } from "./modal-clean-cart"
 import RNUxcam from "react-native-ux-cam"
+import { ModalLeave } from "./modal-clean-cart"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
@@ -193,15 +193,17 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       <Screen preset="fixed" style={styles.container}>
         <Header headerTx="menuChefScreen.title" leftIcon="back" onLeftPress={goBack} />
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
-          <DayDelivery
-            titleTx="menuChefScreen.dayDelivery"
-            days={dayStore.daysByChef}
-            hideWhyButton
-            onPress={(day) => {
-              onChangeDay(day)
-            }}
-            visibleLoading
-          ></DayDelivery>
+          <View style={utilSpacing.ml5}>
+            <DayDelivery
+              titleTx="menuChefScreen.dayDelivery"
+              days={dayStore.daysByChef}
+              hideWhyButton
+              onPress={(day) => {
+                onChangeDay(day)
+              }}
+              visibleLoading
+            ></DayDelivery>
+          </View>
 
           <View style={[styles.card, { ...SHADOW }]}>
             <View style={utilFlex.flexRow}>
@@ -237,7 +239,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             ></Text>
             <Separator style={utilSpacing.mt4}></Separator>
           </View>
-          <View style={[utilSpacing.mb6, utilSpacing.mx5]}>
+          <View style={utilSpacing.mb6}>
             {dishes.map((dish, index) => (
               <View key={dish.id}>
                 <Dish
