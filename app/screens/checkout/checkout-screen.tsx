@@ -11,7 +11,6 @@ import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
-  Checkbox,
   Header,
   Icon,
   Image,
@@ -61,6 +60,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       commonStore,
       orderStore,
       messagesStore,
+      plansStore,
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
@@ -279,6 +279,9 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getTextButtonFooter = (): string => {
+      if (isPlan) {
+        return `${getI18nText("checkoutScreen.pay")} ${commonStore.currency + plansStore.price}`
+      }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
       )
@@ -458,7 +461,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               )}
             </Card>
 
-            {isPlan && !!userStore?.currentCard?.id && (
+            {/* {isPlan && !!userStore?.currentCard?.id && (
               <Card
                 style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
               >
@@ -482,7 +485,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   </View>
                 </Ripple>
               </Card>
-            )}
+            )} */}
 
             <InputText
               name="taxId"

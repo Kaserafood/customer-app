@@ -1,9 +1,10 @@
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import { Card, Price, Separator, Text } from "../../components"
-import { Coupon } from "../../models"
+import { Coupon, useStores } from "../../models"
 import { spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 import { DishesList } from "./dishes-list"
 import { Totals } from "./totals"
 
@@ -14,16 +15,30 @@ interface Props {
 }
 
 const Summary = ({ priceDelivery, coupon, isPlan }: Props) => {
+  const { plansStore, commonStore } = useStores()
+
+  const getType = () => {
+    if (plansStore.type === "happy") {
+      return getI18nText(`checkoutScreen.happy`)
+    } else if (plansStore.type === "prime") {
+      return getI18nText(`checkoutScreen.prime`)
+    } else if (plansStore.type === "test") {
+      return getI18nText(`checkoutScreen.test`)
+    } else {
+      return getI18nText(`checkoutScreen.custom`)
+    }
+  }
+
   return (
     <>
       {isPlan ? (
         <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
           <View style={[utilFlex.flexRow, utilSpacing.mb5]} key={23}>
             <View style={utilSpacing.mr3}>
-              <Text text={`X 4`} numberOfLines={1} preset="semiBold"></Text>
+              <Text text={`X 1`} numberOfLines={1} preset="semiBold"></Text>
             </View>
             <View style={utilFlex.flex1}>
-              <Text preset="bold" numberOfLines={2} text={"platillos"}></Text>
+              <Text preset="bold" numberOfLines={2} text={getType()}></Text>
 
               <Text
                 numberOfLines={2}
@@ -31,21 +46,28 @@ const Summary = ({ priceDelivery, coupon, isPlan }: Props) => {
                 caption
                 preset="semiBold"
                 size="sm"
-                text={`2 creditos`}
+                text={`${plansStore.totalCredits} ${getI18nText("common.credits")} (${getI18nText(
+                  "common.dishes",
+                )})`}
               ></Text>
             </View>
             <View style={utilSpacing.ml3}>
-              <Price preset="simple" amount={234} currencyCode={"GTQ"}></Price>
+              <Price
+                preset="simple"
+                amount={plansStore.price}
+                currencyCode={commonStore.currency}
+                textStyle={utilText.semiBold}
+              ></Price>
             </View>
           </View>
           <Separator style={styles.separator}></Separator>
-          <Totals priceDelivery={priceDelivery} coupon={coupon}></Totals>
+          <Totals priceDelivery={priceDelivery} coupon={coupon} isPlan={isPlan}></Totals>
         </Card>
       ) : (
         <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
           <DishesList></DishesList>
           <Separator style={styles.separator}></Separator>
-          <Totals priceDelivery={priceDelivery} coupon={coupon}></Totals>
+          <Totals priceDelivery={priceDelivery} coupon={coupon} isPlan={isPlan}></Totals>
         </Card>
       )}
     </>

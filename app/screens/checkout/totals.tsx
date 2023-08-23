@@ -9,12 +9,13 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 interface TotalsProps {
   coupon: Coupon
   priceDelivery: number
+  isPlan: boolean
 }
 
 export const Totals = (props: TotalsProps) => {
-  const { cartStore } = useStores()
+  const { cartStore, plansStore } = useStores()
   const [currencyCode, setCurrencyCode] = useState("")
-  const { coupon, priceDelivery } = props
+  const { coupon, priceDelivery, isPlan } = props
 
   useEffect(() => {
     if (cartStore.cart.length > 0) setCurrencyCode(cartStore.cart[0].dish.chef.currencyCode)
@@ -32,7 +33,21 @@ export const Totals = (props: TotalsProps) => {
     <View>
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.subtotal"></Text>
-        <Price style={styles.price} amount={cartStore.subtotal} currencyCode={currencyCode}></Price>
+        {isPlan ? (
+          <Price
+            style={styles.price}
+            textStyle={utilText.semiBold}
+            amount={plansStore.price}
+            currencyCode={currencyCode}
+            preset="simple"
+          ></Price>
+        ) : (
+          <Price
+            style={styles.price}
+            amount={cartStore.subtotal}
+            currencyCode={currencyCode}
+          ></Price>
+        )}
       </View>
 
       {cartStore.discount > 0 && (
@@ -48,17 +63,31 @@ export const Totals = (props: TotalsProps) => {
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
-        <Price style={styles.price} amount={priceDelivery} currencyCode={currencyCode}></Price>
+        {priceDelivery > 0 ? (
+          <Price style={styles.price} amount={priceDelivery} currencyCode={currencyCode}></Price>
+        ) : (
+          <Text tx="common.free"></Text>
+        )}
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="bold" tx="common.total"></Text>
-        <Price
-          style={styles.price}
-          textStyle={utilText.bold}
-          amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
-          currencyCode={currencyCode}
-        ></Price>
+        {isPlan ? (
+          <Price
+            style={styles.price}
+            textStyle={utilText.bold}
+            amount={plansStore.price}
+            currencyCode={currencyCode}
+            preset="simple"
+          ></Price>
+        ) : (
+          <Price
+            style={styles.price}
+            textStyle={utilText.bold}
+            amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
+            currencyCode={currencyCode}
+          ></Price>
+        )}
       </View>
     </View>
   )

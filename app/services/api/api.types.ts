@@ -106,3 +106,31 @@ export type SetupIntentResponse = {
     customerSecret: string
   }
 } & kind
+
+interface Feature {
+  value: number
+  label: string
+}
+
+export type LunchesResponse = {
+  data: {
+    id: number
+    name: string
+    description: string
+    image: string
+    credits: number
+    features: Feature[]
+  }[]
+} & kind
+
+export type DatePlan = {
+  dateNumber: number
+  date: string
+  dayShort: string
+  dateNameLong: string
+  dateNameShort: string
+}
+
+export type DatesPlansResponse = {
+  data: DatePlan[]
+} & kind

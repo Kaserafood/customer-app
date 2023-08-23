@@ -15,9 +15,11 @@ import {
   CommonResponse,
   CountryResponse,
   CuponResponse,
+  DatesPlansResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
+  LunchesResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
   SetupIntentResponse,
@@ -542,5 +544,19 @@ export class Api {
    */
   async addPaymentMethodId(stripePaymentId: string, name: string): Promise<ValueResponse> {
     return await this.request({ stripePaymentId, name }, `/stripe/add-payment-method-id`, "POST")
+  }
+
+  /**
+   * @description Get all lunches for plans by date
+   */
+  async getLunches(date: string): Promise<LunchesResponse> {
+    return await this.request({ date }, `/recipes`, "GET")
+  }
+
+  /**
+   * @description Get dates for plans
+   */
+  async getDatesPlans(): Promise<DatesPlansResponse> {
+    return await this.request({}, `/recipes/dates`, "GET")
   }
 }

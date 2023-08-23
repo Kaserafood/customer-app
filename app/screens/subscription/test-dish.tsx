@@ -1,11 +1,22 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Button, Card, Image, Text } from "../../components"
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 const TestDish = () => {
+  const { plansStore } = useStores()
+  const navigation = useNavigation()
+
+  const handleSelect = (credits: number, price: number, type: string) => {
+    navigation.navigate("menu" as never)
+    plansStore.setTotalCredits(credits)
+    plansStore.setPrice(price)
+    plansStore.setType(type)
+  }
   return (
     <Card style={[styles.container, utilFlex.flexRow, utilSpacing.m5, utilSpacing.p0]}>
       <View style={[styles.containerImage, utilFlex.flexCenter, utilSpacing.mr3]}>
@@ -39,6 +50,7 @@ const TestDish = () => {
         <Button
           tx="common.select"
           style={[utilSpacing.py3, utilSpacing.px1, utilSpacing.my5, utilSpacing.mr3, styles.btn]}
+          onPress={() => handleSelect(1, 40, "test")}
         ></Button>
       </View>
     </Card>

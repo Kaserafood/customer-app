@@ -1,103 +1,43 @@
-import React from "react"
+import React, { useState } from "react"
 import { View } from "react-native"
+import { useQuery } from "react-query"
 import { Chip, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
+import { Api } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
+import { useNavigation } from "@react-navigation/native"
 
 const Menu = () => {
-  const lunches = [
+  const navigation = useNavigation()
+  const api = new Api()
+  const [currentDate, setCurrentDate] = useState({
+    date: "",
+    dateNameLong: "",
+  })
+
+  const { data: lunches } = useQuery(
+    ["lunches", currentDate.date],
+    () => api.getLunches(currentDate.date),
     {
-      id: 23,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Casera",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin ",
-          value: "lactose-free",
-        },
-      ],
+      enabled: !!currentDate.date,
+      onSuccess: (data) => {
+        console.log(data)
+      },
+
+      onError: (error) => {
+        console.log(error)
+      },
     },
-    {
-      id: 5434,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Sin gluten",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-      ],
+  )
+
+  useQuery("dates-plans", () => api.getDatesPlans(), {
+    onSuccess: (data) => {
+      if (data.data.length > 0) setCurrentDate(data.data[0])
     },
-    {
-      id: 233,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Sin gluten",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-      ],
+    onError: (error) => {
+      console.log(error)
     },
-  ]
+  })
 
   return (
     <View style={utilSpacing.py5}>
@@ -111,7 +51,7 @@ const Menu = () => {
         <Chip
           style={utilSpacing.mb5}
           textstyle={utilText.semiBold}
-          text={`Lunes 24 de agosto`}
+          text={currentDate.dateNameLong}
         ></Chip>
         <Text
           style={utilSpacing.pb2}
@@ -122,8 +62,12 @@ const Menu = () => {
         <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb5}></Text>
       </View>
 
-      {lunches.map((lunch) => (
-        <Lunch {...lunch} key={lunch.id}></Lunch>
+      {lunches?.data?.map((lunch) => (
+        <Lunch
+          {...lunch}
+          key={lunch.id}
+          onPress={() => navigation.navigate("subscription" as never)}
+        ></Lunch>
       ))}
     </View>
   )

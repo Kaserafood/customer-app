@@ -3,14 +3,21 @@ import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Button, Icon, Image, Text } from "../../components"
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { addDays, toFormatDate } from "../../utils/date"
 
 const Options = () => {
   const navigation = useNavigation()
+  const { plansStore } = useStores()
 
-  const handleSelect = () => {
+  const handleSelect = (credits: number, price: number, type: string) => {
     navigation.navigate("menu" as never)
+    plansStore.setTotalCredits(credits)
+    plansStore.setExpireDate(toFormatDate(addDays(new Date(), 30), "DD/MM/YYYY"))
+    plansStore.setPrice(price)
+    plansStore.setType(type)
   }
   return (
     <View style={[utilFlex.flexRow, utilSpacing.pb5, utilSpacing.px5]}>
@@ -53,7 +60,7 @@ const Options = () => {
               utilSpacing.px1,
               utilSpacing.mt5,
             ]}
-            onPress={handleSelect}
+            onPress={() => handleSelect(20, 900, "happy")}
           ></Button>
         </View>
       </View>
@@ -100,7 +107,7 @@ const Options = () => {
             utilSpacing.px1,
             utilSpacing.mt5,
           ]}
-          onPress={handleSelect}
+          onPress={() => handleSelect(40, 1680, "prime")}
         ></Button>
       </View>
     </View>

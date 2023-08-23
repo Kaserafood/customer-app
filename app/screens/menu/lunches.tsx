@@ -1,103 +1,52 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleSheet, View } from "react-native"
+import { useQuery } from "react-query"
 import { Separator, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
+import { useStores } from "../../models"
+import { Api, DatePlan } from "../../services/api"
 import { utilSpacing } from "../../theme/Util"
 
-const Lunches = () => {
-  const lunches = [
-    {
-      id: 23,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Casera",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin ",
-          value: "lactose-free",
-        },
-      ],
+interface Props {
+  currentDate: DatePlan
+}
+
+const Lunches = observer(({ currentDate }: Props) => {
+  const api = new Api()
+  const { cartStore } = useStores()
+  const { date, dateNameLong, dateNameShort } = currentDate
+
+  const { data: lunches } = useQuery(["lunches", date], () => api.getLunches(date), {
+    enabled: !!date,
+    onError: (error) => {
+      console.log(error)
     },
-    {
-      id: 5434,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Sin gluten",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-      ],
-    },
-    {
-      id: 233,
-      name: "Pollo a la plancha, arroz y ensalada",
-      description: "Pollo a la plancha, arroz y ensalada, servido con jugo de naranja",
-      image:
-        "https://www.cocinavital.mx/wp-content/uploads/2023/08/cuanto-cuesta-hacer-chiles-en-nogada-634x420.jpg",
-      tags: [
-        {
-          label: "Sin gluten",
-          value: "gluten-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-        {
-          label: "Sin lactosa",
-          value: "lactose-free",
-        },
-        {
-          label: "Sin azucar",
-          value: "sugar-free",
-        },
-        {
-          label: "Sin sal",
-          value: "salt-free",
-        },
-      ],
-    },
-  ]
+  })
+
+  const handleButton = (id: number, quantity: number, totalCredits: number) => {
+    if (cartStore.exitsItemPlan(id, date)) {
+      cartStore.updateItemPlan({
+        id,
+        quantity,
+        credits: totalCredits,
+        date,
+        name: lunches?.data?.find((lunch) => lunch.id === id)?.name,
+        dateLongName: dateNameLong,
+        dateShortName: dateNameShort,
+      })
+    } else {
+      cartStore.addItemPlan({
+        id,
+        quantity,
+        credits: totalCredits,
+        date,
+        name: lunches?.data?.find((lunch) => lunch.id === id)?.name,
+        dateLongName: dateNameLong,
+        dateShortName: dateNameShort,
+      })
+    }
+  }
 
   return (
     <View style={styles.containerDishes}>
@@ -105,18 +54,24 @@ const Lunches = () => {
         <Text tx="menuScreen.lunchDinner" preset="bold" size="lg"></Text>
         <Text tx="menuScreen.deliveryTime"></Text>
       </View>
-      <View style={[utilSpacing.px5, utilSpacing.pb5, utilSpacing.pt3]}>
-        {lunches.map((lunch, index) => (
+      <View style={[utilSpacing.pb5, utilSpacing.pt3]}>
+        {lunches?.data?.map((lunch, index) => (
           <View key={lunch.id}>
-            <Lunch {...lunch} showButtons></Lunch>
+            <Lunch
+              {...lunch}
+              showButtons
+              onPressButton={handleButton}
+              totalCredits={cartStore.itemPlanCredits(lunch.id, date)}
+              quantity={cartStore.itemPlanQuantity(lunch.id, date)}
+            ></Lunch>
 
-            {index !== lunches.length - 1 && <Separator style={utilSpacing.my5}></Separator>}
+            {index !== lunches?.data?.length - 1 && <Separator style={utilSpacing.my5}></Separator>}
           </View>
         ))}
       </View>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   containerDishes: {

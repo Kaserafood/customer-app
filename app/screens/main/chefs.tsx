@@ -111,13 +111,13 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
       .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
       .then(() => {
         // fake data =
-        const data = []
+        // const data = []
 
-        data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        state.setData(formatDishesGroupedByChef(data))
+        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+        state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByChef))
       })
       .catch((error: Error) => {
         messagesStore.showError(error.message)

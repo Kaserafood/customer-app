@@ -21,7 +21,7 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
       >
         <ScrollView>
           <View style={utilSpacing.p5}>
-            <TouchableOpacity onPress={goBack}>
+            <TouchableOpacity style={styles.btnBack} onPress={goBack}>
               <Icon name="xmark" size={30} color={color.text}></Icon>
             </TouchableOpacity>
 
@@ -43,4 +43,8 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
   },
 )
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  btnBack: {
+    maxWidth: 30,
+  },
+})

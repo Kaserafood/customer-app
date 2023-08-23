@@ -6,7 +6,7 @@ import { Text } from "../text/text"
 import { textPresets, viewPresets } from "./button.presets"
 import { ButtonProps } from "./button.props"
 
-export function Button(props: ButtonProps) {
+const Button = (props: ButtonProps) => {
   const {
     preset = "primary",
     tx,
@@ -36,10 +36,8 @@ export function Button(props: ButtonProps) {
   } else {
     viewStyle.borderRadius = 8
   }
-  if (disabled) viewStyle.opacity = 0.5
-  else viewStyle.opacity = 1
 
-  const viewStyles = [viewStyle, styleOverride]
+  const viewStyles = [viewStyle, disabled ? { opacity: 0.5 } : { opacity: 1 }, styleOverride]
   const textStyle = textPresets[preset] || textPresets.primary
   const textStyles = [textStyle, textStyleOverride]
 
@@ -47,9 +45,11 @@ export function Button(props: ButtonProps) {
 
   __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
-    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled === true} activeOpacity={0.8}>
+    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled} activeOpacity={0.8}>
       {iconLeft && iconLeft}
       {content}
     </TouchableOpacity>
   )
 }
+
+export { Button }

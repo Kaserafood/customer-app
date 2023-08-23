@@ -15,6 +15,7 @@ import { CouponModalStoreModel } from "../modal-coupon"
 import { OrderModel } from "../order/order"
 import { UserRegisterModel } from "../user-store"
 import { CoverageModel } from "../coverage/coverage"
+import { PlansStoreModel } from "../plans-store"
 
 /**
  * A RootStore model.
@@ -36,6 +37,7 @@ export const RootStoreModel = types.model("RootStore").props({
   deliveryStore: types.optional(DeliveryStoreModel, {} as any),
   countryStore: types.optional(CountryStoreModel, {} as any),
   coverageStore: types.optional(CoverageModel, {} as any),
+  plansStore: types.optional(PlansStoreModel, {} as any),
 })
 
 /**

@@ -1,62 +1,37 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { useQuery } from "react-query"
 import { Text } from "../../components"
+import { Api, DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 
 interface Props {
-  onDateChange: (date: string) => void
+  onDateChange: (date: DatePlan) => void
 }
 
 const Days = ({ onDateChange }: Props) => {
+  const api = new Api()
   const [selectedDate, setSelectedDate] = useState("")
 
-  const days = [
-    {
-      date: "2023-01-01",
-      dayName: "Lun",
-      day: 1,
+  const { data: days } = useQuery("dates-plans", () => api.getDatesPlans(), {
+    onSuccess: (data) => {
+      if (data.data.length > 0) handleSelectDate(data.data[0])
     },
-    {
-      date: "2023-01-02",
-      dayName: "Mar",
-      day: 2,
+    onError: (error) => {
+      console.log(error)
     },
-    {
-      date: "2023-01-03",
-      dayName: "Mie",
-      day: 3,
-    },
-    {
-      date: "2023-01-04",
-      dayName: "Jue",
-      day: 4,
-    },
-    {
-      date: "2023-01-05",
-      dayName: "Vie",
-      day: 5,
-    },
-    {
-      date: "2023-01-06",
-      dayName: "Sab",
-      day: 6,
-    },
-  ]
+  })
 
-  useEffect(() => {
-    setSelectedDate(days[0].date)
-  }, [])
-
-  const handleSelectDate = (date: string) => {
-    setSelectedDate(date)
+  const handleSelectDate = (date: DatePlan) => {
+    setSelectedDate(date.date)
     onDateChange(date)
   }
 
   return (
     <View style={utilFlex.flexRow}>
-      {days.map((day, index) => (
+      {days?.data?.map((day, index) => (
         <Ripple
           key={day.date}
           rippleOpacity={0.2}
@@ -68,18 +43,18 @@ const Days = ({ onDateChange }: Props) => {
             utilSpacing.py3,
             utilFlex.flex1,
             day.date === selectedDate && styles.active,
-            index !== days.length - 1 && utilSpacing.mr3,
+            index !== days?.data.length - 1 && utilSpacing.mr3,
           ]}
-          onPress={() => handleSelectDate(day.date)}
+          onPress={() => handleSelectDate(day)}
         >
           <Text
-            text={`${day.day}`}
+            text={`${day.dateNumber}`}
             preset="bold"
             size="lg"
             style={[day.date === selectedDate && utilText.textWhite, utilFlex.selfCenter]}
           ></Text>
           <Text
-            text={day.dayName}
+            text={day.dayShort}
             style={[day.date === selectedDate && utilText.textWhite, utilFlex.selfCenter]}
           ></Text>
         </Ripple>

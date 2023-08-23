@@ -239,19 +239,16 @@ export const FormPlans: FC<StackScreenProps<NavigatorParamList, "formPlans">> = 
           )}
         </ScrollView>
 
-        {selectedProtein.length > 0 && (
-          <Animatable.View animation="fadeIn">
-            <ButtonFooter onPress={handleContinue} tx="common.continue"></ButtonFooter>
-            {currentStep === 2 && (
-              <Button
-                style={utilSpacing.py3}
-                preset="white"
-                block
-                tx="formPlansScreen.hop"
-              ></Button>
-            )}
-          </Animatable.View>
-        )}
+        <Animatable.View animation="fadeIn">
+          <ButtonFooter
+            onPress={handleContinue}
+            tx="common.continue"
+            disabled={selectedProtein.length === 0}
+          ></ButtonFooter>
+          {currentStep === 2 && (
+            <Button style={utilSpacing.py3} preset="white" block tx="formPlansScreen.hop"></Button>
+          )}
+        </Animatable.View>
       </Screen>
     )
   },

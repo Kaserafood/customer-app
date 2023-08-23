@@ -6,6 +6,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import { ButtonFooter, Header, InputText, Screen } from "../../components/"
 
 import { FormProvider, useForm } from "react-hook-form"
+import { useStores } from "../../models"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -15,6 +16,7 @@ import ScheduleDelivery from "./schedule-delivery"
 
 export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSummary">> = observer(
   ({ navigation, route: { params } }) => {
+    const { cartStore } = useStores()
     const methods = useForm({
       defaultValues: {
         note: "",
@@ -43,7 +45,12 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
               ></InputText>
             </View>
           </ScrollView>
-          <ButtonFooter onPress={handleContinue} tx="common.confirm"></ButtonFooter>
+
+          <ButtonFooter
+            disabled={!cartStore.hasItemsPlan}
+            onPress={handleContinue}
+            tx="common.confirm"
+          ></ButtonFooter>
         </FormProvider>
       </Screen>
     )

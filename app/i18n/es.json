@@ -371,24 +371,24 @@
     "paymentMethodErrorUnknown": "La tarjeta debe ser Visa o MasterCard",
     "paymentCashDescription": "Pagas al recibir",
     "paymentMethodErrorEmptyFields": "No has ingresado todos los datos de tu tarjeta",
-
     "deliveryInfo": "Información de entrega",
-
     "noteDelivery": "Nota de entrega",
     "noteDeliveryPlaceholder": "Referencias, código de acceso, etc.",
-
     "paymentAutomatic": "Plan mensual (cobro automático)",
     "offOrder": "Ahorra 5% de tu orden ({{total}})",
     "paymentAutomaticDescription": {
       "part1": "Se cobrará tu tarjeta cada ",
       "part2": ". Puedes cancelar el plan cuando desees."
     },
-
     "taxId": "Ingresa tu NIT (opcional)",
     "taxIdPlaceholder": "Escribe el NIT",
     "datesDelivery": "Recibirás platillos en estas fechas:",
     "discount": "Descuento",
-    "deliveryPrice": "Precio de envío"
+    "deliveryPrice": "Precio de envío",
+    "happy": "Plan Feliz",
+    "prime": "Plan Prime",
+    "custom": "Plan personalizado",
+    "test": "Platillo de prueba"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",
@@ -714,8 +714,8 @@
     "threePerDay": "3 opciones por día",
     "freeDelivery": "Envío gratis",
     "monthForUse": "1 mes para usar",
-    "priceHappy": "Q850",
-    "pricePrime": "Q1,600",
+    "priceHappy": "Q900",
+    "pricePrime": "Q1,680",
     "priceHappyDishes": "(Q45 por platillo)",
     "pricePrimeDishes": "(Q42 por platillo)",
     "packages": "Paquetes",
@@ -742,7 +742,9 @@
     "scheduleThisWeek": "Programa los platillos que desees esta semana",
     "lunchDinner": "Almuerzos y cenas",
     "deliveryTime": "Las entregas son de 10 AM a 1 PM",
-    "importantAnnouncement": "Anuncio importante"
+    "importantAnnouncement": "Anuncio importante",
+    "useCredits": "Usar créditos ( {{total}} )",
+    "scheduleLater": "Programar después"
   },
   "lunch": {
     "credit": "crédito",

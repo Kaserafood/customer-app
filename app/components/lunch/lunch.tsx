@@ -1,7 +1,8 @@
-import { useNavigation } from "@react-navigation/native"
+import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import Ripple from "react-native-material-ripple"
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { Icon } from "../icon/icon"
@@ -9,78 +10,126 @@ import { Image } from "../image/image"
 import { Text } from "../text/text"
 
 interface Props {
+  id: number
   name: string
   description: string
   image: string
-  tags: {
+  features: {
     label: string
-    value: string
+    value: number
   }[]
+  credits: number
   showButtons?: boolean
+  onPress?: () => void
+  onPressButton?: (id: number, quantity: number, totalCredits: number) => void
+  totalCredits?: number
+  quantity?: number
 }
 
-const Lunch = ({ name, description, tags, image, showButtons }: Props) => {
-  const [total, setTotal] = useState(0)
+const Lunch = observer(
+  ({
+    id,
+    name,
+    description,
+    features,
+    image,
+    showButtons,
+    credits,
+    onPress,
+    onPressButton,
+    totalCredits: totalCreditsProp,
+    quantity: quantityProp,
+  }: Props) => {
+    const { cartStore } = useStores()
+    const [totalCredits, setTotalCredits] = useState(totalCreditsProp || 0)
 
-  const navigation = useNavigation()
+    const [quantity, setQuantity] = useState(quantityProp || 0)
 
-  return (
-    <Ripple
-      rippleOpacity={0.2}
-      rippleDuration={400}
-      style={[utilFlex.flexRow, utilSpacing.px5, utilSpacing.py3]}
-      onPress={() => navigation.navigate("plans" as never)}
-    >
-      <Image resizeMode="cover" style={styles.image} source={{ uri: image }}></Image>
-      <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-        <View>
-          <Text text={name} preset="semiBold" numberOfLines={2}></Text>
-          <Text text={description} style={utilSpacing.mb3} numberOfLines={2}></Text>
-        </View>
+    const handleButton = (quantity: number, totalCredits: number) => {
+      setQuantity(quantity)
+      setTotalCredits(totalCredits)
+      onPressButton(id, quantity, totalCredits)
+    }
 
-        <ScrollView horizontal style={[utilFlex.flex1, utilFlex.flexRow, styles.containerTags]}>
-          {tags.map((tag) => (
+    return (
+      <View>
+        <Ripple
+          rippleOpacity={0.2}
+          rippleDuration={400}
+          style={[
+            utilFlex.flexRow,
+            utilSpacing.px5,
+            utilSpacing.py3,
+            showButtons && utilSpacing.pb6,
+          ]}
+          onPress={onPress}
+        >
+          <Image resizeMode="cover" style={styles.image} source={{ uri: image }}></Image>
+          <View style={[utilFlex.flex1, utilSpacing.ml4]}>
+            <View>
+              <Text text={name} preset="semiBold" numberOfLines={2}></Text>
+              <Text text={description} style={utilSpacing.mb3} numberOfLines={2}></Text>
+            </View>
+
+            <ScrollView horizontal style={[utilFlex.flex1, utilFlex.flexRow, styles.containerTags]}>
+              {features?.map((tag) => (
+                <View
+                  key={tag.value}
+                  style={[
+                    styles.tag,
+                    utilSpacing.px4,
+                    utilSpacing.py3,
+                    utilSpacing.mr2,
+                    utilSpacing.mb2,
+                  ]}
+                >
+                  <Text text={tag.label}></Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        </Ripple>
+        {showButtons && (
+          <View style={[utilFlex.flexRow, styles.containerTotal]}>
             <View
-              key={tag.value}
               style={[
-                styles.tag,
-                utilSpacing.px4,
-                utilSpacing.py3,
-                utilSpacing.mr2,
-                utilSpacing.mb2,
+                utilFlex.flex1,
+                utilFlex.flexCenterVertical,
+                styles.containerCredits,
+                utilSpacing.pr3,
               ]}
             >
-              <Text text={tag.label}></Text>
-            </View>
-          ))}
-        </ScrollView>
-
-        {showButtons && (
-          <View style={utilFlex.flexRow}>
-            <View style={[utilFlex.flex1, utilFlex.flexCenterVertical]}>
-              {total > 0 && (
+              {totalCredits > 0 && (
                 <View style={utilFlex.flexRow}>
-                  <Text text={`${total} `}></Text>
-                  <Text tx={total === 1 ? "lunch.credit" : "lunch.credits"}></Text>
+                  <Text text={`${totalCredits} `} preset="semiBold"></Text>
+                  <Text
+                    preset="semiBold"
+                    tx={totalCredits === 1 ? "lunch.credit" : "lunch.credits"}
+                  ></Text>
                 </View>
               )}
             </View>
 
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, styles.containerButtons]}>
               <TouchableOpacity
-                style={[styles.btn, utilSpacing.p3]}
-                onPress={() => setTotal(total - 1)}
-                disabled={total === 0}
+                style={[styles.btn, utilSpacing.p3, quantity === 0 && styles.disabled]}
+                onPress={() => {
+                  handleButton(quantity - 1, totalCredits - credits)
+                }}
+                disabled={quantity === 0}
               >
                 <Icon name="minus" size={12} color={color.palette.white}></Icon>
               </TouchableOpacity>
               <View style={[styles.total, utilSpacing.mx3, utilFlex.flexCenter]}>
-                <Text>{total}</Text>
+                <Text>{quantity}</Text>
               </View>
 
               <TouchableOpacity
-                style={[styles.btn, utilSpacing.p3]}
-                onPress={() => setTotal(total + 1)}
+                style={[styles.btn, utilSpacing.p3, !cartStore.hasCredits && styles.disabled]}
+                onPress={() => {
+                  handleButton(quantity + 1, totalCredits + credits)
+                }}
+                disabled={!cartStore.hasCredits}
               >
                 <Icon name="plus" size={12} color={color.palette.white}></Icon>
               </TouchableOpacity>
@@ -88,9 +137,9 @@ const Lunch = ({ name, description, tags, image, showButtons }: Props) => {
           </View>
         )}
       </View>
-    </Ripple>
-  )
-}
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   btn: {
@@ -100,10 +149,23 @@ const styles = StyleSheet.create({
   containerButtons: {
     alignSelf: "flex-end",
   },
+  containerCredits: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
   containerTags: {
     display: "flex",
     flexWrap: "nowrap",
     overflow: "hidden",
+  },
+  containerTotal: {
+    bottom: 0,
+    position: "absolute",
+    right: spacing[5],
+  },
+  disabled: {
+    opacity: 0.5,
   },
   image: {
     borderRadius: spacing[3],

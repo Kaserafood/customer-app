@@ -5,7 +5,6 @@ import images from "../../assets/images"
 import { Button, Image, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 
 const BannerMain = () => {
   const navigation = useNavigation()
@@ -23,7 +22,7 @@ const BannerMain = () => {
           block
           textStyle={[utilSpacing.px2]}
           style={[utilSpacing.mt4, utilSpacing.px1, utilSpacing.py3]}
-          onPress={() => navigation.navigate(getI18nText("tabMainNavigation.packages") as never)}
+          onPress={() => navigation.navigate("subscription" as never)}
         ></Button>
       </View>
 
