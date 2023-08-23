@@ -8,7 +8,8 @@ import { NavigatorParamList } from "../../navigators"
 import { ScrollView } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
 import { ModalLocation } from "../../components/location/modal-location"
-import { Api } from "../../services/api"
+import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
+import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -17,9 +18,12 @@ import Benefits from "./benefits"
 import Menu from "./menu"
 
 const modalStateLocation = new ModalStateHandler()
+const modalStateDeliveryDatePlan = new ModalStateHandler()
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen() {
+    const [currentDate, setCurrentDate] = useState<DatePlan>()
+
     useEffect(() => {
       RNUxcam.tagScreenName("plans")
     }, [])
@@ -37,7 +41,13 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
           <Banner variant="light"></Banner>
           <Benefits></Benefits>
-          <Menu></Menu>
+          {currentDate?.date && (
+            <Menu
+              currentDate={currentDate}
+              showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
+            ></Menu>
+          )}
+
           <Text
             tx="mainScreen.priceLunch"
             preset="semiBold"
@@ -47,6 +57,10 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           <Banner variant="dark"></Banner>
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
+        <ModalDeliveryDatePlan
+          state={modalStateDeliveryDatePlan}
+          onSelectDate={setCurrentDate}
+        ></ModalDeliveryDatePlan>
       </Screen>
     )
   },

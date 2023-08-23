@@ -1,19 +1,20 @@
-import React, { useState } from "react"
+import { useNavigation } from "@react-navigation/native"
+import React from "react"
 import { View } from "react-native"
 import { useQuery } from "react-query"
 import { Chip, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
-import { Api } from "../../services/api"
+import { Api, DatePlan } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
-import { useNavigation } from "@react-navigation/native"
 
-const Menu = () => {
+interface Props {
+  currentDate: DatePlan
+  showModalDates: () => void
+}
+
+const Menu = ({ currentDate, showModalDates }: Props) => {
   const navigation = useNavigation()
   const api = new Api()
-  const [currentDate, setCurrentDate] = useState({
-    date: "",
-    dateNameLong: "",
-  })
 
   const { data: lunches } = useQuery(
     ["lunches", currentDate.date],
@@ -30,15 +31,6 @@ const Menu = () => {
     },
   )
 
-  useQuery("dates-plans", () => api.getDatesPlans(), {
-    onSuccess: (data) => {
-      if (data.data.length > 0) setCurrentDate(data.data[0])
-    },
-    onError: (error) => {
-      console.log(error)
-    },
-  })
-
   return (
     <View style={utilSpacing.py5}>
       <View style={utilSpacing.px5}>
@@ -52,6 +44,7 @@ const Menu = () => {
           style={utilSpacing.mb5}
           textstyle={utilText.semiBold}
           text={currentDate.dateNameLong}
+          onPress={() => showModalDates()}
         ></Chip>
         <Text
           style={utilSpacing.pb2}

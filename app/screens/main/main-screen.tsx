@@ -1,16 +1,18 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
+import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
+import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { SHADOW, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -25,11 +27,13 @@ import ValuePrepositions from "./value-prepositions"
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
 const modalStateWhy = new ModalStateHandler()
+const modalStateDeliveryDatePlan = new ModalStateHandler()
 const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
     const { cartStore, commonStore, dishStore } = useStores()
+    const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     const onBannerPress = (banner: BannerModel) => {
       const category: Category = {
@@ -76,12 +80,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
     }
 
     return (
-      <Screen
-        preset="fixed"
-        // style={styles.container}
-        statusBar="dark-content"
-        statusBarBackgroundColor={color.primary}
-      >
+      <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
         <View style={[styles.containerLocation, utilSpacing.py4]}>
           <Location
             onPress={() => {
@@ -94,7 +93,13 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         <ScrollView style={styles.container}>
           <BannerMain></BannerMain>
           <ValuePrepositions></ValuePrepositions>
-          <Lunches></Lunches>
+          {currentDate?.date && (
+            <Lunches
+              currentDate={currentDate}
+              showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
+            ></Lunches>
+          )}
+
           <Dishes
             onWhyPress={(state) => modalStateWhy.setVisible(state)}
             onDishPress={toDetail}
@@ -112,6 +117,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
+        <ModalDeliveryDatePlan
+          state={modalStateDeliveryDatePlan}
+          onSelectDate={setCurrentDate}
+        ></ModalDeliveryDatePlan>
       </Screen>
     )
   },
