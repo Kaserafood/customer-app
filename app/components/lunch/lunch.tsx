@@ -40,7 +40,7 @@ const Lunch = observer(
     totalCredits: totalCreditsProp,
     quantity: quantityProp,
   }: Props) => {
-    const { cartStore } = useStores()
+    const { cartStore, plansStore } = useStores()
     const [totalCredits, setTotalCredits] = useState(totalCreditsProp || 0)
 
     const [quantity, setQuantity] = useState(quantityProp || 0)
@@ -49,6 +49,13 @@ const Lunch = observer(
       setQuantity(quantity)
       setTotalCredits(totalCredits)
       onPressButton(id, quantity, totalCredits)
+    }
+
+    const enoughCredits = () => {
+      if (plansStore.totalCredits - cartStore.useCredits - credits < 0) {
+        return false
+      }
+      return true
     }
 
     return (
@@ -125,11 +132,15 @@ const Lunch = observer(
               </View>
 
               <TouchableOpacity
-                style={[styles.btn, utilSpacing.p3, !cartStore.hasCredits && styles.disabled]}
+                style={[
+                  styles.btn,
+                  utilSpacing.p3,
+                  (!cartStore.hasCredits || !enoughCredits()) && styles.disabled,
+                ]}
                 onPress={() => {
                   handleButton(quantity + 1, totalCredits + credits)
                 }}
-                disabled={!cartStore.hasCredits}
+                disabled={!cartStore.hasCredits || !enoughCredits()}
               >
                 <Icon name="plus" size={12} color={color.palette.white}></Icon>
               </TouchableOpacity>

@@ -6,6 +6,10 @@ import { UserLogin, UserRegister } from "../../models/user-store"
 import { Card } from "../../screens/checkout/modal-payment-card"
 import { handleMessageProblem } from "../../utils/messages"
 
+import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
+import { loadString } from "../../utils/storage"
+import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { getGeneralApiProblem } from "./api-problem"
 import {
   AddressResponse,
   BannerResponse,
@@ -26,10 +30,6 @@ import {
   UserLoginResponse,
   ValueResponse,
 } from "./api.types"
-import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { getGeneralApiProblem } from "./api-problem"
-import { loadString } from "../../utils/storage"
-import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
@@ -549,8 +549,8 @@ export class Api {
   /**
    * @description Get all lunches for plans by date
    */
-  async getLunches(date: string): Promise<LunchesResponse> {
-    return await this.request({ date }, `/recipes`, "GET")
+  async getItemsPlan(date: string, type: string): Promise<LunchesResponse> {
+    return await this.request({ date, type }, `/recipes`, "GET")
   }
 
   /**

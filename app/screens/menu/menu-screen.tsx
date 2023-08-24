@@ -11,7 +11,7 @@ import { color, spacing } from "../../theme"
 import { SHADOW, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 import Days from "./days"
-import Lunches from "./lunches"
+import GroupType from "./group-type"
 
 export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = observer(
   ({ navigation, route: { params } }) => {
@@ -67,7 +67,31 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
               }}
             ></Days>
           </View>
-          {currentDate && <Lunches currentDate={currentDate}></Lunches>}
+          {currentDate && (
+            <View>
+              <GroupType
+                currentDate={currentDate}
+                type="lunch"
+                title="menuScreen.lunchDinner"
+              ></GroupType>
+
+              {plansStore.type === "prime" && (
+                <View>
+                  <GroupType
+                    title="menuScreen.desserts"
+                    currentDate={currentDate}
+                    type="dessert"
+                  ></GroupType>
+
+                  <GroupType
+                    title="menuScreen.snacksDrinks"
+                    currentDate={currentDate}
+                    type="snack"
+                  ></GroupType>
+                </View>
+              )}
+            </View>
+          )}
         </ScrollView>
 
         <ButtonFooter

@@ -34,20 +34,24 @@ const DeliveryLabel = ({ labelDeliveryTime, isPlan }: Props) => {
   return (
     <View>
       {isPlan ? (
-        <View>
-          <Text
-            style={utilSpacing.mr2}
-            preset="semiBold"
-            size="lg"
-            tx="checkoutScreen.datesDelivery"
-          ></Text>
-          <Text
-            preset="semiBold"
-            caption
-            text={getDatesDelivery()}
-            style={[utilSpacing.mb6, utilFlex.flex1]}
-          ></Text>
-        </View>
+        <>
+          {getDatesDelivery().length > 0 && (
+            <View>
+              <Text
+                style={utilSpacing.mr2}
+                preset="semiBold"
+                size="lg"
+                tx="checkoutScreen.datesDelivery"
+              ></Text>
+              <Text
+                preset="semiBold"
+                caption
+                text={getDatesDelivery()}
+                style={[utilSpacing.mb6, utilFlex.flex1]}
+              ></Text>
+            </View>
+          )}
+        </>
       ) : (
         <View>
           <Text

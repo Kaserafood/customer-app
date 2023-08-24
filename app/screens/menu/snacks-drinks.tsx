@@ -12,17 +12,21 @@ interface Props {
   currentDate: DatePlan
 }
 
-const Lunches = observer(({ currentDate }: Props) => {
+const SnacksDrinks = observer(({ currentDate }: Props) => {
   const api = new Api()
   const { cartStore } = useStores()
   const { date, dateNameLong, dateNameShort } = currentDate
 
-  const { data: lunches } = useQuery(["lunches", date], () => api.getLunches(date), {
-    enabled: !!date,
-    onError: (error) => {
-      console.log(error)
+  const { data: snacksDrinks } = useQuery(
+    ["snacks-drinks", date],
+    () => api.getItemsPlan(date, "snack"),
+    {
+      enabled: !!date,
+      onError: (error) => {
+        console.log(error)
+      },
     },
-  })
+  )
 
   const handleButton = (id: number, quantity: number, totalCredits: number) => {
     if (cartStore.exitsItemPlan(id, date)) {
@@ -31,7 +35,7 @@ const Lunches = observer(({ currentDate }: Props) => {
         quantity,
         credits: totalCredits,
         date,
-        name: lunches?.data?.find((lunch) => lunch.id === id)?.name,
+        name: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.name,
         dateLongName: dateNameLong,
         dateShortName: dateNameShort,
       })
@@ -41,7 +45,7 @@ const Lunches = observer(({ currentDate }: Props) => {
         quantity,
         credits: totalCredits,
         date,
-        name: lunches?.data?.find((lunch) => lunch.id === id)?.name,
+        name: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.name,
         dateLongName: dateNameLong,
         dateShortName: dateNameShort,
       })
@@ -51,11 +55,10 @@ const Lunches = observer(({ currentDate }: Props) => {
   return (
     <View style={styles.containerDishes}>
       <View style={utilSpacing.p5}>
-        <Text tx="menuScreen.lunchDinner" preset="bold" size="lg"></Text>
-        <Text tx="menuScreen.deliveryTime"></Text>
+        <Text tx="menuScreen.snacksDrinks" preset="bold" size="lg"></Text>
       </View>
       <View style={[utilSpacing.pb5, utilSpacing.pt3]}>
-        {lunches?.data?.map((lunch, index) => (
+        {snacksDrinks?.data?.map((lunch, index) => (
           <View key={lunch.id}>
             <Lunch
               {...lunch}
@@ -65,7 +68,9 @@ const Lunches = observer(({ currentDate }: Props) => {
               quantity={cartStore.itemPlanQuantity(lunch.id, date)}
             ></Lunch>
 
-            {index !== lunches?.data?.length - 1 && <Separator style={utilSpacing.my5}></Separator>}
+            {index !== snacksDrinks?.data?.length - 1 && (
+              <Separator style={utilSpacing.my5}></Separator>
+            )}
           </View>
         ))}
       </View>
@@ -79,4 +84,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default Lunches
+export default SnacksDrinks

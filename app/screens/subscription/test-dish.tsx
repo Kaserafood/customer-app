@@ -6,6 +6,7 @@ import { Button, Card, Image, Text } from "../../components"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { addDays, toFormatDate } from "../../utils/date"
 
 const TestDish = () => {
   const { plansStore } = useStores()
@@ -16,6 +17,9 @@ const TestDish = () => {
     plansStore.setTotalCredits(credits)
     plansStore.setPrice(price)
     plansStore.setType(type)
+    if (type === "test") {
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 2), "DD/MM/YYYY"))
+    }
   }
   return (
     <Card style={[styles.container, utilFlex.flexRow, utilSpacing.m5, utilSpacing.p0]}>

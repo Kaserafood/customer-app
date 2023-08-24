@@ -5,7 +5,6 @@ import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 
 import RNUxcam from "react-native-ux-cam"
-import images from "../../assets/images"
 import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
@@ -43,9 +42,18 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
           <Card style={[styles.card, utilSpacing.p5]}>
             <Text tx="endOrderScreen.deliveryOn" preset="bold"></Text>
             <Text text={params.deliveryAddress} caption style={utilSpacing.mb4}></Text>
-
-            <Text tx="endOrderScreen.deliveryDate" preset="bold"></Text>
-            <Text caption text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
+            {!isPlan ? (
+              <>
+                <Text tx="endOrderScreen.deliveryDate" preset="bold"></Text>
+                <Text caption text={`${params.deliveryDate} ${params.deliveryTime}`}></Text>
+              </>
+            ) : (
+              <>
+                <Text tx="endOrderScreen.deliveryDate" preset="bold"></Text>
+                <Text caption text={`${params.deliveryDate}`}></Text>
+                <Text caption style={utilSpacing.mt3} text={`${params.deliveryTime}`}></Text>
+              </>
+            )}
           </Card>
           <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
           {isPlan && (
@@ -58,13 +66,7 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
               <View style={[styles.body, utilFlex.flexCenter]}>
                 <View></View>
                 <Text style={utilSpacing.my5} size="lg" text={thankYou} preset="bold"></Text>
-
-                {isPlan ? (
-                  <Image style={styles.imageChef} source={images.chef2}></Image>
-                ) : (
-                  <Image style={styles.imageChef} source={{ uri: params.imageChef }}></Image>
-                )}
-
+                <Image style={styles.imageChef} source={{ uri: params.imageChef }}></Image>
                 <Text
                   style={utilSpacing.my5}
                   size="lg"

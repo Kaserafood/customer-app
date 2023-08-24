@@ -114,6 +114,10 @@ export const CartStoreModel = types
       const item = self.cartPlans.find((item) => item.id === id && item.date === date)
       applySnapshot(self.cartPlans[self.cartPlans.indexOf(item)], itemCart)
     },
+    remoteItemPlan(id: number, date: string) {
+      const item = self.cartPlans.find((item) => item.id === id && item.date === date)
+      detach(self.cartPlans[self.cartPlans.indexOf(item)])
+    },
     itemPlanCredits(id: number, date: string) {
       const item = self.cartPlans.find((item) => item.id === id && item.date === date)
       return item?.credits ?? 0

@@ -15,9 +15,14 @@ const Options = () => {
   const handleSelect = (credits: number, price: number, type: string) => {
     navigation.navigate("menu" as never)
     plansStore.setTotalCredits(credits)
-    plansStore.setExpireDate(toFormatDate(addDays(new Date(), 30), "DD/MM/YYYY"))
     plansStore.setPrice(price)
     plansStore.setType(type)
+
+    if (type === "happy") {
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 30), "DD/MM/YYYY"))
+    } else if (type === "prime") {
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 90), "DD/MM/YYYY"))
+    }
   }
   return (
     <View style={[utilFlex.flexRow, utilSpacing.pb5, utilSpacing.px5]}>

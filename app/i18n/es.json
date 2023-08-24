@@ -744,7 +744,9 @@
     "deliveryTime": "Las entregas son de 10 AM a 1 PM",
     "importantAnnouncement": "Anuncio importante",
     "useCredits": "Usar créditos ( {{total}} )",
-    "scheduleLater": "Programar después"
+    "scheduleLater": "Programar después",
+    "snacksDrinks": "Snacks y bebidas",
+    "desserts": "Postres"
   },
   "lunch": {
     "credit": "crédito",

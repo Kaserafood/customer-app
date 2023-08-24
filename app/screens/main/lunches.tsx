@@ -18,7 +18,7 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
   const api = new Api()
   const { data: lunches } = useQuery(
     ["lunches", currentDate.date],
-    () => api.getLunches(currentDate.date),
+    () => api.getItemsPlan(currentDate.date, "lunch"),
     {
       enabled: !!currentDate.date,
       onError: (error) => {

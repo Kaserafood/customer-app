@@ -120,8 +120,35 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       }
     }
 
+    const getDatesDelivery = () => {
+      const dates = []
+
+      cartStore.cartPlans.forEach((item) => {
+        dates.push(item.dateShortName)
+      })
+
+      const uniqueDates = dates.filter(
+        (item, index, self) => index === self.findIndex((t) => t === item),
+      )
+
+      return uniqueDates.join(", ")
+    }
+
     const createOrderPlan = () => {
-      navigation.navigate("endOrder", {} as never)
+      commonStore.setVisibleLoading(true)
+
+      setTimeout(() => {
+        commonStore.setVisibleLoading(false)
+        navigation.navigate("endOrder", {
+          orderId: 0,
+          deliveryDate: getDatesDelivery(),
+          deliveryTime: "Las entregas son de 10 AM a 1 PM",
+          deliveryAddress: addressStore.current.address,
+          imageChef:
+            "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
+          isPlan: true,
+        })
+      }, 1500)
     }
 
     const createOrderDish = async (data) => {
