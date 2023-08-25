@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
@@ -34,6 +34,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
   ({ navigation, route: { params } }) => {
     const { cartStore, commonStore, dishStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
+
+    useEffect(() => {
+      commonStore.getCurrency()
+    }, [])
 
     const onBannerPress = (banner: BannerModel) => {
       const category: Category = {
@@ -134,7 +138,7 @@ const styles = StyleSheet.create({
   containerLocation: {
     backgroundColor: color.primary,
     ...SHADOW,
-    height: 68,
+    height: 63,
   },
   location: {
     backgroundColor: color.palette.white,

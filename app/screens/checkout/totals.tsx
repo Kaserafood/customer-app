@@ -13,13 +13,8 @@ interface TotalsProps {
 }
 
 export const Totals = (props: TotalsProps) => {
-  const { cartStore, plansStore } = useStores()
-  const [currencyCode, setCurrencyCode] = useState("")
+  const { cartStore, plansStore, commonStore } = useStores()
   const { coupon, priceDelivery, isPlan } = props
-
-  useEffect(() => {
-    if (cartStore.cart.length > 0) setCurrencyCode(cartStore.cart[0].dish.chef.currencyCode)
-  }, [])
 
   useEffect(() => {
     if (coupon?.id > 0) {
@@ -38,14 +33,14 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.semiBold}
             amount={plansStore.price}
-            currencyCode={currencyCode}
+            currencyCode={commonStore.currency}
             preset="simple"
           ></Price>
         ) : (
           <Price
             style={styles.price}
             amount={cartStore.subtotal}
-            currencyCode={currencyCode}
+            currencyCode={commonStore.currency}
           ></Price>
         )}
       </View>
@@ -56,7 +51,7 @@ export const Totals = (props: TotalsProps) => {
           <Price
             style={styles.price}
             amount={cartStore.discount}
-            currencyCode={currencyCode}
+            currencyCode={commonStore.currency}
           ></Price>
         </View>
       )}
@@ -64,7 +59,11 @@ export const Totals = (props: TotalsProps) => {
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
         {priceDelivery > 0 ? (
-          <Price style={styles.price} amount={priceDelivery} currencyCode={currencyCode}></Price>
+          <Price
+            style={styles.price}
+            amount={priceDelivery}
+            currencyCode={commonStore.currency}
+          ></Price>
         ) : (
           <Text tx="common.free"></Text>
         )}
@@ -77,7 +76,7 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.bold}
             amount={plansStore.price}
-            currencyCode={currencyCode}
+            currencyCode={commonStore.currency}
             preset="simple"
           ></Price>
         ) : (
@@ -85,7 +84,7 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.bold}
             amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
-            currencyCode={currencyCode}
+            currencyCode={commonStore.currency}
           ></Price>
         )}
       </View>

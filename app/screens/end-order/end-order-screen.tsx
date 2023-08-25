@@ -37,7 +37,12 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
 
     return (
       <Screen style={ROOT} preset="fixed">
-        <Header style={styles.header} headerTx="endOrderScreen.title" />
+        {!isPlan ? (
+          <Header style={styles.header} headerTx="endOrderScreen.title" />
+        ) : (
+          <Header style={styles.header} headerText="Kasera" />
+        )}
+
         <ScrollView style={utilSpacing.pb7}>
           <Card style={[styles.card, utilSpacing.p5]}>
             <Text tx="endOrderScreen.deliveryOn" preset="bold"></Text>

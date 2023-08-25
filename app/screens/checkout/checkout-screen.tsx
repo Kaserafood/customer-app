@@ -11,6 +11,7 @@ import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
+  Checkbox,
   Header,
   Icon,
   Image,
@@ -51,6 +52,8 @@ const modalStatePaymentList = new ModalStateHandler()
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
+
+    const [subscription, setSubscription] = useState(false)
     const isPlan = params?.isPlan
     const {
       addressStore,
@@ -307,7 +310,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const getTextButtonFooter = (): string => {
       if (isPlan) {
-        return `${getI18nText("checkoutScreen.pay")} ${commonStore.currency + plansStore.price}`
+        return `${getI18nText("checkoutScreen.pay")} ${`${commonStore.currency  } ${  plansStore.price}`}`
       }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
@@ -488,13 +491,21 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               )}
             </Card>
 
-            {/* {isPlan && !!userStore?.currentCard?.id && (
+            {isPlan && !!userStore?.currentCard?.id && (
               <Card
                 style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
               >
-                <Ripple style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.p3]}>
+                <Ripple
+                  style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.p3]}
+                  onPress={() => setSubscription(!subscription)}
+                >
                   <View>
-                    <Checkbox rounded value={false} preset="default"></Checkbox>
+                    <Checkbox
+                      rounded
+                      value={subscription}
+                      preset="default"
+                      onToggle={setSubscription}
+                    ></Checkbox>
                   </View>
 
                   <View style={utilFlex.flex1}>
@@ -512,7 +523,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   </View>
                 </Ripple>
               </Card>
-            )} */}
+            )}
 
             <InputText
               name="taxId"

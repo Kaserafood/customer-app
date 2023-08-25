@@ -80,6 +80,6 @@ const styles = StyleSheet.create({
   },
   containerLocation: {
     backgroundColor: color.primary,
-    height: 68,
+    height: 63,
   },
 })

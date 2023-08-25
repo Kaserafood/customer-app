@@ -165,6 +165,7 @@ export class Api {
     latitude: number,
     longitude: number,
     categoryId?: number,
+    isFavorite?: boolean,
   ): Promise<DishResponse> {
     return await this.request(
       {
@@ -175,6 +176,7 @@ export class Api {
         latitude,
         longitude,
         categoryId,
+        isFavorite,
       },
       "/dishes",
       "GET",

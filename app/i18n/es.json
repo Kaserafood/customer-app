@@ -714,8 +714,8 @@
     "threePerDay": "3 opciones por día",
     "freeDelivery": "Envío gratis",
     "monthForUse": "1 mes para usar",
-    "priceHappy": "Q900",
-    "pricePrime": "Q1,680",
+    "priceHappy": "Q940",
+    "pricePrime": "Q1,800",
     "priceHappyDishes": "(Q45 por platillo)",
     "pricePrimeDishes": "(Q42 por platillo)",
     "packages": "Paquetes",
@@ -779,5 +779,8 @@
     "datesDelivery": "Recibirás platillos en estas fechas:",
     "discount": "Descuento",
     "deliveryPrice": "Precio de envío"
+  },
+  "dishesScreen": {
+    "moreWanted": "Platillos más queridos"
   }
 }

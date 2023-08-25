@@ -65,7 +65,7 @@ const Options = () => {
               utilSpacing.px1,
               utilSpacing.mt5,
             ]}
-            onPress={() => handleSelect(20, 900, "happy")}
+            onPress={() => handleSelect(20, 940, "happy")}
           ></Button>
         </View>
       </View>
@@ -112,7 +112,7 @@ const Options = () => {
             utilSpacing.px1,
             utilSpacing.mt5,
           ]}
-          onPress={() => handleSelect(40, 1680, "prime")}
+          onPress={() => handleSelect(40, 1800, "prime")}
         ></Button>
       </View>
     </View>

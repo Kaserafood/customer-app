@@ -7,4 +7,5 @@ export interface DishParams {
   latitude: number
   longitude: number
   categoryId?: number
+  isFavorite?: boolean
 }

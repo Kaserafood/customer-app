@@ -121,7 +121,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 styleContainer={utilSpacing.mb6}
                 rules={{
                   minLength: {
-                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
+                    value: getMaskLength(countryStore.selectedCountry?.maskPhone || ""),
                     message:
                       userStore.countryId === GUATEMALA
                         ? "registerFormScreen.phoneFormatIncorrectGt"
@@ -129,7 +129,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                   },
                 }}
                 labelTx="addressScreen.phoneDelivery"
-                mask={countryStore.selectedCountry.maskPhone}
+                mask={countryStore.selectedCountry?.maskPhone}
               ></InputText>
             </FormProvider>
           </View>

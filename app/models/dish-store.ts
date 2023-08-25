@@ -2,9 +2,9 @@ import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 
 import { Api, DishResponse } from "../services/api"
 
-import { Dish, dish } from "./dish"
-import { userChef } from "./user-store"
 import { DishParams } from "../screens/home/dish.types"
+import { dish } from "./dish"
+import { userChef } from "./user-store"
 
 export const dishChef = dish.props({
   chef: types.optional(types.maybe(userChef), {}),
@@ -44,6 +44,7 @@ export const DishStoreModel = types
         tokenPagination,
         latitude,
         longitude,
+        isFavorite,
       } = params
       if (categoryId) detach(self.dishesCategory)
       else {
@@ -58,6 +59,7 @@ export const DishStoreModel = types
         latitude,
         longitude,
         categoryId,
+        isFavorite,
       )
 
       if (result && result.kind === "ok") {
@@ -69,7 +71,8 @@ export const DishStoreModel = types
               return { isEmptyResult: true }
             applySnapshot(self.dishes, self.dishes.concat(result.data?.dishes))
           } else {
-            if (result.data?.dishes) applySnapshot(self.dishes, result.data?.dishes)
+            if (result.data?.dishes && !isFavorite) applySnapshot(self.dishes, result.data?.dishes)
+            else if (result.data?.length > 0) applySnapshot(self.dishesFavorites, result.data)
           }
         }
       }
