@@ -17,13 +17,15 @@ export interface ButtonFooterProps extends ButtonProps {
    * Show border top
    */
   borderTop?: boolean
+
+  children? : React.ReactNode
 }
 
 /**
  * Button to use on footer of screen.
  */
 export const ButtonFooter = function ButtonFooter(props: ButtonFooterProps) {
-  const { style, onPress, borderTop = true, ...rest } = props
+  const { style, onPress, borderTop = true, children, ...rest } = props
   const insets = useSafeAreaInsets()
   return (
     <View style={[styles.container, borderTop && styles.bordeTop, style]}>
@@ -36,6 +38,7 @@ export const ButtonFooter = function ButtonFooter(props: ButtonFooterProps) {
           {...rest}
         ></Button>
       </View>
+      {children}
       <View style={{ height: insets.bottom, backgroundColor: color.background }}></View>
     </View>
   )
