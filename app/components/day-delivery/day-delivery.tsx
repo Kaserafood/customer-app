@@ -1,8 +1,9 @@
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useEffect } from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 
+import * as RNLocalize from "react-native-localize"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
@@ -65,6 +66,14 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
   } = props
 
   const { dayStore } = useStores()
+
+  useEffect(() => {
+    dayStore.getDays(RNLocalize.getTimeZone()).then(() => {
+      if (dayStore.days.length > 0) {
+        dayStore.setCurrentDay(dayStore.days[0])
+      }
+    })
+  }, [])
 
   return (
     <View style={[utilSpacing.mt6, style]}>

@@ -25,7 +25,7 @@ const ValuePrepositions = () => {
           style={[utilFlex.flex1, utilSpacing.px4, styles.cardPlans, utilSpacing.mr3]}
         >
           <Text size="lg" preset="bold" tx="mainScreen.packageFoodHealthy"></Text>
-          <View style={utilSpacing.mt3}>
+          <View style={[utilSpacing.mt3, utilFlex.flex1]}>
             <Text tx="mainScreen.dailyDeliveryFree" style={utilFlex.flex1}></Text>
             <Image
               style={[styles.imgPlan, utilFlex.selfCenter, utilSpacing.mt4]}
@@ -48,7 +48,7 @@ const ValuePrepositions = () => {
 
           <View style={utilSpacing.mt3}>
             <Text
-              tx="mainScreen.dailyDeliveryFree"
+              tx="mainScreen.testIndividualDish"
               style={[utilFlex.flex1, utilText.textWhite]}
             ></Text>
             <Image

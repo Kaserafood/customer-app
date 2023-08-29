@@ -101,9 +101,10 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
 
       fetch()
     }
-  }, [userStore.addressId])
+  }, [userStore.addressId, addressStore.current?.latitude, addressStore.current?.longitude, dayStore.currentDay.date])
 
   const fetch = () => {
+    console.log("Fetching chefs")
     const { latitude, longitude } = addressStore.current
 
     state.setData([])

@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useLayoutEffect } from "react"
+import React, { FC, useEffect, useLayoutEffect } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
@@ -34,12 +34,16 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     }, [])
 
     const {
-      categoryStore: { categories },
+      categoryStore: { categories, getAll },
       userStore,
       cartStore,
       commonStore,
       dishStore,
     } = useStores()
+
+    useEffect(() => {
+      getAll()
+    }, [])
 
     const toCategory = (category: Category) => {
       AppEventsLogger.logEvent("categoryPress", 1, {

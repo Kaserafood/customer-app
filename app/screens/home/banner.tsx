@@ -5,6 +5,7 @@ import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 
+import { observer } from "mobx-react-lite"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
@@ -20,7 +21,7 @@ interface PropsBanner {
 }
 const windowWidth = Dimensions.get("window").width
 
-export const Banner = (props: PropsBanner) => {
+export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
 
   const { bannerStore } = useStores()
@@ -143,7 +144,7 @@ export const Banner = (props: PropsBanner) => {
       </ScrollView>
     </View>
   )
-}
+})
 
 interface ButtonProps {
   onPress: () => void

@@ -5,6 +5,7 @@ import Ripple from "react-native-material-ripple"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 import { Icon } from "../icon/icon"
 import { Image } from "../image/image"
 import { Text } from "../text/text"
@@ -24,6 +25,7 @@ interface Props {
   onPressButton?: (id: number, quantity: number, totalCredits: number) => void
   totalCredits?: number
   quantity?: number
+  showCredits?: boolean
 }
 
 const Lunch = observer(
@@ -39,6 +41,7 @@ const Lunch = observer(
     onPressButton,
     totalCredits: totalCreditsProp,
     quantity: quantityProp,
+    showCredits,
   }: Props) => {
     const { cartStore, plansStore } = useStores()
     const [totalCredits, setTotalCredits] = useState(totalCreditsProp || 0)
@@ -58,6 +61,13 @@ const Lunch = observer(
       return true
     }
 
+    const getLabelCredit = () => {
+      if (credits === 1) {
+        return `${credits} ${getI18nText("common.credit")}`
+      }
+      return `${credits} ${getI18nText("common.credits")}`
+    }
+
     return (
       <View>
         <Ripple
@@ -66,8 +76,8 @@ const Lunch = observer(
           style={[
             utilFlex.flexRow,
             utilSpacing.px5,
-            utilSpacing.py3,
-            showButtons && utilSpacing.pb6,
+            utilSpacing.py4,
+            showButtons && styles.paddingBottom,
           ]}
           onPress={onPress}
         >
@@ -94,6 +104,12 @@ const Lunch = observer(
                 </View>
               ))}
             </ScrollView>
+            {showCredits && (
+              <Text
+                style={[styles.credit, utilSpacing.px3, utilSpacing.py1]}
+                text={getLabelCredit()}
+              ></Text>
+            )}
           </View>
         </Ripple>
         {showButtons && (
@@ -175,6 +191,12 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: spacing[5],
   },
+  credit: {
+    alignSelf: "flex-start",
+    backgroundColor: color.palette.greenLight,
+    borderRadius: spacing[2],
+    display: "flex",
+  },
   disabled: {
     opacity: 0.5,
   },
@@ -182,6 +204,9 @@ const styles = StyleSheet.create({
     borderRadius: spacing[3],
     height: 105,
     width: 140,
+  },
+  paddingBottom: {
+    paddingBottom: 38,
   },
   tag: {
     alignSelf: "flex-start",

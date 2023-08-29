@@ -29,7 +29,7 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
   const api = new Api()
 
   useQuery(
-    ["dishes-main", dayStore?.currentDay?.date],
+    ["dishes-main", dayStore?.currentDay?.date || null, addressStore.current.latitude],
     () =>
       api.getAllDishes(
         dayStore?.currentDay?.date || null,
@@ -71,9 +71,7 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
         ></DayDelivery>
       </View>
 
-      {data.length > 0 && (
-        <ListDishes dishes={dishStore.dishes} toDetail={onDishPress}></ListDishes>
-      )}
+      {data.length > 0 && <ListDishes dishes={data} toDetail={onDishPress}></ListDishes>}
 
       <Button
         tx="mainScreen.seeMoreDishes"

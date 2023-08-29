@@ -69,6 +69,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
             <Lunch
               {...lunch}
               showButtons
+              showCredits
               onPressButton={handleButton}
               totalCredits={cartStore.itemPlanCredits(lunch.id, date)}
               quantity={cartStore.itemPlanQuantity(lunch.id, date)}
