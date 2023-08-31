@@ -277,7 +277,11 @@
     "testFirstLunch": "¡Prueba tu primer platillo sin compromisos y envío gratis!",
     "iWantTest": "Quiero probar",
     "priceLunch": "* Paquetes desde Q42 por platillo",
-    "testIndividualDish": "Prueba creaciones caseras de chefs de tu comunidad."
+    "testIndividualDish": "Prueba creaciones caseras de chefs de tu comunidad.",
+    "bookDish": "Reserva platillos",
+    "homemadeChefs": "caseros de chefs locales",
+    "some": "Algunos",
+    "chefsForYou": "chefs para ti"
   },
   "placeholder": {
     "dishTitle": "Costillas con barcaboo de pollo",

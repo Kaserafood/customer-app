@@ -5,7 +5,6 @@ import Ripple from "react-native-material-ripple"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 import { Icon } from "../icon/icon"
 import { Image } from "../image/image"
 import { Text } from "../text/text"
@@ -25,7 +24,6 @@ interface Props {
   onPressButton?: (id: number, quantity: number, totalCredits: number) => void
   totalCredits?: number
   quantity?: number
-  showCredits?: boolean
 }
 
 const Lunch = observer(
@@ -41,7 +39,6 @@ const Lunch = observer(
     onPressButton,
     totalCredits: totalCreditsProp,
     quantity: quantityProp,
-    showCredits,
   }: Props) => {
     const { cartStore, plansStore } = useStores()
     const [totalCredits, setTotalCredits] = useState(totalCreditsProp || 0)
@@ -61,13 +58,6 @@ const Lunch = observer(
       return true
     }
 
-    const getLabelCredit = () => {
-      if (credits === 1) {
-        return `${credits} ${getI18nText("common.credit")}`
-      }
-      return `${credits} ${getI18nText("common.credits")}`
-    }
-
     return (
       <View>
         <Ripple
@@ -84,7 +74,7 @@ const Lunch = observer(
           <Image resizeMode="cover" style={styles.image} source={{ uri: image }}></Image>
           <View style={[utilFlex.flex1, utilSpacing.ml4]}>
             <View>
-              <Text text={name} preset="semiBold" numberOfLines={2}></Text>
+              <Text text={name} preset="semiBold" numberOfLines={2} style={utilSpacing.mb2}></Text>
               <Text text={description} style={utilSpacing.mb3} numberOfLines={2}></Text>
             </View>
 
@@ -104,12 +94,6 @@ const Lunch = observer(
                 </View>
               ))}
             </ScrollView>
-            {showCredits && (
-              <Text
-                style={[styles.credit, utilSpacing.px3, utilSpacing.py1]}
-                text={getLabelCredit()}
-              ></Text>
-            )}
           </View>
         </Ripple>
         {showButtons && (
@@ -122,15 +106,13 @@ const Lunch = observer(
                 utilSpacing.pr3,
               ]}
             >
-              {totalCredits > 0 && (
-                <View style={utilFlex.flexRow}>
-                  <Text text={`${totalCredits} `} preset="semiBold"></Text>
-                  <Text
-                    preset="semiBold"
-                    tx={totalCredits === 1 ? "lunch.credit" : "lunch.credits"}
-                  ></Text>
-                </View>
-              )}
+              <View style={utilFlex.flexRow}>
+                <Text text={`${credits} `} preset="semiBold"></Text>
+                <Text
+                  preset="semiBold"
+                  tx={credits === 1 ? "lunch.credit" : "lunch.credits"}
+                ></Text>
+              </View>
             </View>
 
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, styles.containerButtons]}>

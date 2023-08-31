@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     display: "flex",
     height: 2,
-    width: 70,
+    top: 2,
+    width: 75,
   },
   btnMore: {
     minWidth: 230,

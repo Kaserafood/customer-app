@@ -58,9 +58,12 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
   return (
     <View style={[utilSpacing.py5, utilSpacing.mt5]}>
       <View style={utilSpacing.pl5}>
-        <View style={styles.containerTitle}>
-          <Text tx="mainScreen.homemadeDishes" preset="bold" size="lg"></Text>
-          <View style={styles.bar}></View>
+        <View style={[styles.containerTitle, utilFlex.flexRow]}>
+          <Text tx="mainScreen.bookDish" preset="bold" size="lg"></Text>
+          <View style={utilSpacing.ml2}>
+            <Text tx="mainScreen.homemadeChefs" preset="bold" size="lg"></Text>
+            <View style={styles.bar}></View>
+          </View>
         </View>
 
         <DayDelivery
@@ -112,9 +115,10 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: color.primary,
     height: 2,
-    left: 115,
+    left: -2,
     position: "relative",
-    width: 65,
+    top: 2,
+    width: 60,
   },
   button: {
     minWidth: 240,

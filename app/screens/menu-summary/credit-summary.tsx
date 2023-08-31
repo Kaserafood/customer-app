@@ -18,6 +18,16 @@ const CreditSummary = observer(() => {
     return ((plansStore.totalCredits - cartStore.useCredits) * 100) / plansStore.totalCredits
   }
 
+  const getColorBar = () => {
+    if (getProgress() > 60) {
+      return color.palette.green
+    } else if (getProgress() > 25) {
+      return color.palette.yellow
+    } else {
+      return color.palette.red
+    }
+  }
+
   return (
     <View style={[styles.container, utilSpacing.p5, utilSpacing.m5]}>
       <Text tx="menuSummary.remainingCredits" preset="bold" size="lg"></Text>
@@ -25,7 +35,7 @@ const CreditSummary = observer(() => {
       <ProgressBar
         progress={getProgress()}
         height={7}
-        backgroundColor={color.primary}
+        backgroundColor={getColorBar()}
         trackColor={color.palette.whiteGray}
         progressDuration={450}
       />

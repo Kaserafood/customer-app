@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { StyleSheet, View } from "react-native"
+import { View } from "react-native"
 import { useQuery } from "react-query"
 import { Separator, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
@@ -55,7 +55,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
   }
 
   return (
-    <View style={styles.containerDishes}>
+    <View>
       {data?.length > 0 && (
         <View style={[utilSpacing.px5, utilSpacing.pt3]}>
           <Text tx={title} preset="bold" size="lg"></Text>
@@ -69,7 +69,6 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
             <Lunch
               {...lunch}
               showButtons
-              showCredits
               onPressButton={handleButton}
               totalCredits={cartStore.itemPlanCredits(lunch.id, date)}
               quantity={cartStore.itemPlanQuantity(lunch.id, date)}
@@ -81,12 +80,6 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
       </View>
     </View>
   )
-})
-
-const styles = StyleSheet.create({
-  containerDishes: {
-    // backgroundColor: color.palette.whiteGray,
-  },
 })
 
 export default GroupType

@@ -2,6 +2,7 @@ import React from "react"
 import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 
+import { useNavigation } from "@react-navigation/native"
 import { useQuery } from "react-query"
 import images from "../../assets/images"
 import { Image } from "../../components/image/image"
@@ -10,7 +11,6 @@ import { Category } from "../../models/category-store"
 import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { useNavigation } from "@react-navigation/native"
 
 interface Props {
   onPress: (category: Category) => void
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: color.primary,
     height: 2,
-
+    top: 2,
     width: 55,
   },
   containerCategoryItem: {

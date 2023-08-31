@@ -13,7 +13,7 @@ import { useStores } from "../../models"
 import { Dish } from "../../models/dish"
 import { NavigatorParamList } from "../../navigators"
 import { color } from "../../theme"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ChefItem, ChefItemModel } from "../chefs/chef-item"
 
 export class DataState {
@@ -111,13 +111,6 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
     dishStore
       .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
       .then(() => {
-        // fake data =
-        // const data = []
-
-        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-        // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
         state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByChef))
       })
       .catch((error: Error) => {
@@ -130,9 +123,12 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
 
   return (
     <View style={utilSpacing.ml5}>
-      <View style={[styles.containerTitle, utilSpacing.my5]}>
-        <Text tx="mainScreen.someChefsForYou" preset="bold" size="lg"></Text>
-        <View style={styles.bar}></View>
+      <View style={[styles.containerTitle, utilSpacing.my5, utilFlex.flexRow]}>
+        <Text tx="mainScreen.some" preset="bold" size="lg"></Text>
+        <View style={utilSpacing.ml2}>
+          <Text tx="mainScreen.chefsForYou" preset="bold" size="lg"></Text>
+          <View style={styles.bar}></View>
+        </View>
       </View>
       <ScrollView horizontal>
         {state.data.map((chef, index) => (
@@ -156,9 +152,10 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: color.primary,
     height: 2,
-    left: 60,
+    left: -3,
     position: "relative",
-    width: 40,
+    top: 2,
+    width: 45,
   },
 
   containerTitle: {
