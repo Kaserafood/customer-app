@@ -74,7 +74,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
               quantity={cartStore.itemPlanQuantity(lunch.id, date)}
             ></Lunch>
 
-            {index !== data?.length - 1 && <Separator style={utilSpacing.my5}></Separator>}
+            {index !== data?.length - 1 && <Separator style={utilSpacing.my2}></Separator>}
           </View>
         ))}
       </View>

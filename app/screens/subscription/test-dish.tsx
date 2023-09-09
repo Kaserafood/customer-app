@@ -18,7 +18,7 @@ const TestDish = () => {
     plansStore.setPrice(price)
     plansStore.setType(type)
     if (type === "test") {
-      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 2), "DD/MM/YYYY"))
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 2), "YYYY-MM-DD"))
     }
   }
   return (

@@ -23,13 +23,13 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
     }, [])
 
     useEffect(() => {
-      if (plansStore.totalCredits - cartStore.useCredits <= 0) {
+      if (plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits) <= 0) {
         cartStore.setHasCredits(false)
       } else cartStore.setHasCredits(true)
-    }, [cartStore.useCredits, plansStore.totalCredits])
+    }, [cartStore.useCredits, plansStore.totalCredits, plansStore.consumedCredits])
 
     const getLabelSummary = () => {
-      return `${plansStore.totalCredits - cartStore.useCredits}/${
+      return `${plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)}/${
         plansStore.totalCredits
       } ${getI18nText("common.credits")}`
     }
@@ -101,15 +101,14 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
           })}
           onPress={() => navigation.push("menuSummary")}
         >
-            <Button
-          preset="white"
-          style={utilSpacing.py3}
-          block
-          tx="menuScreen.scheduleLater"
-          onPress={handleScheduleLater}
-        ></Button>
+          <Button
+            preset="white"
+            style={utilSpacing.py3}
+            block
+            tx="menuScreen.scheduleLater"
+            onPress={handleScheduleLater}
+          ></Button>
         </ButtonFooter>
-      
       </Screen>
     )
   },

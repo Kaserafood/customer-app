@@ -9,6 +9,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
 import { ModalLocation } from "../../components/location/modal-location"
 import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
+import { useStores } from "../../models"
 import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
@@ -16,17 +17,23 @@ import { ModalStateHandler } from "../../utils/modalState"
 import Banner from "./banner"
 import Benefits from "./benefits"
 import Menu from "./menu"
+import CreditSummary from "./credit-summary"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
-  function PlansScreen() {
+  function PlansScreen({ navigation }) {
     const [currentDate, setCurrentDate] = useState<DatePlan>()
+    const { plansStore } = useStores()
 
     useEffect(() => {
       RNUxcam.tagScreenName("plans")
     }, [])
+
+    const recharge = () => {
+      navigation.navigate("subscription", { isRecharge: true })
+    }
 
     return (
       <Screen preset="fixed" style={styles.container}>
@@ -39,8 +46,17 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           ></Location>
         </View>
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
-          <Banner variant="light"></Banner>
-          <Benefits></Benefits>
+          {!plansStore.id ? (
+            <>
+              <Banner variant="light"></Banner>
+              <Benefits></Benefits>
+            </>
+          ) : (
+            <>
+              <CreditSummary onRecharge={recharge}></CreditSummary>
+            </>
+          )}
+
           {currentDate?.date && (
             <Menu
               currentDate={currentDate}
@@ -48,13 +64,17 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
             ></Menu>
           )}
 
-          <Text
-            tx="mainScreen.priceLunch"
-            preset="semiBold"
-            style={[utilSpacing.pb5, utilFlex.selfCenter]}
-          ></Text>
+          {!plansStore.id && (
+            <>
+              <Text
+                tx="mainScreen.priceLunch"
+                preset="semiBold"
+                style={[utilSpacing.pb5, utilFlex.selfCenter]}
+              ></Text>
 
-          <Banner variant="dark"></Banner>
+              <Banner variant="dark"></Banner>
+            </>
+          )}
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <ModalDeliveryDatePlan

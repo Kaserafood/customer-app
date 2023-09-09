@@ -6,16 +6,22 @@ import { Text } from "../../components"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { toFormatDate } from "../../utils/date"
 
 const CreditSummary = observer(() => {
   const { plansStore, cartStore } = useStores()
 
   const getLabelSummary = () => {
-    return `${plansStore.totalCredits - cartStore.useCredits} / ${plansStore.totalCredits}`
+    return `${plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)} / ${
+      plansStore.totalCredits
+    }`
   }
 
   const getProgress = () => {
-    return ((plansStore.totalCredits - cartStore.useCredits) * 100) / plansStore.totalCredits
+    return (
+      ((plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)) * 100) /
+      plansStore.totalCredits
+    )
   }
 
   const getColorBar = () => {
@@ -41,7 +47,10 @@ const CreditSummary = observer(() => {
       />
       <View style={[utilFlex.flexRow, utilSpacing.mt2]}>
         <Text tx="menuSummary.expiresOn"></Text>
-        <Text text={plansStore.expireDate} style={utilSpacing.ml2}></Text>
+        <Text
+          text={toFormatDate(new Date(plansStore.expireDate), "DD/MM/YYYY")}
+          style={utilSpacing.ml2}
+        ></Text>
       </View>
     </View>
   )

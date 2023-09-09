@@ -15,7 +15,7 @@ interface Props {
 }
 
 const Summary = ({ priceDelivery, coupon, isPlan }: Props) => {
-  const { plansStore, commonStore } = useStores()
+  const { plansStore, userStore } = useStores()
 
   const getType = () => {
     if (plansStore.type === "happy") {
@@ -55,7 +55,7 @@ const Summary = ({ priceDelivery, coupon, isPlan }: Props) => {
               <Price
                 preset="simple"
                 amount={plansStore.price}
-                currencyCode={commonStore.currency}
+                currencyCode={userStore.account.currency}
                 textStyle={utilText.semiBold}
               ></Price>
             </View>

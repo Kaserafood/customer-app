@@ -5,11 +5,11 @@ import { ChefResponse } from "../services/api"
 import { Api } from "../services/api/api"
 import { saveString } from "../utils/storage"
 
+import { SetupIntent } from "../screens/checkout/modal-payment-stripe"
+import { GUATEMALA } from "../utils/constants"
 import { categoryStore } from "./category-store"
 import { dish } from "./dish"
 import { withEnvironment } from "./extensions/with-environment"
-import { GUATEMALA } from "../utils/constants"
-import { SetupIntent } from "../screens/checkout/modal-payment-stripe"
 
 export const userChef = types.model("UserChef").props({
   id: types.maybeNull(types.number),
@@ -48,6 +48,21 @@ const cardModel = types.model("Card").props({
 })
 export interface Card extends Instance<typeof cardModel> {}
 
+// const plan = types.model("Plan").props({
+//   id: types.number,
+//   totalCredits: types.number,
+//   type: types.string,
+//   expirationDate: types.string,
+//   creditsConsumed: types.number,
+// })
+
+const account = types.model("Account").props({
+  currency: types.string,
+  // plan: plan,
+  date: types.string,
+})
+export interface Account extends Instance<typeof account> {}
+
 export const UserRegisterModel = userRegister
   .props({
     userId: types.maybeNull(types.integer),
@@ -60,6 +75,7 @@ export const UserRegisterModel = userRegister
     currentCard: types.maybe(cardModel),
     isTester: types.maybeNull(types.boolean),
     countryId: types.maybeNull(types.number),
+    account: types.maybeNull(account),
   })
   .extend(withEnvironment)
   .views((self) => ({
@@ -273,4 +289,11 @@ export const UserRegisterModel = userRegister
       }
       return 0
     },
+    setAccount: (account: any) => {
+      self.account = account
+    },
+
+    // setPlan(plan: any) {
+    //   self.account.plan = plan
+    // },
   }))

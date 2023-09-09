@@ -28,7 +28,7 @@ interface endOrderParams {
 }
 
 interface mapScreenParams {
-  screenToReturn: "main" | "checkout"
+  screenToReturn: "main" | "checkout" | "menuSummary"
 }
 
 interface tokenScreenParams {
@@ -57,6 +57,11 @@ interface menuChefProps extends MenuChef {
 
 interface checkoutProps {
   isPlan?: boolean
+  commentToChef?: string
+}
+
+interface subscriptionProps {
+  isRecharge?: boolean
 }
 
 export type NavigatorParamList = {
@@ -88,7 +93,7 @@ export type NavigatorParamList = {
   reportBug: undefined
   plans: undefined
   formPlans: undefined
-  subscription: undefined
+  subscription: subscriptionProps
   menu: undefined
   menuSummary: undefined
   checkoutPlan: undefined

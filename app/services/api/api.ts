@@ -11,6 +11,7 @@ import { loadString } from "../../utils/storage"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
 import { getGeneralApiProblem } from "./api-problem"
 import {
+  AccountResponse,
   AddressResponse,
   BannerResponse,
   CardResponse,
@@ -26,6 +27,8 @@ import {
   LunchesResponse,
   OrderDetailResponse,
   OrderOverviewResponse,
+  OrderPlanRequest,
+  ReservationRequest,
   SetupIntentResponse,
   UserLoginResponse,
   ValueResponse,
@@ -560,5 +563,26 @@ export class Api {
    */
   async getDatesPlans(): Promise<DatesPlansResponse> {
     return await this.request({}, `/recipes/dates`, "GET")
+  }
+
+  /**
+   * @description Insert the name and stripe payment method id
+   */
+  async createOrderPlan(orderPlan: OrderPlanRequest): Promise<ValueResponse> {
+    return await this.request(orderPlan, `/plans`, "POST")
+  }
+
+  /**
+   * @description Create a reservation for an existent plan
+   */
+  async createReservation(orderPlan: ReservationRequest): Promise<ValueResponse> {
+    return await this.request(orderPlan, `/plans/reservation`, "POST")
+  }
+
+  /**
+   * @description Get the user account
+   */
+  async getAccount(userId: number, timeZone: string): Promise<AccountResponse> {
+    return await this.request({ userId, timeZone }, `/users/account`, "GET")
   }
 }

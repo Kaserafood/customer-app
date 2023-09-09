@@ -61,7 +61,7 @@ const Lunch = observer(
     return (
       <View>
         <Ripple
-          rippleOpacity={0.2}
+          rippleOpacity={0}
           rippleDuration={400}
           style={[
             utilFlex.flexRow,
@@ -117,13 +117,15 @@ const Lunch = observer(
 
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, styles.containerButtons]}>
               <TouchableOpacity
-                style={[styles.btn, utilSpacing.p3, quantity === 0 && styles.disabled]}
+                style={[utilSpacing.p5, quantity === 0 && styles.disabled]}
                 onPress={() => {
                   handleButton(quantity - 1, totalCredits - credits)
                 }}
                 disabled={quantity === 0}
               >
-                <Icon name="minus" size={12} color={color.palette.white}></Icon>
+                <View style={[styles.btn, utilSpacing.p3]}>
+                  <Icon name="minus" size={12} color={color.palette.white}></Icon>
+                </View>
               </TouchableOpacity>
               <View style={[styles.total, utilSpacing.mx3, utilFlex.flexCenter]}>
                 <Text>{quantity}</Text>
@@ -131,8 +133,7 @@ const Lunch = observer(
 
               <TouchableOpacity
                 style={[
-                  styles.btn,
-                  utilSpacing.p3,
+                  utilSpacing.p5,
                   (!cartStore.hasCredits || !enoughCredits()) && styles.disabled,
                 ]}
                 onPress={() => {
@@ -140,7 +141,9 @@ const Lunch = observer(
                 }}
                 disabled={!cartStore.hasCredits || !enoughCredits()}
               >
-                <Icon name="plus" size={12} color={color.palette.white}></Icon>
+                <View style={[styles.btn, utilSpacing.p3]}>
+                  <Icon name="plus" size={12} color={color.palette.white}></Icon>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -171,7 +174,7 @@ const styles = StyleSheet.create({
   containerTotal: {
     bottom: 0,
     position: "absolute",
-    right: spacing[5],
+    // right: spacing[5],
   },
   credit: {
     alignSelf: "flex-start",
@@ -188,7 +191,7 @@ const styles = StyleSheet.create({
     width: 140,
   },
   paddingBottom: {
-    paddingBottom: 38,
+    paddingBottom: 50,
   },
   tag: {
     alignSelf: "flex-start",

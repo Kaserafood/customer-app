@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import React from "react"
+import React, { useMemo } from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Button, Icon, Image, Text } from "../../components"
@@ -8,20 +8,52 @@ import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { addDays, toFormatDate } from "../../utils/date"
 
-const Options = () => {
+interface Props {
+  isRecharge: boolean
+  onShowModalChangePlan: () => void
+  toCheckout: () => void
+}
+
+const Options = ({ isRecharge, onShowModalChangePlan, toCheckout }: Props) => {
   const navigation = useNavigation()
-  const { plansStore } = useStores()
+  const { plansStore, userStore, cartStore } = useStores()
+
+  const totalAvailable = useMemo(() => {
+    return plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)
+  }, [plansStore.totalCredits, cartStore.useCredits, plansStore.consumedCredits])
+
+  const isCurrentTypeHappy = useMemo(() => {
+    return plansStore.type === "happy" && plansStore.id > 0 && totalAvailable !== 0
+  }, [plansStore.type, plansStore.id])
+
+  const isCurrentTypePrime = useMemo(() => {
+    return plansStore.type === "prime" && plansStore.id > 0 && totalAvailable !== 0
+  }, [plansStore.type, plansStore.id])
 
   const handleSelect = (credits: number, price: number, type: string) => {
-    navigation.navigate("menu" as never)
+    if ((type === "happy" && isCurrentTypePrime) || (type === "prime" && isCurrentTypeHappy)) {
+      onShowModalChangePlan()
+      return
+    }
+
     plansStore.setTotalCredits(credits)
     plansStore.setPrice(price)
     plansStore.setType(type)
 
     if (type === "happy") {
-      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 30), "DD/MM/YYYY"))
+      plansStore.setExpireDate(
+        toFormatDate(addDays(new Date(userStore.account.date), 30), "YYYY-MM-DD"),
+      )
     } else if (type === "prime") {
-      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 90), "DD/MM/YYYY"))
+      plansStore.setExpireDate(
+        toFormatDate(addDays(new Date(userStore.account.date), 90), "YYYY-MM-DD"),
+      )
+    }
+
+    if (isRecharge) {
+      toCheckout()
+    } else {
+      navigation.navigate("menu" as never)
     }
   }
   return (
@@ -64,6 +96,7 @@ const Options = () => {
               utilSpacing.mx4,
               utilSpacing.px1,
               utilSpacing.mt5,
+              isCurrentTypePrime && styles.opacity,
             ]}
             onPress={() => handleSelect(20, 940, "happy")}
           ></Button>
@@ -111,6 +144,7 @@ const Options = () => {
             utilSpacing.mx4,
             utilSpacing.px1,
             utilSpacing.mt5,
+            isCurrentTypeHappy && styles.opacity,
           ]}
           onPress={() => handleSelect(40, 1800, "prime")}
         ></Button>
@@ -147,6 +181,9 @@ const styles = StyleSheet.create({
   image: {
     height: 100,
     width: 100,
+  },
+  opacity: {
+    opacity: 0.5,
   },
 })
 export default Options

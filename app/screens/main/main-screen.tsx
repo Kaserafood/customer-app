@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
@@ -32,12 +32,8 @@ const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, commonStore, dishStore } = useStores()
+    const { cartStore, commonStore, dishStore, userStore, plansStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
-
-    useEffect(() => {
-      commonStore.getCurrency()
-    }, [])
 
     const onBannerPress = (banner: BannerModel) => {
       const category: Category = {
@@ -95,7 +91,8 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView style={styles.container}>
-          <BannerMain></BannerMain>
+          {!plansStore.id && <BannerMain></BannerMain>}
+
           <ValuePrepositions></ValuePrepositions>
           {currentDate?.date && (
             <Lunches
@@ -117,7 +114,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           </View>
           <Categories onPress={(category) => toCategory(category)}></Categories>
           <Chefs state={state}></Chefs>
-          <BannerMain></BannerMain>
+          {!plansStore.id && <BannerMain></BannerMain>}
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>

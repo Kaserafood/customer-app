@@ -393,7 +393,8 @@
     "happy": "Plan Feliz",
     "prime": "Plan Prime",
     "custom": "Plan personalizado",
-    "test": "Platillo de prueba"
+    "test": "Platillo de prueba",
+    "deliveryTimePlan": "Las entregas son de 10 AM a 1 PM"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",
@@ -701,7 +702,8 @@
       "benefit6": "Fácil de calentar en microondas, horno o sartén"
     },
     "moreInfo": "Más información",
-    "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales"
+    "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales",
+    "recharge": "Recargar"
   },
   "formPlansScreen": {
     "knowYou": "Ayúdanos a conocerte mejor",
@@ -740,7 +742,9 @@
       "part1": "Paga cada vez que compres un paquete o",
       "part2": " activa un plan mensual ",
       "part3": "con cobro automático (como Netflix 😜) para obtener mejores precios."
-    }
+    },
+    "changePlan": "Cambio de plan",
+    "changePlanDescription": "No puedes cambiar de plan hasta que termines los créditos de tu plan actual"
   },
   "menuScreen": {
     "title": "Menú",

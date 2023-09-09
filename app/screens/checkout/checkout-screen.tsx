@@ -36,7 +36,10 @@ import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
+import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
+import { useMutation } from "react-query"
+import { Api, OrderPlanRequest } from "../../services/api"
 import { MEXICO } from "../../utils/constants"
 import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
@@ -52,6 +55,7 @@ const modalStatePaymentList = new ModalStateHandler()
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
+    const api = new Api()
 
     const [subscription, setSubscription] = useState(false)
     const isPlan = params?.isPlan
@@ -95,6 +99,41 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       }
     }, [navigation])
 
+    const { mutate: createOrderPlan } = useMutation(
+      (data: OrderPlanRequest) => api.createOrderPlan(data),
+      {
+        onSuccess: (res) => {
+          const planId = Number(res.data.value)
+          if (planId > 0) {
+            plansStore.setConsumedCredits(cartStore.useCredits + plansStore.consumedCredits)
+
+            plansStore.setId(Number(res.data.value))
+            navigation.navigate("endOrder", {
+              orderId: 0,
+              deliveryDate: getDatesDelivery(),
+              deliveryTime: getI18nText("checkoutScreen.deliveryTimePlan"),
+              deliveryAddress: addressStore.current.address,
+              imageChef:
+                "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
+              isPlan: true,
+            })
+          } else if (planId === -1) {
+            messagesStore.showError("checkoutScreen.errorOrderPayment", true)
+            RNUxcam.logEvent("checkout: errorOrderPayment")
+          } else {
+            RNUxcam.logEvent("checkout: errorOrder")
+            messagesStore.showError("checkoutScreen.errorOrder", true)
+          }
+          commonStore.setVisibleLoading(false)
+        },
+        onError: (error) => {
+          console.log("error", error)
+          messagesStore.showError("checkoutScreen.errorOrder", true)
+          commonStore.setVisibleLoading(false)
+        },
+      },
+    )
+
     const getPaymentMethodId = () => {
       if (userStore.currentCard?.id) return userStore.currentCard?.id
 
@@ -115,9 +154,37 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       __DEV__ && console.log({ errors })
     }
 
-    const sendOrder = (data) => {
+    const sendOrder = async (data) => {
       if (isPlan) {
-        createOrderPlan()
+        commonStore.setVisibleLoading(true)
+        const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
+        const items = cartStore.cartPlans.map((item) => ({
+          recipeId: item.id,
+          deliveryDate: item.date,
+          credits: item.credits,
+          quantity: item.quantity,
+        }))
+
+        const orderPlan: OrderPlanRequest = {
+          userId: userStore.userId,
+          totalCredits: plansStore.totalCredits,
+          type: plansStore.type,
+          amount: plansStore.price,
+          expirationDate: plansStore.expireDate,
+          items,
+          timeZone: RNLocalize.getTimeZone(),
+          addressId: userStore.addressId,
+          noteDelivery: data.customerNote,
+          taxId,
+          paymentMethodType: getPaymentMethodId() ? "card" : "cash",
+          paymentMethodTokenId: getPaymentMethodId(),
+          versionApp: getVersion(),
+          deviceType: Platform.OS,
+          commentToChef: params?.commentToChef,
+          currencyCode: userStore.account.currency,
+        }
+        console.log(data)
+        createOrderPlan(orderPlan)
       } else {
         createOrderDish(data)
       }
@@ -135,23 +202,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       )
 
       return uniqueDates.join(", ")
-    }
-
-    const createOrderPlan = () => {
-      commonStore.setVisibleLoading(true)
-
-      setTimeout(() => {
-        commonStore.setVisibleLoading(false)
-        navigation.navigate("endOrder", {
-          orderId: 0,
-          deliveryDate: getDatesDelivery(),
-          deliveryTime: "Las entregas son de 10 AM a 1 PM",
-          deliveryAddress: addressStore.current.address,
-          imageChef:
-            "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
-          isPlan: true,
-        })
-      }, 1500)
     }
 
     const createOrderDish = async (data) => {
@@ -310,7 +360,9 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const getTextButtonFooter = (): string => {
       if (isPlan) {
-        return `${getI18nText("checkoutScreen.pay")} ${`${commonStore.currency  } ${  plansStore.price}`}`
+        return `${getI18nText(
+          "checkoutScreen.pay",
+        )} ${`${userStore.account.currency} ${plansStore.price}`}`
       }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",

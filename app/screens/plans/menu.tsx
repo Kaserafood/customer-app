@@ -4,6 +4,7 @@ import { View } from "react-native"
 import { useQuery } from "react-query"
 import { Chip, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
+import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
 
@@ -14,6 +15,7 @@ interface Props {
 
 const Menu = ({ currentDate, showModalDates }: Props) => {
   const navigation = useNavigation()
+  const { userStore, plansStore } = useStores()
   const api = new Api()
 
   const { data: lunches } = useQuery(
@@ -26,6 +28,14 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
       },
     },
   )
+
+  const handlePressDish = () => {
+    if (!plansStore.id) {
+      navigation.navigate("subscription" as never)
+    } else {
+      navigation.navigate("menu" as never)
+    }
+  }
 
   return (
     <View style={utilSpacing.py5}>
@@ -52,11 +62,7 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
       </View>
 
       {lunches?.data?.map((lunch) => (
-        <Lunch
-          {...lunch}
-          key={lunch.id}
-          onPress={() => navigation.navigate("subscription" as never)}
-        ></Lunch>
+        <Lunch {...lunch} key={lunch.id} onPress={handlePressDish}></Lunch>
       ))}
     </View>
   )

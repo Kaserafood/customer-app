@@ -4,20 +4,41 @@ import React from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
+import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
+import { useQuery } from "react-query"
 import { Icon } from "../components"
+import { useStores } from "../models"
 import { HomeScreen, PlansScreen, SearchScreen } from "../screens"
 import { MainScreen } from "../screens/main/main-screen"
+import { Api } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
 
+const api = new Api()
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const insets = useSafeAreaInsets()
+  const { userStore, plansStore } = useStores()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
   }
+
+  useQuery(
+    ["user", userStore.userId],
+    () => api.getAccount(userStore.userId, RNLocalize.getTimeZone()),
+    {
+      onSuccess: (data: any) => {
+        const { currency, date } = data.data
+
+        userStore.setAccount({ currency, date })
+        plansStore.setPlan(data.data.plan)
+      },
+      enabled: userStore.userId > 0,
+    },
+  )
+
   return (
     <Tab.Navigator
       screenOptions={{

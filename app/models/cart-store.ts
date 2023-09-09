@@ -59,6 +59,19 @@ export const CartStoreModel = types
     get countQuantityItemsPlan() {
       return self.cartPlans.reduce((acc, item) => acc + (item.quantity ?? 0), 0)
     },
+    get datesDelivery() {
+      const dates = []
+
+      self.cartPlans.forEach((item) => {
+        dates.push(item.dateShortName)
+      })
+
+      const uniqueDates = dates.filter(
+        (item, index, self) => index === self.findIndex((t) => t === item),
+      )
+
+      return uniqueDates.join(", ")
+    },
   }))
   .actions((self) => ({
     addItem(itemCart: ItemCart) {
@@ -113,10 +126,6 @@ export const CartStoreModel = types
       const { id, date } = itemCart
       const item = self.cartPlans.find((item) => item.id === id && item.date === date)
       applySnapshot(self.cartPlans[self.cartPlans.indexOf(item)], itemCart)
-    },
-    remoteItemPlan(id: number, date: string) {
-      const item = self.cartPlans.find((item) => item.id === id && item.date === date)
-      detach(self.cartPlans[self.cartPlans.indexOf(item)])
     },
     itemPlanCredits(id: number, date: string) {
       const item = self.cartPlans.find((item) => item.id === id && item.date === date)

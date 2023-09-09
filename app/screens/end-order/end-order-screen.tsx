@@ -4,10 +4,13 @@ import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View, ViewStyle } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 
+import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
+import { useQuery } from "react-query"
 import { Button, Card, Header, Image, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
+import { Api } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { spacing } from "../../theme/spacing"
@@ -17,7 +20,7 @@ const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
   flex: 1,
 }
-
+const api = new Api()
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
     const { orderId, isPlan } = params
@@ -28,12 +31,19 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
 
     const [order, setOrder] = useState("")
     const [thankYou, setThankYou] = useState("")
-    const { userStore, cartStore } = useStores()
+    const { userStore, cartStore, plansStore } = useStores()
     useEffect(() => {
       cartStore.cleanItems()
+      cartStore.cleanItemsPlan()
       if (orderId) setOrder(`${getI18nText("endOrderScreen.order")} #${params.orderId}`)
       setThankYou(`¡${getI18nText("endOrderScreen.thankYou")} ${userStore.displayName}!`)
     }, [])
+
+    useQuery("user", () => api.getAccount(userStore.userId, RNLocalize.getTimeZone()), {
+      onSuccess: (data: any) => {
+        plansStore.setPlan(data.data.plan)
+      },
+    })
 
     return (
       <Screen style={ROOT} preset="fixed">

@@ -4,7 +4,7 @@ import { Category } from "../../models/category-store"
 import { Country } from "../../models/country-store"
 import { Day, DeliveryTime } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
-import { Card, UserChef } from "../../models/user-store"
+import { Account, Card, UserChef } from "../../models/user-store"
 
 import { GeneralApiProblem } from "./api-problem"
 
@@ -133,4 +133,48 @@ export type DatePlan = {
 
 export type DatesPlansResponse = {
   data: DatePlan[]
+} & kind
+
+export type OrderPlanRequest = {
+  userId: number
+  totalCredits: number
+  type: string
+  amount: number
+  expirationDate: string
+  items: {
+    recipeId: number
+    deliveryDate: string
+    credits: number
+  }[]
+  timeZone: string
+  addressId: number
+  noteDelivery?: string
+  taxId?: string
+  paymentMethodType: string
+  paymentMethodStripeId?: number
+  paymentMethodTokenId?: number | string
+  coupon?: string
+  amountCoupon?: number
+  versionApp: string
+  deviceType: string
+  isSubscription?: boolean
+  commentToChef?: string
+  currencyCode: string
+}
+
+export interface ReservationRequest {
+  orderPlanId: number
+  items: {
+    recipeId: number
+    quantity: number
+    deliveryDate: string
+    credits: number
+  }[]
+  timeZone: string
+  userId: number
+  commentToChef?: string
+}
+
+export type AccountResponse = {
+  data: Account
 } & kind

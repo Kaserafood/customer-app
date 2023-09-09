@@ -32,15 +32,4 @@ export const CommonStoreModel = types
         self.phoneNumber = result.data?.value
       }
     }),
-    getCurrency: flow(function* () {
-      const api = new Api()
-      const result = yield api.getParam("woocommerce_currency")
-
-      if (result && result.kind === "ok") {
-        self.currency = result.data?.value
-      }
-    }),
-    setCurrency(currency: string) {
-      self.currency = currency
-    },
   }))
