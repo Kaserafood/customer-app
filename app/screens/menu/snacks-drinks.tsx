@@ -36,6 +36,7 @@ const SnacksDrinks = observer(({ currentDate }: Props) => {
         credits: totalCredits,
         date,
         name: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.name,
+        description: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.description,
         dateLongName: dateNameLong,
         dateShortName: dateNameShort,
       })
@@ -46,6 +47,7 @@ const SnacksDrinks = observer(({ currentDate }: Props) => {
         credits: totalCredits,
         date,
         name: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.name,
+        description: snacksDrinks?.data?.find((lunch) => lunch.id === id)?.description,
         dateLongName: dateNameLong,
         dateShortName: dateNameShort,
       })

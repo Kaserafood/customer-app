@@ -33,14 +33,14 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.semiBold}
             amount={plansStore.price}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
             preset="simple"
           ></Price>
         ) : (
           <Price
             style={styles.price}
             amount={cartStore.subtotal}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
           ></Price>
         )}
       </View>
@@ -51,7 +51,7 @@ export const Totals = (props: TotalsProps) => {
           <Price
             style={styles.price}
             amount={cartStore.discount}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
           ></Price>
         </View>
       )}
@@ -62,7 +62,7 @@ export const Totals = (props: TotalsProps) => {
           <Price
             style={styles.price}
             amount={priceDelivery}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
           ></Price>
         ) : (
           <Text tx="common.free"></Text>
@@ -76,7 +76,7 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.bold}
             amount={plansStore.price}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
             preset="simple"
           ></Price>
         ) : (
@@ -84,7 +84,7 @@ export const Totals = (props: TotalsProps) => {
             style={styles.price}
             textStyle={utilText.bold}
             amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
-            currencyCode={userStore.account.currency}
+            currencyCode={userStore.account?.currency}
           ></Price>
         )}
       </View>

@@ -23,6 +23,7 @@ export interface MetaDataCart extends SnapshotIn<typeof metaDataCart> {}
 const itemCartPlans = types.model("ItemCartPlans").props({
   id: types.number,
   name: types.maybeNull(types.string),
+  description: types.string,
   quantity: types.number,
   credits: types.number,
   date: types.string,
@@ -39,6 +40,7 @@ export const CartStoreModel = types
     discount: types.maybe(types.number),
     cartPlans: types.array(itemCartPlans),
     hasCredits: types.maybe(types.boolean),
+    inRechargeProcess: types.maybe(types.boolean),
   })
   .views((self) => ({
     get subtotal() {
@@ -137,5 +139,8 @@ export const CartStoreModel = types
     },
     setHasCredits(hasCredits: boolean) {
       self.hasCredits = hasCredits
+    },
+    setInRechargeProcess(inRechargeProcess: boolean) {
+      self.inRechargeProcess = inRechargeProcess
     },
   }))

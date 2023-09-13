@@ -99,6 +99,7 @@ export class Api {
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         config.headers["country-id"] = parseInt(countryId || -1)
+        config.headers["Accept-Language"] = locale
 
         if (config.url === "/users/login") countryId = null
         return config
@@ -576,6 +577,7 @@ export class Api {
    * @description Create a reservation for an existent plan
    */
   async createReservation(orderPlan: ReservationRequest): Promise<ValueResponse> {
+    console.log("LOCALE", locale)
     return await this.request(orderPlan, `/plans/reservation`, "POST")
   }
 

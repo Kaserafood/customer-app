@@ -31,7 +31,14 @@ export const RegisterFormScreen: FC<
 > = observer(({ navigation }) => {
   const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { userStore, commonStore, addressStore, messagesStore, countryStore } = useStores()
+  const {
+    userStore,
+    commonStore,
+    addressStore,
+    messagesStore,
+    countryStore,
+    cartStore,
+  } = useStores()
   const fieldPhone = useRef(null)
 
   const goTerms = () => navigation.navigate("termsConditions")
@@ -111,7 +118,7 @@ export const RegisterFormScreen: FC<
             RNUxcam.logEvent("register", {
               exploreApp: true,
             })
-            navigation.navigate("checkout")
+            navigation.navigate("checkout", { isPlan: cartStore.inRechargeProcess })
           }
         })
         .catch((error: Error) => {

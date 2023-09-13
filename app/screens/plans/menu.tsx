@@ -30,7 +30,7 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
   )
 
   const handlePressDish = () => {
-    if (!plansStore.id) {
+    if (!plansStore.hasActivePlan || !plansStore.hasCredits) {
       navigation.navigate("subscription" as never)
     } else {
       navigation.navigate("menu" as never)

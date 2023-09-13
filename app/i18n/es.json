@@ -703,7 +703,8 @@
     },
     "moreInfo": "Más información",
     "messageWhatsApp": "Hola, quiero mas información sobre los paquetes de almuerzos semanales",
-    "recharge": "Recargar"
+    "recharge": "Recargar",
+    "packageExpired": "Tu paquete ha expirado el {{date}}"
   },
   "formPlansScreen": {
     "knowYou": "Ayúdanos a conocerte mejor",

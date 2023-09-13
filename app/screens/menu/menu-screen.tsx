@@ -101,13 +101,15 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
           })}
           onPress={() => navigation.push("menuSummary")}
         >
-          <Button
-            preset="white"
-            style={utilSpacing.py3}
-            block
-            tx="menuScreen.scheduleLater"
-            onPress={handleScheduleLater}
-          ></Button>
+          {cartStore.inRechargeProcess && (
+            <Button
+              preset="white"
+              style={utilSpacing.py3}
+              block
+              tx="menuScreen.scheduleLater"
+              onPress={handleScheduleLater}
+            ></Button>
+          )}
         </ButtonFooter>
       </Screen>
     )

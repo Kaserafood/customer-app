@@ -1,7 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC } from "react"
-import { StyleSheet } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { ButtonFooter, Header, Screen } from "../../components/"
 
@@ -12,7 +11,6 @@ import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { Api, ReservationRequest } from "../../services/api"
-import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
@@ -25,7 +23,14 @@ const modalStateLocation = new ModalStateHandler()
 const api = new Api()
 export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSummary">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, addressStore, userStore, plansStore, commonStore } = useStores()
+    const {
+      cartStore,
+      addressStore,
+      userStore,
+      plansStore,
+      commonStore,
+      messagesStore,
+    } = useStores()
     const methods = useForm({
       defaultValues: {
         note: "",
@@ -48,6 +53,8 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
                 "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
               isPlan: true,
             })
+          } else {
+            messagesStore.showError()
           }
         },
         onError: () => {
@@ -57,7 +64,13 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
     )
 
     const handleContinue = (data) => {
-      if (plansStore.id > 0) {
+      // Id de usuario va ser -1 cuando entra como "Explora la app"
+      if (userStore.userId === -1) {
+        navigation.navigate("registerForm")
+        return
+      }
+
+      if (plansStore.hasActivePlan && !cartStore.inRechargeProcess) {
         commonStore.setVisibleLoading(true)
         createReservation({
           orderPlanId: plansStore.id,
@@ -66,6 +79,8 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
             quantity: item.quantity,
             deliveryDate: item.date,
             credits: item.credits,
+            name: item.name,
+            description: item.description,
           })),
           timeZone: RNLocalize.getTimeZone(),
           userId: userStore.userId,
@@ -96,9 +111,3 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
     )
   },
 )
-
-const styles = StyleSheet.create({
-  containerInput: {
-    backgroundColor: color.palette.whiteGray,
-  },
-})

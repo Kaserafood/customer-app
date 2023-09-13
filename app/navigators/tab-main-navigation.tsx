@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { DrawerActions } from "@react-navigation/native"
-import React from "react"
+import React, { useEffect } from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
@@ -11,10 +11,11 @@ import { Icon } from "../components"
 import { useStores } from "../models"
 import { HomeScreen, PlansScreen, SearchScreen } from "../screens"
 import { MainScreen } from "../screens/main/main-screen"
-import { Api } from "../services/api"
+import { Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
+import { setLocaleI18n } from "../i18n"
 
 const api = new Api()
 export function TabMainNavigation({ navigationRef }) {
@@ -38,6 +39,15 @@ export function TabMainNavigation({ navigationRef }) {
       enabled: userStore.userId > 0,
     },
   )
+  useEffect(() => {
+    if (userStore.countryId === 1) {
+      setLocale("es")
+      setLocaleI18n("es")
+    } else {
+      setLocale("en")
+      setLocaleI18n("en")
+    }
+  }, [userStore.countryId])
 
   return (
     <Tab.Navigator

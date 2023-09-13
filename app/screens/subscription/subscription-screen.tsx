@@ -1,11 +1,13 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
+import * as RNLocalize from "react-native-localize"
 import { Icon, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList, goBack } from "../../navigators"
+import { Api } from "../../services/api"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -15,10 +17,24 @@ import Options from "./options"
 import TestDish from "./test-dish"
 
 const modalStatePlan = new ModalStateHandler()
-
+const api = new Api()
 export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription">> = observer(
   function SubscriptionScreen({ navigation, route: { params } }) {
-    const { plansStore } = useStores()
+    const { plansStore, userStore, cartStore } = useStores()
+
+    useEffect(() => {
+      cartStore.setInRechargeProcess(true)
+    }, [])
+
+    useEffect(() => {
+      navigation.addListener("beforeRemove", () => {
+        api.getAccount(userStore.userId, RNLocalize.getTimeZone()).then((response: any) => {
+          plansStore.setPlan(response.data?.plan)
+          cartStore.cleanItemsPlan()
+          cartStore.setInRechargeProcess(false)
+        })
+      })
+    }, [navigation])
 
     const goCheckout = () => {
       navigation.navigate("checkout", { isPlan: true })
@@ -45,7 +61,6 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
           </View>
 
           <Options
-            isRecharge={params?.isRecharge}
             toCheckout={goCheckout}
             onShowModalChangePlan={() => modalStatePlan.setVisible(true)}
           ></Options>

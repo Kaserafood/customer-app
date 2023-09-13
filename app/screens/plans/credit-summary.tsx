@@ -1,5 +1,6 @@
+import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
-import React from "react"
+import React, { useMemo } from "react"
 import { StyleSheet, View } from "react-native"
 import ProgressBar from "react-native-animated-progress"
 import { Button, Text } from "../../components"
@@ -7,6 +8,7 @@ import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { toFormatDate } from "../../utils/date"
+import { getI18nText } from "../../utils/translate"
 
 interface Props {
   onRecharge: () => void
@@ -14,24 +16,25 @@ interface Props {
 
 const CreditSummary = observer(({ onRecharge }: Props) => {
   const { plansStore, cartStore } = useStores()
+  const navigation = useNavigation()
 
-  const getLabelSummary = () => {
+  const labelSummary = useMemo(() => {
     return `${plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)} / ${
       plansStore.totalCredits
     }`
-  }
+  }, [plansStore.totalCredits, cartStore.useCredits, plansStore.consumedCredits])
 
-  const getProgress = () => {
+  const progress = useMemo(() => {
     return (
       ((plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)) * 100) /
       plansStore.totalCredits
     )
-  }
+  }, [plansStore.totalCredits, cartStore.useCredits, plansStore.consumedCredits])
 
   const getColorBar = () => {
-    if (getProgress() > 60) {
+    if (progress > 60) {
       return color.palette.green
-    } else if (getProgress() > 25) {
+    } else if (progress > 25) {
       return color.palette.yellow
     } else {
       return color.palette.red
@@ -40,6 +43,10 @@ const CreditSummary = observer(({ onRecharge }: Props) => {
 
   const handleRecharge = () => {
     onRecharge()
+  }
+
+  const toSubscription = () => {
+    navigation.navigate("subscription" as never)
   }
 
   return (
@@ -52,35 +59,54 @@ const CreditSummary = observer(({ onRecharge }: Props) => {
         utilFlex.flexCenterVertical,
       ]}
     >
-      <View style={utilFlex.flex1}>
-        <Text tx="menuSummary.remainingCredits" preset="bold" size="lg"></Text>
-        <Text size="lg" preset="semiBold" text={getLabelSummary()} style={utilSpacing.mb4}></Text>
-        <ProgressBar
-          progress={getProgress()}
-          height={7}
-          backgroundColor={getColorBar()}
-          trackColor={color.palette.whiteGray}
-          progressDuration={450}
-        />
-        <View style={[utilFlex.flexRow, utilSpacing.mt2]}>
-          <Text tx="menuSummary.expiresOn"></Text>
+      {!plansStore.hasActivePlan ? (
+        <>
           <Text
-            text={toFormatDate(new Date(plansStore.expireDate), "DD/MM/YYYY")}
-            style={utilSpacing.ml2}
+            text={getI18nText("plansScreen.packageExpired", {
+              date: toFormatDate(new Date(plansStore.expireDate), "DD/MM/YYYY"),
+            })}
+            preset="bold"
+            size="lg"
           ></Text>
+
+          <Button
+            tx="plansScreen.recharge"
+            style={[utilSpacing.py3, utilSpacing.px1, utilSpacing.mt5, styles.btnSelect]}
+            onPress={toSubscription}
+          ></Button>
+        </>
+      ) : (
+        <View style={utilFlex.flex1}>
+          <Text tx="menuSummary.remainingCredits" preset="bold" size="lg"></Text>
+          <Text size="lg" preset="semiBold" text={labelSummary} style={utilSpacing.mb4}></Text>
+          <ProgressBar
+            progress={progress}
+            height={7}
+            backgroundColor={getColorBar()}
+            trackColor={color.palette.whiteGray}
+            progressDuration={450}
+          />
+          <View style={[utilFlex.flexRow, utilSpacing.mt2]}>
+            <Text tx="menuSummary.expiresOn"></Text>
+            <Text
+              text={toFormatDate(new Date(plansStore.expireDate), "DD/MM/YYYY")}
+              style={utilSpacing.ml2}
+            ></Text>
+          </View>
+
+          <Button
+            tx="plansScreen.recharge"
+            style={[
+              utilSpacing.py3,
+              // utilSpacing.ml4,
+              utilSpacing.px1,
+              utilSpacing.mt5,
+              styles.btnSelect,
+            ]}
+            onPress={handleRecharge}
+          ></Button>
         </View>
-      </View>
-      <Button
-        tx="plansScreen.recharge"
-        style={[
-          utilSpacing.py3,
-          utilSpacing.ml4,
-          utilSpacing.px1,
-          utilSpacing.mt5,
-          styles.btnSelect,
-        ]}
-        onPress={handleRecharge}
-      ></Button>
+      )}
     </View>
   )
 })

@@ -9,7 +9,16 @@ export const PlansStoreModel = types
     type: types.optional(types.string, ""),
     price: types.optional(types.number, 0),
     consumedCredits: types.optional(types.number, 0),
+    state: types.optional(types.string, ""),
   })
+  .views((self) => ({
+    get hasActivePlan() {
+      return self.id > 0 && self.state !== "expired"
+    },
+    get hasCredits() {
+      return self.totalCredits - self.consumedCredits > 0
+    },
+  }))
   .actions((self) => ({
     setId(id: number) {
       self.id = id
@@ -41,6 +50,18 @@ export const PlansStoreModel = types
         self.type = ""
         self.price = 0
         self.consumedCredits = 0
+        self.state = ""
+      }
+    },
+    getPlan() {
+      return {
+        id: self.id,
+        totalCredits: self.totalCredits,
+        expireDate: self.expireDate,
+        type: self.type,
+        price: self.price,
+        consumedCredits: self.consumedCredits,
+        state: self.state,
       }
     },
     setConsumedCredits(consumedCredits: number) {

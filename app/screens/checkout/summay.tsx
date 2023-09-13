@@ -55,7 +55,7 @@ const Summary = ({ priceDelivery, coupon, isPlan }: Props) => {
               <Price
                 preset="simple"
                 amount={plansStore.price}
-                currencyCode={userStore.account.currency}
+                currencyCode={userStore.account?.currency}
                 textStyle={utilText.semiBold}
               ></Price>
             </View>

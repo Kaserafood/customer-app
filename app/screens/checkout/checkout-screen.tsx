@@ -163,6 +163,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           deliveryDate: item.date,
           credits: item.credits,
           quantity: item.quantity,
+          name: item.name,
+          description: item.description,
         }))
 
         const orderPlan: OrderPlanRequest = {
@@ -181,7 +183,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           versionApp: getVersion(),
           deviceType: Platform.OS,
           commentToChef: params?.commentToChef,
-          currencyCode: userStore.account.currency,
+          currencyCode: userStore.account?.currency,
         }
         console.log(data)
         createOrderPlan(orderPlan)
@@ -362,7 +364,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       if (isPlan) {
         return `${getI18nText(
           "checkoutScreen.pay",
-        )} ${`${userStore.account.currency} ${plansStore.price}`}`
+        )} ${`${userStore.account?.currency} ${plansStore.price}`}`
       }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",

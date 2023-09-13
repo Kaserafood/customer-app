@@ -16,8 +16,8 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import Banner from "./banner"
 import Benefits from "./benefits"
-import Menu from "./menu"
 import CreditSummary from "./credit-summary"
+import Menu from "./menu"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
@@ -25,14 +25,16 @@ const modalStateDeliveryDatePlan = new ModalStateHandler()
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen({ navigation }) {
     const [currentDate, setCurrentDate] = useState<DatePlan>()
-    const { plansStore } = useStores()
+    const { plansStore, cartStore } = useStores()
 
     useEffect(() => {
+      cartStore.setInRechargeProcess(false)
       RNUxcam.tagScreenName("plans")
     }, [])
 
     const recharge = () => {
-      navigation.navigate("subscription", { isRecharge: true })
+      cartStore.setInRechargeProcess(true)
+      navigation.navigate("subscription")
     }
 
     return (
@@ -46,7 +48,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           ></Location>
         </View>
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
-          {!plansStore.id ? (
+          {!plansStore.hasActivePlan ? (
             <>
               <Banner variant="light"></Banner>
               <Benefits></Benefits>
@@ -64,7 +66,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
             ></Menu>
           )}
 
-          {!plansStore.id && (
+          {!plansStore.hasActivePlan && (
             <>
               <Text
                 tx="mainScreen.priceLunch"

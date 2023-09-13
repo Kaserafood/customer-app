@@ -9,12 +9,11 @@ import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { addDays, toFormatDate } from "../../utils/date"
 
 interface Props {
-  isRecharge: boolean
   onShowModalChangePlan: () => void
   toCheckout: () => void
 }
 
-const Options = ({ isRecharge, onShowModalChangePlan, toCheckout }: Props) => {
+const Options = ({ onShowModalChangePlan, toCheckout }: Props) => {
   const navigation = useNavigation()
   const { plansStore, userStore, cartStore } = useStores()
 
@@ -23,11 +22,21 @@ const Options = ({ isRecharge, onShowModalChangePlan, toCheckout }: Props) => {
   }, [plansStore.totalCredits, cartStore.useCredits, plansStore.consumedCredits])
 
   const isCurrentTypeHappy = useMemo(() => {
-    return plansStore.type === "happy" && plansStore.id > 0 && totalAvailable !== 0
+    return (
+      plansStore.type === "happy" &&
+      plansStore.id > 0 &&
+      totalAvailable !== 0 &&
+      plansStore.hasActivePlan
+    )
   }, [plansStore.type, plansStore.id])
 
   const isCurrentTypePrime = useMemo(() => {
-    return plansStore.type === "prime" && plansStore.id > 0 && totalAvailable !== 0
+    return (
+      plansStore.type === "prime" &&
+      plansStore.id > 0 &&
+      totalAvailable !== 0 &&
+      plansStore.hasActivePlan
+    )
   }, [plansStore.type, plansStore.id])
 
   const handleSelect = (credits: number, price: number, type: string) => {
@@ -37,20 +46,21 @@ const Options = ({ isRecharge, onShowModalChangePlan, toCheckout }: Props) => {
     }
 
     plansStore.setTotalCredits(credits)
+    plansStore.setConsumedCredits(0)
     plansStore.setPrice(price)
     plansStore.setType(type)
 
+    let date = new Date()
+
+    if (userStore.account?.date) date = new Date(userStore.account?.date)
+
     if (type === "happy") {
-      plansStore.setExpireDate(
-        toFormatDate(addDays(new Date(userStore.account.date), 30), "YYYY-MM-DD"),
-      )
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 31), "YYYY-MM-DD"))
     } else if (type === "prime") {
-      plansStore.setExpireDate(
-        toFormatDate(addDays(new Date(userStore.account.date), 90), "YYYY-MM-DD"),
-      )
+      plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 93), "YYYY-MM-DD"))
     }
 
-    if (isRecharge) {
+    if (cartStore.inRechargeProcess && !plansStore.hasCredits) {
       toCheckout()
     } else {
       navigation.navigate("menu" as never)

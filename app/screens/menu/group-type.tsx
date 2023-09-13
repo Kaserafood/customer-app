@@ -38,6 +38,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
           credits: totalCredits,
           date,
           name: data?.find((lunch) => lunch.id === id)?.name,
+          description: data?.find((lunch) => lunch.id === id)?.description,
           dateLongName: dateNameLong,
           dateShortName: dateNameShort,
         })
@@ -48,6 +49,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
         credits: totalCredits,
         date,
         name: data?.find((lunch) => lunch.id === id)?.name,
+        description: data?.find((lunch) => lunch.id === id)?.description,
         dateLongName: dateNameLong,
         dateShortName: dateNameShort,
       })

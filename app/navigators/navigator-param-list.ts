@@ -60,10 +60,6 @@ interface checkoutProps {
   commentToChef?: string
 }
 
-interface subscriptionProps {
-  isRecharge?: boolean
-}
-
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -93,7 +89,7 @@ export type NavigatorParamList = {
   reportBug: undefined
   plans: undefined
   formPlans: undefined
-  subscription: subscriptionProps
+  subscription: undefined
   menu: undefined
   menuSummary: undefined
   checkoutPlan: undefined
