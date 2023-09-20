@@ -349,7 +349,7 @@
     "deliveryDate": "Fecha de entrega",
     "deliveryDatePlaceholder": "Selecciona una fecha",
     "deliveryTime": "Elige el rango de entrega",
-    "paymentMethod": "Método de pago",
+    "paymentMethod": "Selecciona el método de pago",
     "paymentMethods": "Métodos de pago",
     "paymentCard": "Agrega los datos de la tarjeta",
     "delivery": "Entrega:",
@@ -394,7 +394,10 @@
     "prime": "Plan Prime",
     "custom": "Plan personalizado",
     "test": "Platillo de prueba",
-    "deliveryTimePlan": "Las entregas son de 10 AM a 1 PM"
+    "deliveryTimePlan": "Las entregas son de 10 AM a 1 PM",
+    "addPaymentMethod": "Agregar método de pago",
+    "youDontHavePaymentMethods": "Aún no has agregado métodos de pago",
+    "errorSelectPaymentMethod": "Debes seleccionar un método de pago"
   },
   "endOrderScreen": {
     "title": "Pedido realizado",

@@ -2,19 +2,16 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Keyboard, Platform, ScrollView, StyleSheet, View } from "react-native"
 import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 
-import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
-  Checkbox,
   Header,
   Icon,
-  Image,
   InputText,
   ModalDeliveryDate,
   Screen,
@@ -30,7 +27,6 @@ import { color } from "../../theme"
 import { palette } from "../../theme/palette"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
-import { getImageByTypeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
@@ -45,6 +41,7 @@ import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
+import SelectPaymentMethod from "./select-payment-mehtod"
 import Summary from "./summay"
 
 const modalStateLocation = new ModalStateHandler()
@@ -156,6 +153,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const sendOrder = async (data) => {
       if (isPlan) {
+        if (!getPaymentMethodId()) {
+          messagesStore.showError("checkoutScreen.errorSelectPaymentMethod", true)
+          RNUxcam.logEvent("checkout: errorSelectPaymentMethod")
+          return
+        }
         commonStore.setVisibleLoading(true)
         const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
         const items = cartStore.cartPlans.map((item) => ({
@@ -462,86 +464,13 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             )}
 
             <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
-            <Text
-              preset="bold"
-              size="lg"
-              tx="checkoutScreen.paymentMethod"
-              style={[utilSpacing.mb2, utilSpacing.mx4]}
-            ></Text>
 
-            <Card
-              style={[styles.containerPayment, utilSpacing.m4, utilSpacing.px1, utilSpacing.p0]}
-            >
-              {userStore.currentCard?.id ? (
-                <Ripple
-                  rippleOpacity={0.2}
-                  rippleDuration={400}
-                  onPress={() => {
-                    modalStatePaymentList.setVisible(true)
-                  }}
-                  style={[
-                    utilSpacing.p2,
-                    utilSpacing.py3,
-                    utilFlex.flexRow,
-                    utilFlex.flexCenterVertical,
-                  ]}
-                >
-                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-                    <Text text={userStore.currentCard.name} preset="semiBold"></Text>
-                    <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                      <Text
-                        text="****"
-                        caption
-                        size="sm"
-                        style={[utilSpacing.mt2, utilSpacing.mr2]}
-                      ></Text>
+            <SelectPaymentMethod
+              openPaymentList={() => modalStatePaymentList.setVisible(true)}
+              isPlan={isPlan}
+            ></SelectPaymentMethod>
 
-                      <Text text={userStore.currentCard.number} caption size="sm"></Text>
-                    </View>
-                  </View>
-
-                  <Image
-                    style={[styles.imageCard, utilSpacing.mr4]}
-                    source={getImageByTypeCard(userStore.currentCard.type as never)}
-                  ></Image>
-                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
-                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
-                  </TouchableOpacity>
-                </Ripple>
-              ) : (
-                <Ripple
-                  rippleOpacity={0.2}
-                  rippleDuration={400}
-                  onPress={() => {
-                    modalStatePaymentList.setVisible(true)
-                  }}
-                  style={[
-                    utilSpacing.p2,
-                    utilSpacing.py3,
-                    utilFlex.flexRow,
-                    utilFlex.flexCenterVertical,
-                  ]}
-                >
-                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-                    <View style={utilFlex.felxColumn}>
-                      <Text
-                        tx="checkoutScreen.paymentCash"
-                        preset="semiBold"
-                        style={utilSpacing.mb1}
-                      ></Text>
-                      <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
-                    </View>
-                  </View>
-
-                  <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
-                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
-                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
-                  </TouchableOpacity>
-                </Ripple>
-              )}
-            </Card>
-
-            {isPlan && !!userStore?.currentCard?.id && (
+            {/* {isPlan && !!userStore?.currentCard?.id && (
               <Card
                 style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
               >
@@ -573,7 +502,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   </View>
                 </Ripple>
               </Card>
-            )}
+            )} */}
 
             <InputText
               name="taxId"
@@ -622,7 +551,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         <ModalLocation screenToReturn={"checkout"} modal={modalStateLocation}></ModalLocation>
         <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
         <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
-        <ModalPaymentList stateModal={modalStatePaymentList}></ModalPaymentList>
+        <ModalPaymentList stateModal={modalStatePaymentList} isPlan={isPlan}></ModalPaymentList>
       </Screen>
     )
   },

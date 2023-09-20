@@ -26,4 +26,5 @@ export const palette = {
   grayPlaceHolder: "#939AA4",
   gray300: "#EDEDED",
   yellow: "#FFC107",
+  greenBackground: "#eefcf6",
 }
