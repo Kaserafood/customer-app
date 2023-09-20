@@ -117,9 +117,11 @@ export type LunchesResponse = {
     id: number
     name: string
     description: string
+    recipeId: number
     image: string
     credits: number
     features: Feature[]
+    amountPaymentKitchen: number
   }[]
 } & kind
 

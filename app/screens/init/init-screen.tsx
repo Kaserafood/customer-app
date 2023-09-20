@@ -11,12 +11,13 @@ import RNUxcam from "react-native-ux-cam"
 import { Button, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
-import { setCountryId } from "../../services/api"
+import { setCountryId, setLocale } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalCountry } from "./modal-country"
+import { setLocaleI18n } from "../../i18n"
 
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
@@ -47,9 +48,14 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     useEffect(() => {
       if (countryStore.countries?.length > 0) {
         const countryId = countryStore.countries[0].id
-        if (countryStore.countries.length > 0) {
-          userStore.setCountryId(countryId)
-          setCountryId(countryId)
+        userStore.setCountryId(countryId)
+        setCountryId(countryId)
+        if (countryId === 1) {
+          setLocale("es")
+          setLocaleI18n("es")
+        } else {
+          setLocale("en")
+          setLocaleI18n("en")
         }
       }
     }, [countryStore.countries])

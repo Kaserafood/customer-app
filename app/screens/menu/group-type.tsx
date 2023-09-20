@@ -29,30 +29,25 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
     }).data?.data?.slice(0, plansStore.type === "prime" ? 4 : 3) ?? []
 
   const handleButton = (id: number, quantity: number, totalCredits: number) => {
+    const item = data?.find((lunch) => lunch.id === id)
+
+    const values = {
+      id,
+      quantity,
+      credits: totalCredits,
+      date,
+      name: item?.name,
+      description: item?.description,
+      recipeId: item?.recipeId,
+      dateLongName: dateNameLong,
+      dateShortName: dateNameShort,
+      amountPaymentKitchen: item?.amountPaymentKitchen,
+    }
     if (cartStore.exitsItemPlan(id, date)) {
       if (quantity === 0) cartStore.removeItemPlan(id, date)
-      else
-        cartStore.updateItemPlan({
-          id,
-          quantity,
-          credits: totalCredits,
-          date,
-          name: data?.find((lunch) => lunch.id === id)?.name,
-          description: data?.find((lunch) => lunch.id === id)?.description,
-          dateLongName: dateNameLong,
-          dateShortName: dateNameShort,
-        })
+      else cartStore.updateItemPlan(values)
     } else {
-      cartStore.addItemPlan({
-        id,
-        quantity,
-        credits: totalCredits,
-        date,
-        name: data?.find((lunch) => lunch.id === id)?.name,
-        description: data?.find((lunch) => lunch.id === id)?.description,
-        dateLongName: dateNameLong,
-        dateShortName: dateNameShort,
-      })
+      cartStore.addItemPlan(values)
     }
   }
 

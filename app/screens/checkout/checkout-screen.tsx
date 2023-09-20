@@ -159,12 +159,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         commonStore.setVisibleLoading(true)
         const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
         const items = cartStore.cartPlans.map((item) => ({
-          recipeId: item.id,
+          ...item,
           deliveryDate: item.date,
-          credits: item.credits,
-          quantity: item.quantity,
-          name: item.name,
-          description: item.description,
         }))
 
         const orderPlan: OrderPlanRequest = {

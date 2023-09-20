@@ -20,12 +20,14 @@ import { color } from "../../theme/color"
 import { GUATEMALA } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
+import * as RNLocalize from "react-native-localize"
+import { Api } from "../../services/api"
 
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
   screens: [],
 }
-
+const api = new Api()
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
@@ -66,18 +68,19 @@ export const RegisterFormScreen: FC<
       userStore
         .register({ ...data, countryId: userStore.countryId })
         .then(async (userId) => {
-          commonStore.setVisibleLoading(false)
           if (userId > 0) {
             OneSignal.setExternalUserId(userId.toString())
             RNUxcam.setUserProperty("userId", userId.toString())
-
+            await getAccount()
             if (currentUserId === -1) {
               await saveAddress(userId)
+              commonStore.setVisibleLoading(false)
             } else {
               RNUxcam.logEvent("register", {
                 exploreApp: false,
               })
               commonStore.setIsSignedIn(true)
+              commonStore.setVisibleLoading(false)
               navigation.navigate("map")
             }
           }
@@ -87,6 +90,13 @@ export const RegisterFormScreen: FC<
           messagesStore.showError(error.message)
         })
     }
+  }
+
+  const getAccount = async () => {
+    await api.getAccount(userStore.userId, RNLocalize.getTimeZone()).then((res) => {
+      const { currency, date } = res.data
+      userStore.setAccount({ currency, date })
+    })
   }
 
   const onError: SubmitErrorHandler<UserRegister> = (errors) => {

@@ -22,6 +22,7 @@ export interface MetaDataCart extends SnapshotIn<typeof metaDataCart> {}
 
 const itemCartPlans = types.model("ItemCartPlans").props({
   id: types.number,
+  recipeId: types.number,
   name: types.maybeNull(types.string),
   description: types.string,
   quantity: types.number,
@@ -29,6 +30,7 @@ const itemCartPlans = types.model("ItemCartPlans").props({
   date: types.string,
   dateLongName: types.maybeNull(types.string),
   dateShortName: types.maybeNull(types.string),
+  amountPaymentKitchen: types.number,
 })
 interface ItemPlan extends SnapshotIn<typeof itemCartPlans> {}
 

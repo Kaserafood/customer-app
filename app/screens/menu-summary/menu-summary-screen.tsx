@@ -75,12 +75,13 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
         createReservation({
           orderPlanId: plansStore.id,
           items: cartStore.cartPlans.map((item) => ({
-            recipeId: item.id,
+            recipeId: item.recipeId,
             quantity: item.quantity,
             deliveryDate: item.date,
             credits: item.credits,
             name: item.name,
             description: item.description,
+            amountPaymentKitchen: item.amountPaymentKitchen,
           })),
           timeZone: RNLocalize.getTimeZone(),
           userId: userStore.userId,
