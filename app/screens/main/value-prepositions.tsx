@@ -16,22 +16,24 @@ const ValuePrepositions = () => {
 
   return (
     <View style={utilSpacing.p5}>
-      <Text size="lg" preset="semiBold" tx="mainScreen.whatDoYouNeed"></Text>
+      <Text size="lg" preset="bold" tx="mainScreen.whatDoYouNeed"></Text>
       <View style={[utilFlex.flexRow, utilSpacing.pt5]}>
         <Card
           onPress={() => {
             navigation.navigate(getI18nText("tabMainNavigation.packages") as never)
           }}
-          style={[utilFlex.flex1, utilSpacing.px4, styles.cardPlans, utilSpacing.mr3]}
+          style={[utilFlex.flex1, utilSpacing.p4, styles.cardPlans, utilSpacing.mr3]}
         >
-          <Text size="lg" preset="bold" tx="mainScreen.packageFoodHealthy"></Text>
-          <View style={[utilSpacing.mt3, utilFlex.flex1]}>
-            <Text tx="mainScreen.dailyDeliveryFree" style={utilFlex.flex1}></Text>
-            <Image
-              style={[styles.imgPlan, utilFlex.selfCenter, utilSpacing.mt4]}
-              source={images.plans}
-            ></Image>
+          <View style={utilFlex.flex1}>
+            <Image style={[styles.imgPlan, utilFlex.selfCenter]} source={images.plans}></Image>
           </View>
+          <Text
+            size="lg"
+            style={[utilText.textCenter, utilSpacing.mt3]}
+            preset="bold"
+            tx="mainScreen.packageFoodHealthy"
+          ></Text>
+          <Image style={styles.imageLeaves} source={images.leaves}></Image>
         </Card>
         <Card
           onPress={() => {
@@ -39,23 +41,15 @@ const ValuePrepositions = () => {
           }}
           style={[utilFlex.flex1, styles.cardDishes, utilSpacing.ml3]}
         >
+          <View>
+            <Image style={[styles.imgPlan, utilFlex.selfCenter]} source={images.dish}></Image>
+          </View>
           <Text
-            style={utilText.textWhite}
+            style={[utilText.textWhite, utilText.textCenter, utilSpacing.mt3]}
             size="lg"
             preset="bold"
             tx="mainScreen.dishesAndMore"
           ></Text>
-
-          <View style={utilSpacing.mt3}>
-            <Text
-              tx="mainScreen.testIndividualDish"
-              style={[utilFlex.flex1, utilText.textWhite]}
-            ></Text>
-            <Image
-              style={[styles.imgPlan, utilFlex.selfCenter, utilSpacing.mt4]}
-              source={images.dish}
-            ></Image>
-          </View>
         </Card>
       </View>
     </View>
@@ -70,6 +64,14 @@ const styles = StyleSheet.create({
   },
   cardPlans: {
     backgroundColor: color.palette.gray300,
+    overflow: "hidden",
+  },
+  imageLeaves: {
+    height: 80,
+    position: "absolute",
+    right: -30,
+    top: 0,
+    width: 80,
   },
   imgPlan: {
     height: 90,

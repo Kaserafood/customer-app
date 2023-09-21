@@ -1,13 +1,14 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useQuery } from "react-query"
-import { Separator, Text } from "../../components"
+import { Card, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { utilSpacing } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 
 interface Props {
   currentDate: DatePlan
@@ -52,31 +53,36 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
   }
 
   return (
-    <View>
+    <View style={styles.bg}>
       {data?.length > 0 && (
-        <View style={[utilSpacing.px5, utilSpacing.pt3]}>
+        <View style={[utilSpacing.px5, utilSpacing.pt5]}>
           <Text tx={title} preset="bold" size="lg"></Text>
           {type === "lunch" && <Text tx="menuScreen.deliveryTime"></Text>}
         </View>
       )}
 
-      <View style={[utilSpacing.pb5, utilSpacing.pt3]}>
-        {data?.map((lunch, index) => (
-          <View key={lunch.id}>
+      <View style={utilSpacing.pb5}>
+        {data?.map((lunch) => (
+          <Card key={lunch.id} style={[utilSpacing.mx5, utilSpacing.mt5]}>
             <Lunch
               {...lunch}
               showButtons
               onPressButton={handleButton}
               totalCredits={cartStore.itemPlanCredits(lunch.id, date)}
               quantity={cartStore.itemPlanQuantity(lunch.id, date)}
+              style={utilSpacing.px3}
             ></Lunch>
 
-            {index !== data?.length - 1 && <Separator style={utilSpacing.my2}></Separator>}
-          </View>
+            {/* {index !== data?.length - 1 && <Separator style={utilSpacing.my2}></Separator>} */}
+          </Card>
         ))}
       </View>
     </View>
   )
+})
+
+const styles = StyleSheet.create({
+  bg: { backgroundColor: palette.whiteGray },
 })
 
 export default GroupType

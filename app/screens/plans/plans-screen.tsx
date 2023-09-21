@@ -71,7 +71,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
               <Text
                 tx="mainScreen.priceLunch"
                 preset="semiBold"
-                style={[utilSpacing.pb5, utilFlex.selfCenter]}
+                style={[utilSpacing.py5, utilFlex.selfCenter]}
               ></Text>
 
               <Banner variant="dark"></Banner>

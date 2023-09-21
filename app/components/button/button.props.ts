@@ -54,4 +54,8 @@ export interface ButtonProps extends TouchableOpacityProps {
    * Icon to display on the left of the button
    */
   iconLeft?: React.ReactNode
+  /**
+   * Icon to display on the right of the button
+   */
+  iconRight?: React.ReactNode
 }

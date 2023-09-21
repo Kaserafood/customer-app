@@ -2,11 +2,12 @@ import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import { useQuery } from "react-query"
-import { Button, Card, Chip, Text } from "../../components"
+import { Button, Card, Chip, Icon, Separator, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
 import { Api, DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 import { getI18nText } from "../../utils/translate"
 
 interface Props {
@@ -30,15 +31,17 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
   const navigation = useNavigation()
 
   return (
-    <View style={[styles.containerDishes, utilSpacing.mt5]}>
-      <View style={utilSpacing.p5}>
+    <Card style={[styles.containerDishes, utilSpacing.m5]}>
+      <View style={utilSpacing.p3}>
         <View style={styles.containerTitle}>
-          <Text tx="mainScreen.knowLunchPackages" preset="bold" size="lg"></Text>
-          <View style={styles.bar}></View>
+          <Text>
+            <Text tx="mainScreen.knowThe" size="lg"></Text>
+            <Text tx="mainScreen.lunchPackages" size="lg" preset="bold"></Text>
+          </Text>
         </View>
 
         <View style={[utilFlex.flexRow, utilSpacing.my4, utilFlex.flexCenterVertical]}>
-          <Text tx="mainScreen.exploreDailyMenu" style={utilFlex.flex1}></Text>
+          {/* <Text tx="mainScreen.exploreDailyMenu" style={utilFlex.flex1}></Text> */}
           <Chip
             textstyle={utilText.semiBold}
             onPress={() => showModalDates()}
@@ -54,37 +57,43 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
               onPress={() =>
                 navigation.navigate(getI18nText("tabMainNavigation.packages") as never)
               }
+              style={utilSpacing.px3}
             ></Lunch>
+            <Separator></Separator>
           </View>
         ))}
 
-        <Card style={[utilSpacing.p5, utilSpacing.m5]}>
-          <Text tx="mainScreen.pickOptions" style={[utilSpacing.mb5, utilText.textCenter]}></Text>
+        <View style={[utilSpacing.pt6, utilSpacing.mx5]}>
+          {/* <Text tx="mainScreen.pickOptions" style={[utilSpacing.mb5, utilText.textCenter]}></Text> */}
           <Button
-            style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py4, utilSpacing.px0]}
-            tx="common.moreInfo"
+            style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py3, utilSpacing.px0]}
+            tx="mainScreen.seeMoreOptions"
             onPress={() => navigation.navigate(getI18nText("tabMainNavigation.packages") as never)}
+            iconRight={<Icon name="angle-right1" size={18} color={color.palette.white}></Icon>}
           ></Button>
-        </Card>
+        </View>
       </View>
-    </View>
+      <View style={styles.circle}></View>
+    </Card>
   )
 }
 
 const styles = StyleSheet.create({
-  bar: {
-    alignSelf: "flex-end",
-    backgroundColor: color.primary,
-    display: "flex",
-    height: 2,
-    top: 2,
-    width: 75,
-  },
   btnMore: {
     minWidth: 230,
   },
+  circle: {
+    backgroundColor: palette.green200,
+    borderRadius: 300,
+    height: 150,
+    position: "absolute",
+    right: -75,
+    top: -75,
+    width: 150,
+    zIndex: -1,
+  },
   containerDishes: {
-    backgroundColor: color.palette.whiteGray,
+    overflow: "hidden",
   },
   containerTitle: {
     alignContent: "flex-start",

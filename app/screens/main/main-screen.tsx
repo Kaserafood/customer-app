@@ -1,19 +1,18 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useState } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
-import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
-import { DatePlan, setLocale } from "../../services/api"
+import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { SHADOW, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -32,8 +31,8 @@ const modalStateDeliveryDatePlan = new ModalStateHandler()
 const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
-  ({ navigation, route: { params } }) => {
-    const { cartStore, commonStore, dishStore, userStore, plansStore } = useStores()
+  ({ navigation }) => {
+    const { cartStore, commonStore, dishStore, plansStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     const onBannerPress = (banner: BannerModel) => {
@@ -92,7 +91,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView style={styles.container}>
-          {!plansStore.id && <BannerMain></BannerMain>}
+          {!plansStore.hasActivePlan && <BannerMain></BannerMain>}
 
           <ValuePrepositions></ValuePrepositions>
           {currentDate?.date && (
@@ -115,7 +114,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           </View>
           <Categories onPress={(category) => toCategory(category)}></Categories>
           <Chefs state={state}></Chefs>
-          {!plansStore.id && <BannerMain></BannerMain>}
+          {!plansStore.hasActivePlan && <BannerMain></BannerMain>}
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>

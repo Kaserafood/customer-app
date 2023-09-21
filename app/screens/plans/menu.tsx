@@ -1,12 +1,13 @@
 import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import { View } from "react-native"
+import { StyleSheet, View } from "react-native"
 import { useQuery } from "react-query"
-import { Chip, Text } from "../../components"
+import { Card, Chip, Separator, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
 import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 
 interface Props {
   currentDate: DatePlan
@@ -38,7 +39,7 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
   }
 
   return (
-    <View style={utilSpacing.py5}>
+    <View style={[utilSpacing.py5, styles.bg]}>
       <View style={utilSpacing.px5}>
         <Text
           style={utilSpacing.py5}
@@ -52,20 +53,34 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
           text={currentDate.dateNameLong}
           onPress={() => showModalDates()}
         ></Chip>
-        <Text
-          style={utilSpacing.pb2}
-          tx="mainScreen.dinnerLunch"
-          preset="semiBold"
-          size="lg"
-        ></Text>
-        <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb5}></Text>
       </View>
 
-      {lunches?.data?.map((lunch) => (
-        <Lunch {...lunch} key={lunch.id} onPress={handlePressDish}></Lunch>
-      ))}
+      <Card style={utilSpacing.mx5}>
+        <View style={[utilSpacing.px3, utilSpacing.pt4]}>
+          <Text
+            style={utilSpacing.pb2}
+            tx="mainScreen.dinnerLunch"
+            preset="semiBold"
+            size="lg"
+          ></Text>
+          <Text tx="mainScreen.deliveryTime" style={utilSpacing.mb2}></Text>
+        </View>
+
+        {lunches?.data?.map((lunch, index) => (
+          <View key={lunch.id}>
+            <Lunch {...lunch} onPress={handlePressDish} style={utilSpacing.px3}></Lunch>
+            {index < lunches.data.length - 1 && <Separator></Separator>}
+          </View>
+        ))}
+      </Card>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  bg: {
+    backgroundColor: palette.whiteGray,
+  },
+})
 
 export default Menu

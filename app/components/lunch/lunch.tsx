@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite"
 import React, { useState } from "react"
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -24,6 +24,10 @@ interface Props {
   onPressButton?: (id: number, quantity: number, totalCredits: number) => void
   totalCredits?: number
   quantity?: number
+  /**
+   * An optional style override useful for padding & margin.
+   */
+  style?: StyleProp<ViewStyle>
 }
 
 const Lunch = observer(
@@ -39,6 +43,7 @@ const Lunch = observer(
     onPressButton,
     totalCredits: totalCreditsProp,
     quantity: quantityProp,
+    style,
   }: Props) => {
     const { cartStore, plansStore } = useStores()
     const [totalCredits, setTotalCredits] = useState(totalCreditsProp || 0)
@@ -67,25 +72,33 @@ const Lunch = observer(
             utilFlex.flexRow,
             utilSpacing.px5,
             utilSpacing.py4,
+            style,
             showButtons && styles.paddingBottom,
           ]}
           onPress={onPress}
         >
-          <Image resizeMode="cover" style={styles.image} source={{ uri: image }}></Image>
-          <View style={[utilFlex.flex1, utilSpacing.ml4]}>
+          {!!image && (
+            <Image
+              resizeMode="cover"
+              style={[styles.image, utilSpacing.mr4]}
+              source={{ uri: image }}
+            ></Image>
+          )}
+
+          <View style={[utilFlex.flex1, utilFlex.felxColumn]}>
             <View>
               <Text text={name} preset="semiBold" numberOfLines={2} style={utilSpacing.mb2}></Text>
               <Text text={description} style={utilSpacing.mb3} numberOfLines={2}></Text>
             </View>
 
-            <ScrollView horizontal style={[utilFlex.flex1, utilFlex.flexRow, styles.containerTags]}>
+            <View style={[utilFlex.flex1, utilFlex.flexRow, styles.containerTags]}>
               {features?.map((tag) => (
                 <View
                   key={tag.value}
                   style={[
                     styles.tag,
                     utilSpacing.px4,
-                    utilSpacing.py3,
+                    utilSpacing.py2,
                     utilSpacing.mr2,
                     utilSpacing.mb2,
                   ]}
@@ -93,7 +106,7 @@ const Lunch = observer(
                   <Text text={tag.label}></Text>
                 </View>
               ))}
-            </ScrollView>
+            </View>
           </View>
         </Ripple>
         {showButtons && (
@@ -169,6 +182,7 @@ const styles = StyleSheet.create({
   containerTags: {
     display: "flex",
     flexWrap: "nowrap",
+    // minHeight: 32,
     overflow: "hidden",
   },
   containerTotal: {

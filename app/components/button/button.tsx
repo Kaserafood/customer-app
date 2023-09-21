@@ -18,6 +18,7 @@ const Button = (props: ButtonProps) => {
     block,
     disabled,
     iconLeft,
+    iconRight,
     ...rest
   } = props
 
@@ -48,6 +49,7 @@ const Button = (props: ButtonProps) => {
     <TouchableOpacity style={viewStyles} {...rest} disabled={disabled} activeOpacity={0.8}>
       {iconLeft && iconLeft}
       {content}
+      {iconRight && iconRight}
     </TouchableOpacity>
   )
 }

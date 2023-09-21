@@ -9,7 +9,7 @@ import { useStores } from "../../models"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { Api } from "../../services/api"
 import { color } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 
 interface Props {
@@ -59,11 +59,16 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
     <View style={[utilSpacing.py5, utilSpacing.mt5]}>
       <View style={utilSpacing.pl5}>
         <View style={[styles.containerTitle, utilFlex.flexRow]}>
-          <Text tx="mainScreen.bookDish" preset="bold" size="lg"></Text>
-          <View style={utilSpacing.ml2}>
-            <Text tx="mainScreen.homemadeChefs" preset="bold" size="lg"></Text>
-            <View style={styles.bar}></View>
-          </View>
+          <Text>
+            <Text tx="mainScreen.book" preset="bold" size="lg"></Text>
+            <Text
+              tx="mainScreen.homemadeDishes"
+              preset="bold"
+              style={utilText.textPrimary}
+              size="lg"
+            ></Text>
+            <Text tx="mainScreen.localChefs" preset="bold" size="lg"></Text>
+          </Text>
         </View>
 
         <DayDelivery

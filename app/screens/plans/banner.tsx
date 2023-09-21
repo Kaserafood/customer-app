@@ -5,6 +5,7 @@ import images from "../../assets/images"
 import { Button, Image, Text } from "../../components"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 
 interface Props {
   variant: "light" | "dark"
@@ -16,7 +17,7 @@ const Banner = ({ variant }: Props) => {
     <>
       {variant === "light" ? (
         <View style={[utilFlex.flex, utilFlex.flexRow]}>
-          <View style={[utilFlex.flex1, utilSpacing.py6, utilSpacing.px5]}>
+          <View style={[utilFlex.flex1, utilSpacing.py6, utilSpacing.pl5, utilSpacing.pr2]}>
             <Text
               preset="bold"
               size="lg"
@@ -33,7 +34,9 @@ const Banner = ({ variant }: Props) => {
           </View>
 
           <View style={[utilFlex.flex, utilFlex.flexCenterVertical]}>
-            <Image style={styles.image} source={images.plans}></Image>
+            <Image style={[styles.image, utilSpacing.mr6]} source={images.dishes}></Image>
+            <View style={styles.circle}></View>
+            <Image style={styles.imageLeaves} source={images.leaves}></Image>
           </View>
         </View>
       ) : (
@@ -58,7 +61,8 @@ const Banner = ({ variant }: Props) => {
           </View>
 
           <View style={[utilFlex.flex, utilFlex.flexCenterVertical]}>
-            <Image style={styles.image} source={images.plans}></Image>
+            <Image style={[styles.image, utilSpacing.mr6]} source={images.dishes}></Image>
+            <Image style={styles.imageLeavesDark} source={images.leaves}></Image>
           </View>
         </View>
       )}
@@ -72,8 +76,32 @@ const styles = StyleSheet.create({
   bgDark: {
     backgroundColor: color.palette.black,
   },
+  circle: {
+    backgroundColor: palette.green200,
+    borderRadius: 300,
+    height: 300,
+    position: "absolute",
+    right: -150,
+    top: -75,
+    width: 300,
+    zIndex: -1,
+  },
   image: {
-    height: 140,
-    width: 140,
+    height: 125,
+    width: 125,
+  },
+  imageLeaves: {
+    height: 145,
+    position: "absolute",
+    right: -95,
+    width: 145,
+    zIndex: -1,
+  },
+  imageLeavesDark: {
+    height: 200,
+    position: "absolute",
+    right: -90,
+    width: 200,
+    zIndex: -1,
   },
 })

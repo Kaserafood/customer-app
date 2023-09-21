@@ -72,7 +72,7 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
               <GroupType
                 currentDate={currentDate}
                 type="lunch"
-                title="menuScreen.lunchDinner"
+                title="menuScreen.strongDish"
               ></GroupType>
 
               {plansStore.type === "prime" && (
