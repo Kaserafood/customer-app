@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native start",
-    "ios": "ENVFILE=.env.development react-native run-ios",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-native start",
+    "ios": "NODE_OPTIONS=--openssl-legacy-provider ENVFILE=.env.development react-native run-ios",
     "android": "adb reverse tcp:9090 tcp:9090 && SET ENVFILE=.env.development && react-native run-android",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",

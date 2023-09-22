@@ -15,7 +15,7 @@ import GroupType from "./group-type"
 
 export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, plansStore } = useStores()
+    const { cartStore, plansStore , userStore} = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     useEffect(() => {
@@ -35,6 +35,11 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
     }
 
     const handleScheduleLater = () => {
+
+      if (userStore.userId === -1) {
+        navigation.navigate("registerForm")
+        return
+      }
       cartStore.cleanItemsPlan()
       navigation.push("checkout", {
         isPlan: true,
