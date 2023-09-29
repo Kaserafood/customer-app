@@ -25,9 +25,11 @@ import {
   DishResponse,
   GeneralApiResponse,
   LunchesResponse,
+  OrderDetailChef,
   OrderDetailResponse,
   OrderOverviewResponse,
   OrderPlanRequest,
+  OrdersChef,
   ReservationRequest,
   SetupIntentResponse,
   UserLoginResponse,
@@ -586,5 +588,26 @@ export class Api {
    */
   async getAccount(userId: number, timeZone: string): Promise<AccountResponse> {
     return await this.request({ userId, timeZone }, `/users/account`, "GET")
+  }
+
+  /**
+   * @description Get orders for chef
+   */
+  async getOrdersChef(chefId: number, timeZone: string): Promise<OrdersChef> {
+    return await this.request({ chefId, timeZone }, `/chefs/orders`, "GET")
+  }
+
+  /**
+   * @description Get orders for chef
+   */
+  async getOrderChefById(orderId: number, timeZone: string): Promise<OrderDetailChef> {
+    return await this.request({ timeZone }, `/chefs/orders/${orderId}`, "GET")
+  }
+
+  /**
+   * @description Update order status
+   */
+  async updateOrderStatus(orderId: number, status: string): Promise<ValueResponse> {
+    return await this.request({ status }, `/chefs/orders/${orderId}/status`, "PUT")
   }
 }

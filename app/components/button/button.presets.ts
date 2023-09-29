@@ -2,7 +2,6 @@ import { TextStyle, ViewStyle } from "react-native"
 
 import { color, spacing } from "../../theme"
 import { typography, typographySize } from "../../theme/typography"
-import { NO_SHADOW } from "../../theme/Util"
 
 const BASE_VIEW: ViewStyle = {
   paddingVertical: spacing[4],
@@ -46,16 +45,6 @@ export const viewPresets: Record<string, ViewStyle> = {
    * Button gray background.
    */
   gray: { ...BASE_VIEW, backgroundColor: color.palette.grayLight } as ViewStyle,
-
-  /**
-   * Like a link.
-   */
-  link: {
-    ...BASE_VIEW,
-    ...NO_SHADOW,
-    backgroundColor: color.palette.redDark,
-    borderRadius: 100,
-  } as ViewStyle,
 }
 
 export const textPresets: Record<ButtonPresetNames, TextStyle> = {
@@ -64,14 +53,6 @@ export const textPresets: Record<ButtonPresetNames, TextStyle> = {
   white: { ...BASE_TEXT, color: color.palette.black } as TextStyle,
 
   gray: { ...BASE_TEXT, color: color.palette.black } as TextStyle,
-
-  link: {
-    ...BASE_TEXT,
-    color: color.primary,
-    fontSize: 16,
-    fontFamily: typography.primary,
-    width: 300,
-  } as TextStyle,
 }
 
 /**

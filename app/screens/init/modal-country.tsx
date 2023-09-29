@@ -1,15 +1,15 @@
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect } from "react"
-import { View, StyleSheet } from "react-native"
+import React, { useEffect } from "react"
+import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
-import { Modal, Text, Image, Separator } from "../../components"
+import { Image, Modal, Separator, Text } from "../../components"
+import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
+import { setCountryId, setLocale } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { saveString } from "../../utils/storage"
-import { setCountryId, setLocale } from "../../services/api"
-import { setLocaleI18n } from "../../i18n"
 
 interface ModalCountryProps {
   modalState: ModalStateHandler

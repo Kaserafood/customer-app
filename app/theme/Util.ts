@@ -36,6 +36,7 @@ export const utilText = StyleSheet.create({
   marginNegative: {
     marginBottom: -4,
   },
+  regular: { fontFamily: typography.primary },
   semiBold: { fontFamily: typography.primarySemiBold },
 
   textCenter: {

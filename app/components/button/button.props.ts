@@ -58,4 +58,9 @@ export interface ButtonProps extends TouchableOpacityProps {
    * Icon to display on the right of the button
    */
   iconRight?: React.ReactNode
+
+  /**
+   * Size of the button
+   */
+  size?: "sm" | "md"
 }

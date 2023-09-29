@@ -31,9 +31,9 @@ export function TabMainNavigation({ navigationRef }) {
     () => api.getAccount(userStore.userId, RNLocalize.getTimeZone()),
     {
       onSuccess: (data: any) => {
-        const { currency, date } = data.data
+        const { currency, date, role } = data.data
 
-        userStore.setAccount({ currency, date })
+        userStore.setAccount({ currency, date, role })
         plansStore.setPlan(data.data.plan)
       },
       enabled: userStore.userId > 0,

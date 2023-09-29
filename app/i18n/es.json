@@ -29,7 +29,12 @@
     "credits": "créditos",
     "writeHere": "Escribe aquí",
     "confirm": "Confirmar",
-    "free": "Gratis"
+    "free": "Gratis",
+    "view": "Ver",
+    "delivery": "Entrega",
+    "articles": "Artículos",
+    "tax": "NIT",
+    "yes": "Sí"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -481,7 +486,8 @@
     "loginRegister": "Iniciar sesión / Registrarse",
     "bugReport": "Reportar un error",
     "support": "Soporte",
-    "whatsAppMessage": "Hola, tengo un consulta"
+    "whatsAppMessage": "Hola, tengo un consulta",
+    "ordersToPrepare": "Pedidos a preparar"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -797,5 +803,33 @@
   },
   "dishesScreen": {
     "moreWanted": "Platillos más queridos"
+  },
+  "ordersChefScreen": {
+    "title": "Pedidos a preparar",
+    "articles": "artículos",
+    "delivery": "Hora de entrega",
+    "reject": "Rechazar",
+    "noOrders": "No tienes pedidos a preparar",
+    "status": "Estado",
+    "orderConfirmed": "Tu pedido ha sido confirmado",
+    "orderRejected": "Tu pedido ha sido rechazado",
+    "orderConfirmedError": "No se ha logrado confirmar tu pedido",
+    "orderRejectedError": "No se ha logrado rechazar tu pedido",
+    "confirm": "Confirmar de enterado",
+    "aware": "Enterado",
+    "rejected": "Rechazado",
+    "cancelled": "Cancelado",
+    "onRoute": "En ruta",
+    "orderOnRoute": "¿Tu pedido va en ruta?",
+    "orderOnRouteConfirm": "Tu pedido van en ruta",
+    "orderOnRouteError": "No se ha logrado confirmar tu pedido",
+    "delivered": "Entregado al repartidor",
+    "completed": "Completado"
+  },
+  "orderChefDetail": {
+    "title": "Pedido #{{order}}",
+    "customerPreferences": "Preferencias del cliente",
+    "customerNote": "Nota del cliente",
+    "orderMade": "Pedido realizado el {{date}}"
   }
 }

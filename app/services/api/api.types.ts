@@ -180,3 +180,53 @@ export interface ReservationRequest {
 export type AccountResponse = {
   data: Account
 } & kind
+
+interface OrderChef {
+  date: string
+  dateName: string
+  orders: OrderSummary[]
+  isToday?: boolean
+  isTomorrow?: boolean
+}
+
+interface OrderSummary {
+  id: number
+  customerName: string
+  deliveryTime: string
+  total: number
+  deliveryDate: string
+  quantityItems: number
+  status: string
+}
+
+export type OrdersChef = {
+  data: OrderChef[]
+} & kind
+
+interface Product {
+  itemId: number
+  name: string
+  price: number
+  quantity: number
+  addons: {
+    key: string
+    value: string
+  }[]
+}
+
+interface OrderDetails {
+  id: number
+  createdDate: string
+  status: string
+  deliveryTime: string
+  total: string
+  deliveryDate: string
+  customerNote: string | null
+  statusName: string
+  tax: string
+  products: Product[]
+}
+
+export type OrderDetailChef = {
+  data: OrderDetails
+} & kind

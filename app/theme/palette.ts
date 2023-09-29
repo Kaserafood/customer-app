@@ -28,4 +28,10 @@ export const palette = {
   yellow: "#FFC107",
   greenBackground: "#eefcf6",
   green200: "#CBE8C7",
+  error: "#f44336",
+  errorBg: "#ffebee",
+  blueBg: "#e3f2fd",
+  blue: "#2194f3",
+  amber50: "#fff3e0",
+  amber600: "#fb8a00",
 }

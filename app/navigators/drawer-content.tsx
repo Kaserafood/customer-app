@@ -1,8 +1,8 @@
-import React from "react"
-import { Linking, Platform, StyleSheet, View } from "react-native"
-import Ripple from "react-native-material-ripple"
 import { DrawerContentScrollView } from "@react-navigation/drawer"
 import { useNavigation } from "@react-navigation/native"
+import React from "react"
+import { StyleSheet, View } from "react-native"
+import Ripple from "react-native-material-ripple"
 
 import { Card, Icon, Text } from "../components"
 import { useStores } from "../models"
@@ -48,6 +48,10 @@ export default function DrawerContent(props) {
     openWhatsApp(commonStore.phoneNumber, "drawerContent.whatsAppMessage")
   }
 
+  const ordersToPrepare = () => {
+    navigation.navigate("ordersChef" as never)
+  }
+
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -81,19 +85,21 @@ export default function DrawerContent(props) {
               </View>
             </Card>
           </Ripple>
-          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={order}>
-            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                <Icon
-                  name="pot-food"
-                  style={utilSpacing.mr4}
-                  size={30}
-                  color={color.palette.grayDark}
-                />
-                <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
-              </View>
-            </Card>
-          </Ripple>
+          {userStore.account.role === "customer" && (
+            <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={order}>
+              <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+                <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+                  <Icon
+                    name="pot-food"
+                    style={utilSpacing.mr4}
+                    size={30}
+                    color={color.palette.grayDark}
+                  />
+                  <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
+                </View>
+              </Card>
+            </Ripple>
+          )}
         </View>
       )}
       <Ripple
@@ -142,6 +148,27 @@ export default function DrawerContent(props) {
           </View>
         </Card>
       </Ripple>
+
+      {userStore.account.role === "chef" && (
+        <Ripple
+          rippleOpacity={0.2}
+          rippleDuration={400}
+          style={utilSpacing.m3}
+          onPress={() => ordersToPrepare()}
+        >
+          <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+              <Icon
+                name="hat-chef"
+                style={utilSpacing.mr4}
+                size={30}
+                color={color.palette.grayDark}
+              />
+              <Text tx="drawerContent.ordersToPrepare" preset="semiBold" size="md"></Text>
+            </View>
+          </Card>
+        </Ripple>
+      )}
 
       {
         // Usuario que ha ingresado como "Explora la app"
