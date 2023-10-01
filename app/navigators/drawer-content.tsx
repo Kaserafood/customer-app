@@ -85,7 +85,7 @@ export default function DrawerContent(props) {
               </View>
             </Card>
           </Ripple>
-          {userStore.account.role === "customer" && (
+          {userStore.account?.role === "customer" && (
             <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={order}>
               <Card style={[utilSpacing.px4, utilSpacing.py5]}>
                 <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
@@ -149,7 +149,7 @@ export default function DrawerContent(props) {
         </Card>
       </Ripple>
 
-      {userStore.account.role === "chef" && (
+      {userStore.account?.role === "chef" && (
         <Ripple
           rippleOpacity={0.2}
           rippleDuration={400}
