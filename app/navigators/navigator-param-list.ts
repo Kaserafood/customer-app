@@ -68,6 +68,14 @@ interface ordersChefProps {
   timestamp?: number
 }
 
+interface dishesProps {
+  showBackIcon?: boolean
+}
+
+interface plansProps {
+  showBackIcon?: boolean
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -95,7 +103,7 @@ export type NavigatorParamList = {
   newChefs: undefined
   orderDetail: OrderOverview
   reportBug: undefined
-  plans: undefined
+  plans: plansProps
   formPlans: undefined
   subscription: undefined
   menu: undefined
@@ -103,4 +111,5 @@ export type NavigatorParamList = {
   checkoutPlan: undefined
   ordersChef: ordersChefProps
   orderChefDetail: orderPrepareDetailProps
+  dishes: dishesProps
 }

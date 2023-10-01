@@ -62,7 +62,6 @@ const Banner = ({ variant }: Props) => {
 
           <View style={[utilFlex.flex, utilFlex.flexCenterVertical]}>
             <Image style={[styles.image, utilSpacing.mr6]} source={images.dishes}></Image>
-            <Image style={styles.imageLeavesDark} source={images.leaves}></Image>
           </View>
         </View>
       )}

@@ -37,7 +37,7 @@ const OrderItem = ({
 }: Props) => {
   const { userStore, messagesStore, commonStore } = useStores()
 
-  const { mutate: confirm } = useMutation(() => api.updateOrderStatus(id, "confirmed"), {
+  const { mutate: confirm } = useMutation(() => api.updateOrderStatus(id, "wc-confirmed"), {
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderConfirmed", true)
@@ -69,7 +69,7 @@ const OrderItem = ({
     },
   })
 
-  const { mutate: onRoute } = useMutation(() => api.updateOrderStatus(id, "on-route"), {
+  const { mutate: onRoute } = useMutation(() => api.updateOrderStatus(id, "wc-on-route"), {
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderOnRouteConfirm", true)
@@ -92,7 +92,7 @@ const OrderItem = ({
 
   return (
     <Card
-      style={[utilSpacing.mb5, utilSpacing.p4, border && status !== "on-route" && styles.border]}
+      style={[utilSpacing.mb5, utilSpacing.p4, border && status !== "wc-on-route" && styles.border]}
     >
       <View style={utilFlex.flexRow}>
         <View style={[utilFlex.flexRow, utilFlex.flex1]}>
@@ -129,7 +129,7 @@ const OrderItem = ({
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mt5, styles.containerButtons]}>
-        {status === "pending-confirmation" && (
+        {status === "wc-pending-confirmation" && (
           <>
             {/* <Button
               preset="primary"
@@ -147,7 +147,7 @@ const OrderItem = ({
           </>
         )}
 
-        {status === "confirmed" && !isToday && (
+        {status === "wc-confirmed" && !isToday && (
           <View style={[styles.status, styles.bgBlue, utilSpacing.px5, utilSpacing.py2]}>
             <Text
               tx="ordersChefScreen.aware"
@@ -158,7 +158,7 @@ const OrderItem = ({
           </View>
         )}
 
-        {status === "confirmed" && isToday && (
+        {status === "wc-confirmed" && isToday && (
           <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
             <Text
               tx="ordersChefScreen.orderOnRoute"
@@ -174,7 +174,7 @@ const OrderItem = ({
           </View>
         )}
 
-        {status === "on-route" && isToday && (
+        {status === "wc-on-route" && isToday && (
           <View style={[styles.status, styles.bgAmber, utilSpacing.px5, utilSpacing.py2]}>
             <Text
               tx="ordersChefScreen.delivered"

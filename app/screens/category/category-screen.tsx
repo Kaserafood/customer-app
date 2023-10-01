@@ -1,10 +1,11 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
 import {
   DayDelivery,
   Dish,
@@ -24,7 +25,6 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import RNUxcam from "react-native-ux-cam"
 import { DishParams } from "../home/dish.types"
 
 const modalStateWhy = new ModalStateHandler()
@@ -117,6 +117,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             days={dayStore.days}
             onWhyPress={() => modalStateWhy.setVisible(true)}
             onPress={(day) => onChangeDay(day)}
+            style={utilSpacing.pl5}
           ></DayDelivery>
           <View style={styles.container}>
             <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>

@@ -5,13 +5,16 @@ import images from "../../assets/images"
 import { Card, Image, Text } from "../../components"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 
-const ValuePrepositions = () => {
+interface Props {
+  screenNavigate: (string: "plans" | "dishes") => void
+}
+
+const ValuePrepositions = ({ screenNavigate }: Props) => {
   const navigation = useNavigation()
 
-  const toPlans = () => {
-    navigation.navigate("plans" as never)
+  const toScreen = (screen: "plans" | "dishes") => {
+    screenNavigate(screen)
   }
 
   return (
@@ -20,7 +23,7 @@ const ValuePrepositions = () => {
       <View style={[utilFlex.flexRow, utilSpacing.pt5]}>
         <Card
           onPress={() => {
-            navigation.navigate(getI18nText("tabMainNavigation.packages") as never)
+            toScreen("plans")
           }}
           style={[utilFlex.flex1, utilSpacing.p4, styles.cardPlans, utilSpacing.mr3]}
         >
@@ -37,7 +40,7 @@ const ValuePrepositions = () => {
         </Card>
         <Card
           onPress={() => {
-            navigation.navigate(getI18nText("tabMainNavigation.dishes") as never)
+            toScreen("dishes")
           }}
           style={[utilFlex.flex1, styles.cardDishes, utilSpacing.ml3]}
         >

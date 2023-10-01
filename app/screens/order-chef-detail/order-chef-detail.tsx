@@ -26,7 +26,7 @@ export const OrderChefDetailScreen: FC<
   const { messagesStore, commonStore } = useStores()
 
   const { data: order } = useQuery(
-    "order-detail",
+    ["order-detail", params.id],
     () => api.getOrderChefById(params.id, RNLocalize.getTimeZone()),
     {
       enabled: !!params.id,
@@ -36,7 +36,7 @@ export const OrderChefDetailScreen: FC<
     },
   )
 
-  const { mutate: confirm } = useMutation(() => api.updateOrderStatus(params.id, "confirmed"), {
+  const { mutate: confirm } = useMutation(() => api.updateOrderStatus(params.id, "wc-confirmed"), {
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderConfirmed", true)
@@ -143,7 +143,7 @@ export const OrderChefDetailScreen: FC<
         </ScrollView>
       )}
 
-      {data?.status === "pending-confirmation" && (
+      {data?.status === "wc-pending-confirmation" && (
         <Card style={[styles.bordeTop, utilSpacing.px0]}>
           <View style={[utilFlex.flexRow, utilSpacing.px5]}>
             {/* <Button

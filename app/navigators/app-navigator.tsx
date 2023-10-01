@@ -19,6 +19,7 @@ import {
   DishDetailScreen,
   EndOrderScreen,
   FavoriteScreen,
+  HomeScreen,
   InitScreen,
   LoginFormScreen,
   MapScreen,
@@ -116,6 +117,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="menu" component={MenuScreen} />
         <Stack.Screen name="menuSummary" component={MenuSummaryScreen} />
         <Stack.Screen name="search" component={SearchScreen} />
+        <Stack.Screen name="dishes" component={HomeScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )

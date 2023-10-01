@@ -9,7 +9,7 @@ import { useStores } from "../../models"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { Api } from "../../services/api"
 import { color } from "../../theme"
-import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 
 interface Props {
@@ -24,7 +24,7 @@ interface DishResponse {
 
 const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
   const navigation = useNavigation()
-  const { dayStore, dishStore, userStore, addressStore, cartStore, commonStore } = useStores()
+  const { dayStore, userStore, addressStore } = useStores()
   const [data, setData] = useState([])
   const api = new Api()
 
@@ -59,23 +59,19 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
     <View style={[utilSpacing.py5, utilSpacing.mt5]}>
       <View style={utilSpacing.pl5}>
         <View style={[styles.containerTitle, utilFlex.flexRow]}>
-          <Text>
-            <Text tx="mainScreen.book" preset="bold" size="lg"></Text>
-            <Text
-              tx="mainScreen.homemadeDishes"
-              preset="bold"
-              style={utilText.textPrimary}
-              size="lg"
-            ></Text>
-            <Text tx="mainScreen.localChefs" preset="bold" size="lg"></Text>
-          </Text>
+          <Text tx="mainScreen.book" preset="bold" size="lg"></Text>
+
+          <View style={utilSpacing.ml2}>
+            <Text tx="mainScreen.homemadeDishes" preset="bold" size="lg"></Text>
+            <View style={styles.bar}></View>
+          </View>
         </View>
 
         <DayDelivery
           days={dayStore.days}
           onWhyPress={onWhyPress}
           onPress={handleChangeDay}
-          style={utilSpacing.m0}
+          style={[utilSpacing.m0, utilSpacing.mb5]}
         ></DayDelivery>
       </View>
 
@@ -96,7 +92,7 @@ const ListDishes = observer(function ListDishes(props: {
   toDetail: (dish: DishModel) => void
   dishes: DishChef[]
 }) {
-  const { dishStore, commonStore, cartStore } = useStores()
+  const { dishStore } = useStores()
 
   const onPressDish = (dish: DishChef) => {
     props.toDetail(dish)
@@ -120,10 +116,10 @@ const styles = StyleSheet.create({
   bar: {
     backgroundColor: color.primary,
     height: 2,
-    left: -2,
+
     position: "relative",
-    top: 2,
-    width: 60,
+    top: 4,
+    width: 56,
   },
   button: {
     minWidth: 240,
