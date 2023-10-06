@@ -28,6 +28,7 @@ export const CountryStoreModel = types
       if (result && result.kind === "ok") {
         applySnapshot(self.countries, result.data)
         // const deviceCountry = RNLocalize.getCountry()
+        console.log("set auto country", result.data)
         self.selectedCountry = result.data[0]
         setLocaleI18n("es")
         setLocale("es")

@@ -112,7 +112,9 @@ export const Banner = observer((props: PropsBanner) => {
                   ]}
                   text={banner.description}
                 ></Text>
-                <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
+                {banner.buttonText?.trim().length > 0 && (
+                  <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
+                )}
               </View>
             </View>
           </TouchableOpacity>

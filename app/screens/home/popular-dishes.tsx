@@ -59,8 +59,9 @@ const styles = StyleSheet.create({
     display: "flex",
     height: 2,
     position: "relative",
-    right: -5,
-    width: 70,
+    // right: -5,
+    top: 4,
+    width: 65,
   },
   containerTitle: {
     alignContent: "flex-start",

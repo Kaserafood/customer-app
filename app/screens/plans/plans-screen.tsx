@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { StyleSheet, View } from "react-native"
-import { Location, Screen, Text } from "../../components"
-import { NavigatorParamList } from "../../navigators"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
+import { Icon, Location, Screen, Text } from "../../components"
+import { NavigatorParamList, goBack } from "../../navigators"
 
 import { ScrollView } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
@@ -23,7 +23,7 @@ const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
-  function PlansScreen({ navigation }) {
+  function PlansScreen({ navigation, route: { params } }) {
     const [currentDate, setCurrentDate] = useState<DatePlan>()
     const { plansStore, cartStore } = useStores()
 
@@ -40,6 +40,20 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
     return (
       <Screen preset="fixed" style={styles.container}>
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
+          {params && params?.showBackIcon && (
+            <TouchableOpacity
+              style={[styles.btnBack, utilSpacing.ml5]}
+              onPress={goBack}
+              activeOpacity={0.5}
+            >
+              <Icon
+                name="angle-left-1"
+                style={utilSpacing.mr2}
+                size={24}
+                color={color.palette.white}
+              ></Icon>
+            </TouchableOpacity>
+          )}
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)

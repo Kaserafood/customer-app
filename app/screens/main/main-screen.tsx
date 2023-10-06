@@ -1,9 +1,9 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useState } from "react"
-import { ScrollView, StyleSheet, View } from "react-native"
+import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
-import { Location, Screen } from "../../components"
+import { Icon, Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
@@ -13,8 +13,8 @@ import { Category } from "../../models/category-store"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { DatePlan } from "../../services/api"
-import { color } from "../../theme"
-import { SHADOW, utilSpacing } from "../../theme/Util"
+import { color, spacing } from "../../theme"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Banner } from "../home/banner"
 import BannerMain from "./banner-main"
@@ -31,7 +31,7 @@ const modalStateDeliveryDatePlan = new ModalStateHandler()
 const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { cartStore, commonStore, dishStore, plansStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
@@ -81,19 +81,28 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
-        <View style={[styles.containerLocation, utilSpacing.py4]}>
+        <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
             }}
-            style={utilSpacing.px5}
+            style={[utilSpacing.pl5, utilSpacing.pr4]}
           ></Location>
+
+          <TouchableOpacity
+            style={[utilSpacing.py3, utilSpacing.px4, styles.btnSearch, utilSpacing.mr5]}
+            onPress={() => navigation.navigate("search")}
+          >
+            <Icon name="magnifying-glass" color={color.primary} size={22}></Icon>
+          </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.container}>
           {!plansStore.hasActivePlan && <BannerMain></BannerMain>}
 
-          <ValuePrepositions></ValuePrepositions>
+          <ValuePrepositions
+            screenNavigate={(screen) => navigation.navigate(screen, { showBackIcon: true })}
+          ></ValuePrepositions>
           {currentDate?.date && (
             <Lunches
               currentDate={currentDate}
@@ -128,6 +137,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 )
 
 const styles = StyleSheet.create({
+  btnSearch: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[3],
+  },
   container: {
     backgroundColor: color.background,
     flex: 1,

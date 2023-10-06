@@ -60,6 +60,7 @@ const account = types.model("Account").props({
   currency: types.string,
   // plan: plan,
   date: types.string,
+  role: types.maybeNull(types.string),
 })
 export interface Account extends Instance<typeof account> {}
 
@@ -81,6 +82,9 @@ export const UserRegisterModel = userRegister
   .views((self) => ({
     get isNotSelectedCards() {
       return self.cards.filter((card) => card.selected).length === 0
+    },
+    isChef: () => {
+      return self.account.role === "chef"
     },
   }))
   .actions((self) => ({
