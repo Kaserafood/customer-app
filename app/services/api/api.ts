@@ -6,7 +6,12 @@ import { UserLogin, UserRegister } from "../../models/user-store"
 import { Card } from "../../screens/checkout/modal-payment-card"
 import { handleMessageProblem } from "../../utils/messages"
 
+import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
+import { loadString } from "../../utils/storage"
+import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { getGeneralApiProblem } from "./api-problem"
 import {
+  AccountResponse,
   AddressResponse,
   BannerResponse,
   CardResponse,
@@ -15,19 +20,21 @@ import {
   CommonResponse,
   CountryResponse,
   CuponResponse,
+  DatesPlansResponse,
   DayResponse,
   DishResponse,
   GeneralApiResponse,
+  LunchesResponse,
+  OrderDetailChef,
   OrderDetailResponse,
   OrderOverviewResponse,
+  OrderPlanRequest,
+  OrdersChef,
+  ReservationRequest,
   SetupIntentResponse,
   UserLoginResponse,
   ValueResponse,
 } from "./api.types"
-import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
-import { getGeneralApiProblem } from "./api-problem"
-import { loadString } from "../../utils/storage"
-import { SetupIntent } from "../../screens/checkout/modal-payment-stripe"
 
 type requestType = "GET" | "POST" | "PUT" | "DELETE"
 let countryId
@@ -94,6 +101,7 @@ export class Api {
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
         config.headers["country-id"] = parseInt(countryId || -1)
+        config.headers["Accept-Language"] = locale
 
         if (config.url === "/users/login") countryId = null
         return config
@@ -163,6 +171,7 @@ export class Api {
     latitude: number,
     longitude: number,
     categoryId?: number,
+    isFavorite?: boolean,
   ): Promise<DishResponse> {
     return await this.request(
       {
@@ -173,6 +182,7 @@ export class Api {
         latitude,
         longitude,
         categoryId,
+        isFavorite,
       },
       "/dishes",
       "GET",
@@ -183,8 +193,8 @@ export class Api {
    *
    * @description Get dish by id
    */
-  async getDish(dishId: number): Promise<DishResponse> {
-    return await this.request({}, `/dishes/${dishId}`, "GET")
+  async getDish(dishId: number, latitude: number, longitude: number): Promise<DishResponse> {
+    return await this.request({ latitude, longitude }, `/dishes/${dishId}`, "GET")
   }
 
   /**
@@ -542,5 +552,62 @@ export class Api {
    */
   async addPaymentMethodId(stripePaymentId: string, name: string): Promise<ValueResponse> {
     return await this.request({ stripePaymentId, name }, `/stripe/add-payment-method-id`, "POST")
+  }
+
+  /**
+   * @description Get all lunches for plans by date
+   */
+  async getItemsPlan(date: string, type: string): Promise<LunchesResponse> {
+    return await this.request({ date, type }, `/recipes`, "GET")
+  }
+
+  /**
+   * @description Get dates for plans
+   */
+  async getDatesPlans(): Promise<DatesPlansResponse> {
+    return await this.request({}, `/recipes/dates`, "GET")
+  }
+
+  /**
+   * @description Insert the name and stripe payment method id
+   */
+  async createOrderPlan(orderPlan: OrderPlanRequest): Promise<ValueResponse> {
+    return await this.request(orderPlan, `/plans`, "POST")
+  }
+
+  /**
+   * @description Create a reservation for an existent plan
+   */
+  async createReservation(orderPlan: ReservationRequest): Promise<ValueResponse> {
+    console.log("LOCALE", locale)
+    return await this.request(orderPlan, `/plans/reservation`, "POST")
+  }
+
+  /**
+   * @description Get the user account
+   */
+  async getAccount(userId: number, timeZone: string): Promise<AccountResponse> {
+    return await this.request({ userId, timeZone }, `/users/account`, "GET")
+  }
+
+  /**
+   * @description Get orders for chef
+   */
+  async getOrdersChef(chefId: number, timeZone: string): Promise<OrdersChef> {
+    return await this.request({ chefId, timeZone }, `/chefs/orders`, "GET")
+  }
+
+  /**
+   * @description Get orders for chef
+   */
+  async getOrderChefById(orderId: number, timeZone: string): Promise<OrderDetailChef> {
+    return await this.request({ timeZone }, `/chefs/orders/${orderId}`, "GET")
+  }
+
+  /**
+   * @description Update order status
+   */
+  async updateOrderStatus(orderId: number, status: string): Promise<ValueResponse> {
+    return await this.request({ status }, `/chefs/orders/${orderId}/status`, "PUT")
   }
 }

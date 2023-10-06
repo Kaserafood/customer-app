@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native start",
-    "ios": "ENVFILE=.env.development react-native run-ios",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-native start",
+    "ios": "NODE_OPTIONS=--openssl-legacy-provider ENVFILE=.env.development react-native run-ios",
     "android": "adb reverse tcp:9090 tcp:9090 && SET ENVFILE=.env.development && react-native run-android",
     "test:e2e": "detox test -c ios.sim.debug",
     "build:e2e": "detox build -c ios.sim.debug",
@@ -25,8 +25,6 @@
     "build-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
-    "release-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && cd android && ./gradlew assembleRelease && cd ..",
-    "debug-build": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ && cd android && ./gradlew assembleDebug && cd app/src/main/res/ && rmdir /S /Q raw && rmdir /S /Q drawable-mdpi",
     "release:android": "cd android && set FILEENV=.env.production && ./gradlew bundleRelease && cd ..",
     "release:android:apk": "cd android && ./gradlew assembleRelease && cd .."
   },
@@ -88,6 +86,7 @@
     "react-native-ux-cam": "5.4.3",
     "react-native-vector-icons": "^9.1.0",
     "react-native-video": "^5.2.1",
+    "react-query": "^3.39.3",
     "reactotron-mst": "3.1.4",
     "reactotron-react-js": "^3.3.7",
     "reactotron-react-native": "5.0.1",

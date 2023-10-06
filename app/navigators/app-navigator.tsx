@@ -19,6 +19,7 @@ import {
   DishDetailScreen,
   EndOrderScreen,
   FavoriteScreen,
+  HomeScreen,
   InitScreen,
   LoginFormScreen,
   MapScreen,
@@ -27,15 +28,23 @@ import {
   NewPasswordScreen,
   OrderDetailScreen,
   OrdersScreen,
+  PlansScreen,
   PrivacyPolicyScreen,
   RecoverPasswordScreen,
   RecoverPasswordTokenScreen,
   RegisterFormScreen,
   RegisterPagerScreen,
   ReportBugScreen,
+  SearchScreen,
   TermsConditionsScreen,
 } from "../screens"
 
+import { FormPlans } from "../screens/form-plans/form-plans-screen"
+import { MenuSummaryScreen } from "../screens/menu-summary/menu-summary-screen"
+import MenuScreen from "../screens/menu/menu-screen"
+import { OrderChefDetailScreen } from "../screens/order-chef-detail/order-chef-detail"
+import { OrdersChefScreen } from "../screens/orders-chef/orders-chef-screen"
+import { Subscription } from "../screens/subscription/subscription-screen"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
@@ -57,7 +66,7 @@ import { NavigatorParamList } from "./navigator-param-list"
 const Stack = createNativeStackNavigator<NavigatorParamList>()
 
 const AppStack = observer(() => {
-  const { commonStore, userStore } = useStores()
+  const { commonStore } = useStores()
 
   return (
     <Stack.Navigator
@@ -86,6 +95,8 @@ const AppStack = observer(() => {
           <Stack.Screen name="newChefs" component={NewChefsScreen} />
           <Stack.Screen name="favorite" component={FavoriteScreen} />
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
+          <Stack.Screen name="ordersChef" component={OrdersChefScreen} />
+          <Stack.Screen name="orderChefDetail" component={OrderChefDetailScreen} />
           <Stack.Screen name="map" component={MapScreen} />
         </Stack.Group>
       )}
@@ -100,6 +111,13 @@ const AppStack = observer(() => {
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
         <Stack.Screen name="registerForm" component={RegisterFormScreen} />
+        <Stack.Screen name="plans" component={PlansScreen} />
+        <Stack.Screen name="formPlans" component={FormPlans} />
+        <Stack.Screen name="subscription" component={Subscription} />
+        <Stack.Screen name="menu" component={MenuScreen} />
+        <Stack.Screen name="menuSummary" component={MenuSummaryScreen} />
+        <Stack.Screen name="search" component={SearchScreen} />
+        <Stack.Screen name="dishes" component={HomeScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )
@@ -127,11 +145,17 @@ export const AppNavigator = (props: NavigationProps) => {
       dishDetail: {
         path: "products/:id",
       },
+      orderChefDetail: {
+        path: "orders/:id",
+      },
+      ordersChef: {
+        path: "orders",
+      },
     },
   }
 
   const linking = {
-    prefixes: ["kasera://"],
+    prefixes: ["kasera://", "https://kaserafood.com"],
     config,
   }
 

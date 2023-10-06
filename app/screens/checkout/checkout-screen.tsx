@@ -2,18 +2,16 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, Platform, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import { Keyboard, Platform, ScrollView, StyleSheet, View } from "react-native"
 import { getUniqueId, getVersion } from "react-native-device-info"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 
-import images from "../../assets/images"
 import {
   ButtonFooter,
   Card,
   Header,
   Icon,
-  Image,
   InputText,
   ModalDeliveryDate,
   Screen,
@@ -29,19 +27,22 @@ import { color } from "../../theme"
 import { palette } from "../../theme/palette"
 import { spacing } from "../../theme/spacing"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
-import { getImageByTypeCard } from "../../utils/image"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
+import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
+import { useMutation } from "react-query"
+import { Api, OrderPlanRequest } from "../../services/api"
 import { MEXICO } from "../../utils/constants"
+import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
-import { DishesList } from "./dishes-list"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
-import { Totals } from "./totals"
+import SelectPaymentMethod from "./select-payment-mehtod"
+import Summary from "./summay"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -49,8 +50,12 @@ const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
+    const api = new Api()
+
+    const [subscription, setSubscription] = useState(false)
+    const isPlan = params?.isPlan
     const {
       addressStore,
       dayStore,
@@ -59,6 +64,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       commonStore,
       orderStore,
       messagesStore,
+      plansStore,
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
 
@@ -84,11 +90,46 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }, [])
 
     useEffect(() => {
-      if (!cartStore.hasItems) {
+      if (!cartStore.hasItems && !isPlan) {
         console.log("to main screen")
         navigation.navigate("main")
       }
     }, [navigation])
+
+    const { mutate: createOrderPlan } = useMutation(
+      (data: OrderPlanRequest) => api.createOrderPlan(data),
+      {
+        onSuccess: (res) => {
+          const planId = Number(res.data.value)
+          if (planId > 0) {
+            plansStore.setConsumedCredits(cartStore.useCredits + plansStore.consumedCredits)
+
+            plansStore.setId(Number(res.data.value))
+            navigation.navigate("endOrder", {
+              orderId: 0,
+              deliveryDate: getDatesDelivery(),
+              deliveryTime: getI18nText("checkoutScreen.deliveryTimePlan"),
+              deliveryAddress: addressStore.current.address,
+              imageChef:
+                "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
+              isPlan: true,
+            })
+          } else if (planId === -1) {
+            messagesStore.showError("checkoutScreen.errorOrderPayment", true)
+            RNUxcam.logEvent("checkout: errorOrderPayment")
+          } else {
+            RNUxcam.logEvent("checkout: errorOrder")
+            messagesStore.showError("checkoutScreen.errorOrder", true)
+          }
+          commonStore.setVisibleLoading(false)
+        },
+        onError: (error) => {
+          console.log("error", error)
+          messagesStore.showError("checkoutScreen.errorOrder", true)
+          commonStore.setVisibleLoading(false)
+        },
+      },
+    )
 
     const getPaymentMethodId = () => {
       if (userStore.currentCard?.id) return userStore.currentCard?.id
@@ -110,7 +151,60 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       __DEV__ && console.log({ errors })
     }
 
-    const onSubmit = async (data) => {
+    const sendOrder = async (data) => {
+      if (isPlan) {
+        if (!getPaymentMethodId()) {
+          messagesStore.showError("checkoutScreen.errorSelectPaymentMethod", true)
+          RNUxcam.logEvent("checkout: errorSelectPaymentMethod")
+          return
+        }
+        commonStore.setVisibleLoading(true)
+        const taxId = data.taxId?.trim().length === 0 ? "CF" : data.taxId.toUpperCase()
+        const items = cartStore.cartPlans.map((item) => ({
+          ...item,
+          deliveryDate: item.date,
+        }))
+
+        const orderPlan: OrderPlanRequest = {
+          userId: userStore.userId,
+          totalCredits: plansStore.totalCredits,
+          type: plansStore.type,
+          amount: plansStore.price,
+          expirationDate: plansStore.expireDate,
+          items,
+          timeZone: RNLocalize.getTimeZone(),
+          addressId: userStore.addressId,
+          noteDelivery: data.customerNote,
+          taxId,
+          paymentMethodType: getPaymentMethodId() ? "card" : "cash",
+          paymentMethodTokenId: getPaymentMethodId(),
+          versionApp: getVersion(),
+          deviceType: Platform.OS,
+          commentToChef: params?.commentToChef,
+          currencyCode: userStore.account?.currency,
+        }
+        console.log(data)
+        createOrderPlan(orderPlan)
+      } else {
+        createOrderDish(data)
+      }
+    }
+
+    const getDatesDelivery = () => {
+      const dates = []
+
+      cartStore.cartPlans.forEach((item) => {
+        dates.push(item.dateShortName)
+      })
+
+      const uniqueDates = dates.filter(
+        (item, index, self) => index === self.findIndex((t) => t === item),
+      )
+
+      return uniqueDates.join(", ")
+    }
+
+    const createOrderDish = async (data) => {
       Keyboard.dismiss()
       if (!dayStore.currentDay) {
         messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
@@ -118,7 +212,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         return
       }
 
-      if (labelDeliveryTime.length === 0) {
+      if (labelDeliveryTime.length === 0 && !isPlan) {
         messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
         RNUxcam.logEvent("checkout: errorTimeDelivery")
         return
@@ -265,6 +359,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getTextButtonFooter = (): string => {
+      if (isPlan) {
+        return `${getI18nText(
+          "checkoutScreen.pay",
+        )} ${`${userStore.account?.currency} ${plansStore.price}`}`
+      }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
       )
@@ -339,105 +438,71 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               value={addressStore.current.instructionsDelivery}
             ></InputText>
 
-            <Ripple
-              rippleOpacity={0.2}
-              rippleDuration={400}
-              onPress={() => modalDelivery.setVisible(true)}
-            >
-              <InputText
-                name="diveryDate"
-                preset="card"
-                labelTx="checkoutScreen.deliveryDate"
-                placeholderTx="checkoutScreen.deliveryDatePlaceholder"
-                editable={false}
-                value={getNameDayDelivery()}
-                iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
-              ></InputText>
-            </Ripple>
+            {!params?.isPlan && (
+              <View>
+                <Ripple
+                  rippleOpacity={0.2}
+                  rippleDuration={400}
+                  onPress={() => modalDelivery.setVisible(true)}
+                >
+                  <InputText
+                    name="diveryDate"
+                    preset="card"
+                    labelTx="checkoutScreen.deliveryDate"
+                    placeholderTx="checkoutScreen.deliveryDatePlaceholder"
+                    editable={false}
+                    value={getNameDayDelivery()}
+                    iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
+                  ></InputText>
+                </Ripple>
 
-            <DeliveryTimeList
-              onSelectItem={(value) => setLabelDeliveryTime(value)}
-              chefId={commonStore.currentChefId}
-            ></DeliveryTimeList>
+                <DeliveryTimeList
+                  onSelectItem={(value) => setLabelDeliveryTime(value)}
+                  chefId={commonStore.currentChefId}
+                ></DeliveryTimeList>
+              </View>
+            )}
+
             <Separator style={[utilSpacing.my6, utilSpacing.mx4]}></Separator>
-            <Text
-              preset="bold"
-              size="lg"
-              tx="checkoutScreen.paymentMethod"
-              style={[utilSpacing.mb2, utilSpacing.mx4]}
-            ></Text>
 
-            <Card
-              style={[styles.containerPayment, utilSpacing.m4, utilSpacing.px1, utilSpacing.p0]}
-            >
-              {userStore.currentCard?.id ? (
+            <SelectPaymentMethod
+              openPaymentList={() => modalStatePaymentList.setVisible(true)}
+              isPlan={isPlan}
+            ></SelectPaymentMethod>
+
+            {/* {isPlan && !!userStore?.currentCard?.id && (
+              <Card
+                style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
+              >
                 <Ripple
-                  rippleOpacity={0.2}
-                  rippleDuration={400}
-                  onPress={() => {
-                    modalStatePaymentList.setVisible(true)
-                  }}
-                  style={[
-                    utilSpacing.p2,
-                    utilSpacing.py3,
-                    utilFlex.flexRow,
-                    utilFlex.flexCenterVertical,
-                  ]}
+                  style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.p3]}
+                  onPress={() => setSubscription(!subscription)}
                 >
-                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-                    <Text text={userStore.currentCard.name} preset="semiBold"></Text>
-                    <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                      <Text
-                        text="****"
-                        caption
-                        size="sm"
-                        style={[utilSpacing.mt2, utilSpacing.mr2]}
-                      ></Text>
-
-                      <Text text={userStore.currentCard.number} caption size="sm"></Text>
-                    </View>
+                  <View>
+                    <Checkbox
+                      rounded
+                      value={subscription}
+                      preset="default"
+                      onToggle={setSubscription}
+                    ></Checkbox>
                   </View>
 
-                  <Image
-                    style={[styles.imageCard, utilSpacing.mr4]}
-                    source={getImageByTypeCard(userStore.currentCard.type as never)}
-                  ></Image>
-                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
-                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
-                  </TouchableOpacity>
-                </Ripple>
-              ) : (
-                <Ripple
-                  rippleOpacity={0.2}
-                  rippleDuration={400}
-                  onPress={() => {
-                    modalStatePaymentList.setVisible(true)
-                  }}
-                  style={[
-                    utilSpacing.p2,
-                    utilSpacing.py3,
-                    utilFlex.flexRow,
-                    utilFlex.flexCenterVertical,
-                  ]}
-                >
-                  <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-                    <View style={utilFlex.felxColumn}>
-                      <Text
-                        tx="checkoutScreen.paymentCash"
-                        preset="semiBold"
-                        style={utilSpacing.mb1}
-                      ></Text>
-                      <Text tx="checkoutScreen.paymentCashDescription" caption size="sm"></Text>
-                    </View>
+                  <View style={utilFlex.flex1}>
+                    <Text
+                      tx="checkoutScreen.paymentAutomatic"
+                      preset="semiBold"
+                      size="md"
+                      style={utilSpacing.mb1}
+                    ></Text>
+                    <Text>
+                      <Text tx="checkoutScreen.paymentAutomaticDescription.part1"></Text>
+                      <Text text="18 de agosto" preset="semiBold"></Text>
+                      <Text tx="checkoutScreen.paymentAutomaticDescription.part2"></Text>
+                    </Text>
                   </View>
-
-                  <Image style={[styles.imageCard, utilSpacing.mr4]} source={images.cash}></Image>
-                  <TouchableOpacity style={[utilSpacing.px4, utilSpacing.py3, utilSpacing.mr3]}>
-                    <Icon name="angle-right" size={18} color={color.palette.grayDark} />
-                  </TouchableOpacity>
                 </Ripple>
-              )}
-            </Card>
+              </Card>
+            )} */}
 
             <InputText
               name="taxId"
@@ -469,28 +534,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
           <View style={utilSpacing.mx4}>
             <Separator style={utilSpacing.my6}></Separator>
-            <View style={utilFlex.flexRow}>
-              <Text style={utilSpacing.mr2} preset="semiBold" tx="checkoutScreen.delivery"></Text>
-              <Text
-                preset="semiBold"
-                caption
-                text={`${getNameDayDelivery()} ${labelDeliveryTime}`}
-                style={[utilSpacing.mb6, utilFlex.flex1]}
-              ></Text>
-            </View>
+            <DeliveryLabel labelDeliveryTime={labelDeliveryTime} isPlan={isPlan}></DeliveryLabel>
 
             {/* Resume order */}
-            <Card style={[utilSpacing.p5, utilSpacing.mb6]}>
-              <DishesList></DishesList>
-              <Separator style={styles.separator}></Separator>
-              <Totals priceDelivery={priceDelivery()} coupon={coupon}></Totals>
-            </Card>
+            <Summary priceDelivery={priceDelivery()} coupon={coupon} isPlan={isPlan}></Summary>
           </View>
         </ScrollView>
 
-        {cartStore.hasItems && (
+        {(cartStore.hasItems || isPlan) && (
           <ButtonFooter
-            onPress={methods.handleSubmit(onSubmit, onError)}
+            onPress={methods.handleSubmit(sendOrder, onError)}
             text={getTextButtonFooter()}
           ></ButtonFooter>
         )}
@@ -498,7 +551,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         <ModalLocation screenToReturn={"checkout"} modal={modalStateLocation}></ModalLocation>
         <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
         <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
-        <ModalPaymentList stateModal={modalStatePaymentList}></ModalPaymentList>
+        <ModalPaymentList stateModal={modalStatePaymentList} isPlan={isPlan}></ModalPaymentList>
       </Screen>
     )
   },
@@ -532,6 +585,14 @@ const styles = StyleSheet.create({
     height: 24,
     marginLeft: spacing[1],
     width: 35,
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  paymentAutomatic: {
+    backgroundColor: "#eefcf6",
+    borderColor: color.palette.green,
+    borderRadius: spacing[2],
+    borderWidth: 1,
+    ...SHADOW,
   },
   price: {
     backgroundColor: color.transparent,

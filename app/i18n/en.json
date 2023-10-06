@@ -294,7 +294,7 @@
     "deliveryDate": "Date of delivery",
     "deliveryDatePlaceholder": "Select a date",
     "deliveryTime": "Choose the delivery range",
-    "paymentMethod": "Payment method",
+    "paymentMethod": "Select a payment method",
     "paymentMethods": "Payment methods",
     "paymentCard": "Add the card information",
     "delivery": "Delivery:",

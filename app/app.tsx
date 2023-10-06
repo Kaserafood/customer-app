@@ -14,31 +14,31 @@ import { Linking } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { enableLatestRenderer } from "react-native-maps"
 import OneSignal from "react-native-onesignal"
-import { initialWindowMetrics, SafeAreaProvider } from "react-native-safe-area-context"
+import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
 
 import "./utils/ignore-warnings"
 
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 
+import RNUxcam from "react-native-ux-cam"
+import { QueryClient, QueryClientProvider } from "react-query"
+import { Loader, Messages, ModalCoupon } from "./components"
+import { setLocaleI18n } from "./i18n"
+import { RootStore, RootStoreProvider, setupRootStore } from "./models"
+import { AppNavigator, useNavigationPersistence } from "./navigators"
 import { ErrorBoundary } from "./screens/error/error-boundary"
+import { setLocale } from "./services/api"
 import { utilFlex } from "./theme/Util"
 import { checkNotificationPermission, trackingPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
-import { Loader, Messages, ModalCoupon } from "./components"
-import { RootStore, RootStoreProvider, setupRootStore } from "./models"
-import { AppNavigator, useNavigationPersistence } from "./navigators"
-import RNUxcam from "react-native-ux-cam"
-import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
-import { setLocale } from "./services/api"
-import { setLocaleI18n } from "./i18n"
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
 enableLatestRenderer()
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
-
+const queryClient = new QueryClient()
 function App() {
   loadString("locale").then((locale) => {
     if (locale && locale.length > 0) {
@@ -94,7 +94,7 @@ function App() {
               if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
 
               const data: any = notification.additionalData
-              if (data.type === "coupon") {
+              if (data && data.type === "coupon") {
                 rootStore?.couponModalStore.setVisible(true)
                 if (data.title?.length > 0) rootStore?.couponModalStore.setTitle(data.title)
                 if (data.subtitle?.length > 0)
@@ -136,19 +136,21 @@ function App() {
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
-            <GestureHandlerRootView style={utilFlex.flex1}>
-              <AppNavigator
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
-              />
-              <Loader></Loader>
-              <ModalCoupon></ModalCoupon>
-            </GestureHandlerRootView>
-            <Messages></Messages>
-          </ErrorBoundary>
-        </SafeAreaProvider>
+        <QueryClientProvider client={queryClient}>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <ErrorBoundary catchErrors={"always"}>
+              <GestureHandlerRootView style={utilFlex.flex1}>
+                <AppNavigator
+                  initialState={initialNavigationState}
+                  onStateChange={onNavigationStateChange}
+                />
+                <Loader></Loader>
+                <ModalCoupon></ModalCoupon>
+              </GestureHandlerRootView>
+              <Messages></Messages>
+            </ErrorBoundary>
+          </SafeAreaProvider>
+        </QueryClientProvider>
       </RootStoreProvider>
     </ToggleStorybook>
   )

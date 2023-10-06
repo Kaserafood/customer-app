@@ -1,15 +1,15 @@
 import React, { useRef, useState } from "react"
 
-import { Modal, Text, Button } from "../../components"
-import { ModalState } from "../../utils/modalState"
-import { CardField, useStripe, initStripe } from "@stripe/stripe-react-native"
+import { CardField, initStripe, useStripe } from "@stripe/stripe-react-native"
+import { Button, Modal, Text } from "../../components"
 import { utilSpacing } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
 
-import { TextInput, View, StyleSheet, Keyboard } from "react-native"
-import { useStores } from "../../models"
+import { Keyboard, StyleSheet, TextInput, View } from "react-native"
 import { useEffectAsync } from "react-native-text-input-mask"
-import { color } from "../../theme"
 import { translate } from "../../i18n"
+import { useStores } from "../../models"
+import { color } from "../../theme"
 
 interface Props {
   stateModal: ModalState
@@ -137,7 +137,7 @@ export const ModalPaymentStripe = ({ stateModal, onGetCards }: Props) => {
 
         <CardField
           ref={cardFieldRef}
-          countryCode={countryStore.selectedCountry.code.toLocaleLowerCase()}
+          countryCode={countryStore.selectedCountry?.code?.toLocaleLowerCase()}
           postalCodeEnabled={false}
           style={styles.fieldStyle}
           cardStyle={styles.cardStyle}

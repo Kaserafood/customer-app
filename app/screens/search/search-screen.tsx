@@ -1,15 +1,15 @@
-import React, { FC, useLayoutEffect } from "react"
+import { useIsFocused } from "@react-navigation/native"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
+import React, { FC, useEffect, useLayoutEffect } from "react"
 import { StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { useIsFocused } from "@react-navigation/native"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import images from "../../assets/images"
-import { Card, Header, Icon, Image, ModalRequestDish, Screen, Text } from "../../components"
+import { Card, Icon, Image, ModalRequestDish, Screen, Text } from "../../components"
 import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
@@ -21,8 +21,8 @@ import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
-import { ModalSearch } from "./modal-search"
 import RNUxcam from "react-native-ux-cam"
+import { ModalSearch } from "./modal-search"
 
 const modalStateRequest = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -34,12 +34,16 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     }, [])
 
     const {
-      categoryStore: { categories },
+      categoryStore: { categories, getAll },
       userStore,
       cartStore,
       commonStore,
       dishStore,
     } = useStores()
+
+    useEffect(() => {
+      getAll()
+    }, [])
 
     const toCategory = (category: Category) => {
       AppEventsLogger.logEvent("categoryPress", 1, {
@@ -101,21 +105,33 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         <StatusBar barStyle="dark-content" backgroundColor={"transparent"} translucent></StatusBar>
         <ScrollView style={styles.body}>
           <View style={utilSpacing.mb5}>
-            <TouchableOpacity
-              style={[
-                styles.search,
-                utilSpacing.py5,
-                utilSpacing.px4,
-                utilFlex.flexRow,
-                utilSpacing.my5,
-                utilFlex.flexCenterVertical,
-                utilSpacing.mx3,
-              ]}
-              onPress={onPressSearch}
-            >
-              <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
-              <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
-            </TouchableOpacity>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb5]}>
+              <TouchableOpacity style={styles.btnBack} onPress={goBack} activeOpacity={0.5}>
+                <Icon
+                  name="angle-left-1"
+                  style={utilSpacing.mr2}
+                  size={24}
+                  color={color.text}
+                ></Icon>
+              </TouchableOpacity>
+              <View style={utilFlex.flex1}>
+                <TouchableOpacity
+                  style={[
+                    styles.search,
+                    utilSpacing.py5,
+                    utilSpacing.px4,
+                    utilFlex.flexRow,
+
+                    utilFlex.flexCenterVertical,
+                    utilSpacing.mx3,
+                  ]}
+                  onPress={onPressSearch}
+                >
+                  <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
+                  <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
             {userStore.userId > 0 && (
               <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={openRequestDish}>
@@ -207,6 +223,14 @@ const styles = StyleSheet.create({
     flex: 1,
     minWidth: 300,
     width: "88%",
+  },
+  btnBack: {
+    alignItems: "center",
+    backgroundColor: color.palette.gray300,
+    borderRadius: 100,
+    height: 38,
+    justifyContent: "center",
+    width: 38,
   },
   card: {
     alignItems: "center",

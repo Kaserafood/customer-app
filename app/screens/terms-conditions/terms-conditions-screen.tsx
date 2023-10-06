@@ -9,6 +9,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { utilSpacing } from "../../theme/Util"
+import { TxKeyPath } from "../../i18n"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -20,13 +21,13 @@ export const TermsConditionsScreen: FC<
 > = observer(function TermsConditionsScreen() {
   const textList = []
 
-  for (let i = 1; i <= 61; i++) {
+  for (let i = 1; i <= 1; i++) {
     const text1 = `termsConditionsScreen.text${i}`
     const styles: TextStyle = { ...utilSpacing.mb4 }
     if (i === 1) {
       styles.marginTop = spacing[4]
     }
-    textList.push(<Text style={styles} tx={text1} key={i}></Text>)
+    textList.push(<Text style={styles} tx={text1 as TxKeyPath} key={i}></Text>)
   }
 
   return (

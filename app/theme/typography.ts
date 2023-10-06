@@ -42,7 +42,7 @@ export const typography = {
   /**
    * The primary font.  Used in most places.
    */
-  brand: Platform.select({ ios: "ChaloopsW00-Bd", android: "Chaloops-Bold" }),
+  brand: Platform.select({ ios: "Poppins-Bold", android: "Poppins-Bold" }),
 }
 
 export const typographySize = {

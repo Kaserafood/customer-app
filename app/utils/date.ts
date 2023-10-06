@@ -49,3 +49,15 @@ export function toFormatDateTime(date: Date, format: formatDateTime) {
     .replace("mm", minutes.toString().padStart(2, "0"))
     .replace("ss", seconds.toString().padStart(2, "0"))
 }
+
+/**
+ *
+ * @param date
+ * @param days
+ * @returns
+ */
+export function addDays(date: Date, days: number): Date {
+  const result = new Date(date)
+  result.setDate(result.getDate() + days)
+  return result
+}

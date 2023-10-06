@@ -17,7 +17,14 @@ import { clear } from "../../utils/storage"
 const modalState = new ModalStateHandler()
 export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> = observer(
   function AccountScreen({ navigation }) {
-    const { commonStore, userStore, addressStore, cartStore, messagesStore } = useStores()
+    const {
+      commonStore,
+      userStore,
+      addressStore,
+      cartStore,
+      messagesStore,
+      plansStore,
+    } = useStores()
 
     const closeSession = async () => {
       await clear()
@@ -27,6 +34,8 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
       userStore.setEmail(undefined)
       addressStore.removeAddress()
       addressStore.setAddresses([])
+      cartStore.cleanItemsPlan()
+      plansStore.setPlan(undefined)
       cartStore.cleanItems()
       commonStore.setIsSignedIn(false)
       navigation.navigate("init")

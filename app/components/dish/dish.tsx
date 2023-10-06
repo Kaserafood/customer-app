@@ -1,7 +1,7 @@
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
-import { observer } from "mobx-react-lite"
 
 import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
@@ -65,7 +65,7 @@ export const Dish = observer(function Dish(props: DishProps) {
 
   return (
     <Ripple
-      style={[utilSpacing.py3, style]}
+      style={[utilSpacing.py3, utilSpacing.px5, style]}
       rippleOpacity={0.2}
       rippleDuration={400}
       onPress={onPress}

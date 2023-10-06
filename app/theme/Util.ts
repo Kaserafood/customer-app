@@ -36,6 +36,7 @@ export const utilText = StyleSheet.create({
   marginNegative: {
     marginBottom: -4,
   },
+  regular: { fontFamily: typography.primary },
   semiBold: { fontFamily: typography.primarySemiBold },
 
   textCenter: {
@@ -46,10 +47,13 @@ export const utilText = StyleSheet.create({
     color: color.palette.grayDark,
   },
 
+  textPrimary: {
+    color: color.primary,
+  },
+
   textSm: {
     fontSize: typographySize.sm,
   },
-
   textWhite: {
     color: color.palette.white,
   },
@@ -128,6 +132,9 @@ export const utilSpacing = StyleSheet.create({
   m9: {
     margin: spacing[8],
   },
+  mb0: {
+    marginBottom: 0,
+  },
   mb1: {
     marginBottom: spacing[0],
   },
@@ -154,6 +161,9 @@ export const utilSpacing = StyleSheet.create({
   },
   mb9: {
     marginBottom: spacing[8],
+  },
+  ml0: {
+    marginLeft: 0,
   },
   ml1: {
     marginLeft: spacing[0],
@@ -182,6 +192,9 @@ export const utilSpacing = StyleSheet.create({
   ml9: {
     marginLeft: spacing[8],
   },
+  mr0: {
+    marginRight: 0,
+  },
   mr1: {
     marginRight: spacing[0],
   },
@@ -208,6 +221,9 @@ export const utilSpacing = StyleSheet.create({
   },
   mr9: {
     marginRight: spacing[8],
+  },
+  mt0: {
+    marginTop: 0,
   },
   mt1: {
     marginTop: spacing[0],
@@ -236,6 +252,9 @@ export const utilSpacing = StyleSheet.create({
   mt9: {
     marginTop: spacing[8],
   },
+  mx0: {
+    marginHorizontal: 0,
+  },
   mx1: {
     marginHorizontal: spacing[0],
   },
@@ -262,6 +281,9 @@ export const utilSpacing = StyleSheet.create({
   },
   mx9: {
     marginHorizontal: spacing[8],
+  },
+  my0: {
+    marginVertical: 0,
   },
   my1: {
     marginVertical: spacing[0],
@@ -320,6 +342,9 @@ export const utilSpacing = StyleSheet.create({
   p9: {
     padding: spacing[8],
   },
+  pb0: {
+    paddingBottom: 0,
+  },
   pb1: {
     paddingBottom: spacing[0],
   },
@@ -346,6 +371,9 @@ export const utilSpacing = StyleSheet.create({
   },
   pb9: {
     paddingBottom: spacing[8],
+  },
+  pl0: {
+    paddingLeft: 0,
   },
   pl1: {
     paddingLeft: spacing[0],
@@ -374,6 +402,9 @@ export const utilSpacing = StyleSheet.create({
   pl9: {
     paddingLeft: spacing[8],
   },
+  pr0: {
+    paddingRight: 0,
+  },
   pr1: {
     paddingRight: spacing[0],
   },
@@ -400,6 +431,9 @@ export const utilSpacing = StyleSheet.create({
   },
   pr9: {
     paddingRight: spacing[8],
+  },
+  pt0: {
+    paddingTop: 0,
   },
   pt1: {
     paddingTop: spacing[0],
@@ -428,6 +462,9 @@ export const utilSpacing = StyleSheet.create({
   pt9: {
     paddingTop: spacing[8],
   },
+  px0: {
+    paddingHorizontal: 0,
+  },
   px1: {
     paddingHorizontal: spacing[0],
   },
@@ -454,6 +491,9 @@ export const utilSpacing = StyleSheet.create({
   },
   px9: {
     paddingHorizontal: spacing[8],
+  },
+  py0: {
+    paddingVertical: 0,
   },
   py1: {
     paddingVertical: spacing[0],

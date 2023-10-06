@@ -142,11 +142,11 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
                 onChangeDay(day)
               }}
               hideWhyButton={true}
-              style={utilSpacing.mt2}
+              style={[utilSpacing.mt2, utilSpacing.ml5, utilSpacing.mb5]}
             ></DayDelivery>
           )}
 
-          <ScrollView style={utilSpacing.px4}>
+          <ScrollView style={utilSpacing.px0}>
             {dishStore.dishesSearch.map((dish, index) => (
               <View key={dish.id}>
                 <Dish dish={dish} onPress={() => onDishPress(dish)}></Dish>

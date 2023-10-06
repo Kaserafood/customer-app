@@ -1,12 +1,13 @@
 import * as React from "react"
-import { TouchableOpacity } from "react-native"
+import { StyleSheet, TouchableOpacity } from "react-native"
 
 import { Text } from "../text/text"
 
+import { spacing, typography } from "../../theme"
 import { textPresets, viewPresets } from "./button.presets"
 import { ButtonProps } from "./button.props"
 
-export function Button(props: ButtonProps) {
+const Button = (props: ButtonProps) => {
   const {
     preset = "primary",
     tx,
@@ -18,38 +19,61 @@ export function Button(props: ButtonProps) {
     block,
     disabled,
     iconLeft,
+    iconRight,
+    size = "md",
     ...rest
   } = props
 
   const viewStyle = viewPresets[preset] || viewPresets.primary
-  if (block) {
-    viewStyle.width = "100%"
-  } else viewStyle.width = 175
 
-  if (preset === "link") {
-    viewStyle.width = 35
-    viewStyle.height = 35
-  }
+  const viewStyles = [viewStyle, disabled ? { opacity: 0.5 } : { opacity: 1 }]
 
-  if (rounded) {
-    viewStyle.borderRadius = 100
-  } else {
-    viewStyle.borderRadius = 8
-  }
-  if (disabled) viewStyle.opacity = 0.5
-  else viewStyle.opacity = 1
-
-  const viewStyles = [viewStyle, styleOverride]
   const textStyle = textPresets[preset] || textPresets.primary
+
   const textStyles = [textStyle, textStyleOverride]
 
-  const content = children || <Text tx={tx} text={text} style={textStyles} />
+  const content = children || (
+    <Text
+      tx={tx}
+      text={text}
+      style={[textStyles, size === "sm" && { fontFamily: typography.primarySemiBold }]}
+    />
+  )
 
   __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
-    <TouchableOpacity style={viewStyles} {...rest} disabled={disabled === true} activeOpacity={0.8}>
+    <TouchableOpacity
+      style={[
+        viewStyles,
+        size === "sm" && styles.sm,
+        block && styles.block,
+        rounded && styles.rounded,
+        styleOverride,
+      ]}
+      {...rest}
+      disabled={disabled}
+      activeOpacity={0.8}
+    >
       {iconLeft && iconLeft}
       {content}
+      {iconRight && iconRight}
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  block: {
+    width: "100%",
+  },
+  rounded: {
+    borderRadius: 100,
+  },
+  sm: {
+    borderRadius: spacing[2],
+    paddingHorizontal: spacing[1],
+    paddingVertical: spacing[1],
+    width: "auto",
+  },
+})
+
+export { Button }

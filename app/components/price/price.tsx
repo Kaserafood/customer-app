@@ -7,6 +7,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
+import { useStores } from "../../models"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-end",
@@ -50,8 +51,12 @@ export interface PriceProps {
 
 export const Price = observer(function Price(props: PriceProps) {
   const { style, amount, preset = "dish", textStyle, currencyCode } = props
+  const { userStore } = useStores()
 
-  const price = getFormat(amount, currencyCode)
+  let currency = currencyCode
+  if (!currencyCode) currency = userStore.account?.currency || "USD"
+
+  const price = getFormat(amount, currency)
   const Delivery = () => {
     return (
       <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, style]}>
@@ -62,7 +67,7 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Dish = () => {
-    const price = getFormat(amount, currencyCode)
+    const price = getFormat(amount, currency)
     const styles = [CONTAINER, style]
     return (
       <View style={styles}>
@@ -72,7 +77,7 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Simple = () => {
-    const price = getFormat(amount, currencyCode)
+    const price = getFormat(amount, currency)
     return <Text style={textStyle} text={`${price}`} preset="bold"></Text>
   }
 

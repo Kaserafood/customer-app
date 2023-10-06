@@ -9,7 +9,8 @@ import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
 
-import { Addons, ButtonFooter, Icon, Image, InputText, Screen, Price, Text } from "../../components"
+import RNUxcam from "react-native-ux-cam"
+import { Addons, ButtonFooter, Icon, Image, InputText, Price, Screen, Text } from "../../components"
 import { Separator } from "../../components/separator/separator"
 import { ItemCart } from "../../models/cart-store"
 import { DishChef as DishChefModel } from "../../models/dish-store"
@@ -22,7 +23,6 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
 import ListDish from "./ListDish"
 import SkeletonLoadingDish from "./SkeletonLoadingDish"
 
@@ -39,7 +39,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     const [currentDish, setCurrentDish] = useState<DishChefModel>(params)
     const scrollRef = useRef<ScrollView>()
     const { ...methods } = useForm({ mode: "onBlur" })
-    const { dishStore, commonStore, cartStore } = useStores()
+    const { dishStore, commonStore, cartStore, addressStore } = useStores()
     const [loading, setLoading] = useState(false)
     const [loadingDishes, setLoadingDishes] = useState(true)
     const { addonStore } = useStores()
@@ -48,20 +48,22 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     useEffect(() => {
       const getDish = async () => {
         commonStore.setVisibleLoading(true)
-        dishStore.getDish(params.id).then((res) => {
-          if (res) {
-            setCurrentDish(res)
-            commonStore.setVisibleLoading(false)
-            navigation.setParams({ ...res })
-            RNUxcam.logEvent("dishDetail", {
-              id: res.id,
-              name: res.title,
-              price: res.price,
-              chefId: res.chef.id,
-              chefName: res.chef.name,
-            })
-          }
-        })
+        dishStore
+          .getDish(params.id, addressStore.current.latitude, addressStore.current.longitude)
+          .then((res) => {
+            if (res) {
+              setCurrentDish(res)
+              commonStore.setVisibleLoading(false)
+              navigation.setParams({ ...res })
+              RNUxcam.logEvent("dishDetail", {
+                id: res.id,
+                name: res.title,
+                price: res.price,
+                chefId: res.chef.id,
+                chefName: res.chef.name,
+              })
+            }
+          })
       }
       // No va venir el chef cuando se llega a esta pantalla desde el push notification
       if (!params.chef) {

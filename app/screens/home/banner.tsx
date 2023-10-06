@@ -5,6 +5,7 @@ import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 
+import { observer } from "mobx-react-lite"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
@@ -20,7 +21,7 @@ interface PropsBanner {
 }
 const windowWidth = Dimensions.get("window").width
 
-export const Banner = (props: PropsBanner) => {
+export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
 
   const { bannerStore } = useStores()
@@ -55,7 +56,7 @@ export const Banner = (props: PropsBanner) => {
         {bannerStore.showWelcome && (
           <TouchableOpacity
             activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml4]}
+            style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
             onPress={onPressWelcomeBanner}
           >
             <Image
@@ -82,7 +83,7 @@ export const Banner = (props: PropsBanner) => {
           <TouchableOpacity
             key={banner.id}
             activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml4]}
+            style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml5]}
             onPress={() => onBannerPress(banner)}
           >
             <Image style={[styles.image, utilSpacing.mr3]} source={{ uri: banner.image }}></Image>
@@ -111,7 +112,9 @@ export const Banner = (props: PropsBanner) => {
                   ]}
                   text={banner.description}
                 ></Text>
-                <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
+                {banner.buttonText?.trim().length > 0 && (
+                  <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
+                )}
               </View>
             </View>
           </TouchableOpacity>
@@ -143,7 +146,7 @@ export const Banner = (props: PropsBanner) => {
       </ScrollView>
     </View>
   )
-}
+})
 
 interface ButtonProps {
   onPress: () => void

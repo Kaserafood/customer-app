@@ -9,16 +9,12 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 interface TotalsProps {
   coupon: Coupon
   priceDelivery: number
+  isPlan: boolean
 }
 
 export const Totals = (props: TotalsProps) => {
-  const { cartStore } = useStores()
-  const [currencyCode, setCurrencyCode] = useState("")
-  const { coupon, priceDelivery } = props
-
-  useEffect(() => {
-    if (cartStore.cart.length > 0) setCurrencyCode(cartStore.cart[0].dish.chef.currencyCode)
-  }, [])
+  const { cartStore, plansStore, userStore } = useStores()
+  const { coupon, priceDelivery, isPlan } = props
 
   useEffect(() => {
     if (coupon?.id > 0) {
@@ -32,7 +28,21 @@ export const Totals = (props: TotalsProps) => {
     <View>
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.subtotal"></Text>
-        <Price style={styles.price} amount={cartStore.subtotal} currencyCode={currencyCode}></Price>
+        {isPlan ? (
+          <Price
+            style={styles.price}
+            textStyle={utilText.semiBold}
+            amount={plansStore.price}
+            currencyCode={userStore.account?.currency}
+            preset="simple"
+          ></Price>
+        ) : (
+          <Price
+            style={styles.price}
+            amount={cartStore.subtotal}
+            currencyCode={userStore.account?.currency}
+          ></Price>
+        )}
       </View>
 
       {cartStore.discount > 0 && (
@@ -41,24 +51,42 @@ export const Totals = (props: TotalsProps) => {
           <Price
             style={styles.price}
             amount={cartStore.discount}
-            currencyCode={currencyCode}
+            currencyCode={userStore.account?.currency}
           ></Price>
         </View>
       )}
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
-        <Price style={styles.price} amount={priceDelivery} currencyCode={currencyCode}></Price>
+        {priceDelivery > 0 ? (
+          <Price
+            style={styles.price}
+            amount={priceDelivery}
+            currencyCode={userStore.account?.currency}
+          ></Price>
+        ) : (
+          <Text tx="common.free"></Text>
+        )}
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="bold" tx="common.total"></Text>
-        <Price
-          style={styles.price}
-          textStyle={utilText.bold}
-          amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
-          currencyCode={currencyCode}
-        ></Price>
+        {isPlan ? (
+          <Price
+            style={styles.price}
+            textStyle={utilText.bold}
+            amount={plansStore.price}
+            currencyCode={userStore.account?.currency}
+            preset="simple"
+          ></Price>
+        ) : (
+          <Price
+            style={styles.price}
+            textStyle={utilText.bold}
+            amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
+            currencyCode={userStore.account?.currency}
+          ></Price>
+        )}
       </View>
     </View>
   )

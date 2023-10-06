@@ -9,6 +9,7 @@ export const CommonStoreModel = types
     currentChefImage: types.optional(types.string, ""),
     isSignedIn: types.optional(types.boolean, false),
     phoneNumber: types.maybe(types.string),
+    currency: types.optional(types.string, ""),
   })
   .actions((self) => ({
     setVisibleLoading(isLoading: boolean) {

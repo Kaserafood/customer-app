@@ -7,13 +7,16 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import LottieView from "lottie-react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
+import { ScreenType, useChef } from "../../common/hooks/useChef"
 import {
   Categories,
   Chip,
   DayDelivery,
   Dish,
   EmptyData,
+  Icon,
   Location,
   ModalDeliveryDate,
   ModalRequestDish,
@@ -23,34 +26,40 @@ import {
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
+import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import { NavigatorParamList } from "../../navigators"
+import { NavigatorParamList, goBack } from "../../navigators"
+import { setLocale } from "../../services/api"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString, saveString } from "../../utils/storage"
+import { ChefItemModel } from "../chefs/chef-item"
 import { Banner } from "./banner"
+import { DataState, ListChef } from "./chef-list"
 import { DishParams } from "./dish.types"
 import { ModalWelcome } from "./modal-welcome"
+import PopularDishes from "./popular-dishes"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
-
+const state = new DataState()
 /**
  * Home Screen to show main dishes
  */
-export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
-  ({ navigation }) => {
+export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = observer(
+  ({ navigation, route: { params } }) => {
     const [refreshing, setRefreshing] = useState(false)
     const [fetchData, setFetchData] = useState(true)
     const [isFetchingMoreData, setIsFetchingMoreData] = useState(false)
+    const { formatDishesGroupedByChef } = useChef()
     const {
       dishStore,
       dayStore,
@@ -171,6 +180,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           await saveString("countryId", "1")
           userStore.setCountryId(1)
         }
+
+        if (userStore.countryId === 1) {
+          setLocale("es")
+          setLocaleI18n("es")
+        }
       }
       setUserStoreData()
 
@@ -184,6 +198,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
        */
       if (!__DEV__) if (cartStore.hasItems) cartStore.cleanItems()
       if (tokenPagination) setIsFetchingMoreData(true)
+      fetchChefs()
       const params: DishParams = {
         date: useCurrentDate ? dayStore.currentDay.date : null,
         timeZone: RNLocalize.getTimeZone(),
@@ -213,6 +228,27 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
         })
         .finally(() => {
           commonStore.setVisibleLoading(false)
+        })
+    }
+
+    const fetchChefs = () => {
+      const { latitude, longitude } = addressStore.current
+
+      state.setData([])
+      dishStore
+        .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
+        .then(() => {
+          // fake data =
+          // const data = []
+
+          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
+          state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByChef))
+        })
+        .catch((error: Error) => {
+          messagesStore.showError(error.message)
         })
     }
 
@@ -252,33 +288,91 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
       return layoutMeasurement.height + contentOffset.y >= contentSize.height - 50
     }
 
+    const toScreen = (screen: ScreenType, userChef: ChefItemModel) => {
+      /**
+       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
+      dishStore.setIsUpdate(false)
+
+      if (cartStore.hasItems) cartStore.cleanItems()
+      const chef = {
+        ...userChef,
+      }
+      delete chef.category
+      delete chef.currentDishName
+      delete chef.pageView
+      delete chef.currentIndexPage
+      navigation.push(screen, { ...chef, isGetMenu: screen === "menuChef" })
+    }
+
+    const getChef = (index: number) => {
+      const chef = state.data.slice(index, index + 1)
+
+      const data = new DataState()
+      data.setData(chef)
+
+      return data
+    }
+
     return (
       <Screen
         preset="fixed"
         style={styles.container}
         statusBar="dark-content"
-        statusBarBackgroundColor={color.palette.white}
+        statusBarBackgroundColor={color.primary}
       >
+        <View
+          style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow, utilSpacing.pr5]}
+        >
+          {params && params?.showBackIcon && (
+            <TouchableOpacity
+              style={[styles.btnBack, utilSpacing.ml5]}
+              onPress={goBack}
+              activeOpacity={0.5}
+            >
+              <Icon
+                name="angle-left-1"
+                style={utilSpacing.mr2}
+                size={24}
+                color={color.palette.white}
+              ></Icon>
+            </TouchableOpacity>
+          )}
+          <Location
+            onPress={() => {
+              modalStateLocation.setVisible(true)
+            }}
+            style={[utilSpacing.pl5, utilSpacing.pr4]}
+          ></Location>
+
+          <TouchableOpacity
+            style={[utilSpacing.py3, utilSpacing.px4, styles.btnSearch]}
+            onPress={() => navigation.navigate("search")}
+          >
+            <Icon name="magnifying-glass" color={color.primary} size={22}></Icon>
+          </TouchableOpacity>
+        </View>
         <ScrollView
           style={styles.container}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           onScroll={onScroll}
         >
-          <Location
-            onPress={() => {
-              modalStateLocation.setVisible(true)
-            }}
-            style={utilSpacing.px4}
-          ></Location>
-          <DayDelivery
-            days={dayStore.days}
-            onWhyPress={(state) => modalStateWhy.setVisible(state)}
-            onPress={(day) => {
-              onChangeDay(day)
-            }}
-          ></DayDelivery>
+          <PopularDishes onPressDish={(dish) => toDetail(dish)}></PopularDishes>
+          <Separator style={[utilSpacing.mx5, utilSpacing.mt3]}></Separator>
+          <View style={utilSpacing.pl5}>
+            <DayDelivery
+              days={dayStore.days}
+              onWhyPress={(state) => modalStateWhy.setVisible(state)}
+              onPress={(day) => {
+                onChangeDay(day)
+              }}
+            ></DayDelivery>
+          </View>
 
-          <Separator style={utilSpacing.m4}></Separator>
+          <Separator style={utilSpacing.m5}></Separator>
           <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
@@ -289,12 +383,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
           ></Banner>
-          <View style={utilSpacing.px4}>
+          <View>
             <View
               style={[
                 utilFlex.flexRow,
                 utilSpacing.mt3,
                 utilSpacing.mb6,
+                utilSpacing.ml5,
                 utilFlex.flexCenterVertical,
               ]}
             >
@@ -307,7 +402,43 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             </View>
             {dishStore.dishes.length > 0 && (
               <ListDishes
-                dishes={dishStore.dishes}
+                dishes={dishStore.dishes.slice(0, 3)}
+                toDetail={(dish) => toDetail(dish)}
+              ></ListDishes>
+            )}
+            {getChef(0)?.data?.length > 0 && (
+              <ListChef
+                state={getChef(0)}
+                toScreen={(screen, dish, chef) => toScreen(screen, chef)}
+              ></ListChef>
+            )}
+            {dishStore.dishes.slice(3, 5).length > 0 && (
+              <ListDishes
+                dishes={dishStore.dishes.slice(3, 5)}
+                toDetail={(dish) => toDetail(dish)}
+              ></ListDishes>
+            )}
+            {getChef(1)?.data?.length > 0 && (
+              <ListChef
+                state={getChef(1)}
+                toScreen={(screen, dish, chef) => toScreen(screen, chef)}
+              ></ListChef>
+            )}
+            {dishStore.dishes.slice(5, 8).length > 0 && (
+              <ListDishes
+                dishes={dishStore.dishes.slice(5, 8)}
+                toDetail={(dish) => toDetail(dish)}
+              ></ListDishes>
+            )}
+            {getChef(2)?.data?.length > 0 && (
+              <ListChef
+                state={getChef(2)}
+                toScreen={(screen, dish, chef) => toScreen(screen, chef)}
+              ></ListChef>
+            )}
+            {dishStore.dishes.slice(8, 500).length > 0 && (
+              <ListDishes
+                dishes={dishStore.dishes.slice(8, 500)}
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}
@@ -373,6 +504,18 @@ const ListDishes = observer(function ListDishes(props: {
 })
 
 const styles = StyleSheet.create({
+  btnBack: {
+    alignItems: "center",
+    backgroundColor: color.primaryDarker,
+    borderRadius: 100,
+    height: 38,
+    justifyContent: "center",
+    width: 38,
+  },
+  btnSearch: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[3],
+  },
   chip: {
     borderRadius: spacing[3],
     marginRight: spacing[2],
@@ -382,7 +525,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: color.background,
     flex: 1,
-    paddingTop: spacing[2],
+  },
+  containerLocation: {
+    backgroundColor: color.primary,
+    ...SHADOW,
+    height: 63,
   },
   iconShipping: {
     height: 24,

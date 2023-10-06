@@ -1,8 +1,9 @@
-import React from "react"
+import { observer } from "mobx-react-lite"
+import React, { useEffect } from "react"
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
-import { observer } from "mobx-react-lite"
 
+import * as RNLocalize from "react-native-localize"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Day } from "../../models/day-store"
@@ -66,13 +67,21 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
 
   const { dayStore } = useStores()
 
+  useEffect(() => {
+    dayStore.getDays(RNLocalize.getTimeZone()).then(() => {
+      if (dayStore.days.length > 0) {
+        dayStore.setCurrentDay(dayStore.days[0])
+      }
+    })
+  }, [])
+
   return (
     <View style={[utilSpacing.mt6, style]}>
       <View style={[utilFlex.flexCenterVertical, styles.why]}>
         <Text
           tx={titleTx || "mainScreen.dayShipping"}
           preset="semiBold"
-          style={[styles.dayShipping, utilSpacing.ml4]}
+          style={styles.dayShipping}
         ></Text>
         {!hideWhyButton && (
           <Chip tx="mainScreen.why" style={styles.chip} onPressIn={() => onWhyPress(true)}></Chip>
@@ -125,7 +134,7 @@ export const DayDelivery = observer(function DayDelivery(props: DayDeliveryProps
             <Chip
               active={day.date === dayStore.currentDay.date}
               text={day.dayName}
-              style={[styles.chip, utilSpacing.my2, index === 0 && utilSpacing.ml4]}
+              style={[styles.chip, utilSpacing.my2]}
               onPress={() => {
                 onPress(day)
                 dayStore.setCurrentDay(day)

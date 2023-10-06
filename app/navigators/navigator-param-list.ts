@@ -24,10 +24,11 @@ interface endOrderParams {
   deliveryTime: string
   deliveryAddress: string
   imageChef: string
+  isPlan?: boolean
 }
 
 interface mapScreenParams {
-  screenToReturn: "main" | "checkout"
+  screenToReturn: "main" | "checkout" | "menuSummary"
 }
 
 interface tokenScreenParams {
@@ -54,7 +55,26 @@ interface menuChefProps extends MenuChef {
   showModalCart?: boolean
 }
 
-interface checkoutProps {}
+interface checkoutProps {
+  isPlan?: boolean
+  commentToChef?: string
+}
+
+interface orderPrepareDetailProps {
+  id: number
+}
+
+interface ordersChefProps {
+  timestamp?: number
+}
+
+interface dishesProps {
+  showBackIcon?: boolean
+}
+
+interface plansProps {
+  showBackIcon?: boolean
+}
 
 export type NavigatorParamList = {
   init: undefined
@@ -83,5 +103,13 @@ export type NavigatorParamList = {
   newChefs: undefined
   orderDetail: OrderOverview
   reportBug: undefined
-  plans: undefined
+  plans: plansProps
+  formPlans: undefined
+  subscription: undefined
+  menu: undefined
+  menuSummary: undefined
+  checkoutPlan: undefined
+  ordersChef: ordersChefProps
+  orderChefDetail: orderPrepareDetailProps
+  dishes: dishesProps
 }

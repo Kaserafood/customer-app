@@ -19,11 +19,12 @@ import { ModalPaymentStripe } from "./modal-payment-stripe"
 
 interface ModalPaymentListProps {
   stateModal: ModalStateHandler
+  isPlan: boolean
 }
 const modalStatePaymentQPayPro = new ModalStateHandler()
 const modalStatePaymentStripe = new ModalStateHandler()
 
-export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps) => {
+export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentListProps) => {
   const { userStore, messagesStore } = useStores()
   useEffect(() => {
     ;(async () => {
@@ -52,9 +53,15 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       .getPaymentMethods(userStore.userId)
       .then(() => {
         const existsSelected = userStore.cards.find((item) => item.selected)
-
+        if (userStore.cards.length === 0) {
+          addPaymentMethod()
+        }
         if (!existsSelected) {
           userStore.setCurrentCard(null)
+
+          if (userStore.cards.length === 1) {
+            onSelectedPaymentItem(userStore.cards[0].id, false)
+          }
         } else {
           if (existsSelected.id !== userStore.currentCard?.id) {
             userStore.setCurrentCard(existsSelected)
@@ -66,13 +73,13 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
       })
   }
 
-  const onSelectedPaymentItem = (id: number | null | string) => {
+  const onSelectedPaymentItem = (id: number | null | string, fetchAgain = true) => {
     userStore
       .updateSelectedCard(userStore.userId, id)
       .then(async (res) => {
         if (res) {
-          messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
-          await fetch()
+          // messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
+          if (fetchAgain) await fetch()
           if (id) {
             userStore.setCurrentCard(userStore.cards.find((item) => item.id === id))
           } else {
@@ -104,15 +111,26 @@ export const ModalPaymentList = observer(({ stateModal }: ModalPaymentListProps)
             preset="bold"
           ></Text>
           <ScrollView>
-            <PaymentMethodItem
-              id={0}
-              name={getI18nText("checkoutScreen.paymentCash")}
-              type="cash"
-              selected={userStore.isNotSelectedCards}
-              onSelected={() => onSelectedPaymentItem(null)}
-              description={getI18nText("checkoutScreen.paymentCashDescription")}
-            ></PaymentMethodItem>
-            {userStore.cards.length > 0 && <Separator></Separator>}
+            {userStore.cards.length === 0 && isPlan && (
+              <View style={[utilSpacing.py5, utilFlex.selfCenter]}>
+                <Text preset="semiBold" tx="checkoutScreen.youDontHavePaymentMethods"></Text>
+              </View>
+            )}
+
+            {!isPlan && (
+              <View>
+                <PaymentMethodItem
+                  id={0}
+                  name={getI18nText("checkoutScreen.paymentCash")}
+                  type="cash"
+                  selected={userStore.isNotSelectedCards}
+                  onSelected={() => onSelectedPaymentItem(null)}
+                  description={getI18nText("checkoutScreen.paymentCashDescription")}
+                ></PaymentMethodItem>
+                {userStore.cards.length > 0 && <Separator></Separator>}
+              </View>
+            )}
+
             {userStore.cards.map((item, index) => (
               <View key={item.id}>
                 <PaymentMethodItem
@@ -161,44 +179,51 @@ interface PaymentMethodItemProps {
   subType?: typeCard
 }
 
-const PaymentMethodItem = ({
-  onSelected,
-  id,
-  name,
-  description,
-  type,
-  selected,
-  showPrefixCard,
-  subType,
-}: PaymentMethodItemProps) => {
-  return (
-    <Ripple key={id} onPress={onSelected}>
-      <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
-        <Image
-          style={[styles.imageCard, utilSpacing.mr4]}
-          source={getImageByType(type as paymentType, subType)}
-        ></Image>
-        <View style={utilFlex.flex1}>
-          <Text text={name} preset="semiBold" style={utilSpacing.pb1}></Text>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            {showPrefixCard && (
-              <Text text="****" caption size="sm" style={[utilSpacing.mt2, utilSpacing.mr2]}></Text>
-            )}
-            <Text text={description} caption size="sm"></Text>
+const PaymentMethodItem = observer(
+  ({
+    onSelected,
+    id,
+    name,
+    description,
+    type,
+    selected,
+    showPrefixCard,
+    subType,
+  }: PaymentMethodItemProps) => {
+    return (
+      <Ripple key={id} onPress={onSelected}>
+        <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.py4]}>
+          <Image
+            style={[styles.imageCard, utilSpacing.mr4]}
+            source={getImageByType(type as paymentType, subType)}
+          ></Image>
+          <View style={utilFlex.flex1}>
+            <Text text={name} preset="semiBold" style={utilSpacing.pb1}></Text>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+              {showPrefixCard && (
+                <Text
+                  text="****"
+                  caption
+                  size="sm"
+                  style={[utilSpacing.mt2, utilSpacing.mr2]}
+                ></Text>
+              )}
+              <Text text={description} caption size="sm"></Text>
+            </View>
           </View>
-        </View>
 
-        {selected ? (
-          <Animated.View entering={ZoomIn} exiting={ZoomOut}>
-            <IconRN name="check" size={30} color={color.palette.black} />
-          </Animated.View>
-        ) : (
-          <View style={styles.h30}></View>
-        )}
-      </View>
-    </Ripple>
-  )
-}
+          {selected ? (
+            <Animated.View entering={ZoomIn} exiting={ZoomOut}>
+              <IconRN name="check" size={30} color={color.palette.black} />
+            </Animated.View>
+          ) : (
+            <View style={styles.h30}></View>
+          )}
+        </View>
+      </Ripple>
+    )
+  },
+)
 
 const styles = StyleSheet.create({
   btn: {
