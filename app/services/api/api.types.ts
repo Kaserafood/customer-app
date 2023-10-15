@@ -162,6 +162,8 @@ export type OrderPlanRequest = {
   isSubscription?: boolean
   commentToChef?: string
   currencyCode: string
+  deliveryPrice: number
+  isCustom: boolean
 }
 
 export interface ReservationRequest {

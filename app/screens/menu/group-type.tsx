@@ -27,7 +27,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
       onError: (error) => {
         console.log(error)
       },
-    }).data?.data?.slice(0, plansStore.type === "prime" ? 4 : 3) ?? []
+    }).data?.data?.slice(0, plansStore.type === "prime" ? 3 : 2) ?? []
 
   const handleButton = (id: number, quantity: number, totalCredits: number) => {
     const item = data?.find((lunch) => lunch.id === id)

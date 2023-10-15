@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 
 import { Price, Text } from "../../components"
@@ -59,11 +59,7 @@ export const Totals = (props: TotalsProps) => {
       <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
         <Text style={utilFlex.flex1} preset="semiBold" caption tx="common.deliveryAmount"></Text>
         {priceDelivery > 0 ? (
-          <Price
-            style={styles.price}
-            amount={priceDelivery}
-            currencyCode={userStore.account?.currency}
-          ></Price>
+          <Price preset="simple" textStyle={utilText.semiBold} amount={priceDelivery}></Price>
         ) : (
           <Text tx="common.free"></Text>
         )}
@@ -73,18 +69,14 @@ export const Totals = (props: TotalsProps) => {
         <Text style={utilFlex.flex1} preset="bold" tx="common.total"></Text>
         {isPlan ? (
           <Price
-            style={styles.price}
             textStyle={utilText.bold}
-            amount={plansStore.price}
-            currencyCode={userStore.account?.currency}
+            amount={plansStore.price + priceDelivery}
             preset="simple"
           ></Price>
         ) : (
           <Price
-            style={styles.price}
             textStyle={utilText.bold}
             amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
-            currencyCode={userStore.account?.currency}
           ></Price>
         )}
       </View>

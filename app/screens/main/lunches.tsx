@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import { useQuery } from "react-query"
@@ -8,14 +7,14 @@ import { Api, DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
-import { getI18nText } from "../../utils/translate"
 
 interface Props {
   currentDate: DatePlan
   showModalDates: () => void
+  toPlans: () => void
 }
 
-const Lunches = ({ currentDate, showModalDates }: Props) => {
+const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
   const api = new Api()
   const { data: lunches } = useQuery(
     ["lunches", currentDate.date],
@@ -28,8 +27,6 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
     },
   )
 
-  const navigation = useNavigation()
-
   return (
     <Card style={[styles.containerDishes, utilSpacing.m5]}>
       <View style={utilSpacing.p3}>
@@ -41,7 +38,6 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
         </View>
 
         <View style={[utilFlex.flexRow, utilSpacing.my4, utilFlex.flexCenterVertical]}>
-          {/* <Text tx="mainScreen.exploreDailyMenu" style={utilFlex.flex1}></Text> */}
           <Chip
             textstyle={utilText.semiBold}
             onPress={() => showModalDates()}
@@ -52,23 +48,16 @@ const Lunches = ({ currentDate, showModalDates }: Props) => {
       <View style={utilSpacing.pb5}>
         {lunches?.data?.map((lunch) => (
           <View key={lunch.id}>
-            <Lunch
-              {...lunch}
-              onPress={() =>
-                navigation.navigate(getI18nText("tabMainNavigation.packages") as never)
-              }
-              style={utilSpacing.px3}
-            ></Lunch>
+            <Lunch {...lunch} onPress={toPlans} style={utilSpacing.px3}></Lunch>
             <Separator></Separator>
           </View>
         ))}
 
         <View style={[utilSpacing.pt6, utilSpacing.mx5]}>
-          {/* <Text tx="mainScreen.pickOptions" style={[utilSpacing.mb5, utilText.textCenter]}></Text> */}
           <Button
             style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py3, utilSpacing.px0]}
             tx="mainScreen.seeMoreOptions"
-            onPress={() => navigation.navigate(getI18nText("tabMainNavigation.packages") as never)}
+            onPress={toPlans}
             iconRight={<Icon name="angle-right1" size={18} color={color.palette.white}></Icon>}
           ></Button>
         </View>

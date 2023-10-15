@@ -40,21 +40,30 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
     const { mutate: createReservation } = useMutation(
       (data: ReservationRequest) => api.createReservation(data),
       {
-        onSuccess: (res) => {
-          commonStore.setVisibleLoading(false)
+        onSuccess: async (res) => {
           if (Number(res.data.value) > 0) {
             plansStore.setConsumedCredits(cartStore.useCredits + plansStore.consumedCredits)
+
+            // Update values of plan
+            const account: any = await api.getAccount(userStore.userId, RNLocalize.getTimeZone())
+
+            if (account.data) {
+              plansStore.setPlan(account.data.plan)
+            }
+
+            commonStore.setVisibleLoading(false)
             navigation.navigate("endOrder", {
               orderId: 0,
               deliveryDate: cartStore.datesDelivery,
               deliveryTime: getI18nText("checkoutScreen.deliveryTimePlan"),
               deliveryAddress: addressStore.current.address,
               imageChef:
-                "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
+                "https://kaserafood.com/wp-content/uploads/2023/10/cropped-24800e3b-125b-4a03-a86f-5db969f56db7-e1696618503955-1.jpg",
               isPlan: true,
             })
           } else {
             messagesStore.showError()
+            commonStore.setVisibleLoading(false)
           }
         },
         onError: () => {

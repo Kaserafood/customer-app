@@ -23,6 +23,7 @@ import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
 import Lunches from "./lunches"
 import ValuePrepositions from "./value-prepositions"
+import { ModalWelcome } from "../home/modal-welcome"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
@@ -107,6 +108,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
             <Lunches
               currentDate={currentDate}
               showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
+              toPlans={() => navigation.navigate("plans", { showBackIcon: true })}
             ></Lunches>
           )}
 
@@ -131,6 +133,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           state={modalStateDeliveryDatePlan}
           onSelectDate={setCurrentDate}
         ></ModalDeliveryDatePlan>
+        <ModalWelcome modalState={modalStateWelcome}></ModalWelcome>
       </Screen>
     )
   },
