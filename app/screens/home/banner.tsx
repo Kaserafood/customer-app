@@ -13,6 +13,7 @@ import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
 
 interface PropsBanner {
   onPressWelcome: () => void
@@ -22,7 +23,7 @@ interface PropsBanner {
 const windowWidth = Dimensions.get("window").width
 
 export const Banner = observer((props: PropsBanner) => {
-  const { onPressWelcome: onPressKasera, onPressNewChefs, onBannerPress } = props
+  const { onPressWelcome, onPressNewChefs, onBannerPress } = props
 
   const { bannerStore } = useStores()
 
@@ -39,9 +40,8 @@ export const Banner = observer((props: PropsBanner) => {
       banner: "Welcome",
       description: "El usuario presionó el banner de 'Bienvenido'",
     })
-    console.log("before call action")
-    onPressKasera()
-    console.log("after call action")
+
+    onPressWelcome()
   }
 
   const onPressNewChefsBanner = () => {
