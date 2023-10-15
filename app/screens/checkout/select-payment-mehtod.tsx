@@ -16,7 +16,7 @@ interface SelectPaymentMethodProps {
 }
 
 const SelectPaymentMethod = ({ openPaymentList, isPlan }: SelectPaymentMethodProps) => {
-  const { userStore } = useStores()
+  const { userStore, plansStore } = useStores()
 
   return (
     <View>
@@ -27,13 +27,14 @@ const SelectPaymentMethod = ({ openPaymentList, isPlan }: SelectPaymentMethodPro
         style={[utilSpacing.mb2, utilSpacing.mx4]}
       ></Text>
 
-      {isPlan && !userStore.currentCard?.id ? (
+      {!userStore.paymentCash && !userStore.currentCard?.id ? (
         <View style={[utilSpacing.mx4, utilSpacing.mb4, utilSpacing.mt2, utilFlex.selfCenter]}>
           <Button
             tx="checkoutScreen.addPaymentMethod"
-            preset="white"
-            style={[styles.btnPaymentMethod, utilSpacing.py2]}
-            textStyle={{ color: palette.green }}
+            preset="primary"
+            size="sm"
+            style={[utilSpacing.px4, utilSpacing.py3, styles.btnPaymentMethod]}
+            // textStyle={{ color: palette.green }}
             onPress={() => openPaymentList(true)}
           ></Button>
         </View>
@@ -117,12 +118,12 @@ export default SelectPaymentMethod
 const styles = StyleSheet.create({
   btnPaymentMethod: {
     // NO_SHADOW,
-    backgroundColor: palette.greenBackground,
-    borderColor: palette.green,
-    borderWidth: 1,
-    color: palette.red,
-    height: 40,
-    width: 275,
+    backgroundColor: palette.green,
+    // borderColor: palette.green,
+    // borderWidth: 1,
+    // color: palette.red,
+    // height: 40,
+    // width: 275,
   },
 
   containerPayment: {

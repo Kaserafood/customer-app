@@ -34,4 +34,7 @@ export const palette = {
   blue: "#2194f3",
   amber50: "#fff3e0",
   amber600: "#fb8a00",
+  pink: "#FDBAB6",
+  green600: "#B8D870",
+  yellow600: "#F5DA48",
 }

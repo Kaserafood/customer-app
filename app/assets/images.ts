@@ -72,6 +72,8 @@ const images = {
   change: require("./images/change.png"),
   leaves: require("./images/leaves.png"),
   dishes: require("./images/plans.png"),
+  custom: require("./images/custom.png"),
+  welcome: require("./images/welcome.png"),
 }
 
 export default images

@@ -107,6 +107,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
             <Lunches
               currentDate={currentDate}
               showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
+              toPlans={() => navigation.navigate("plans", { showBackIcon: true })}
             ></Lunches>
           )}
 

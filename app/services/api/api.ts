@@ -610,4 +610,11 @@ export class Api {
   async updateOrderStatus(orderId: number, status: string): Promise<ValueResponse> {
     return await this.request({ status }, `/chefs/orders/${orderId}/status`, "PUT")
   }
+
+  /**
+   * @description Get plan config
+   */
+  async getPlanConfig(): Promise<ValueResponse> {
+    return await this.request({}, `/plans/config`, "GET")
+  }
 }
