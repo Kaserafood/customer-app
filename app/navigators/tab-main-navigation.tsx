@@ -8,6 +8,7 @@ import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
 import { useQuery } from "react-query"
 import { Icon } from "../components"
+import { setLocaleI18n } from "../i18n"
 import { useStores } from "../models"
 import { HomeScreen, PlansScreen, SearchScreen } from "../screens"
 import { MainScreen } from "../screens/main/main-screen"
@@ -15,7 +16,6 @@ import { Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getI18nText } from "../utils/translate"
-import { setLocaleI18n } from "../i18n"
 
 const api = new Api()
 export function TabMainNavigation({ navigationRef }) {
@@ -36,7 +36,6 @@ export function TabMainNavigation({ navigationRef }) {
         userStore.setAccount({ currency, date, role })
         plansStore.setPlan(data.data.plan)
       },
-      enabled: userStore.userId > 0,
     },
   )
   useEffect(() => {
