@@ -28,9 +28,10 @@ const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
   )
 
   return (
-    <Card style={[styles.containerDishes, utilSpacing.m5]}>
-      <View style={utilSpacing.p3}>
-        <View style={styles.containerTitle}>
+    <Card style={[utilSpacing.p0, utilSpacing.m5]}>
+     <View style={ styles.containerDishes} >
+      <View style={[utilSpacing.p5]}>
+        <View >
           <Text>
             <Text tx="mainScreen.knowThe" size="lg"></Text>
             <Text tx="mainScreen.lunchPackages" size="lg" preset="bold"></Text>
@@ -44,8 +45,10 @@ const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
             text={currentDate.dateNameLong}
           ></Chip>
         </View>
+       
       </View>
-      <View style={utilSpacing.pb5}>
+     
+  <View style={[utilSpacing.px5, utilSpacing.pb5]}>
         {lunches?.data?.map((lunch) => (
           <View key={lunch.id}>
             <Lunch {...lunch} onPress={toPlans} style={utilSpacing.px3}></Lunch>
@@ -63,6 +66,9 @@ const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
         </View>
       </View>
       <View style={styles.circle}></View>
+</View>
+     
+    
     </Card>
   )
 }
