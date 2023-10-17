@@ -4,7 +4,7 @@ import { StyleSheet, View } from "react-native"
 import { CartItemAddon, Price, Text } from "../../components"
 import { useStores } from "../../models"
 import { color } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 
 export const DishesList = () => {
@@ -33,6 +33,8 @@ export const DishesList = () => {
           <View style={utilSpacing.ml3}>
             <Price
               style={styles.price}
+              preset="simple"
+              textStyle={utilText.regular}
               amount={item.total}
               currencyCode={item.dish.chef.currencyCode}
             ></Price>

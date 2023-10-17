@@ -34,7 +34,8 @@
     "delivery": "Entrega",
     "articles": "Artículos",
     "tax": "NIT",
-    "yes": "Sí"
+    "yes": "Sí",
+    "comment": "Comentario"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -746,6 +747,15 @@
     "title": "Pedido #{{order}}",
     "customerPreferences": "Preferencias del cliente",
     "customerNote": "Nota del cliente",
-    "orderMade": "Pedido realizado el {{date}}"
+    "orderMade": "Pedido realizado el {{date}}",
+    "orderSummary": "Resumen del pedido",
+    "amountInvoice": "Monto a facturar: ",
+    "detailedOrder": "Pedido detallado",
+    "tax": "NIT: ",
+    "revenue": "Ganancia: ",
+    "article": "artículo",
+    "articles": "artículos",
+    "noteChef": "Nota del cliente",
+    "vacuumPacked": "Empacado al vacío"
   }
 }

@@ -10,7 +10,7 @@ const BASE: TextStyle = {
   fontFamily: typography.primary,
   color: color.text,
   fontSize: typographySize.md,
-  marginBottom: -4, // Is needed to fix the bottom margin of the text
+  marginBottom: -4, // it's necessary to fix the bottom margin of the text
   // lineHeight: 23,
 }
 
