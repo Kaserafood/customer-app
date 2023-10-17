@@ -193,6 +193,7 @@ interface OrderChef {
 
 interface OrderSummary {
   id: number
+  code: string
   customerName: string
   deliveryTime: string
   total: number
@@ -210,6 +211,8 @@ interface Product {
   name: string
   price: number
   quantity: number
+  image: string
+  noteChef?: string
   addons: {
     key: string
     value: string
@@ -218,15 +221,30 @@ interface Product {
 
 interface OrderDetails {
   id: number
+  code?: string
   createdDate: string
   status: string
   deliveryTime: string
   total: string
   deliveryDate: string
-  customerNote: string | null
   statusName: string
   tax: string
   products: Product[]
+  totalInvoice: number
+  revenue: number
+  noteChef?: string // This note just exists in packages not in individual dishes
+  package?: {
+    packages: {
+      dishes: {
+        id: number
+        name: string
+        accompaniments: string
+        quantity: number
+        comment: string
+        price: number
+      }[]
+    }[]
+  }
 }
 
 export type OrderDetailChef = {

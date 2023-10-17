@@ -34,8 +34,8 @@ export const OrdersChefScreen: FC<StackScreenProps<NavigatorParamList, "ordersCh
       },
     )
 
-    const toDetail = (orderId: number) => {
-      navigation.navigate("orderChefDetail", { id: orderId })
+    const toDetail = (orderId: number, code?: string) => {
+      navigation.navigate("orderChefDetail", { id: orderId, code })
     }
 
     return (
@@ -62,7 +62,7 @@ export const OrdersChefScreen: FC<StackScreenProps<NavigatorParamList, "ordersCh
                   border={item.isToday}
                   isToday={item.isToday}
                   refetch={refetch}
-                  onPress={() => toDetail(order.id)}
+                  onPress={() => toDetail(order.id, order.code)}
                 ></OrderItem>
               ))}
             </View>

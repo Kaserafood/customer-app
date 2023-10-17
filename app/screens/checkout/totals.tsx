@@ -39,8 +39,10 @@ export const Totals = (props: TotalsProps) => {
         ) : (
           <Price
             style={styles.price}
+            textStyle={utilText.semiBold}
             amount={cartStore.subtotal}
             currencyCode={userStore.account?.currency}
+            preset="simple"
           ></Price>
         )}
       </View>
@@ -77,6 +79,7 @@ export const Totals = (props: TotalsProps) => {
           <Price
             textStyle={utilText.bold}
             amount={cartStore.subtotal + priceDelivery - cartStore.discount ?? 0}
+            preset="simple"
           ></Price>
         )}
       </View>

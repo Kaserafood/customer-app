@@ -62,6 +62,7 @@ interface checkoutProps {
 
 interface orderPrepareDetailProps {
   id: number
+  code?: string
 }
 
 interface ordersChefProps {

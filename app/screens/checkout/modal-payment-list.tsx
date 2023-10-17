@@ -119,22 +119,23 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
               </View>
             )}
 
-            {plansStore.type === "basic" && (
-              <View>
-                <PaymentMethodItem
-                  id={0}
-                  name={getI18nText("checkoutScreen.paymentCash")}
-                  type="cash"
-                  selected={userStore.paymentCash}
-                  onSelected={async () => {
-                    await onSelectedPaymentItem(null)
-                    userStore.setPaymentCash(true)
-                  }}
-                  description={getI18nText("checkoutScreen.paymentCashDescription")}
-                ></PaymentMethodItem>
-                {userStore.cards.length > 0 && <Separator></Separator>}
-              </View>
-            )}
+            {plansStore.type === "basic" ||
+              (!isPlan && (
+                <View>
+                  <PaymentMethodItem
+                    id={0}
+                    name={getI18nText("checkoutScreen.paymentCash")}
+                    type="cash"
+                    selected={userStore.paymentCash}
+                    onSelected={async () => {
+                      await onSelectedPaymentItem(null)
+                      userStore.setPaymentCash(true)
+                    }}
+                    description={getI18nText("checkoutScreen.paymentCashDescription")}
+                  ></PaymentMethodItem>
+                  {userStore.cards.length > 0 && <Separator></Separator>}
+                </View>
+              ))}
 
             {userStore.cards.map((item, index) => (
               <View key={item.id}>

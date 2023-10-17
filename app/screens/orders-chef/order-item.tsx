@@ -10,6 +10,7 @@ import { getI18nText } from "../../utils/translate"
 
 interface Props {
   id: number
+  code?: string
   customerName: string
   quantityItems: number
   total: number
@@ -26,6 +27,7 @@ const api = new Api()
 const OrderItem = ({
   customerName,
   id,
+  code,
   quantityItems,
   total,
   deliveryTime,
@@ -96,7 +98,7 @@ const OrderItem = ({
     >
       <View style={utilFlex.flexRow}>
         <View style={[utilFlex.flexRow, utilFlex.flex1]}>
-          <Text text={`#${id}`} preset="bold"></Text>
+          <Text text={`#${code || id}`} preset="bold"></Text>
           <Text text=" - " preset="bold"></Text>
           <Text text={customerName} preset="bold"></Text>
         </View>
