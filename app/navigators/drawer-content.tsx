@@ -34,6 +34,10 @@ export default function DrawerContent(props) {
     navigation.navigate("reportBug" as never)
   }
 
+  const toUploadInvoice = () => {
+    navigation.navigate("chefInvoice" as never)
+  }
+
   const handleSupport = async () => {
     commonStore.setVisibleLoading(true)
 
@@ -165,6 +169,27 @@ export default function DrawerContent(props) {
                 color={color.palette.grayDark}
               />
               <Text tx="drawerContent.ordersToPrepare" preset="semiBold" size="md"></Text>
+            </View>
+          </Card>
+        </Ripple>
+      )}
+
+      {userStore.account?.role === "chef" && (
+        <Ripple
+          rippleOpacity={0.2}
+          rippleDuration={400}
+          style={utilSpacing.m3}
+          onPress={() => toUploadInvoice()}
+        >
+          <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+              <Icon
+                name="hat-chef"
+                style={utilSpacing.mr4}
+                size={30}
+                color={color.palette.grayDark}
+              />
+              <Text tx="drawerContent.uploadInvoice" preset="semiBold" size="md"></Text>
             </View>
           </Card>
         </Ripple>

@@ -398,7 +398,8 @@
     "bugReport": "Reportar un error",
     "support": "Soporte",
     "whatsAppMessage": "Hola, tengo un consulta",
-    "ordersToPrepare": "Pedidos a preparar"
+    "ordersToPrepare": "Pedidos a preparar",
+    "uploadInvoice": "Subir facturas"
   },
   "tabMainNavigation": {
     "home": "Inicio",

@@ -39,6 +39,7 @@ import {
   TermsConditionsScreen,
 } from "../screens"
 
+import { ChefInvoiceScreen } from "../screens/chef-invoice/chef-invoice-screen"
 import { FormPlans } from "../screens/form-plans/form-plans-screen"
 import { MenuSummaryScreen } from "../screens/menu-summary/menu-summary-screen"
 import MenuScreen from "../screens/menu/menu-screen"
@@ -97,6 +98,7 @@ const AppStack = observer(() => {
           <Stack.Screen name="orderDetail" component={OrderDetailScreen} />
           <Stack.Screen name="ordersChef" component={OrdersChefScreen} />
           <Stack.Screen name="orderChefDetail" component={OrderChefDetailScreen} />
+          <Stack.Screen name="chefInvoice" component={ChefInvoiceScreen} />
           <Stack.Screen name="map" component={MapScreen} />
         </Stack.Group>
       )}
