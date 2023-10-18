@@ -65,7 +65,6 @@
     "react-native-fast-image": "^8.5.11",
     "react-native-fbsdk-next": "^11.0.0",
     "react-native-flash-message": "^0.2.1",
-    "react-native-fs": "^2.20.0",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.4.1",
     "react-native-keychain": "6.2.0",
