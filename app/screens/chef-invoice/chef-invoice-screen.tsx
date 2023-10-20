@@ -63,12 +63,15 @@ export const ChefInvoiceScreen: FC<StackScreenProps<NavigatorParamList, "ordersC
       <Screen style={styles.container} preset="fixed">
         <Header headerTx="chefInvoiceScreen.title" leftIcon="back" onLeftPress={goBack} />
         <ScrollView>
+        { !!data && (
           <ListOrders
-            refetch={refetch}
-            data={data}
-            toDetail={toDetail}
-            handleUpload={handleOnUpload}
-          ></ListOrders>
+          refetch={refetch}
+          data={data}
+          toDetail={toDetail}
+          handleUpload={handleOnUpload}
+        ></ListOrders>
+        ) }
+          
 
           {isFetched && data?.data?.length === 0 && (
             <View style={utilSpacing.mt8}>
@@ -102,7 +105,7 @@ interface Props {
 const ListOrders = ({ data, toDetail, handleUpload, refetch }: Props) => {
   return (
     <View>
-      {data?.data?.map((item) => (
+      {!!data && data?.data?.map((item) => (
         <View key={item.date} style={[utilSpacing.mb3, utilSpacing.mx5]}>
           <View style={[utilFlex.flexRow, utilSpacing.py4]}>
             <Text tx="common.delivery" preset="bold" size="lg" style={utilSpacing.mr1}></Text>
