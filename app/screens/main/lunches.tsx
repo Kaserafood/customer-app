@@ -29,46 +29,43 @@ const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
 
   return (
     <Card style={[utilSpacing.p0, utilSpacing.m5]}>
-     <View style={ styles.containerDishes} >
-      <View style={[utilSpacing.p5]}>
-        <View >
-          <Text>
-            <Text tx="mainScreen.knowThe" size="lg"></Text>
-            <Text tx="mainScreen.lunchPackages" size="lg" preset="bold"></Text>
-          </Text>
-        </View>
-
-        <View style={[utilFlex.flexRow, utilSpacing.my4, utilFlex.flexCenterVertical]}>
-          <Chip
-            textstyle={utilText.semiBold}
-            onPress={() => showModalDates()}
-            text={currentDate.dateNameLong}
-          ></Chip>
-        </View>
-       
-      </View>
-     
-  <View style={[utilSpacing.px5, utilSpacing.pb5]}>
-        {lunches?.data?.map((lunch) => (
-          <View key={lunch.id}>
-            <Lunch {...lunch} onPress={toPlans} style={utilSpacing.px3}></Lunch>
-            <Separator></Separator>
+      <View style={styles.containerDishes}>
+        <View style={utilSpacing.p5}>
+          <View>
+            <Text>
+              <Text tx="mainScreen.knowThe" size="lg"></Text>
+              <Text tx="mainScreen.lunchPackages" size="lg" preset="bold"></Text>
+            </Text>
           </View>
-        ))}
 
-        <View style={[utilSpacing.pt6, utilSpacing.mx5]}>
-          <Button
-            style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py3, utilSpacing.px0]}
-            tx="mainScreen.seeMoreOptions"
-            onPress={toPlans}
-            iconRight={<Icon name="angle-right1" size={18} color={color.palette.white}></Icon>}
-          ></Button>
+          <View style={[utilFlex.flexRow, utilSpacing.my4, utilFlex.flexCenterVertical]}>
+            <Chip
+              textstyle={utilText.semiBold}
+              onPress={() => showModalDates()}
+              text={currentDate.dateNameLong}
+            ></Chip>
+          </View>
         </View>
+
+        <View style={[utilSpacing.px5, utilSpacing.pb5]}>
+          {lunches?.data?.map((lunch) => (
+            <View key={lunch.id}>
+              <Lunch {...lunch} onPress={toPlans} style={utilSpacing.px3}></Lunch>
+              <Separator></Separator>
+            </View>
+          ))}
+
+          <View style={[utilSpacing.pt6, utilSpacing.mx5]}>
+            <Button
+              style={[utilFlex.selfCenter, styles.btnMore, utilSpacing.py4, utilSpacing.px0]}
+              tx="mainScreen.seeMoreOptions"
+              onPress={toPlans}
+              iconRight={<Icon name="angle-right1" size={18} color={color.palette.white}></Icon>}
+            ></Button>
+          </View>
+        </View>
+        <View style={styles.circle}></View>
       </View>
-      <View style={styles.circle}></View>
-</View>
-     
-    
     </Card>
   )
 }
@@ -89,11 +86,6 @@ const styles = StyleSheet.create({
   },
   containerDishes: {
     overflow: "hidden",
-  },
-  containerTitle: {
-    alignContent: "flex-start",
-    alignSelf: "flex-start",
-    display: "flex",
   },
 })
 

@@ -184,12 +184,12 @@ export default function DrawerContent(props) {
           <Card style={[utilSpacing.px4, utilSpacing.py5]}>
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
               <Icon
-                name="hat-chef"
+                name="clock-rotate-left1"
                 style={utilSpacing.mr4}
                 size={30}
                 color={color.palette.grayDark}
               />
-              <Text tx="drawerContent.uploadInvoice" preset="semiBold" size="md"></Text>
+              <Text tx="drawerContent.previousOrders" preset="semiBold" size="md"></Text>
             </View>
           </Card>
         </Ripple>

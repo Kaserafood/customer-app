@@ -200,6 +200,7 @@ interface OrderSummary {
   deliveryDate: string
   quantityItems: number
   status: string
+  tax: string
 }
 
 export type OrdersChef = {

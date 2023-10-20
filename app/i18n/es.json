@@ -399,7 +399,7 @@
     "support": "Soporte",
     "whatsAppMessage": "Hola, tengo un consulta",
     "ordersToPrepare": "Pedidos a preparar",
-    "uploadInvoice": "Subir facturas"
+    "previousOrders": "Pedidos anteriores"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -758,5 +758,19 @@
     "articles": "artículos",
     "noteChef": "Nota del cliente",
     "vacuumPacked": "Empacado al vacío"
+  },
+  "chefInvoiceScreen": {
+    "title": "Pedidos anteriores",
+    "uploadInvoiceOrder": "Subir factura del pedido #{{order}}",
+    "selectImagOrPDF": "*Selecciona una imagen o PDF",
+    "pickFile": "Seleccionar factura",
+    "uploadFile": "Subir factura",
+    "amountInvoice": "Monto a facturar",
+    "uploadInvoice": "Subir factura",
+    "uploadSuccess": "Factura subida",
+    "uploadError": "No se ha logrado subir la factura",
+    "invalidSelectedFile": "El archivo seleccionado no es válido",
+    "errorToSelectFile": "No se ha logrado seleccionar el archivo",
+    "invoiced": "Facturado"
   }
 }
