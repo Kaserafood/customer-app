@@ -113,4 +113,5 @@ export type NavigatorParamList = {
   ordersChef: ordersChefProps
   orderChefDetail: orderPrepareDetailProps
   dishes: dishesProps
+  chefInvoice: undefined
 }
