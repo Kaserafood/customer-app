@@ -74,6 +74,8 @@ const images = {
   dishes: require("./images/plans.png"),
   custom: require("./images/custom.png"),
   welcome: require("./images/welcome.png"),
+  pdf: require("./images/pdf.png"),
+  placeholder: require("./images/img-placeholder.jpg"),
 }
 
 export default images
