@@ -8,12 +8,15 @@ import { palette } from "../../theme/palette"
 interface Props {
   id: number
   code?: string
+  codeCredit?: string
   customerName: string
   total: number
   border: boolean
   status: string
   isToday?: boolean
   tax: string
+  revenue: number
+  paidChef: boolean
   onPress: () => void
   refetch: () => void
   onUpload: () => void
@@ -23,9 +26,12 @@ const OrderItem = ({
   customerName,
   id,
   code,
+  codeCredit,
   total,
+  revenue,
   border,
   status,
+  paidChef,
   tax,
   onPress,
   onUpload,
@@ -38,7 +44,7 @@ const OrderItem = ({
     >
       <View style={utilFlex.flexRow}>
         <View style={[utilFlex.flexRow, utilFlex.flex1]}>
-          <Text text={`#${code || id}`} preset="bold"></Text>
+          <Text text={`#${code || codeCredit || id}`} preset="bold"></Text>
           <Text text=" - " preset="bold"></Text>
           <Text text={customerName} preset="bold"></Text>
         </View>
@@ -53,22 +59,51 @@ const OrderItem = ({
       </View>
 
       <View>
-        <Text style={utilSpacing.mb3}>
-          <Text preset="semiBold" tx="chefInvoiceScreen.amountInvoice"></Text>
-          <Text text=": " preset="semiBold"></Text>
-          <Price
-            preset="simple"
-            amount={+total}
-            textStyle={utilText.regular}
-            currencyCode={userStore.account.currency}
-          />
-        </Text>
+        {userStore.account?.isGeneralRegime ? (
+          <Text style={utilSpacing.mb3}>
+            <Text preset="semiBold" tx="chefInvoiceScreen.amountInvoice"></Text>
+            <Text text=": " preset="semiBold"></Text>
+            <Price preset="simple" amount={+revenue} textStyle={utilText.regular} />
+          </Text>
+        ) : (
+          <Text style={utilSpacing.mb3}>
+            <Text preset="semiBold" tx="chefInvoiceScreen.amountInvoice"></Text>
+            <Text text=": " preset="semiBold"></Text>
+            <Price
+              preset="simple"
+              amount={+total}
+              textStyle={utilText.regular}
+              currencyCode={userStore.account.currency}
+            />
+          </Text>
+        )}
 
-        <Text>
-          <Text preset="semiBold" tx="common.tax"></Text>
-          <Text text=": " preset="semiBold"></Text>
-          <Text text={tax}></Text>
-        </Text>
+        {!userStore.account?.isGeneralRegime && (
+          <Text>
+            <Text preset="semiBold" tx="common.tax"></Text>
+            <Text text=": " preset="semiBold"></Text>
+            <Text text={tax}></Text>
+          </Text>
+        )}
+
+        {paidChef && (
+          <View
+            style={[
+              styles.status,
+              styles.bgGreen,
+              utilSpacing.px5,
+              utilSpacing.py2,
+              utilSpacing.mt3,
+            ]}
+          >
+            <Text
+              tx="chefInvoiceScreen.paid"
+              preset="semiBold"
+              size="lg"
+              style={styles.green}
+            ></Text>
+          </View>
+        )}
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mt5, styles.containerButtons]}>
@@ -120,11 +155,14 @@ const styles = StyleSheet.create({
     backgroundColor: palette.errorBg,
   },
 
+  bgGreen: {
+    backgroundColor: palette.greenBackground,
+  },
+
   blue: {
     color: palette.blue,
     letterSpacing: 0.6,
   },
-
   border: {
     borderColor: palette.yellow,
     borderWidth: 1,
@@ -136,7 +174,11 @@ const styles = StyleSheet.create({
     color: palette.error,
     letterSpacing: 0.6,
   },
+  green: {
+    color: palette.green,
+  },
   status: {
+    alignSelf: "flex-start",
     borderRadius: 8,
   },
 })

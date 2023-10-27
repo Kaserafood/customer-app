@@ -30,6 +30,7 @@ import {
   OrderOverviewResponse,
   OrderPlanRequest,
   OrdersChef,
+  OrdersChefParams,
   ReservationRequest,
   SetupIntentResponse,
   UserLoginResponse,
@@ -591,12 +592,9 @@ export class Api {
   /**
    * @description Get orders for chef
    */
-  async getOrdersChef(
-    chefId: number,
-    timeZone: string,
-    toUploadInvoice?: boolean,
-  ): Promise<OrdersChef> {
-    return await this.request({ chefId, timeZone, toUploadInvoice }, `/chefs/orders`, "GET")
+
+  async getOrdersChef(params: OrdersChefParams): Promise<OrdersChef> {
+    return await this.request({ ...params }, `/chefs/orders`, "GET")
   }
 
   /**

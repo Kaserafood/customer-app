@@ -164,6 +164,7 @@ export type OrderPlanRequest = {
   currencyCode: string
   deliveryPrice: number
   isCustom: boolean
+  deliveryPricePerDay: number
 }
 
 export interface ReservationRequest {
@@ -180,7 +181,7 @@ export interface ReservationRequest {
 }
 
 export type AccountResponse = {
-  data: Account
+  data: Account & { plan: any }
 } & kind
 
 interface OrderChef {
@@ -201,6 +202,8 @@ interface OrderSummary {
   quantityItems: number
   status: string
   tax: string
+  revenue: number
+  paidChef: boolean
 }
 
 export type OrdersChef = {
@@ -223,6 +226,7 @@ interface Product {
 interface OrderDetails {
   id: number
   code?: string
+  codeCredit?: string
   createdDate: string
   status: string
   deliveryTime: string
@@ -251,3 +255,12 @@ interface OrderDetails {
 export type OrderDetailChef = {
   data: OrderDetails
 } & kind
+
+export interface OrdersChefParams {
+  chefId: number
+  timeZone: string
+  toUploadInvoice?: boolean
+  startDate?: string
+  endDate?: string
+  typeOrder?: string[]
+}

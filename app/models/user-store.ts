@@ -61,6 +61,8 @@ const account = types.model("Account").props({
   // plan: plan,
   date: types.string,
   role: types.maybeNull(types.string),
+  isGeneralRegime: types.maybeNull(types.boolean),
+  kaseraTaxId: types.maybeNull(types.string),
 })
 export interface Account extends Instance<typeof account> {}
 
@@ -302,7 +304,7 @@ export const UserRegisterModel = userRegister
       }
       return 0
     },
-    setAccount: (account: any) => {
+    setAccount: (account: Account) => {
       self.account = account
     },
     setPaymentCash: (paymentCash: boolean) => {

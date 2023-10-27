@@ -16,7 +16,7 @@ import OrderItem from "./order-item"
 const api = new Api()
 export const OrdersChefScreen: FC<StackScreenProps<NavigatorParamList, "ordersChef">> = observer(
   function OrdersPrepare({ navigation, route: { params } }) {
-    const { userStore } = useStores()
+    const { userStore, commonStore } = useStores()
 
     useEffect(() => {
       if (params?.timestamp) {
@@ -24,15 +24,28 @@ export const OrdersChefScreen: FC<StackScreenProps<NavigatorParamList, "ordersCh
       }
     }, [params?.timestamp])
 
-    const { data, isFetched, refetch } = useQuery(
+    const { data, isFetched, refetch, isLoading } = useQuery(
       "orders",
-      () => api.getOrdersChef(userStore.userId, RNLocalize.getTimeZone()),
+      () =>
+        api.getOrdersChef({
+          chefId: userStore.userId,
+          timeZone: RNLocalize.getTimeZone(),
+        }),
       {
+        enabled: false,
         onError: (error) => {
           console.log(error)
         },
+        onSettled: () => {
+          commonStore.setVisibleLoading(false)
+        },
       },
     )
+
+    useEffect(() => {
+      commonStore.setVisibleLoading(true)
+      refetch()
+    }, [])
 
     const toDetail = (orderId: number, code?: string) => {
       navigation.navigate("orderChefDetail", { id: orderId, code })

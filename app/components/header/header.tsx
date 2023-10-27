@@ -47,12 +47,13 @@ const BUTTON: ViewStyle = {
 export function Header(props: HeaderProps) {
   const {
     onLeftPress,
-
+    rightIcon,
     leftIcon,
     headerText,
     headerTx,
     style,
     titleStyle,
+    onRightPress,
   } = props
   const header = headerText || (headerTx && translate(headerTx)) || ""
 
@@ -76,7 +77,18 @@ export function Header(props: HeaderProps) {
         <Text style={[TITLE, titleStyle]} text={header} />
       </View>
 
-      <View style={RIGHT} />
+      {rightIcon ? (
+        <TouchableOpacity style={utilSpacing.pr3} onPress={onRightPress} activeOpacity={0.5}>
+          <Icon
+            name={rightIcon}
+            style={utilSpacing.mr2}
+            size={24}
+            color={color.palette.white}
+          ></Icon>
+        </TouchableOpacity>
+      ) : (
+        <View style={RIGHT} />
+      )}
     </View>
   )
 }

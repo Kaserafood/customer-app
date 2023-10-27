@@ -20,9 +20,19 @@ export interface HeaderProps {
   leftIcon?: IconTypes
 
   /**
+   * Icon that should appear on the right side
+   */
+  rightIcon?: string
+
+  /**
    * What happens when you press the left icon
    */
   onLeftPress?(): void
+
+  /**
+   * What happens when you press the right icon
+   */
+  onRightPress?(): void
 
   /**
    * Container style overrides.

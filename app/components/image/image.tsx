@@ -15,7 +15,7 @@ type ImageProps = DefaultImageProps & {
 }
 
 export function Image(props: ImageProps) {
-  if (!props.source && !props.source.uri) {
+  if ((!props.source && !props.source.uri) || props.source?.uri?.trim() === "") {
     return (
       <RNImage {...props} source={images.placeholder} style={[styles.placeholder, props.style]} />
     )

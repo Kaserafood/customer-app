@@ -93,6 +93,16 @@ export const CartStoreModel = types
 
       return uniqueDateDishes.length * deliveryPrice
     },
+
+    calculateDeliveryPricePerDay: (creditRecharge: number, deliveryPrice: number) => {
+      if (Number(creditRecharge) === 0) return 0
+
+      if (creditRecharge >= 20) {
+        return 0
+      }
+
+      return deliveryPrice
+    },
   }))
   .actions((self) => ({
     addItem(itemCart: ItemCart) {

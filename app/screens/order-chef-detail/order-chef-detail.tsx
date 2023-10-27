@@ -1,7 +1,7 @@
 import { StackActions } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
@@ -35,15 +35,25 @@ export const OrderChefDetailScreen: FC<
   const insets = useSafeAreaInsets()
   const { messagesStore, commonStore } = useStores()
   const [code, setCode] = useState(params.code)
+  const [codeCredit, setCodeCredit] = useState("")
 
-  const { data: order } = useQuery(
+  const { data: order, isLoading } = useQuery(
     ["order-detail", params.id],
     () => api.getOrderChefById(params.id, RNLocalize.getTimeZone()),
     {
       enabled: !!params.id,
       onSuccess(data) {
-        if (data.data?.code) {
-          setCode(data.data?.code)
+        const order = data.data
+
+        if (order) {
+          const { code, codeCredit } = order
+          if (code) {
+            setCode(code)
+          }
+
+          if (codeCredit) {
+            setCodeCredit(codeCredit)
+          }
         }
       },
       onError: (error) => {
@@ -51,6 +61,10 @@ export const OrderChefDetailScreen: FC<
       },
     },
   )
+
+  useEffect(() => {
+    commonStore.setVisibleLoading(isLoading)
+  }, [isLoading])
 
   const { mutate: confirm } = useMutation(() => api.updateOrderStatus(params.id, "wc-confirmed"), {
     onSuccess: (data) => {
@@ -103,7 +117,9 @@ export const OrderChefDetailScreen: FC<
   return (
     <Screen preset="fixed">
       <Header
-        headerText={getI18nText("orderChefDetail.title", { order: code || params.id })}
+        headerText={getI18nText("orderChefDetail.title", {
+          order: code || codeCredit || params.id,
+        })}
         leftIcon="back"
         onLeftPress={goBack}
       />
@@ -141,48 +157,52 @@ export const OrderChefDetailScreen: FC<
             </View>
           )}
 
-          <View style={[utilSpacing.mx5, utilSpacing.mt3]}>
-            <Separator style={utilSpacing.my3}></Separator>
-            <Text preset="semiBold" text={translate("orderChefDetail.orderSummary")}></Text>
-          </View>
-
-          <Card style={[utilSpacing.m5, utilSpacing.p4]}>
+          {!codeCredit && (
             <View>
-              {data.products.map((product, index) => (
-                <View key={product.itemId} style={utilSpacing.mb2}>
-                  <Text>
-                    <Text preset="bold" text={`X${product.quantity} - `}></Text>
-                    <Text text={product.name}></Text>
-                  </Text>
+              <View style={[utilSpacing.mx5, utilSpacing.mt3]}>
+                <Separator style={utilSpacing.my3}></Separator>
+                <Text preset="semiBold" text={translate("orderChefDetail.orderSummary")}></Text>
+              </View>
+
+              <Card style={[utilSpacing.m5, utilSpacing.p4]}>
+                <View>
+                  {data.products.map((product, index) => (
+                    <View key={product.itemId} style={utilSpacing.mb2}>
+                      <Text>
+                        <Text preset="bold" text={`X${product.quantity} - `}></Text>
+                        <Text text={product.name}></Text>
+                      </Text>
+                    </View>
+                  ))}
                 </View>
-              ))}
+              </Card>
+
+              {!!code && !!data.noteChef && (
+                <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
+                  <Text>
+                    <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
+                    <Text text=": "></Text>
+                    <Text text={data.noteChef}></Text>
+                  </Text>
+                </Card>
+              )}
+
+              <Card style={[utilSpacing.mx5, utilSpacing.p4]}>
+                <Text style={utilSpacing.mb2}>
+                  <Text preset="semiBold" tx="orderChefDetail.amountInvoice"></Text>
+                  <Price
+                    amount={data.totalInvoice}
+                    preset="simple"
+                    textStyle={utilText.regular}
+                  ></Price>
+                </Text>
+                <Text>
+                  <Text preset="bold" style={utilFlex.flex1} tx="orderChefDetail.tax"></Text>
+                  <Text text={`${data.tax}`}></Text>
+                </Text>
+              </Card>
             </View>
-          </Card>
-
-          {!!code && !!data.noteChef && (
-            <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
-              <Text>
-                <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
-                <Text text=": "></Text>
-                <Text text={data.noteChef}></Text>
-              </Text>
-            </Card>
           )}
-
-          <Card style={[utilSpacing.mx5, utilSpacing.p4]}>
-            <Text style={utilSpacing.mb2}>
-              <Text preset="semiBold" tx="orderChefDetail.amountInvoice"></Text>
-              <Price
-                amount={data.totalInvoice}
-                preset="simple"
-                textStyle={utilText.regular}
-              ></Price>
-            </Text>
-            <Text>
-              <Text preset="bold" style={utilFlex.flex1} tx="orderChefDetail.tax"></Text>
-              <Text text={`${data.tax}`}></Text>
-            </Text>
-          </Card>
 
           <Separator style={[utilSpacing.mx5, utilSpacing.my6]}></Separator>
 
@@ -227,9 +247,19 @@ export const OrderChefDetailScreen: FC<
           ) : (
             <View>
               {data.products.map((product, index) => (
-                <Product key={index} {...product}></Product>
+                <Product key={index} {...product} showPrice={!codeCredit}></Product>
               ))}
             </View>
+          )}
+
+          {!!codeCredit && !!data.noteChef && data.noteChef !== "null" && (
+            <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
+              <Text>
+                <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
+                <Text text=": "></Text>
+                <Text text={data.noteChef}></Text>
+              </Text>
+            </Card>
           )}
 
           <Card style={[utilSpacing.my2, utilSpacing.mx5, utilSpacing.p4]}>
@@ -277,30 +307,44 @@ interface ProductProps {
   quantity: number
   image: string
   noteChef?: string
+  showPrice?: boolean
+  description?: string
   addons: {
     key: string
     value: string
   }[]
 }
 
-const Product = ({ name, price, addons, quantity, image, noteChef }: ProductProps) => {
+const Product = ({
+  name,
+  price,
+  addons,
+  quantity,
+  image,
+  noteChef,
+  showPrice = true,
+  description,
+}: ProductProps) => {
   const { userStore } = useStores()
 
   return (
     <Card style={[utilSpacing.mb5, utilSpacing.mx5, utilSpacing.p4]}>
       <View style={utilFlex.flexRow}>
         <Image source={{ uri: image }} style={styles.imageProduct}></Image>
-        <View style={utilSpacing.ml4}>
+        <View style={[utilSpacing.ml4, utilFlex.flex1]}>
           <Text>
             <Text preset="bold" text={`x${quantity} - `}></Text>
             <Text preset="bold" text={name}></Text>
           </Text>
+          {description && <Text text={description}></Text>}
 
-          <Price
-            style={[styles.price, utilSpacing.mt4]}
-            amount={+price}
-            currencyCode={userStore.account?.currency}
-          ></Price>
+          {showPrice && (
+            <Price
+              style={[styles.price, utilSpacing.mt4]}
+              amount={+price}
+              currencyCode={userStore.account?.currency}
+            ></Price>
+          )}
         </View>
       </View>
       {!!addons && addons.length > 0 && (

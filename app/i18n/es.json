@@ -35,7 +35,13 @@
     "articles": "Artículos",
     "tax": "NIT",
     "yes": "Sí",
-    "comment": "Comentario"
+    "comment": "Comentario",
+    "search": "Buscar",
+    "revenue": "Ganancia",
+    "summary": "Resumen",
+    "orders": "Pedidos",
+    "delivered": "Entregado",
+    "totalToInvoiced": "Total a facturar"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -771,6 +777,15 @@
     "uploadError": "No se ha logrado subir la factura",
     "invalidSelectedFile": "El archivo seleccionado no es válido",
     "errorToSelectFile": "No se ha logrado seleccionar el archivo",
-    "invoiced": "Facturado"
+    "invoiced": "Facturado",
+    "filters": "Filtrar pedidos",
+    "typeOrder": "Tipo de pedido",
+    "vacuumPacked": "Empacado al vacío",
+    "dailyDelivery": "Entrega diaria",
+    "dateRange": "Rango de fechas",
+    "startDate": "Fecha inicio",
+    "endDate": "Fecha fin",
+    "noOrders": "No tienes pedidos",
+    "paid": "Pago realizado"
   }
 }

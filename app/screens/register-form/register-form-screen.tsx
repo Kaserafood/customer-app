@@ -7,6 +7,7 @@ import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import OneSignal from "react-native-onesignal"
 
+import * as RNLocalize from "react-native-localize"
 import RNUxcam from "react-native-ux-cam"
 import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
@@ -14,14 +15,13 @@ import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
+import { Api } from "../../services/api"
 import { spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { GUATEMALA } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
-import * as RNLocalize from "react-native-localize"
-import { Api } from "../../services/api"
 
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
@@ -94,8 +94,8 @@ export const RegisterFormScreen: FC<
 
   const getAccount = async () => {
     await api.getAccount(userStore.userId, RNLocalize.getTimeZone()).then((res) => {
-      const { currency, date } = res.data
-      userStore.setAccount({ currency, date })
+      const { currency, date, role, isGeneralRegime, kaseraTaxId } = res.data
+      userStore.setAccount({ currency, date, role, isGeneralRegime, kaseraTaxId })
     })
   }
 
