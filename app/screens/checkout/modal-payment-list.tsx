@@ -25,7 +25,7 @@ const modalStatePaymentQPayPro = new ModalStateHandler()
 const modalStatePaymentStripe = new ModalStateHandler()
 
 export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentListProps) => {
-  const { userStore, messagesStore } = useStores()
+  const { userStore, messagesStore, plansStore } = useStores()
   useEffect(() => {
     ;(async () => {
       await fetch()
@@ -53,15 +53,15 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
       .getPaymentMethods(userStore.userId)
       .then(() => {
         const existsSelected = userStore.cards.find((item) => item.selected)
-        if (userStore.cards.length === 0) {
+        if (userStore.cards.length === 0 && isPlan && plansStore.type !== "basic") {
           addPaymentMethod()
         }
         if (!existsSelected) {
           userStore.setCurrentCard(null)
 
-          if (userStore.cards.length === 1) {
-            onSelectedPaymentItem(userStore.cards[0].id, false)
-          }
+          // if (userStore.cards.length === 1) {
+          //   onSelectedPaymentItem(userStore.cards[0].id, false)
+          // }
         } else {
           if (existsSelected.id !== userStore.currentCard?.id) {
             userStore.setCurrentCard(existsSelected)
@@ -73,14 +73,16 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
       })
   }
 
-  const onSelectedPaymentItem = (id: number | null | string, fetchAgain = true) => {
-    userStore
+  const onSelectedPaymentItem = async (id: number | null | string, fetchAgain = true) => {
+    console.log("onSelectedPaymentItem", id)
+    await userStore
       .updateSelectedCard(userStore.userId, id)
       .then(async (res) => {
         if (res) {
           // messagesStore.showSuccess("checkoutScreen.paymentMethodUpdated", true)
           if (fetchAgain) await fetch()
           if (id) {
+            console.log("seraching current card", id)
             userStore.setCurrentCard(userStore.cards.find((item) => item.id === id))
           } else {
             userStore.setCurrentCard(null)
@@ -111,20 +113,23 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
             preset="bold"
           ></Text>
           <ScrollView>
-            {userStore.cards.length === 0 && isPlan && (
+            {userStore.cards.length === 0 && isPlan && plansStore.type !== "basic" && (
               <View style={[utilSpacing.py5, utilFlex.selfCenter]}>
                 <Text preset="semiBold" tx="checkoutScreen.youDontHavePaymentMethods"></Text>
               </View>
             )}
 
-            {!isPlan && (
+            {(plansStore.type === "basic" || !isPlan) && (
               <View>
                 <PaymentMethodItem
                   id={0}
                   name={getI18nText("checkoutScreen.paymentCash")}
                   type="cash"
-                  selected={userStore.isNotSelectedCards}
-                  onSelected={() => onSelectedPaymentItem(null)}
+                  selected={userStore.paymentCash}
+                  onSelected={async () => {
+                    await onSelectedPaymentItem(null)
+                    userStore.setPaymentCash(true)
+                  }}
                   description={getI18nText("checkoutScreen.paymentCashDescription")}
                 ></PaymentMethodItem>
                 {userStore.cards.length > 0 && <Separator></Separator>}
@@ -149,7 +154,7 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
           </ScrollView>
 
           <Button
-            preset="white"
+            preset="gray"
             tx="checkoutScreen.addPayment"
             style={[styles.btn, utilSpacing.mt4, utilFlex.selfCenter]}
             onPress={addPaymentMethod}

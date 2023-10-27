@@ -34,7 +34,14 @@
     "delivery": "Entrega",
     "articles": "Artículos",
     "tax": "NIT",
-    "yes": "Sí"
+    "yes": "Sí",
+    "comment": "Comentario",
+    "search": "Buscar",
+    "revenue": "Ganancia",
+    "summary": "Resumen",
+    "orders": "Pedidos",
+    "delivered": "Entregado",
+    "totalToInvoiced": "Total a facturar"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -397,7 +404,8 @@
     "bugReport": "Reportar un error",
     "support": "Soporte",
     "whatsAppMessage": "Hola, tengo un consulta",
-    "ordersToPrepare": "Pedidos a preparar"
+    "ordersToPrepare": "Pedidos a preparar",
+    "previousOrders": "Pedidos anteriores"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -640,16 +648,16 @@
     "prime": "Prime",
     "happyDescription": "20 platillos (créditos)",
     "primeDescription": "40 platillos (créditos)",
-    "threePerDay": "3 opciones por día",
+    "threePerDay": "2 opciones por día",
     "freeDelivery": "Envío gratis",
-    "monthForUse": "1 mes para usar",
-    "priceHappy": "Q940",
-    "pricePrime": "Q1,800",
+    "monthForUse": "30 dias para usar",
+    "priceHappy": "Q900",
+    "pricePrime": "Q1,680",
     "priceHappyDishes": "(Q45 por platillo)",
     "pricePrimeDishes": "(Q42 por platillo)",
     "packages": "Paquetes",
-    "fourPerDay": "4 opciones por día",
-    "threeMonthsForUse": "3 meses para usar",
+    "fourPerDay": "3 opciones por día",
+    "threeMonthsForUse": "60 dias para usar",
     "snacksDrink": "Snacks y bebidas",
     "youAreNotSure": "¿No estás listo para el compromiso?",
     "testFirstDish": "Prueba tu primer platillo",
@@ -666,7 +674,13 @@
       "part3": "con cobro automático (como Netflix 😜) para obtener mejores precios."
     },
     "changePlan": "Cambio de plan",
-    "changePlanDescription": "No puedes cambiar de plan hasta que termines los créditos de tu plan actual"
+    "changePlanDescription": "No puedes cambiar de plan hasta que termines los créditos de tu plan actual",
+    "custom": "Personalizado",
+    "customDescription": "¿Cuantos necestias?",
+    "customPriceDelivery": "Envío Q5 por día (gratis a partir de 20 platillos)",
+    "sevenDaysToUse": "7 dias para usar",
+    "priceCustom": "Q47 por platillo +",
+    "deliveryPerDay": "Q5 de envío por dia"
   },
   "menuScreen": {
     "title": "Menú",
@@ -740,6 +754,38 @@
     "title": "Pedido #{{order}}",
     "customerPreferences": "Preferencias del cliente",
     "customerNote": "Nota del cliente",
-    "orderMade": "Pedido realizado el {{date}}"
+    "orderMade": "Pedido realizado el {{date}}",
+    "orderSummary": "Resumen del pedido",
+    "amountInvoice": "Monto a facturar: ",
+    "detailedOrder": "Pedido detallado",
+    "tax": "NIT: ",
+    "revenue": "Ganancia: ",
+    "article": "artículo",
+    "articles": "artículos",
+    "noteChef": "Nota del cliente",
+    "vacuumPacked": "Empacado al vacío"
+  },
+  "chefInvoiceScreen": {
+    "title": "Pedidos anteriores",
+    "uploadInvoiceOrder": "Subir factura del pedido #{{order}}",
+    "selectImagOrPDF": "*Selecciona una imagen o PDF",
+    "pickFile": "Seleccionar factura",
+    "uploadFile": "Subir factura",
+    "amountInvoice": "Monto a facturar",
+    "uploadInvoice": "Subir factura",
+    "uploadSuccess": "Factura subida",
+    "uploadError": "No se ha logrado subir la factura",
+    "invalidSelectedFile": "El archivo seleccionado no es válido",
+    "errorToSelectFile": "No se ha logrado seleccionar el archivo",
+    "invoiced": "Facturado",
+    "filters": "Filtrar pedidos",
+    "typeOrder": "Tipo de pedido",
+    "vacuumPacked": "Empacado al vacío",
+    "dailyDelivery": "Entrega diaria",
+    "dateRange": "Rango de fechas",
+    "startDate": "Fecha inicio",
+    "endDate": "Fecha fin",
+    "noOrders": "No tienes pedidos",
+    "paid": "Pago realizado"
   }
 }

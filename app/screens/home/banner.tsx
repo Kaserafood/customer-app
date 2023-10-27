@@ -11,8 +11,9 @@ import { Icon, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
-import { color, spacing, typography } from "../../theme"
+import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { ModalState } from "../../utils/modalState"
 
 interface PropsBanner {
   onPressWelcome: () => void
@@ -39,6 +40,7 @@ export const Banner = observer((props: PropsBanner) => {
       banner: "Welcome",
       description: "El usuario presionó el banner de 'Bienvenido'",
     })
+
     onPressWelcome()
   }
 
@@ -60,25 +62,16 @@ export const Banner = observer((props: PropsBanner) => {
             onPress={onPressWelcomeBanner}
           >
             <Image
-              style={[styles.image, utilSpacing.mr3, { left: -33 }]}
-              source={images.banner1}
+              style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
+              source={images.welcome}
             ></Image>
-            <View style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter]}>
-              <Text
-                preset="semiBold"
-                style={[styles.title, styles.textWhite, { fontSize: 25, lineHeight: 35 }]}
-                tx="banner.welcome"
-              ></Text>
-              <Text
-                preset="bold"
-                style={[styles.name, styles.textWhite, { lineHeight: 60 }]}
-                tx="banner.kasera"
-              ></Text>
-              <Button onPress={onPressWelcomeBanner} tx="banner.whatIsIt"></Button>
+            <View style={[styles.containerText, utilFlex.flex1, { justifyContent: "flex-end" }]}>
+              <View style={utilSpacing.mb4}>
+                <Button onPress={onPressWelcomeBanner} tx="banner.whatIsIt"></Button>
+              </View>
             </View>
           </TouchableOpacity>
         )}
-
         {bannerStore.banners.map((banner, index) => (
           <TouchableOpacity
             key={banner.id}
@@ -209,10 +202,6 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     zIndex: 1,
-  },
-  name: {
-    fontFamily: typography.brand,
-    fontSize: 45,
   },
 
   textWhite: {

@@ -162,6 +162,9 @@ export type OrderPlanRequest = {
   isSubscription?: boolean
   commentToChef?: string
   currencyCode: string
+  deliveryPrice: number
+  isCustom: boolean
+  deliveryPricePerDay: number
 }
 
 export interface ReservationRequest {
@@ -178,7 +181,7 @@ export interface ReservationRequest {
 }
 
 export type AccountResponse = {
-  data: Account
+  data: Account & { plan: any }
 } & kind
 
 interface OrderChef {
@@ -191,12 +194,16 @@ interface OrderChef {
 
 interface OrderSummary {
   id: number
+  code: string
   customerName: string
   deliveryTime: string
   total: number
   deliveryDate: string
   quantityItems: number
   status: string
+  tax: string
+  revenue: number
+  paidChef: boolean
 }
 
 export type OrdersChef = {
@@ -208,6 +215,8 @@ interface Product {
   name: string
   price: number
   quantity: number
+  image: string
+  noteChef?: string
   addons: {
     key: string
     value: string
@@ -216,17 +225,42 @@ interface Product {
 
 interface OrderDetails {
   id: number
+  code?: string
+  codeCredit?: string
   createdDate: string
   status: string
   deliveryTime: string
   total: string
   deliveryDate: string
-  customerNote: string | null
   statusName: string
   tax: string
   products: Product[]
+  totalInvoice: number
+  revenue: number
+  noteChef?: string // This note just exists in packages not in individual dishes
+  package?: {
+    packages: {
+      dishes: {
+        id: number
+        name: string
+        accompaniments: string
+        quantity: number
+        comment: string
+        price: number
+      }[]
+    }[]
+  }
 }
 
 export type OrderDetailChef = {
   data: OrderDetails
 } & kind
+
+export interface OrdersChefParams {
+  chefId: number
+  timeZone: string
+  toUploadInvoice?: boolean
+  startDate?: string
+  endDate?: string
+  typeOrder?: string[]
+}

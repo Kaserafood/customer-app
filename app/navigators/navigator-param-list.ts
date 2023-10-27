@@ -62,6 +62,7 @@ interface checkoutProps {
 
 interface orderPrepareDetailProps {
   id: number
+  code?: string
 }
 
 interface ordersChefProps {
@@ -112,4 +113,5 @@ export type NavigatorParamList = {
   ordersChef: ordersChefProps
   orderChefDetail: orderPrepareDetailProps
   dishes: dishesProps
+  chefInvoice: undefined
 }

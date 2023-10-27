@@ -43,6 +43,7 @@ import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import SelectPaymentMethod from "./select-payment-mehtod"
 import Summary from "./summay"
+import { addObserver } from "mobx/dist/internal"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -99,19 +100,27 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     const { mutate: createOrderPlan } = useMutation(
       (data: OrderPlanRequest) => api.createOrderPlan(data),
       {
-        onSuccess: (res) => {
+        onSuccess: async (res) => {
           const planId = Number(res.data.value)
           if (planId > 0) {
             plansStore.setConsumedCredits(cartStore.useCredits + plansStore.consumedCredits)
 
             plansStore.setId(Number(res.data.value))
+
+            // Update values of plan
+            const account: any = await api.getAccount(userStore.userId, RNLocalize.getTimeZone())
+
+            if (account.data) {
+              plansStore.setPlan(account.data.plan)
+            }
+
             navigation.navigate("endOrder", {
               orderId: 0,
               deliveryDate: getDatesDelivery(),
               deliveryTime: getI18nText("checkoutScreen.deliveryTimePlan"),
               deliveryAddress: addressStore.current.address,
               imageChef:
-                "https://kaserafood.com/wp-content/uploads/2022/02/cropped-WhatsApp-Image-2022-02-07-at-3.38.55-PM-min.jpeg",
+                "https://kaserafood.com/wp-content/uploads/2023/10/cropped-24800e3b-125b-4a03-a86f-5db969f56db7-e1696618503955-1.jpg",
               isPlan: true,
             })
           } else if (planId === -1) {
@@ -153,7 +162,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const sendOrder = async (data) => {
       if (isPlan) {
-        if (!getPaymentMethodId()) {
+        if (!getPaymentMethodId() && !userStore.paymentCash) {
           messagesStore.showError("checkoutScreen.errorSelectPaymentMethod", true)
           RNUxcam.logEvent("checkout: errorSelectPaymentMethod")
           return
@@ -169,7 +178,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           userId: userStore.userId,
           totalCredits: plansStore.totalCredits,
           type: plansStore.type,
-          amount: plansStore.price,
+          amount: plansStore.price + priceDelivery(),
           expirationDate: plansStore.expireDate,
           items,
           timeZone: RNLocalize.getTimeZone(),
@@ -182,6 +191,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           deviceType: Platform.OS,
           commentToChef: params?.commentToChef,
           currencyCode: userStore.account?.currency,
+          deliveryPrice: priceDelivery(),
+          isCustom: plansStore.isCustom,
+          deliveryPricePerDay: cartStore.calculateDeliveryPricePerDay(
+            plansStore.totalCredits,
+            plansStore.config.deliveryPrice,
+          ),
         }
         console.log(data)
         createOrderPlan(orderPlan)
@@ -360,9 +375,9 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const getTextButtonFooter = (): string => {
       if (isPlan) {
-        return `${getI18nText(
-          "checkoutScreen.pay",
-        )} ${`${userStore.account?.currency} ${plansStore.price}`}`
+        return `${getI18nText("checkoutScreen.pay")} ${`${userStore.account?.currency} ${
+          plansStore.price + priceDelivery()
+        }`}`
       }
       const text = getI18nText(
         getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
@@ -397,6 +412,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const priceDelivery = () => {
+      if (isPlan) {
+        return cartStore.calculateDeliveryPrice(
+          plansStore.totalCredits,
+          plansStore.config.deliveryPrice,
+        )
+      }
       if (cartStore.cart.length === 0) return 0
       return cartStore.cart[0]?.dish.chef.priceDelivery
     }

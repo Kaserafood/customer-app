@@ -1,14 +1,13 @@
 import React from "react"
 import {
-  Image as RNImage,
-  ImageErrorEventData,
   ImageProps as DefaultImageProps,
   ImageURISource,
-  NativeSyntheticEvent,
+  Image as RNImage,
   StyleProp,
   StyleSheet,
 } from "react-native"
 import FastImage, { ImageStyle } from "react-native-fast-image"
+import images from "../../assets/images"
 
 type ImageProps = DefaultImageProps & {
   source: ImageURISource
@@ -16,10 +15,10 @@ type ImageProps = DefaultImageProps & {
 }
 
 export function Image(props: ImageProps) {
-  const onError = (error: NativeSyntheticEvent<ImageErrorEventData>) => {
-    if (error)
-      console.log("ERROR LOADING IMAGE: ", error.nativeEvent.error, ` URI : ${props.source.uri}`)
-    props.source = { uri: "https://via.placeholder.com/150" }
+  if ((!props.source && !props.source.uri) || props.source?.uri?.trim() === "") {
+    return (
+      <RNImage {...props} source={images.placeholder} style={[styles.placeholder, props.style]} />
+    )
   }
 
   if (props.source?.uri?.length > 0) {
@@ -31,11 +30,10 @@ export function Image(props: ImageProps) {
           priority: FastImage.priority.normal,
         }}
         style={style}
-        onError={() => onError(null)}
       />
     )
   } else if (!props.source?.uri)
-    return <RNImage {...props} source={props.source} style={props.style} onError={onError} />
+    return <RNImage {...props} source={props.source} style={props.style} />
 
   return null
 }
@@ -43,5 +41,8 @@ export function Image(props: ImageProps) {
 const styles = StyleSheet.create({
   image: {
     // backgroundColor: "#eee",
+  },
+  placeholder: {
+    width: "100%",
   },
 })

@@ -22,10 +22,9 @@
     "adb": "adb reverse tcp:9090 tcp:9090 && adb reverse tcp:3000 tcp:3000 && adb reverse tcp:9001 tcp:9001 && adb reverse tcp:8081 tcp:8081",
     "postinstall": "node ./bin/postInstall",
     "build-ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
-    "build-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
+    "build-android": "cd android && ./gradlew bundleRelease && cd ..",
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
-    "release:android": "cd android && set FILEENV=.env.production && ./gradlew bundleRelease && cd ..",
     "release:android:apk": "cd android && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
@@ -62,6 +61,7 @@
     "react-native-config": "^1.4.11",
     "react-native-device-country": "^1.0.2",
     "react-native-device-info": "^8.7.1",
+    "react-native-document-picker": "^9.0.1",
     "react-native-fast-image": "^8.5.11",
     "react-native-fbsdk-next": "^11.0.0",
     "react-native-flash-message": "^0.2.1",

@@ -30,6 +30,7 @@ import {
   OrderOverviewResponse,
   OrderPlanRequest,
   OrdersChef,
+  OrdersChefParams,
   ReservationRequest,
   SetupIntentResponse,
   UserLoginResponse,
@@ -133,9 +134,7 @@ export class Api {
 
   async request(body: any, url: string, requestType: requestType): Promise<GeneralApiResponse> {
     try {
-      const response: ApiResponse<any> = await this.apisauce[requestType.toLowerCase()](url, {
-        ...body,
-      })
+      const response: ApiResponse<any> = await this.apisauce[requestType.toLowerCase()](url, body)
 
       if (!response.ok) {
         const problem = getGeneralApiProblem(response)
@@ -593,8 +592,9 @@ export class Api {
   /**
    * @description Get orders for chef
    */
-  async getOrdersChef(chefId: number, timeZone: string): Promise<OrdersChef> {
-    return await this.request({ chefId, timeZone }, `/chefs/orders`, "GET")
+
+  async getOrdersChef(params: OrdersChefParams): Promise<OrdersChef> {
+    return await this.request({ ...params }, `/chefs/orders`, "GET")
   }
 
   /**
@@ -609,5 +609,19 @@ export class Api {
    */
   async updateOrderStatus(orderId: number, status: string): Promise<ValueResponse> {
     return await this.request({ status }, `/chefs/orders/${orderId}/status`, "PUT")
+  }
+
+  /**
+   * @description Get plan config
+   */
+  async getPlanConfig(): Promise<ValueResponse> {
+    return await this.request({}, `/plans/config`, "GET")
+  }
+
+  /**
+   * @description Get plan config
+   */
+  async uploadInvoice(formData: any): Promise<ValueResponse> {
+    return await this.request(formData, `/upload-file`, "POST")
   }
 }

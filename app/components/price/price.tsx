@@ -2,12 +2,12 @@ import { observer } from "mobx-react-lite"
 import * as React from "react"
 import { StyleProp, TextStyle, View, ViewStyle } from "react-native"
 
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { getFormat } from "../../utils/price"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
-import { useStores } from "../../models"
 
 const CONTAINER: ViewStyle = {
   alignSelf: "flex-end",
@@ -56,7 +56,7 @@ export const Price = observer(function Price(props: PriceProps) {
   let currency = currencyCode
   if (!currencyCode) currency = userStore.account?.currency || "USD"
 
-  const price = getFormat(amount, currency)
+  const price = getFormat(+amount, currency)
   const Delivery = () => {
     return (
       <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, style]}>
@@ -67,7 +67,6 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Dish = () => {
-    const price = getFormat(amount, currency)
     const styles = [CONTAINER, style]
     return (
       <View style={styles}>
@@ -77,7 +76,6 @@ export const Price = observer(function Price(props: PriceProps) {
   }
 
   const Simple = () => {
-    const price = getFormat(amount, currency)
     return <Text style={textStyle} text={`${price}`} preset="bold"></Text>
   }
 

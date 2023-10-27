@@ -76,6 +76,33 @@ export const CartStoreModel = types
 
       return uniqueDates.join(", ")
     },
+
+    calculateDeliveryPrice: (creditRecharge: number, deliveryPrice: number) => {
+      if (Number(creditRecharge) === 0) return 0
+
+      if (creditRecharge >= 20) {
+        return 0
+      }
+
+      const uniqueDateDishes: string[] = []
+      for (const dish of self.cartPlans) {
+        if (!uniqueDateDishes.includes(dish.date)) {
+          uniqueDateDishes.push(dish.date)
+        }
+      }
+
+      return uniqueDateDishes.length * deliveryPrice
+    },
+
+    calculateDeliveryPricePerDay: (creditRecharge: number, deliveryPrice: number) => {
+      if (Number(creditRecharge) === 0) return 0
+
+      if (creditRecharge >= 20) {
+        return 0
+      }
+
+      return deliveryPrice
+    },
   }))
   .actions((self) => ({
     addItem(itemCart: ItemCart) {

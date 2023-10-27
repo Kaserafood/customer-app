@@ -379,9 +379,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           ></Categories>
           <Separator style={utilSpacing.m4}></Separator>
           <Banner
-            onPressWelcome={() => modalStateWelcome.setVisible(true)}
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
+             onPressWelcome={() => modalStateWelcome.setVisible(true)}
           ></Banner>
           <View>
             <View

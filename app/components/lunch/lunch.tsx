@@ -57,7 +57,10 @@ const Lunch = observer(
     }
 
     const enoughCredits = () => {
-      if (plansStore.totalCredits - cartStore.useCredits - credits < 0) {
+      if (
+        plansStore.totalCredits - cartStore.useCredits - plansStore.consumedCredits - credits <
+        0
+      ) {
         return false
       }
       return true

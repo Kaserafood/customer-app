@@ -61,6 +61,8 @@ const account = types.model("Account").props({
   // plan: plan,
   date: types.string,
   role: types.maybeNull(types.string),
+  isGeneralRegime: types.maybeNull(types.boolean),
+  kaseraTaxId: types.maybeNull(types.string),
 })
 export interface Account extends Instance<typeof account> {}
 
@@ -74,6 +76,7 @@ export const UserRegisterModel = userRegister
     deliverySlotTime: types.maybeNull(types.string),
     cards: types.optional(types.array(cardModel), []),
     currentCard: types.maybe(cardModel),
+    paymentCash: types.optional(types.boolean, false),
     isTester: types.maybeNull(types.boolean),
     countryId: types.maybeNull(types.number),
     account: types.maybeNull(account),
@@ -104,6 +107,11 @@ export const UserRegisterModel = userRegister
       self.cards = cards
     },
     setCurrentCard: (card: Card | null) => {
+      if (card?.id) {
+        console.log("card?.id", card?.id)
+        self.paymentCash = false
+      }
+
       if (card === null) {
         if (self.currentCard) {
           self.currentCard.expDate = ""
@@ -112,7 +120,10 @@ export const UserRegisterModel = userRegister
           self.currentCard.type = ""
           self.currentCard.id = 0
         }
-      } else self.currentCard = { ...card }
+      } else {
+        self.paymentCash = false
+        self.currentCard = { ...card }
+      }
     },
     setCountryId: (countryId) => {
       self.countryId = countryId
@@ -293,11 +304,11 @@ export const UserRegisterModel = userRegister
       }
       return 0
     },
-    setAccount: (account: any) => {
+    setAccount: (account: Account) => {
       self.account = account
     },
-
-    // setPlan(plan: any) {
-    //   self.account.plan = plan
-    // },
+    setPaymentCash: (paymentCash: boolean) => {
+      self.currentCard = undefined
+      self.paymentCash = paymentCash
+    },
   }))

@@ -71,11 +71,11 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
             )}
           </Card>
           <Text preset="bold" style={utilSpacing.p5} tx="endOrderScreen.info"></Text>
-          {isPlan && (
-            <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
-              <Text size="lg" text={order} preset="bold"></Text>
-            </View>
-          )}
+
+          <View style={[utilFlex.flexCenter, utilSpacing.my6]}>
+            <Text size="lg" text={order} preset="bold"></Text>
+          </View>
+
           <View>
             <View style={[utilFlex.flexCenter, styles.content, utilSpacing.py5, utilSpacing.mb7]}>
               <View style={[styles.body, utilFlex.flexCenter]}>
