@@ -783,5 +783,11 @@
     "endDate": "Fecha fin",
     "noOrders": "No tienes pedidos",
     "paid": "Pago realizado"
+  },
+  "modalWithoutCoverageCredits": {
+    "title": "Sin cobertura en tu ubicación",
+    "info": "Lamentablemente, no tenemos cobertura en la ubicación que ingresaste, pero te ofrecemos la opción de paquetes sellados al vacío que podrás recibir los domingos o lunes",
+    "whatsAppMessage": "Hola, quiero más información sobre los paquetes sellados al vacío"
   }
+  
 }

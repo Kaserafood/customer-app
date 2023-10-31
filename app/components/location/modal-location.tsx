@@ -128,7 +128,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
               }
             }
           })
-
+          console.log('coverage', isPointInCoverage)
           coverageStore.setHasCoverageCredits(isPointInCoverage)
         }
       },
