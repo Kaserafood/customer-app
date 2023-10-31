@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     width: 56,
   },
   button: {
-    minWidth: 240,
+    minWidth: 260,
   },
   containerTitle: {
     alignContent: "flex-start",

@@ -77,10 +77,14 @@ export const CartStoreModel = types
       return uniqueDates.join(", ")
     },
 
-    calculateDeliveryPrice: (creditRecharge: number, deliveryPrice: number) => {
+    calculateDeliveryPrice: (
+      creditRecharge: number,
+      deliveryPrice: number,
+      minimumQuantityFreeDelivery: number,
+    ) => {
       if (Number(creditRecharge) === 0) return 0
 
-      if (creditRecharge >= 20) {
+      if (creditRecharge >= minimumQuantityFreeDelivery) {
         return 0
       }
 
@@ -94,10 +98,14 @@ export const CartStoreModel = types
       return uniqueDateDishes.length * deliveryPrice
     },
 
-    calculateDeliveryPricePerDay: (creditRecharge: number, deliveryPrice: number) => {
+    calculateDeliveryPricePerDay: (
+      creditRecharge: number,
+      deliveryPrice: number,
+      minimumQuantityFreeDelivery: number,
+    ) => {
       if (Number(creditRecharge) === 0) return 0
 
-      if (creditRecharge >= 20) {
+      if (creditRecharge >= minimumQuantityFreeDelivery) {
         return 0
       }
 

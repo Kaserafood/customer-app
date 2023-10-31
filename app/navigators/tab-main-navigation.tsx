@@ -39,6 +39,16 @@ export function TabMainNavigation({ navigationRef }) {
       },
     },
   )
+
+  useQuery("credit-config", () => api.getPlanConfig(), {
+    onSuccess(data) {
+      plansStore.setPlanConfig(data.data)
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
+
   useEffect(() => {
     if (userStore.countryId === 1) {
       setLocale("es")

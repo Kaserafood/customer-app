@@ -1,3 +1,5 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { BackHandler, Keyboard, StyleSheet, View } from "react-native"
@@ -6,9 +8,9 @@ import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import OneSignal from "react-native-onesignal"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
+import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Header, InputText, Screen, Text } from "../../components"
 import { useStores } from "../../models"
 import { UserLogin } from "../../models/user-store"
@@ -16,8 +18,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import RNUxcam from "react-native-ux-cam"
-import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
+import { UNITED_STATES } from "../../utils/constants"
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
   screens: [],
@@ -62,13 +63,21 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
           commonStore.setVisibleLoading(false)
           if (userValid) {
             commonStore.setIsSignedIn(true)
-            OneSignal.setExternalUserId(userStore.userId.toString())
+
+            let userId = userStore.userId.toString()
+            if (userStore.countryId === UNITED_STATES) {
+              userId = `us_${userId}`
+            }
+
+            OneSignal.setExternalUserId(userId)
+            OneSignal.setEmail(userStore.email)
             AppEventsLogger.logEvent("login", {
               method: "email",
               description: "Se ha logueado con email",
             })
-            AppEventsLogger.setUserID(userStore.userId.toString())
-            RNUxcam.setUserProperty("userId", userStore.userId.toString())
+            AppEventsLogger.setUserID(userId)
+            RNUxcam.setUserProperty("userId", userId)
+
             if (currentUserId === -1) {
               RNUxcam.logEvent("login", {
                 exploreApp: true,

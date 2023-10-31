@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react"
 
 import { CardField, initStripe, useStripe } from "@stripe/stripe-react-native"
 import { Button, Modal, Text } from "../../components"
-import { utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
 
 import { Keyboard, StyleSheet, TextInput, View } from "react-native"
@@ -117,13 +117,13 @@ export const ModalPaymentStripe = ({ stateModal, onGetCards }: Props) => {
   }
 
   return (
-    <Modal isFullScreen state={stateModal} position="bottom" styleBody={utilSpacing.p6}>
+    <Modal isFullScreen state={stateModal} position="bottom" styleBody={utilSpacing.p5}>
       <View>
         <Text
           preset="bold"
           size="xl"
           tx="checkoutScreen.paymentCard"
-          style={[utilSpacing.mb2, utilSpacing.mt5]}
+          style={[utilSpacing.mb2, utilSpacing.mt4]}
         ></Text>
 
         <TextInput
@@ -147,7 +147,7 @@ export const ModalPaymentStripe = ({ stateModal, onGetCards }: Props) => {
           }}
         />
 
-        <Button tx="common.save" block onPress={handleSubmit}></Button>
+        <Button tx="common.save" style={utilFlex.selfCenter} onPress={handleSubmit}></Button>
       </View>
     </Modal>
   )
@@ -155,7 +155,7 @@ export const ModalPaymentStripe = ({ stateModal, onGetCards }: Props) => {
 
 const styles = StyleSheet.create({
   cardStyle: {
-    backgroundColor: color.palette.whiteGray,
+    backgroundColor: color.palette.gray300,
     borderRadius: 10,
     placeholderColor: color.palette.grayPlaceHolder,
     textColor: color.text,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   input: {
-    backgroundColor: color.palette.whiteGray,
+    backgroundColor: color.palette.gray300,
     borderRadius: 10,
     color: color.text,
     fontSize: 18,

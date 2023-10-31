@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import {
   ImageProps as DefaultImageProps,
   ImageURISource,
@@ -15,7 +15,8 @@ type ImageProps = DefaultImageProps & {
 }
 
 export function Image(props: ImageProps) {
-  if ((!props.source && !props.source.uri) || props.source?.uri?.trim() === "") {
+  const [imageError, setImageError] = useState(false)
+  if ((!props.source && !props.source.uri) || props.source?.uri?.trim() === "" || imageError) {
     return (
       <RNImage {...props} source={images.placeholder} style={[styles.placeholder, props.style]} />
     )
@@ -30,6 +31,9 @@ export function Image(props: ImageProps) {
           priority: FastImage.priority.normal,
         }}
         style={style}
+        onError={() => {
+          setImageError(true)
+        }}
       />
     )
   } else if (!props.source?.uri)
