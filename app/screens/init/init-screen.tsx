@@ -7,23 +7,24 @@ import { ScrollView } from "react-native-gesture-handler"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import OneSignal from "react-native-onesignal"
 
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import RNUxcam from "react-native-ux-cam"
-import { Button, Text } from "../../components"
+import { Button, Icon, Text } from "../../components"
+import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { setCountryId, setLocale } from "../../services/api"
-import { utilSpacing, utilText } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalCountry } from "./modal-country"
-import { setLocaleI18n } from "../../i18n"
 
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
-    // const insets = useSafeAreaInsets()
+    const insets = useSafeAreaInsets()
 
     const toRegister = () => {
       userStore.setUserId(0)
@@ -42,7 +43,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }
 
     useEffect(() => {
-      // modalCountry.setVisible(true)
+      modalCountry.setVisible(true)
     }, [])
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       <ScrollView contentContainerStyle={styles.root}>
         <StatusBar backgroundColor={color.primary} barStyle={"light-content"} />
 
-        {/* {countryStore.selectedCountry && (
+        {countryStore.selectedCountry && (
           <TouchableOpacity
             activeOpacity={0.5}
             style={[
@@ -86,9 +87,8 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
               utilFlex.flexRow,
               utilFlex.flexCenterVertical,
               {
-                marginTop: insets.top
-              }
-              
+                marginTop: insets.top,
+              },
             ]}
             onPress={() => modalCountry.setVisible(true)}
           >
@@ -99,7 +99,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             <Text text={countryStore.selectedCountry.name}></Text>
             <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
           </TouchableOpacity>
-        )} */}
+        )}
 
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>

@@ -93,7 +93,9 @@ export const OrderModel = types
     get ordersOverviewInProgress() {
       return self.ordersOverview.filter(
         (order) =>
-          order.woocommerceStatus === "wc-on-hold" || order.woocommerceStatus === "wc-processing",
+          order.woocommerceStatus === "wc-pending-confirmation" ||
+          order.woocommerceStatus === "wc-confirmed" ||
+          order.woocommerceStatus === "wc-on-route",
       )
     },
     // Retorna la ordenes que estan en estado "Facturado" o "Completado"

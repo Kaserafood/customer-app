@@ -43,7 +43,6 @@ import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import SelectPaymentMethod from "./select-payment-mehtod"
 import Summary from "./summay"
-import { addObserver } from "mobx/dist/internal"
 
 const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
@@ -193,10 +192,14 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           currencyCode: userStore.account?.currency,
           deliveryPrice: priceDelivery(),
           isCustom: plansStore.isCustom,
-          deliveryPricePerDay: cartStore.calculateDeliveryPricePerDay(
-            plansStore.totalCredits,
-            plansStore.config.deliveryPrice,
-          ),
+          deliveryPricePerDay:
+            plansStore.type === "test"
+              ? 0
+              : cartStore.calculateDeliveryPricePerDay(
+                  plansStore.totalCredits,
+                  plansStore.config.pricePerDay,
+                  plansStore.config.minimumQuantityFreeDelivery,
+                ),
         }
         console.log(data)
         createOrderPlan(orderPlan)
@@ -413,9 +416,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const priceDelivery = () => {
       if (isPlan) {
+        if (plansStore.type === "test") return 0
+
         return cartStore.calculateDeliveryPrice(
           plansStore.totalCredits,
-          plansStore.config.deliveryPrice,
+          plansStore.config.pricePerDay,
+          plansStore.config.minimumQuantityFreeDelivery,
         )
       }
       if (cartStore.cart.length === 0) return 0

@@ -1,10 +1,10 @@
+import SegmentedControl from "@react-native-segmented-control/segmented-control"
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
-import SegmentedControl from "@react-native-segmented-control/segmented-control"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import { Card, Header, Image, Price, Screen, Text } from "../../components"
 import { OrderOverview, useStores } from "../../models"
@@ -43,7 +43,7 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
             setSelectedIndex(event.nativeEvent.selectedSegmentIndex)
           }}
           appearance="light"
-          style={styles.segmentedControl}
+          style={[styles.segmentedControl, utilSpacing.m5]}
           backgroundColor={color.palette.segmentedControl}
           tintColor={color.palette.white}
           activeFontStyle={{ color: color.text, fontFamily: typography.primarySemiBold }}
@@ -100,15 +100,20 @@ const Order = (props: { order: OrderOverview; onPress: () => void }) => {
         <View style={utilFlex.flexRow}>
           <View>
             <Image source={{ uri: order.chefImage }} style={styles.chefImage}></Image>
-            <Text
+            {/* <Text
               caption
               style={[utilFlex.selfCenter, utilSpacing.mt3]}
               text={`#${order.id}`}
-            ></Text>
+            ></Text> */}
           </View>
           <View style={utilSpacing.ml3}>
-            <Text style={utilSpacing.mb3} preset="bold" size="lg" text={order.chefName}></Text>
-            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb3]}>
+            <Text
+              style={utilSpacing.mb1}
+              preset="bold"
+              size="lg"
+              text={`#${order.id} - ${order.chefName}`}
+            ></Text>
+            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb2]}>
               <Text caption text={`${order.productCount} ${articles} - `}></Text>
               <Price
                 preset="simple"
@@ -118,9 +123,15 @@ const Order = (props: { order: OrderOverview; onPress: () => void }) => {
               ></Price>
             </View>
 
+            <View style={utilSpacing.mb2}>
+              <Text caption text={order.deliveryDate} preset="bold" style={utilSpacing.mr4}></Text>
+              <Text caption text={order.deliverySlotTime}></Text>
+            </View>
+
             <Text
               caption
               text={order.status}
+              preset="bold"
               style={
                 order.woocommerceStatus === "wc-completed" ||
                 order.woocommerceStatus === "wc-billing"
@@ -128,10 +139,6 @@ const Order = (props: { order: OrderOverview; onPress: () => void }) => {
                   : styles.colorOrange
               }
             ></Text>
-            <View style={utilFlex.flexRow}>
-              <Text caption text={order.deliveryDate} preset="bold" style={utilSpacing.mr4}></Text>
-              <Text caption text={order.deliverySlotTime}></Text>
-            </View>
           </View>
         </View>
       </Card>
@@ -142,19 +149,31 @@ const Order = (props: { order: OrderOverview; onPress: () => void }) => {
 const styles = StyleSheet.create({
   chefImage: {
     borderRadius: spacing[2],
-    height: 85,
-    width: 85,
+    height: 100,
+    width: 100,
   },
   colorGreen: {
+    alignSelf: "flex-start",
+    backgroundColor: color.palette.greenBackground,
+    borderRadius: spacing[1],
     color: color.palette.green,
+    letterSpacing: 1,
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[1],
   },
   colorOrange: {
-    color: color.palette.orange,
+    alignSelf: "flex-start",
+    backgroundColor: color.palette.amber50,
+    borderRadius: spacing[1],
+    color: color.palette.amber600,
+    letterSpacing: 1,
+    paddingHorizontal: spacing[2],
+    paddingVertical: spacing[1],
   },
   container: {
     backgroundColor: color.background,
   },
   segmentedControl: {
-    height: 40,
+    height: 45,
   },
 })

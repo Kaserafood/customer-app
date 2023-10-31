@@ -15,6 +15,7 @@ export const CoverageModel = types
     // coordinates: types.optional(types.array(Coordinate), []),
     //  holes: types.optional(types.array(types.array(Coordinate)), []),
     coverage: types.maybeNull(types.string),
+    hasCoverageCredits: types.maybeNull(types.boolean),
   })
   .views((self) => ({
     // get getLength() {
@@ -51,5 +52,8 @@ export const CoverageModel = types
         self.coverage = result.data?.value
       }
     }),
+    setHasCoverageCredits: (value: boolean) => {
+      self.hasCoverageCredits = value
+    },
   }))
 export interface Coverage extends SnapshotOut<typeof CoverageModel> {}

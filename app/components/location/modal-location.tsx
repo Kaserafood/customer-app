@@ -20,6 +20,9 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
+import { isPointInPolygon } from "geolib"
+import { useQuery } from "react-query"
+import { Api } from "../../services/api"
 import { ModalNecessaryLocation } from "./modal-necessary-location"
 
 class ModalPersistent {
@@ -58,10 +61,12 @@ type homeScreenProp = StackNavigationProp<NavigatorParamList, "home">
  */
 const modalPersistent = new ModalPersistent()
 const modalNecessaryLocation = new ModalStateHandler()
+const api = new Api()
+
 export const ModalLocation = observer(function Location(props: LocationProps) {
   const { style, modal, screenToReturn } = props
 
-  const { addressStore, userStore, messagesStore } = useStores()
+  const { addressStore, userStore, messagesStore, coverageStore } = useStores()
   const [addressText, setAddressText] = useState("")
   const navigation = useNavigation<homeScreenProp>()
   const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
@@ -98,6 +103,40 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
       modalPersistent.setPersistent(false)
     }
   }, [userStore.addressId])
+
+  useQuery(
+    ["coverage", addressStore.current?.latitude, addressStore.current?.longitude],
+    () => api.getCoverageCredits(),
+    {
+      enabled: !!addressStore.current?.latitude && !!addressStore.current?.longitude,
+      onSuccess(data) {
+        const coverage = data.data?.value
+        if (coverage) {
+          const geoJson = JSON.parse(coverage)
+
+          let isPointInCoverage = false
+          geoJson.forEach((item) => {
+            if (item.geometry.type === "Polygon") {
+              if (!isPointInCoverage) {
+                isPointInCoverage = isPointInPolygon(
+                  {
+                    latitude: addressStore.current?.latitude,
+                    longitude: addressStore.current?.longitude,
+                  },
+                  item.geometry.coordinates[0],
+                )
+              }
+            }
+          })
+          console.log('coverage', isPointInCoverage)
+          coverageStore.setHasCoverageCredits(isPointInCoverage)
+        }
+      },
+      onError: (error) => {
+        console.log(error)
+      },
+    },
+  )
 
   useEffect(() => {
     if (modal.isVisible && addressText.length === 0) {

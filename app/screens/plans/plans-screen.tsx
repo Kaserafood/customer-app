@@ -8,12 +8,14 @@ import { NavigatorParamList, goBack } from "../../navigators"
 import { ScrollView } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
 import { ModalLocation } from "../../components/location/modal-location"
+import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
 import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
 import { useStores } from "../../models"
 import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import { getI18nText } from "../../utils/translate"
 import Banner from "./banner"
 import Benefits from "./benefits"
 import CreditSummary from "./credit-summary"
@@ -21,6 +23,7 @@ import Menu from "./menu"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
+const modalStateCoverageCredits = new ModalStateHandler()
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen({ navigation, route: { params } }) {
@@ -64,7 +67,10 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
           {!plansStore.hasActivePlan ? (
             <>
-              <Banner variant="light"></Banner>
+              <Banner
+                variant="light"
+                onShowModalCoverageCredits={() => modalStateCoverageCredits.setVisible(true)}
+              ></Banner>
               <Benefits></Benefits>
             </>
           ) : (
@@ -83,12 +89,17 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           {!plansStore.hasActivePlan && (
             <>
               <Text
-                tx="mainScreen.priceLunch"
+                text={getI18nText("mainScreen.priceLunch", {
+                  price: plansStore.config.prime.price,
+                })}
                 preset="semiBold"
                 style={[utilSpacing.py5, utilFlex.selfCenter]}
               ></Text>
 
-              <Banner variant="dark"></Banner>
+              <Banner
+                variant="dark"
+                onShowModalCoverageCredits={() => modalStateCoverageCredits.setVisible(true)}
+              ></Banner>
             </>
           )}
         </ScrollView>
@@ -97,6 +108,9 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
           state={modalStateDeliveryDatePlan}
           onSelectDate={setCurrentDate}
         ></ModalDeliveryDatePlan>
+        <ModalWithoutCoverageCredits
+          modalState={modalStateCoverageCredits}
+        ></ModalWithoutCoverageCredits>
       </Screen>
     )
   },

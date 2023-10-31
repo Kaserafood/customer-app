@@ -164,11 +164,11 @@ export const ModalPaymentList = observer(({ stateModal, isPlan }: ModalPaymentLi
           modalState={modalStatePaymentQPayPro}
           onGetCards={() => fetch()}
         ></ModalPaymentCard>
-        <ModalPaymentStripe
-          stateModal={modalStatePaymentStripe}
-          onGetCards={() => fetch()}
-        ></ModalPaymentStripe>
       </Modal>
+      <ModalPaymentStripe
+        stateModal={modalStatePaymentStripe}
+        onGetCards={() => fetch()}
+      ></ModalPaymentStripe>
     </>
   )
 })

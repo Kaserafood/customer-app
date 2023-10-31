@@ -50,9 +50,12 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
     }
 
     const typePlan = (credits: number) => {
-      if (credits > 0 && credits < 20) {
+      if (credits > 0 && credits <= plansStore.config.basic.maxCredits) {
         return "basic"
-      } else if (credits >= 20 && credits < 40) {
+      } else if (
+        credits > plansStore.config.basic.maxCredits &&
+        credits <= plansStore.config.happy.maxCredits
+      ) {
         return "happy"
       }
 
@@ -72,11 +75,17 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
       if (userStore.account?.date) date = new Date(userStore.account?.date)
 
       if (type === "happy") {
-        plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 30), "YYYY-MM-DD"))
+        plansStore.setExpireDate(
+          toFormatDate(addDays(new Date(date), plansStore.config.happy.days), "YYYY-MM-DD"),
+        )
       } else if (type === "prime") {
-        plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 60), "YYYY-MM-DD"))
+        plansStore.setExpireDate(
+          toFormatDate(addDays(new Date(date), plansStore.config.prime.days), "YYYY-MM-DD"),
+        )
       } else if (type === "basic") {
-        plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 7), "YYYY-MM-DD"))
+        plansStore.setExpireDate(
+          toFormatDate(addDays(new Date(date), plansStore.config.basic.days), "YYYY-MM-DD"),
+        )
       }
 
       if (cartStore.inRechargeProcess && !plansStore.hasCredits) {

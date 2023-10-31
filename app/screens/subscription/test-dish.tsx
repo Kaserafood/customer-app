@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
@@ -7,8 +8,9 @@ import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { addDays, toFormatDate } from "../../utils/date"
+import { getI18nText } from "../../utils/translate"
 
-const TestDish = () => {
+const TestDish = observer(() => {
   const { plansStore } = useStores()
   const navigation = useNavigation()
 
@@ -18,7 +20,9 @@ const TestDish = () => {
     plansStore.setPrice(price)
     plansStore.setType(type)
     if (type === "test") {
-      plansStore.setExpireDate(toFormatDate(addDays(new Date(), 2), "YYYY-MM-DD"))
+      plansStore.setExpireDate(
+        toFormatDate(addDays(new Date(), plansStore.config.test.days), "YYYY-MM-DD"),
+      )
     }
   }
   return (
@@ -45,7 +49,7 @@ const TestDish = () => {
         </View>
 
         <Text
-          tx="subscriptionScreen.forOnly"
+          text={getI18nText("subscriptionScreen.forOnly", { price: plansStore.config.test.price })}
           size="lg"
           style={utilSpacing.mt3}
           preset="semiBold"
@@ -54,12 +58,18 @@ const TestDish = () => {
         <Button
           tx="common.select"
           style={[utilSpacing.py3, utilSpacing.px1, utilSpacing.my5, utilSpacing.mr3, styles.btn]}
-          onPress={() => handleSelect(1, 40, "test")}
+          onPress={() =>
+            handleSelect(
+              plansStore.config.test.maxCredits,
+              plansStore.config.test.price * plansStore.config.test.maxCredits,
+              "test",
+            )
+          }
         ></Button>
       </View>
     </Card>
   )
-}
+})
 
 const styles = StyleSheet.create({
   btn: {
