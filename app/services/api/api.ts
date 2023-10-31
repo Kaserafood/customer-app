@@ -456,6 +456,13 @@ export class Api {
   }
 
   /**
+   * @description Get coverage credits
+   */
+  async getCoverageCredits(): Promise<ValueResponse> {
+    return await this.request({}, `/deliveries/coverage-credits`, "GET")
+  }
+
+  /**
    * @description Send report bug to admin
    */
   async reportBug(data: any): Promise<CommonResponse> {

@@ -1,10 +1,27 @@
 import { types } from "mobx-state-tree"
 
 const Config = types.model("Config").props({
-  highPrice: types.number,
-  mediumPrice: types.number,
-  lowPrice: types.number,
-  deliveryPrice: types.number,
+  test: types.model({
+    price: types.number,
+    days: types.number,
+    maxCredits: types.number,
+  }),
+  basic: types.model({
+    price: types.number,
+    days: types.number,
+    maxCredits: types.number,
+  }),
+  happy: types.model({
+    price: types.number,
+    days: types.number,
+    maxCredits: types.number,
+  }),
+  prime: types.model({
+    price: types.number,
+    days: types.number,
+  }),
+  minimumQuantityFreeDelivery: types.number,
+  pricePerDay: types.number,
 })
 
 export const PlansStoreModel = types
@@ -19,10 +36,27 @@ export const PlansStoreModel = types
     state: types.optional(types.string, ""),
     isCustom: types.optional(types.boolean, false),
     config: types.optional(Config, {
-      highPrice: 0,
-      mediumPrice: 0,
-      lowPrice: 0,
-      deliveryPrice: 0,
+      test: {
+        price: 0,
+        days: 0,
+        maxCredits: 0,
+      },
+      basic: {
+        price: 0,
+        days: 0,
+        maxCredits: 0,
+      },
+      happy: {
+        price: 0,
+        days: 0,
+        maxCredits: 0,
+      },
+      prime: {
+        price: 0,
+        days: 0,
+      },
+      minimumQuantityFreeDelivery: 0,
+      pricePerDay: 0,
     }),
   })
   .views((self) => ({
@@ -34,11 +68,14 @@ export const PlansStoreModel = types
     },
     totalPayment: function (credits: number) {
       let priceCredits = 0
-      if (credits > 0 && credits < 20) {
-        return credits * self.config.highPrice
-      } else if (credits >= 20 && credits < 40) {
-        priceCredits = credits * self.config.mediumPrice
-      } else priceCredits = credits * self.config.lowPrice
+      if (credits > 0 && credits <= self.config.basic.maxCredits) {
+        return credits * self.config.basic.price
+      } else if (
+        credits > self.config.basic.maxCredits &&
+        credits <= self.config.happy.maxCredits
+      ) {
+        priceCredits = credits * self.config.happy.price
+      } else priceCredits = credits * self.config.prime.price
 
       return priceCredits
     },

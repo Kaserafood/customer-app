@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
@@ -11,7 +12,7 @@ interface Props {
   onPressDish: (dish: any) => void
 }
 
-const PopularDishes = ({ onPressDish }: Props) => {
+const PopularDishes = observer(({ onPressDish }: Props) => {
   const { dishStore, dayStore, userStore, addressStore } = useStores()
 
   useEffect(() => {
@@ -28,10 +29,6 @@ const PopularDishes = ({ onPressDish }: Props) => {
     dishStore.getAll(params)
   }, [])
 
-  const onChangeDish = (dish: any) => {
-    onPressDish(dish)
-  }
-
   return (
     <View style={[utilSpacing.pl5, utilSpacing.pt5]}>
       <View style={styles.containerTitle}>
@@ -44,13 +41,13 @@ const PopularDishes = ({ onPressDish }: Props) => {
             onPress={() => onPressDish(dish)}
             dish={dish}
             key={dish.id}
-            currencyCode={"GTQ"}
+            currencyCode={userStore.account?.currency}
           ></DishChef>
         ))}
       </ScrollView>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   bar: {

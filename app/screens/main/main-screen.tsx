@@ -6,6 +6,7 @@ import RNUxcam from "react-native-ux-cam"
 import { Icon, Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
+import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
 import ModalDeliveryDatePlan from "../../components/modal-delivery-date/modal-delivery-date-plan"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
@@ -17,23 +18,25 @@ import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Banner } from "../home/banner"
+import { ModalWelcome } from "../home/modal-welcome"
 import BannerMain from "./banner-main"
 import Categories from "./categories"
 import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
 import Lunches from "./lunches"
 import ValuePrepositions from "./value-prepositions"
-import { ModalWelcome } from "../home/modal-welcome"
+import { UNITED_STATES } from "../../utils/constants"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
 const modalStateWhy = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
+const modalStateCoverageCredits = new ModalStateHandler()
 const state = new DataState()
 
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, commonStore, dishStore, plansStore } = useStores()
+    const { cartStore, commonStore, dishStore, plansStore, coverageStore, userStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     const onBannerPress = (banner: BannerModel) => {
@@ -80,6 +83,24 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       })
     }
 
+    const handlePressBanner = () => {
+      if (!coverageStore.hasCoverageCredits) {
+        modalStateCoverageCredits.setVisible(true)
+        return
+      }
+
+      navigation.navigate("subscription")
+    }
+
+    const handleScreenNavigate = (screen: "plans" | "dishes") => {
+      if (!coverageStore.hasCoverageCredits && screen === "plans") {
+        modalStateCoverageCredits.setVisible(true)
+        return
+      }
+
+      navigation.navigate(screen, { showBackIcon: true })
+    }
+
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
@@ -99,12 +120,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView style={styles.container}>
-          {!plansStore.hasActivePlan && <BannerMain></BannerMain>}
+          {!plansStore.hasActivePlan && <BannerMain onPress={handlePressBanner}></BannerMain>}
 
-          <ValuePrepositions
-            screenNavigate={(screen) => navigation.navigate(screen, { showBackIcon: true })}
-          ></ValuePrepositions>
-          {currentDate?.date && (
+          <ValuePrepositions screenNavigate={handleScreenNavigate}></ValuePrepositions>
+          {currentDate?.date && userStore.countryId !== UNITED_STATES && (
             <Lunches
               currentDate={currentDate}
               showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
@@ -125,7 +144,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           </View>
           <Categories onPress={(category) => toCategory(category)}></Categories>
           <Chefs state={state}></Chefs>
-          {!plansStore.hasActivePlan && <BannerMain></BannerMain>}
+          {!plansStore.hasActivePlan && <BannerMain onPress={handlePressBanner}></BannerMain>}
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>
@@ -134,6 +153,9 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           onSelectDate={setCurrentDate}
         ></ModalDeliveryDatePlan>
         <ModalWelcome modalState={modalStateWelcome}></ModalWelcome>
+        <ModalWithoutCoverageCredits
+          modalState={modalStateCoverageCredits}
+        ></ModalWithoutCoverageCredits>
       </Screen>
     )
   },

@@ -6,13 +6,27 @@ import { Button, Image, Text } from "../../components"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
+import { useStores } from "../../models"
 
 interface Props {
   variant: "light" | "dark"
+  onShowModalCoverageCredits: () => void
 }
 
-const Banner = ({ variant }: Props) => {
+const Banner = ({ variant, onShowModalCoverageCredits }: Props) => {
   const navigation = useNavigation()
+
+  const { coverageStore } = useStores()
+
+  const handleNavigate = () => {
+    if (!coverageStore.hasCoverageCredits) {
+      onShowModalCoverageCredits()
+      return
+    }
+
+    navigation.navigate("subscription" as never)
+  }
+
   return (
     <>
       {variant === "light" ? (
@@ -29,7 +43,7 @@ const Banner = ({ variant }: Props) => {
               tx="mainScreen.seeMenuAndPrices"
               block
               style={[utilSpacing.mt6, utilSpacing.px2, utilSpacing.py4]}
-              onPress={() => navigation.navigate("subscription" as never)}
+              onPress={handleNavigate}
             ></Button>
           </View>
 
@@ -56,7 +70,7 @@ const Banner = ({ variant }: Props) => {
               tx="mainScreen.iWantTest"
               block
               style={[utilSpacing.mt6, utilSpacing.px2, utilSpacing.py4]}
-              onPress={() => navigation.navigate("subscription" as never)}
+              onPress={handleNavigate}
             ></Button>
           </View>
 

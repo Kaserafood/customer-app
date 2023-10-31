@@ -1,17 +1,18 @@
 import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
-import React, { useMemo, useState } from "react"
+import React, { useMemo } from "react"
 import { Dimensions, StyleSheet, TouchableOpacity, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import { useQuery } from "react-query"
 import images from "../../assets/images"
-import { Button, Icon, Image, Text } from "../../components"
+import { Button, Icon, Image, Price, Text } from "../../components"
 import { useStores } from "../../models"
 import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
-import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { SHADOW, utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
 import { addDays, toFormatDate } from "../../utils/date"
+import { getI18nText } from "../../utils/translate"
 
 interface Props {
   onShowModalChangePlan: () => void
@@ -25,7 +26,6 @@ const Options = observer(
   ({ onShowModalChangePlan, toCheckout, counterCredits, onCounterCreditsChange }: Props) => {
     const navigation = useNavigation()
     const { plansStore, userStore, cartStore } = useStores()
-    const [counter, setCounter] = useState(0)
 
     const totalAvailable = useMemo(() => {
       return plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)
@@ -78,9 +78,13 @@ const Options = observer(
       if (userStore.account?.date) date = new Date(userStore.account?.date)
 
       if (type === "happy") {
-        plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 30), "YYYY-MM-DD"))
+        plansStore.setExpireDate(
+          toFormatDate(addDays(new Date(date), plansStore.config.happy.days), "YYYY-MM-DD"),
+        )
       } else if (type === "prime") {
-        plansStore.setExpireDate(toFormatDate(addDays(new Date(date), 60), "YYYY-MM-DD"))
+        plansStore.setExpireDate(
+          toFormatDate(addDays(new Date(date), plansStore.config.prime.days), "YYYY-MM-DD"),
+        )
       }
 
       if (cartStore.inRechargeProcess && !plansStore.hasCredits) {
@@ -100,7 +104,12 @@ const Options = observer(
             <View style={[utilFlex.flex, utilFlex.flex1]}>
               <View style={[utilSpacing.p4, utilFlex.flex1]}>
                 <Text tx="subscriptionScreen.happy" preset="bold" size="lg"></Text>
-                <Text tx="subscriptionScreen.happyDescription" preset="semiBold"></Text>
+                <Text
+                  text={getI18nText("subscriptionScreen.quantityDishes", {
+                    quantity: plansStore.config.basic.maxCredits + 1,
+                  })}
+                  preset="semiBold"
+                ></Text>
 
                 <View style={[utilFlex.flexRow, utilSpacing.mt5]}>
                   <Icon name="check-1" size={14} color={color.palette.green}></Icon>
@@ -114,13 +123,34 @@ const Options = observer(
 
                 <View style={[utilFlex.flexRow, utilSpacing.mt3]}>
                   <Icon name="check-1" size={14} color={color.palette.green}></Icon>
-                  <Text style={utilSpacing.ml3} tx="subscriptionScreen.monthForUse"></Text>
+                  <Text
+                    style={utilSpacing.ml3}
+                    text={getI18nText("subscriptionScreen.daysToUse", {
+                      days: plansStore.config.happy.days,
+                    })}
+                  ></Text>
                 </View>
               </View>
 
               <View style={[utilFlex.flexRow, utilFlex.flexCenterHorizontal, utilSpacing.mt5]}>
-                <Text tx="subscriptionScreen.priceHappy" style={utilSpacing.mr2}></Text>
-                <Text preset="bold" tx="subscriptionScreen.priceHappyDishes"></Text>
+                {/* <Text
+                  text={getI18nText("subscriptionScreen.priceHappy", {
+                    price: 
+                  })}
+                  style={utilSpacing.mr2}
+                ></Text> */}
+                <Price
+                  amount={(plansStore.config.basic.maxCredits + 1) * plansStore.config.happy.price}
+                  preset="simple"
+                  textStyle={utilText.regular}
+                ></Price>
+                <Text
+                  preset="bold"
+                  text={getI18nText("subscriptionScreen.priceDishes", {
+                    price: plansStore.config.happy.price,
+                  })}
+                  style={utilSpacing.ml2}
+                ></Text>
               </View>
 
               <Button
@@ -133,7 +163,13 @@ const Options = observer(
                   utilSpacing.my5,
                   isCurrentTypePrime && styles.opacity,
                 ]}
-                onPress={() => handleSelect(20, 900, "happy")}
+                onPress={() =>
+                  handleSelect(
+                    plansStore.config.basic.maxCredits + 1,
+                    (plansStore.config.basic.maxCredits + 1) * plansStore.config.happy.price,
+                    "happy",
+                  )
+                }
               ></Button>
             </View>
           </View>
@@ -144,8 +180,12 @@ const Options = observer(
             <View style={[utilFlex.flex, utilFlex.flex1]}>
               <View style={[utilSpacing.p4, utilFlex.flex1]}>
                 <Text tx="subscriptionScreen.prime" preset="bold" size="lg"></Text>
-                <Text tx="subscriptionScreen.primeDescription" preset="semiBold"></Text>
-
+                <Text
+                  text={getI18nText("subscriptionScreen.quantityDishes", {
+                    quantity: plansStore.config.happy.maxCredits + 1,
+                  })}
+                  preset="semiBold"
+                ></Text>
                 <View style={[utilFlex.flexRow, utilSpacing.mt5]}>
                   <Icon name="check-1" size={14} color={color.palette.green}></Icon>
                   <Text style={utilSpacing.ml3} tx="subscriptionScreen.fourPerDay"></Text>
@@ -158,7 +198,12 @@ const Options = observer(
 
                 <View style={[utilFlex.flexRow, utilSpacing.mt3]}>
                   <Icon name="check-1" size={14} color={color.palette.green}></Icon>
-                  <Text style={utilSpacing.ml3} tx="subscriptionScreen.threeMonthsForUse"></Text>
+                  <Text
+                    style={utilSpacing.ml3}
+                    text={getI18nText("subscriptionScreen.daysToUse", {
+                      days: plansStore.config.prime.days,
+                    })}
+                  ></Text>
                 </View>
 
                 <View style={[utilFlex.flexRow, utilSpacing.mt3]}>
@@ -168,8 +213,18 @@ const Options = observer(
               </View>
 
               <View style={[utilFlex.flexRow, utilFlex.flexCenterHorizontal, utilSpacing.mt5]}>
-                <Text tx="subscriptionScreen.pricePrime" style={utilSpacing.mr2}></Text>
-                <Text preset="bold" tx="subscriptionScreen.pricePrimeDishes"></Text>
+                <Price
+                  amount={(plansStore.config.happy.maxCredits + 1) * plansStore.config.prime.price}
+                  preset="simple"
+                  textStyle={utilText.regular}
+                ></Price>
+                <Text
+                  preset="bold"
+                  text={getI18nText("subscriptionScreen.priceDishes", {
+                    price: plansStore.config.prime.price,
+                  })}
+                  style={utilSpacing.ml2}
+                ></Text>
               </View>
 
               <Button
@@ -182,7 +237,13 @@ const Options = observer(
                   utilSpacing.my5,
                   isCurrentTypeHappy && styles.opacity,
                 ]}
-                onPress={() => handleSelect(40, 1680, "prime")}
+                onPress={() =>
+                  handleSelect(
+                    plansStore.config.happy.maxCredits + 1,
+                    (plansStore.config.happy.maxCredits + 1) * plansStore.config.prime.price,
+                    "prime",
+                  )
+                }
               ></Button>
             </View>
           </View>
@@ -202,18 +263,35 @@ const Options = observer(
                     <Icon name="check-1" size={14} color={color.palette.green}></Icon>
                     <Text
                       style={utilSpacing.ml3}
-                      tx="subscriptionScreen.customPriceDelivery"
+                      text={getI18nText("subscriptionScreen.customPriceDelivery", {
+                        price: plansStore.config.pricePerDay,
+                        minimumQuantity: plansStore.config.minimumQuantityFreeDelivery,
+                      })}
                     ></Text>
                   </View>
 
                   <View style={[utilFlex.flexRow, utilSpacing.mt5]}>
                     <Icon name="check-1" size={14} color={color.palette.green}></Icon>
-                    <Text style={utilSpacing.ml3} tx="subscriptionScreen.sevenDaysToUse"></Text>
+                    <Text
+                      style={utilSpacing.ml3}
+                      text={getI18nText("subscriptionScreen.daysToUse", {
+                        days: plansStore.config.basic.days,
+                      })}
+                    ></Text>
                   </View>
 
                   <View style={[utilFlex.felxColumn, utilFlex.flexCenter, utilSpacing.mt5]}>
-                    <Text preset="bold" tx="subscriptionScreen.priceCustom"></Text>
-                    <Text tx="subscriptionScreen.deliveryPerDay"></Text>
+                    <Text
+                      preset="bold"
+                      text={getI18nText("subscriptionScreen.priceCustom", {
+                        price: plansStore.config.basic.price,
+                      })}
+                    ></Text>
+                    <Text
+                      text={getI18nText("subscriptionScreen.deliveryPerDay", {
+                        price: plansStore.config.pricePerDay,
+                      })}
+                    ></Text>
                   </View>
                 </View>
 

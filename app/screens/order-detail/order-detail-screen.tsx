@@ -1,8 +1,8 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import { Card, Header, Icon, Price, Screen, Separator, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
@@ -48,6 +48,9 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
               <Text tx="orderDetailScreen.paymentMethod" caption preset="semiBold"></Text>
               <Text text={orderStore.orderDetail.paymentMethod} style={utilSpacing.mb4}></Text>
 
+              <Text tx="orderDetailScreen.orderStatus" caption preset="semiBold"></Text>
+              <Text text={orderStore.orderDetail.status} style={utilSpacing.mb4}></Text>
+
               {orderStore.orderDetail.paymentPending > 0 && (
                 <View style={utilFlex.flex}>
                   <Text tx="orderDetailScreen.pending" caption preset="semiBold"></Text>
@@ -58,7 +61,7 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
               )}
             </Card>
 
-            <Card style={[utilSpacing.mb5, utilSpacing.px4, utilSpacing.py6]}>
+            {/* <Card style={[utilSpacing.mb5, utilSpacing.px4, utilSpacing.py6]}>
               <Text tx="orderDetailScreen.orderStatus" caption preset="semiBold"></Text>
               <Text style={utilSpacing.pb5} text={params.status}></Text>
               <StateItem
@@ -77,7 +80,7 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
                 }
                 isHideLine
               ></StateItem>
-            </Card>
+            </Card> */}
 
             <Card style={[utilSpacing.mb5, utilSpacing.px4, utilSpacing.py6]}>
               {orderStore.orderDetail?.products.map((product, index) => (

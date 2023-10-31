@@ -76,6 +76,7 @@ const images = {
   welcome: require("./images/welcome.png"),
   pdf: require("./images/pdf.png"),
   placeholder: require("./images/img-placeholder.jpg"),
+  welcomeUs: require("./images/welcome-us.png"),
 }
 
 export default images

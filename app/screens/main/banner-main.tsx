@@ -1,13 +1,22 @@
 import { useNavigation } from "@react-navigation/native"
+import { observer } from "mobx-react-lite"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
 import { Button, Image, Text } from "../../components"
+import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getI18nText } from "../../utils/translate"
 
-const BannerMain = () => {
-  const navigation = useNavigation()
+interface Props {
+  onPress: () => void
+}
+
+const BannerMain = observer(({ onPress }: Props) => {
+  // const navigation = useNavigation()
+  const { plansStore } = useStores()
+
   return (
     <View style={[utilFlex.flex, utilFlex.flexRow, styles.banner]}>
       <View style={[utilFlex.flex1, utilSpacing.py6, utilSpacing.pl5]}>
@@ -16,13 +25,16 @@ const BannerMain = () => {
         </View>
 
         <Text preset="bold" size="lg" style={utilSpacing.mt3} tx="mainScreen.eatHealthy"></Text>
-        <Text style={utilSpacing.mt4} tx="mainScreen.testDish"></Text>
+        <Text
+          style={utilSpacing.mt4}
+          text={getI18nText("mainScreen.testDish", { price: plansStore.config.test.price })}
+        ></Text>
         <Button
           tx="mainScreen.requestDish"
           block
           textStyle={[utilSpacing.px2]}
           style={[utilSpacing.mt4, utilSpacing.px1, utilSpacing.py3]}
-          onPress={() => navigation.navigate("subscription" as never)}
+          onPress={onPress}
         ></Button>
       </View>
 
@@ -31,7 +43,7 @@ const BannerMain = () => {
       </View>
     </View>
   )
-}
+})
 
 export default BannerMain
 

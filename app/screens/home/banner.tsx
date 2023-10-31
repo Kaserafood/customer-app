@@ -25,7 +25,7 @@ const windowWidth = Dimensions.get("window").width
 export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
 
-  const { bannerStore } = useStores()
+  const { bannerStore, userStore } = useStores()
 
   useEffect(() => {
     ;(async () => {
@@ -63,7 +63,7 @@ export const Banner = observer((props: PropsBanner) => {
           >
             <Image
               style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
-              source={images.welcome}
+              source={userStore.countryId === 1 ? images.welcome : images.welcomeUs}
             ></Image>
             <View style={[styles.containerText, utilFlex.flex1, { justifyContent: "flex-end" }]}>
               <View style={utilSpacing.mb4}>

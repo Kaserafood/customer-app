@@ -19,7 +19,7 @@ import { Api } from "../../services/api"
 import { spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
-import { GUATEMALA } from "../../utils/constants"
+import { GUATEMALA, UNITED_STATES } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { loadString } from "../../utils/storage"
 
@@ -69,8 +69,14 @@ export const RegisterFormScreen: FC<
         .register({ ...data, countryId: userStore.countryId })
         .then(async (userId) => {
           if (userId > 0) {
-            OneSignal.setExternalUserId(userId.toString())
-            RNUxcam.setUserProperty("userId", userId.toString())
+            let id = userId.toString()
+            if (userStore.countryId === UNITED_STATES) {
+              id = `us_${userId}`
+            }
+
+            OneSignal.setExternalUserId(id)
+            OneSignal.setEmail(data.email)
+            RNUxcam.setUserProperty("userId", id)
             await getAccount()
             if (currentUserId === -1) {
               await saveAddress(userId)
