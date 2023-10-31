@@ -101,6 +101,15 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       navigation.navigate(screen, { showBackIcon: true })
     }
 
+    const handleLunchPress = () => {
+      if (!coverageStore.hasCoverageCredits) {
+        modalStateCoverageCredits.setVisible(true)
+        return
+      }
+
+      navigation.navigate("plans", { showBackIcon: true })
+    }
+
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
@@ -127,7 +136,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
             <Lunches
               currentDate={currentDate}
               showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
-              toPlans={() => navigation.navigate("plans", { showBackIcon: true })}
+              toPlans={handleLunchPress}
             ></Lunches>
           )}
 
