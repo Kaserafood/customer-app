@@ -128,11 +128,12 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
               }
             }
           })
-          console.log('coverage', isPointInCoverage)
+          console.log("coverage", isPointInCoverage)
           coverageStore.setHasCoverageCredits(isPointInCoverage)
         }
       },
       onError: (error) => {
+        messagesStore.showError()
         console.log(error)
       },
     },

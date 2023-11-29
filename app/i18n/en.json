@@ -41,7 +41,8 @@
     "summary": "Summary",
     "orders": "Orders",
     "delivered": "Delivered",
-    "totalToInvoiced": "Total to be invoiced"
+    "totalToInvoiced": "Total to be invoiced",
+    "taxAmount": "Tax"
   },
   "initScreen": {
     "homemadeFood": "Homemade Food",

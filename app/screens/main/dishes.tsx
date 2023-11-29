@@ -24,7 +24,7 @@ interface DishResponse {
 
 const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
   const navigation = useNavigation()
-  const { dayStore, userStore, addressStore } = useStores()
+  const { dayStore, userStore, addressStore, messagesStore } = useStores()
   const [data, setData] = useState([])
   const api = new Api()
 
@@ -42,10 +42,10 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
       ),
     {
       onSuccess: (data: DishResponse) => {
-        console.log("getting dat")
         if (data.kind === "ok") setData(data.data?.dishes as DishChef[])
       },
       onError: (error) => {
+        messagesStore.showError()
         console.log(error)
       },
     },

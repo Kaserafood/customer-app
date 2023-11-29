@@ -5,7 +5,6 @@ import React, { FC, useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useMutation, useQuery } from "react-query"
 import {
   ButtonFooter,
@@ -32,7 +31,6 @@ const api = new Api()
 export const OrderChefDetailScreen: FC<
   StackScreenProps<NavigatorParamList, "orderChefDetail">
 > = observer(function OrderChefDetail({ navigation, route: { params } }) {
-  const insets = useSafeAreaInsets()
   const { messagesStore, commonStore } = useStores()
   const [code, setCode] = useState(params.code)
   const [codeCredit, setCodeCredit] = useState("")
@@ -58,6 +56,7 @@ export const OrderChefDetailScreen: FC<
       },
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     },
   )
@@ -87,7 +86,7 @@ export const OrderChefDetailScreen: FC<
     },
   })
 
-  const { mutate: reject } = useMutation(() => api.updateOrderStatus(params.id, "rejected"), {
+  useMutation(() => api.updateOrderStatus(params.id, "rejected"), {
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderRejected", true)
@@ -166,7 +165,7 @@ export const OrderChefDetailScreen: FC<
 
               <Card style={[utilSpacing.m5, utilSpacing.p4]}>
                 <View>
-                  {data.products.map((product, index) => (
+                  {data.products.map((product) => (
                     <View key={product.itemId} style={utilSpacing.mb2}>
                       <Text>
                         <Text preset="bold" text={`X${product.quantity} - `}></Text>
@@ -216,7 +215,7 @@ export const OrderChefDetailScreen: FC<
             <Card style={[utilSpacing.mx5, utilSpacing.p4, utilSpacing.mb5]}>
               <Text size="lg" tx="common.dishes" preset="semiBold" style={utilSpacing.mb3}></Text>
               <View>
-                {data.package?.packages[0].dishes.map((dish, index) => (
+                {data.package?.packages[0].dishes.map((dish) => (
                   <View key={dish.id} style={utilSpacing.mb4}>
                     <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
                       <Icon

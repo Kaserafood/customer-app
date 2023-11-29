@@ -21,7 +21,7 @@ const api = new Api()
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const insets = useSafeAreaInsets()
-  const { userStore, plansStore } = useStores()
+  const { userStore, plansStore, messagesStore } = useStores()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
   }
@@ -37,6 +37,9 @@ export function TabMainNavigation({ navigationRef }) {
 
         plansStore.setPlan(plan)
       },
+      onError: () => {
+        messagesStore.showError()
+      },
     },
   )
 
@@ -46,6 +49,7 @@ export function TabMainNavigation({ navigationRef }) {
     },
     onError: (error) => {
       console.log(error)
+      messagesStore.showError()
     },
   })
 

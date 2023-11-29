@@ -41,7 +41,8 @@
     "summary": "Resumen",
     "orders": "Pedidos",
     "delivered": "Entregado",
-    "totalToInvoiced": "Total a facturar"
+    "totalToInvoiced": "Total a facturar",
+    "taxAmount": "Impuesto"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -789,5 +790,4 @@
     "info": "Lamentablemente, no tenemos cobertura en la ubicación que ingresaste, pero te ofrecemos la opción de paquetes sellados al vacío que podrás recibir los domingos o lunes",
     "whatsAppMessage": "Hola, quiero más información sobre los paquetes sellados al vacío"
   }
-  
 }

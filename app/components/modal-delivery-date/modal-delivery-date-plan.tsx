@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import { useQuery } from "react-query"
+import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalState } from "../../utils/modalState"
@@ -19,6 +20,7 @@ interface Props {
 const ModalDeliveryDatePlan = ({ state, onSelectDate }: Props) => {
   const api = new Api()
   const [currentDate, setCurrentDate] = useState<DatePlan>()
+  const { messagesStore } = useStores()
 
   const { data: dates } = useQuery("dates-plans", () => api.getDatesPlans(), {
     onSuccess: (data) => {
@@ -26,6 +28,7 @@ const ModalDeliveryDatePlan = ({ state, onSelectDate }: Props) => {
     },
     onError: (error) => {
       console.log(error)
+      messagesStore.showError()
     },
   })
 

@@ -26,18 +26,16 @@ import {
 } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
-import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList, goBack } from "../../navigators"
-import { setLocale } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
-import { loadString, saveString } from "../../utils/storage"
+import { loadString } from "../../utils/storage"
 import { ChefItemModel } from "../chefs/chef-item"
 import { Banner } from "./banner"
 import { DataState, ListChef } from "./chef-list"
@@ -174,16 +172,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           userStore.setDisplayName(displayName)
           userStore.setAddressId(Number(addressId))
           userStore.setEmail(email)
-        }
-
-        if (!userStore.countryId) {
-          await saveString("countryId", "1")
-          userStore.setCountryId(1)
-        }
-
-        if (userStore.countryId === 1) {
-          setLocale("es")
-          setLocaleI18n("es")
         }
       }
       setUserStoreData()
@@ -381,7 +369,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           <Banner
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
-             onPressWelcome={() => modalStateWelcome.setVisible(true)}
+            onPressWelcome={() => modalStateWelcome.setVisible(true)}
           ></Banner>
           <View>
             <View

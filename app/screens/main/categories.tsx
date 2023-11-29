@@ -7,6 +7,7 @@ import { useQuery } from "react-query"
 import images from "../../assets/images"
 import { Image } from "../../components/image/image"
 import { Text } from "../../components/text/text"
+import { useStores } from "../../models"
 import { Category } from "../../models/category-store"
 import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
@@ -22,6 +23,7 @@ interface Props {
 const Categories = ({ onPress }: Props) => {
   const api = new Api()
   const navigation = useNavigation()
+  const { messagesStore } = useStores()
 
   const { data } = useQuery("categories-main", () => api.getAllCategories(), {
     onSuccess: (data: { data: Category[]; kind: string }) => {
@@ -29,6 +31,7 @@ const Categories = ({ onPress }: Props) => {
     },
     onError: (error) => {
       console.log(error)
+      messagesStore.showError()
     },
   })
 

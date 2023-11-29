@@ -43,27 +43,28 @@ export const CartStoreModel = types
     cartPlans: types.array(itemCartPlans),
     hasCredits: types.maybe(types.boolean),
     inRechargeProcess: types.maybe(types.boolean),
+    taxPercentage: types.optional(types.number, 0),
   })
   .views((self) => ({
-    get subtotal() {
+    get subtotal(): number {
       return self.cart.reduce((acc, item) => acc + (item.total ?? 0), 0)
     },
-    get hasItems() {
+    get hasItems(): boolean {
       return self.cart.length > 0
     },
-    get hasItemsPlan() {
+    get hasItemsPlan(): boolean {
       return self.cartPlans.length > 0
     },
-    get useCredits() {
+    get useCredits(): number {
       return self.cartPlans.reduce((acc, item) => acc + (item.credits ?? 0), 0)
     },
     exitsItemPlan(id: number, date: string) {
       return self.cartPlans.find((item) => item.id === id && item.date === date)
     },
-    get countQuantityItemsPlan() {
+    get countQuantityItemsPlan(): number {
       return self.cartPlans.reduce((acc, item) => acc + (item.quantity ?? 0), 0)
     },
-    get datesDelivery() {
+    get datesDelivery(): string {
       const dates = []
 
       self.cartPlans.forEach((item) => {
@@ -81,7 +82,7 @@ export const CartStoreModel = types
       creditRecharge: number,
       deliveryPrice: number,
       minimumQuantityFreeDelivery: number,
-    ) => {
+    ): number => {
       if (Number(creditRecharge) === 0) return 0
 
       if (creditRecharge >= minimumQuantityFreeDelivery) {
@@ -102,7 +103,7 @@ export const CartStoreModel = types
       creditRecharge: number,
       deliveryPrice: number,
       minimumQuantityFreeDelivery: number,
-    ) => {
+    ): number => {
       if (Number(creditRecharge) === 0) return 0
 
       if (creditRecharge >= minimumQuantityFreeDelivery) {
@@ -110,6 +111,38 @@ export const CartStoreModel = types
       }
 
       return deliveryPrice
+    },
+  }))
+  .views((self) => ({
+    calculateTaxAmount: (deliveryPrice: number, planPrice?: number): number => {
+      if (self.taxPercentage === 0) return 0
+
+      if (planPrice) {
+        const totalWithoutTax = planPrice + deliveryPrice
+        return (self.taxPercentage * totalWithoutTax) / 100
+      }
+      const totalWithoutTax = self.subtotal + deliveryPrice - self.discount ?? 0
+      return (self.taxPercentage * totalWithoutTax) / 100
+    },
+    calculateTotalForDishes: (deliveryPrice?: number): number => {
+      const totalWithoutTax = self.subtotal + deliveryPrice - self.discount ?? 0
+
+      if (self.taxPercentage > 0) {
+        const taxAmount = (self.taxPercentage * totalWithoutTax) / 100
+        return totalWithoutTax + taxAmount
+      }
+
+      return totalWithoutTax
+    },
+    calculateTotalForPlans: (planPrice: number, deliveryPrice: number): number => {
+      const totalWithoutTax = planPrice + deliveryPrice
+
+      if (self.taxPercentage > 0) {
+        const taxAmount = (self.taxPercentage * totalWithoutTax) / 100
+        return taxAmount + totalWithoutTax
+      }
+
+      return totalWithoutTax
     },
   }))
   .actions((self) => ({
@@ -179,5 +212,8 @@ export const CartStoreModel = types
     },
     setInRechargeProcess(inRechargeProcess: boolean) {
       self.inRechargeProcess = inRechargeProcess
+    },
+    setTaxPercentage(percentage: number) {
+      self.taxPercentage = percentage
     },
   }))

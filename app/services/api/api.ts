@@ -631,4 +631,11 @@ export class Api {
   async uploadInvoice(formData: any): Promise<ValueResponse> {
     return await this.request(formData, `/upload-file`, "POST")
   }
+
+  /**
+   * @description Get tax percentage
+   */
+  async getTaxPercentage(): Promise<ValueResponse> {
+    return await this.request({}, `/params/tax_percentage`, "GET")
+  }
 }
