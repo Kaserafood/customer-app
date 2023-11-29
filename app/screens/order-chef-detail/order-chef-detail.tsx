@@ -251,7 +251,7 @@ export const OrderChefDetailScreen: FC<
             </View>
           )}
 
-          {!!codeCredit && !!data.noteChef && data.noteChef !== "null" && (
+          {!!data.noteChef && data.noteChef !== "null" && (
             <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
               <Text>
                 <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
