@@ -57,7 +57,7 @@ const OrderItem = ({
     },
   })
 
-  const { mutate: reject } = useMutation(() => api.updateOrderStatus(id, "rejected"), {
+  useMutation(() => api.updateOrderStatus(id, "rejected"), {
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderRejected", true)
@@ -135,13 +135,6 @@ const OrderItem = ({
       <View style={[utilFlex.flexRow, utilSpacing.mt5, styles.containerButtons]}>
         {status === "wc-pending-confirmation" && (
           <>
-            {/* <Button
-              preset="primary"
-              style={utilSpacing.mr3}
-              tx="ordersChefScreen.reject"
-              size="sm"
-              onPress={() => handleChangeStatus(reject)}
-            ></Button> */}
             <Button
               tx="ordersChefScreen.confirm"
               size="sm"
@@ -215,19 +208,6 @@ const OrderItem = ({
       </View>
     </Card>
   )
-}
-
-interface PropsStatus {
-  status:
-    | "pending-confirmation"
-    | "confirmed"
-    | "on-route"
-    | "completed"
-    | "invoiced"
-    | "payment-made"
-    | "refunded"
-    | "cancelled"
-    | "rejected"
 }
 
 const styles = StyleSheet.create({

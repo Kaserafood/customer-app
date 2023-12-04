@@ -60,7 +60,7 @@ interface checkoutProps {
   commentToChef?: string
 }
 
-interface orderPrepareDetailProps {
+interface orderDetailProps {
   id: number
   code?: string
 }
@@ -75,6 +75,10 @@ interface dishesProps {
 
 interface plansProps {
   showBackIcon?: boolean
+}
+
+interface orderDriverProps {
+  timestamp: string
 }
 
 export type NavigatorParamList = {
@@ -111,7 +115,10 @@ export type NavigatorParamList = {
   menuSummary: undefined
   checkoutPlan: undefined
   ordersChef: ordersChefProps
-  orderChefDetail: orderPrepareDetailProps
+  orderChefDetail: orderDetailProps
   dishes: dishesProps
   chefInvoice: undefined
+  driverOrders: orderDriverProps
+  driverOrderDetail: orderDetailProps
+  driverOrdersHistory: undefined
 }

@@ -40,6 +40,8 @@ import {
 } from "../screens"
 
 import { ChefInvoiceScreen } from "../screens/chef-invoice/chef-invoice-screen"
+import { DriverOrderDetail } from "../screens/driver-order-detail/driver-order-detail"
+import { DriverOrdersScreen } from "../screens/driver-orders/driver-orders-screen"
 import { FormPlans } from "../screens/form-plans/form-plans-screen"
 import { MenuSummaryScreen } from "../screens/menu-summary/menu-summary-screen"
 import MenuScreen from "../screens/menu/menu-screen"
@@ -49,6 +51,7 @@ import { Subscription } from "../screens/subscription/subscription-screen"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
+import { DriverOrdersHistoryScreen } from "../screens/driver-orders-history/driver-orders-history-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -108,7 +111,6 @@ const AppStack = observer(() => {
         <Stack.Screen name="recoverPasswordToken" component={RecoverPasswordTokenScreen} />
         <Stack.Screen name="newPassword" component={NewPasswordScreen} />
         <Stack.Screen name="loginForm" component={LoginFormScreen} />
-
         <Stack.Screen name="termsConditions" component={TermsConditionsScreen} />
         <Stack.Screen name="privacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="reportBug" component={ReportBugScreen} />
@@ -120,6 +122,9 @@ const AppStack = observer(() => {
         <Stack.Screen name="menuSummary" component={MenuSummaryScreen} />
         <Stack.Screen name="search" component={SearchScreen} />
         <Stack.Screen name="dishes" component={HomeScreen} />
+        <Stack.Screen name="driverOrders" component={DriverOrdersScreen} />
+        <Stack.Screen name="driverOrderDetail" component={DriverOrderDetail} />
+        <Stack.Screen name="driverOrdersHistory" component={DriverOrdersHistoryScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )

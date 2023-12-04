@@ -10,6 +10,7 @@ import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
 
 import { HeaderProps } from "./header.props"
+import { goBack } from "../../navigators"
 
 // static styles
 const ROOT: ViewStyle = {
@@ -46,7 +47,7 @@ const BUTTON: ViewStyle = {
  */
 export function Header(props: HeaderProps) {
   const {
-    onLeftPress,
+    onLeftPress = goBack,
     rightIcon,
     leftIcon,
     headerText,

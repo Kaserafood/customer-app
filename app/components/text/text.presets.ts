@@ -1,4 +1,4 @@
-import { TextStyle } from "react-native"
+import { Platform, TextStyle } from "react-native"
 
 import { color, typography } from "../../theme"
 import { typographySize } from "../../theme/typography"
@@ -10,7 +10,7 @@ const BASE: TextStyle = {
   fontFamily: typography.primary,
   color: color.text,
   fontSize: typographySize.md,
-  marginBottom: -4, // it's necessary to fix the bottom margin of the text
+  marginBottom: Platform.OS === "android" ? -4 : 0, // it's necessary to fix the bottom margin of the text
   // lineHeight: 23,
 }
 

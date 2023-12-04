@@ -26,7 +26,7 @@ export const palette = {
   grayPlaceHolder: "#939AA4",
   gray300: "#EDEDED",
   yellow: "#FFC107",
-  greenBackground: "#eefcf6",
+  greenBackground: "#E8F5E9",
   green200: "#CBE8C7",
   error: "#f44336",
   errorBg: "#ffebee",
@@ -37,4 +37,6 @@ export const palette = {
   pink: "#FDBAB6",
   green600: "#B8D870",
   yellow600: "#F5DA48",
+  redAccent: "#FF8A80",
+  red900: "#D32F2F",
 }

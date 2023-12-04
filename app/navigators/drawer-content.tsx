@@ -5,6 +5,7 @@ import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 
 import { Card, Icon, Text } from "../components"
+import { TxKeyPath } from "../i18n"
 import { useStores } from "../models"
 import { color } from "../theme"
 import { utilFlex, utilSpacing } from "../theme/Util"
@@ -56,6 +57,10 @@ export default function DrawerContent(props) {
     navigation.navigate("ordersChef" as never)
   }
 
+  const navigate = (screen: string) => {
+    navigation.navigate(screen as never)
+  }
+
   return (
     <DrawerContentScrollView {...props}>
       <View
@@ -69,151 +74,77 @@ export default function DrawerContent(props) {
         text={userStore.displayName}
         style={[utilFlex.selfCenter, utilSpacing.px3, utilSpacing.my5, utilSpacing.mb6]}
       ></Text>
+
       {userStore.userId > 0 && (
         <View>
-          <Ripple
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            style={utilSpacing.m3}
-            onPress={toAccount}
-          >
-            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                <Icon
-                  name="circle-user"
-                  style={utilSpacing.mr4}
-                  size={30}
-                  color={color.palette.grayDark}
-                />
-                <Text tx="drawerContent.myAccount" preset="semiBold" size="md"></Text>
-              </View>
-            </Card>
-          </Ripple>
+          <Item onPress={toAccount} icon="circle-user" text="drawerContent.myAccount"></Item>
+
           {userStore.account?.role === "customer" && (
-            <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={order}>
-              <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-                <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                  <Icon
-                    name="pot-food"
-                    style={utilSpacing.mr4}
-                    size={30}
-                    color={color.palette.grayDark}
-                  />
-                  <Text tx="drawerContent.myOrdres" preset="semiBold" size="md"></Text>
-                </View>
-              </Card>
-            </Ripple>
+            <Item onPress={order} icon="pot-food" text="drawerContent.myOrdres"></Item>
           )}
         </View>
       )}
-      <Ripple
-        rippleOpacity={0.2}
-        rippleDuration={400}
-        style={utilSpacing.m3}
-        onPress={toTermsConditions}
-      >
-        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon
-              name="memo-pad"
-              style={utilSpacing.mr4}
-              size={30}
-              color={color.palette.grayDark}
-            />
-            <Text tx="drawerContent.termsConditions" preset="semiBold" size="md"></Text>
-          </View>
-        </Card>
-      </Ripple>
 
-      <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={toReportBug}>
-        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon name="bug" style={utilSpacing.mr4} size={30} color={color.palette.grayDark} />
-            <Text tx="drawerContent.bugReport" preset="semiBold" size="md"></Text>
-          </View>
-        </Card>
-      </Ripple>
+      <Item onPress={toReportBug} icon="bug" text="drawerContent.bugReport"></Item>
 
-      <Ripple
-        rippleOpacity={0.2}
-        rippleDuration={400}
-        style={utilSpacing.m3}
-        onPress={() => handleSupport()}
-      >
-        <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-          <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-            <Icon
-              name="whatsapp"
-              style={utilSpacing.mr4}
-              size={30}
-              color={color.palette.grayDark}
-            />
-            <Text tx="drawerContent.support" preset="semiBold" size="md"></Text>
-          </View>
-        </Card>
-      </Ripple>
+      <Item onPress={handleSupport} icon="whatsapp" text="drawerContent.support"></Item>
 
-      {userStore.account?.role === "chef" && (
-        <Ripple
-          rippleOpacity={0.2}
-          rippleDuration={400}
-          style={utilSpacing.m3}
-          onPress={() => ordersToPrepare()}
-        >
-          <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-              <Icon
-                name="hat-chef"
-                style={utilSpacing.mr4}
-                size={30}
-                color={color.palette.grayDark}
-              />
-              <Text tx="drawerContent.ordersToPrepare" preset="semiBold" size="md"></Text>
-            </View>
-          </Card>
-        </Ripple>
+      {userStore.isChef && (
+        <Item onPress={ordersToPrepare} icon="hat-chef" text="drawerContent.ordersToPrepare"></Item>
       )}
 
-      {userStore.account?.role === "chef" && (
-        <Ripple
-          rippleOpacity={0.2}
-          rippleDuration={400}
-          style={utilSpacing.m3}
-          onPress={() => toUploadInvoice()}
-        >
-          <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-            <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-              <Icon
-                name="clock-rotate-left1"
-                style={utilSpacing.mr4}
-                size={30}
-                color={color.palette.grayDark}
-              />
-              <Text tx="drawerContent.previousOrders" preset="semiBold" size="md"></Text>
-            </View>
-          </Card>
-        </Ripple>
+      {userStore.isChef && (
+        <Item
+          onPress={toUploadInvoice}
+          icon="clock-rotate-left1"
+          text="drawerContent.previousOrders"
+        ></Item>
+      )}
+
+      {userStore.isDriver && (
+        <Item
+          onPress={() => navigate("driverOrders")}
+          icon="moped"
+          text="drawerContent.orderDeliver"
+        ></Item>
+      )}
+
+      {userStore.isDriver && (
+        <Item
+          onPress={() => navigate("driverOrdersHistory")}
+          icon="clock-rotate-left1"
+          text="drawerContent.ordersDelivered"
+        ></Item>
       )}
 
       {
         // Usuario que ha ingresado como "Explora la app"
         userStore.userId === -1 && (
-          <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={toInit}>
-            <Card style={[utilSpacing.px4, utilSpacing.py5]}>
-              <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
-                <Icon
-                  name="user-lock"
-                  style={utilSpacing.mr4}
-                  size={30}
-                  color={color.palette.grayDark}
-                />
-                <Text tx="drawerContent.loginRegister" preset="semiBold" size="md"></Text>
-              </View>
-            </Card>
-          </Ripple>
+          <Item onPress={toInit} icon="user-lock" text="drawerContent.loginRegister"></Item>
         )
       }
+
+      <Item onPress={toTermsConditions} icon="memo-pad" text="drawerContent.termsConditions"></Item>
     </DrawerContentScrollView>
+  )
+}
+
+interface ItemProps {
+  onPress: () => void
+  icon: string
+  text: TxKeyPath
+}
+
+const Item = ({ onPress, icon, text }: ItemProps) => {
+  return (
+    <Ripple rippleOpacity={0.2} rippleDuration={400} style={utilSpacing.m3} onPress={onPress}>
+      <Card style={[utilSpacing.px4, utilSpacing.py5]}>
+        <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
+          <Icon name={icon} style={utilSpacing.mr4} size={30} color={color.palette.grayDark} />
+          <Text tx={text} preset="semiBold" size="md"></Text>
+        </View>
+      </Card>
+    </Ripple>
   )
 }
 
