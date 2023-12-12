@@ -158,6 +158,9 @@ export const AppNavigator = (props: NavigationProps) => {
       ordersChef: {
         path: "orders",
       },
+      driverOrders: {
+        path: "orders-driver",
+      },
     },
   }
 

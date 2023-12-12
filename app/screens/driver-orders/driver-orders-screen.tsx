@@ -46,6 +46,7 @@ export const DriverOrdersScreen: FC<
     onSuccess: (data) => {
       if (data.data?.value) {
         messagesStore.showSuccess("ordersChefScreen.orderConfirmed", true)
+        setSelectedOrders([])
         refetch()
       } else messagesStore.showError("ordersChefScreen.orderConfirmedError", true)
     },
@@ -75,6 +76,16 @@ export const DriverOrdersScreen: FC<
     }
   }
 
+  const filterOrders = (orders) => {
+    return orders
+      .map((item) => {
+        if (item.status === "wc-cancelled") if (!item.driverCanceled) return null
+
+        return item
+      })
+      .filter((item) => item)
+  }
+
   return (
     <Screen style={styles.container} preset="fixed">
       <Header headerTx="driverOrdersScreen.title" leftIcon="back" onLeftPress={goBack} />
@@ -92,18 +103,20 @@ export const DriverOrdersScreen: FC<
               ></Text>
             </View>
 
-            {item.orders.map((order) => (
-              <OrderItem
-                {...order}
-                key={order.id}
-                border={item.isToday}
-                isToday={item.isToday}
-                refetch={refetch}
-                onPress={() => toDetail(order.id, order.code)}
-                onCheck={(selected) => handleCheck(selected, order.id)}
-                isSelected={selectedOrders.some((item) => +item === +order.id)}
-              ></OrderItem>
-            ))}
+            {filterOrders(item.orders)
+              // .filter((item) => item.status !== "wc-cancelled" && !item.driverCanceled)
+              .map((order) => (
+                <OrderItem
+                  {...order}
+                  key={order.id}
+                  border={item.isToday}
+                  isToday={item.isToday}
+                  refetch={refetch}
+                  onPress={() => toDetail(order.id, order.code)}
+                  onCheck={(selected) => handleCheck(selected, order.id)}
+                  isSelected={selectedOrders.some((item) => +item === +order.id)}
+                ></OrderItem>
+              ))}
           </View>
         ))}
 
@@ -120,7 +133,7 @@ export const DriverOrdersScreen: FC<
       </ScrollView>
 
       {selectedOrders.length > 0 && (
-        <ButtonFooter tx="driverOrdersScreen.confirm" onPress={() => confirm}></ButtonFooter>
+        <ButtonFooter tx="driverOrdersScreen.confirm" onPress={() => confirm()}></ButtonFooter>
       )}
     </Screen>
   )

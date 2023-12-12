@@ -20,6 +20,16 @@ const api = new Api()
 const modalFilters = new ModalStateHandler()
 const modalCalendar = new ModalStateHandler()
 
+const filterOrders = (orders) => {
+  return orders
+    .map((item) => {
+      if (item.status === "wc-cancelled") if (!item.driverCanceled) return null
+
+      return item
+    })
+    .filter((item) => item)
+}
+
 export const DriverOrdersHistoryScreen: FC<
   StackScreenProps<NavigatorParamList, "driverOrdersHistory">
 > = observer(function DriverOrdersHistoryScreen({ navigation }) {
@@ -76,8 +86,8 @@ export const DriverOrdersHistoryScreen: FC<
   const getRevenue = useMemo(() => {
     let revenue = 0
     data?.data?.forEach((item) => {
-      item.orders
-        .filter((order) => order.status === "wc-completed" || order.status === "wc-billing")
+      filterOrders(item.orders)
+        // .filter((order) => order.status === "wc-completed" || order.status === "wc-billing")
         .forEach((order) => {
           revenue += +order.driverPayment || 0
         })
@@ -88,7 +98,7 @@ export const DriverOrdersHistoryScreen: FC<
   const countOrders = useMemo(() => {
     let count = 0
     data?.data?.forEach((item) => {
-      count += item.orders.length
+      count += filterOrders(item.orders).length
     })
     return count
   }, [data?.data])
@@ -184,7 +194,7 @@ const ListOrders = ({ data, toDetail }: Props) => {
               ></Text>
             </View>
 
-            {item.orders.map((order) => (
+            {filterOrders(item.orders).map((order) => (
               <OrderItem
                 {...order}
                 key={order.id}
