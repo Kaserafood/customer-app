@@ -86,8 +86,14 @@ export const UserRegisterModel = userRegister
     get isNotSelectedCards() {
       return self.cards.filter((card) => card.selected).length === 0
     },
-    isChef: () => {
-      return self.account.role === "chef"
+    get isChef() {
+      return self.account?.role === "chef"
+    },
+    get isDriver() {
+      return self.account?.role === "driver"
+    },
+    get isCustomer() {
+      return self.account?.role === "customer"
     },
   }))
   .actions((self) => ({

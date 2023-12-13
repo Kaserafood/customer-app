@@ -42,7 +42,15 @@
     "orders": "Pedidos",
     "delivered": "Entregado",
     "totalToInvoiced": "Total a facturar",
-    "taxAmount": "Impuesto"
+    "taxAmount": "Impuesto",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "paymentMethod": "Método de pago",
+    "status": "Estado",
+    "no": "No",
+    "paid": "Pagado",
+    "completed": "Completado"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -406,7 +414,9 @@
     "support": "Soporte",
     "whatsAppMessage": "Hola, tengo un consulta",
     "ordersToPrepare": "Pedidos a preparar",
-    "previousOrders": "Pedidos anteriores"
+    "previousOrders": "Pedidos anteriores",
+    "orderDeliver": "Pedidos a entregar",
+    "ordersDelivered": "Pedidos anteoriores"
   },
   "tabMainNavigation": {
     "home": "Inicio",
@@ -789,5 +799,33 @@
     "title": "Sin cobertura en tu ubicación",
     "info": "Lamentablemente, no tenemos cobertura en la ubicación que ingresaste, pero te ofrecemos la opción de paquetes sellados al vacío que podrás recibir los domingos o lunes",
     "whatsAppMessage": "Hola, quiero más información sobre los paquetes sellados al vacío"
+  },
+  "driverOrdersScreen": {
+    "title": "Pedidos a entregar",
+    "pickUpAddress": "Recoger",
+    "deliveryAddress": "Entregar",
+    "deliveryTime": "Hora entrega",
+    "confirm": "Confirmar de enterado",
+    "noOrders": "No tienes pedidos para entregar",
+    "noDeliver": "No entregado",
+    "delivered": "Entregado"
+  },
+  "driverOrderDetailScreen": {
+    "pickUp": "Recoger",
+    "deliver": "Entregar",
+    "customerNote": "Nota del cliente",
+    "pendingPayment": "Pendiente de cobro",
+    "slideConfirm": "Desliza para completar",
+    "completedOrder": "El pedido ha sido completado",
+    "completedOrderError": "No se ha logrado completar el pedido",
+    "paidByCustomer": "Pagado",
+    "notDeliver": "No entregado",
+    "confirmedOrderError": "No se logrado confirmar el pedido",
+    "confirmedOrder": "Pedido confirmado",
+    "reason": "Escribe el motivo",
+    "reasonRequired": "El motivo es obligatorio",
+    "orderCanceled": "El pedido se ha cancelado",
+    "orderCanceledError": "No se ha logrado cancelar el pedido",
+    "indicateTheReason": "Indica el motivo del porque no se ha entregado"
   }
 }

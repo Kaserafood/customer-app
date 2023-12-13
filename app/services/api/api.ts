@@ -23,6 +23,7 @@ import {
   DatesPlansResponse,
   DayResponse,
   DishResponse,
+  DriverOrders,
   GeneralApiResponse,
   LunchesResponse,
   OrderDetailChef,
@@ -32,6 +33,7 @@ import {
   OrdersChef,
   OrdersChefParams,
   ReservationRequest,
+  ResponseDriverOrderDetail,
   SetupIntentResponse,
   UserLoginResponse,
   ValueResponse,
@@ -637,5 +639,45 @@ export class Api {
    */
   async getTaxPercentage(): Promise<ValueResponse> {
     return await this.request({}, `/params/tax_percentage`, "GET")
+  }
+
+  /**
+   * @description Get order to shipping for drivers
+   */
+
+  async getOrdersDriver(
+    driverId: number,
+    timeZone: string,
+    startDate?: string,
+    endDate?: string,
+    isHistory = false,
+  ): Promise<DriverOrders> {
+    return await this.request(
+      { driverId, timeZone, isHistory, startDate, endDate },
+      `/drivers/orders`,
+      "GET",
+    )
+  }
+
+  /**
+   * @description Driver Confirm order
+   */
+
+  async driverConfirmed(ordersId: number[]): Promise<ValueResponse> {
+    return await this.request({ ordersId }, `/drivers/confirm`, "POST")
+  }
+
+  /**
+   * @description Get order detail for drivers
+   */
+  async getDriverOrderById(orderId: number, timeZone: string): Promise<ResponseDriverOrderDetail> {
+    return await this.request({ timeZone }, `/drivers/orders/${orderId}`, "GET")
+  }
+
+  /**
+   * @description Cancel order by the driver
+   */
+  async driverCancelOrder(orderId: number, userId: number, reason: string): Promise<ValueResponse> {
+    return await this.request({ orderId, userId, reason }, `/drivers/cancel-order`, "POST")
   }
 }
