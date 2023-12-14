@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native"
 import { useQuery } from "react-query"
 import { Button, Card, Chip, Icon, Separator, Text } from "../../components"
 import Lunch from "../../components/lunch/lunch"
+import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -16,6 +17,8 @@ interface Props {
 
 const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
   const api = new Api()
+  const { messagesStore } = useStores()
+
   const { data: lunches } = useQuery(
     ["lunches", currentDate.date],
     () => api.getItemsPlan(currentDate.date, "lunch"),
@@ -23,6 +26,7 @@ const Lunches = ({ currentDate, showModalDates, toPlans }: Props) => {
       enabled: !!currentDate.date,
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     },
   )

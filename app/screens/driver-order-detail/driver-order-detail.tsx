@@ -1,12 +1,14 @@
 import { StackActions } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
+import React, { FC, useEffect, useMemo, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 import { useMutation, useQuery } from "react-query"
+
 import {
+  Button,
   ButtonFooter,
   Card,
   Header,
@@ -24,12 +26,15 @@ import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
+import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
+import ModalNotDeliver from "./modal-not-deliver"
 
 const api = new Api()
+const modalStateNotDeliver = new ModalStateHandler()
 
-export const OrderChefDetailScreen: FC<
-  StackScreenProps<NavigatorParamList, "orderChefDetail">
+export const DriverOrderDetail: FC<
+  StackScreenProps<NavigatorParamList, "driverOrderDetail">
 > = observer(function OrderChefDetail({ navigation, route: { params } }) {
   const { messagesStore, commonStore } = useStores()
   const [code, setCode] = useState(params.code)
@@ -37,7 +42,7 @@ export const OrderChefDetailScreen: FC<
 
   const { data: order, isLoading } = useQuery(
     ["order-detail", params.id],
-    () => api.getOrderChefById(params.id, RNLocalize.getTimeZone()),
+    () => api.getDriverOrderById(params.id, RNLocalize.getTimeZone()),
     {
       enabled: !!params.id,
       onSuccess(data) {
@@ -65,41 +70,42 @@ export const OrderChefDetailScreen: FC<
     commonStore.setVisibleLoading(isLoading)
   }, [isLoading])
 
-  const { mutate: confirm } = useMutation(() => api.updateOrderStatus(params.id, "wc-confirmed"), {
+  const { mutate: confirm } = useMutation(() => api.driverConfirmed([params.id]), {
     onSuccess: (data) => {
       if (data.data?.value) {
-        messagesStore.showSuccess("ordersChefScreen.orderConfirmed", true)
+        messagesStore.showSuccess("driverOrderDetailScreen.confirmedOrder", true)
 
         navigation.dispatch(
-          StackActions.replace("ordersChef", {
+          StackActions.replace("driverOrders", {
             timestamp: new Date().getTime(),
           }),
         )
-      } else messagesStore.showError("ordersChefScreen.orderConfirmedError", true)
+      } else messagesStore.showError("ordersChefScreen.confirmedOrderError", true)
     },
 
     onError: () => {
-      messagesStore.showError("ordersChefScreen.orderConfirmedError", true)
+      messagesStore.showError("ordersChefScreen.confirmedOrderError", true)
     },
     onSettled: () => {
       commonStore.setVisibleLoading(false)
     },
   })
 
-  useMutation(() => api.updateOrderStatus(params.id, "rejected"), {
+  const { mutate: complete } = useMutation(() => api.updateOrderStatus(params.id, "wc-completed"), {
     onSuccess: (data) => {
       if (data.data?.value) {
-        messagesStore.showSuccess("ordersChefScreen.orderRejected", true)
+        messagesStore.showSuccess("driverOrderDetailScreen.completedOrder", true)
+
         navigation.dispatch(
-          StackActions.replace("ordersChef", {
+          StackActions.replace("driverOrders", {
             timestamp: new Date().getTime(),
           }),
         )
-      } else messagesStore.showError("ordersChefScreen.orderRejectedError", true)
+      } else messagesStore.showError("driverOrderDetailScreen.completedOrderError", true)
     },
 
     onError: () => {
-      messagesStore.showError("ordersChefScreen.orderRejectedError", true)
+      messagesStore.showError("driverOrderDetailScreen.completedOrderError", true)
     },
     onSettled: () => {
       commonStore.setVisibleLoading(false)
@@ -111,7 +117,22 @@ export const OrderChefDetailScreen: FC<
     callback()
   }
 
+  const handleOnCancel = () => {
+    navigation.navigate("driverOrders", { timestamp: new Date().getTime().toString() })
+  }
+
   const { data } = order || {}
+
+  const showButtonComplete = useMemo(
+    () =>
+      !!data &&
+      data.isToday &&
+      data.driverConfirmed &&
+      data.status !== "wc-completed" &&
+      data.status !== "wc-billing" &&
+      !data.driverCanceled,
+    [data],
+  )
 
   return (
     <Screen preset="fixed">
@@ -137,77 +158,123 @@ export const OrderChefDetailScreen: FC<
             </Text>
           </View>
 
-          {!!code && (
-            <View
-              style={[
-                styles.tag,
-                utilSpacing.px5,
-                utilSpacing.py2,
-                utilSpacing.mt4,
-                utilSpacing.ml5,
-              ]}
-            >
-              <Text
-                tx="orderChefDetail.vacuumPacked"
-                preset="semiBold"
-                size="lg"
-                style={styles.amber}
-              ></Text>
+          <View>
+            <View style={[utilSpacing.mx5, utilSpacing.mt3]}>
+              <Separator style={utilSpacing.my3}></Separator>
             </View>
-          )}
 
-          {!codeCredit && (
-            <View>
-              <View style={[utilSpacing.mx5, utilSpacing.mt3]}>
-                <Separator style={utilSpacing.my3}></Separator>
-                <Text preset="semiBold" text={translate("orderChefDetail.orderSummary")}></Text>
-              </View>
+            <Text
+              preset="semiBold"
+              style={[utilSpacing.px5, utilSpacing.mt3]}
+              tx="driverOrderDetailScreen.pickUp"
+            ></Text>
 
-              <Card style={[utilSpacing.m5, utilSpacing.p4]}>
-                <View>
-                  {data.products.map((product) => (
-                    <View key={product.itemId} style={utilSpacing.mb2}>
-                      <Text>
-                        <Text preset="bold" text={`X${product.quantity} - `}></Text>
-                        <Text text={product.name}></Text>
-                      </Text>
-                    </View>
-                  ))}
-                </View>
-              </Card>
+            <Card style={[utilSpacing.mx5, utilSpacing.my4, utilSpacing.p4]}>
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.address"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.chefAddress}></Text>
+              </Text>
 
-              {!!code && !!data.noteChef && (
-                <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
-                  <Text>
-                    <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
-                    <Text text=": "></Text>
-                    <Text text={data.noteChef}></Text>
-                  </Text>
-                </Card>
-              )}
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.phone"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.chefPhone}></Text>
+              </Text>
 
-              <Card style={[utilSpacing.mx5, utilSpacing.p4]}>
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.name"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.chefName}></Text>
+              </Text>
+            </Card>
+
+            <Text
+              preset="semiBold"
+              style={[utilSpacing.px5, utilSpacing.mt3]}
+              tx="driverOrderDetailScreen.deliver"
+            ></Text>
+
+            <Card style={[utilSpacing.mx5, utilSpacing.my4, utilSpacing.p4]}>
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.address"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.customerAddress}></Text>
+              </Text>
+
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.phone"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.customerPhone}></Text>
+              </Text>
+
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.name"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.customerName}></Text>
+              </Text>
+
+              {!!data.customerNote && (
                 <Text style={utilSpacing.mb2}>
-                  <Text preset="semiBold" tx="orderChefDetail.amountInvoice"></Text>
+                  <Text preset="semiBold" tx="driverOrderDetailScreen.customerNote"></Text>
+                  <Text text=": " preset="semiBold"></Text>
+                  <Text text={data.customerNote}></Text>
+                </Text>
+              )}
+            </Card>
+
+            <Card style={[utilSpacing.my2, utilSpacing.mx5, utilSpacing.p4]}>
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="orderChefDetail.revenue"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Price
+                  amount={data.driverPayment}
+                  preset="simple"
+                  textStyle={utilText.regular}
+                ></Price>
+              </Text>
+
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.paymentMethod"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.paymentMethod}></Text>
+              </Text>
+
+              <Text style={[utilSpacing.mb2, utilFlex.flexRow]}>
+                <Text preset="semiBold" tx="driverOrderDetailScreen.paidByCustomer"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                {data.paidByCustomer ? (
+                  <Text tx="common.yes" style={utilSpacing.mr2}></Text>
+                ) : (
+                  <Text tx="common.no" style={utilSpacing.mr3}></Text>
+                )}
+              </Text>
+
+              <Text style={utilSpacing.mb2}>
+                <Text preset="semiBold" tx="common.status"></Text>
+                <Text preset="semiBold" text=": "></Text>
+                <Text text={data.statusName}></Text>
+              </Text>
+
+              {!!data.driverCash && (
+                <Text style={[utilSpacing.mb2, utilSpacing.p3, styles.bgBlue]}>
+                  <Text preset="semiBold" tx="driverOrderDetailScreen.pendingPayment"></Text>
+                  <Text text=": " preset="semiBold"></Text>
                   <Price
-                    amount={data.totalInvoice}
                     preset="simple"
-                    textStyle={utilText.regular}
+                    textStyle={[utilText.semiBold]}
+                    amount={data.driverCash}
                   ></Price>
                 </Text>
-                <Text>
-                  <Text preset="bold" style={utilFlex.flex1} tx="orderChefDetail.tax"></Text>
-                  <Text text={`${data.tax}`}></Text>
-                </Text>
-              </Card>
-            </View>
-          )}
+              )}
+            </Card>
+          </View>
 
           <Separator style={[utilSpacing.mx5, utilSpacing.my6]}></Separator>
 
           <Text
             preset="semiBold"
-            text={translate("orderChefDetail.detailedOrder")}
+            text={translate("common.dishes")}
             style={[utilSpacing.mx5, utilSpacing.mb4]}
           ></Text>
 
@@ -251,50 +318,38 @@ export const OrderChefDetailScreen: FC<
             </View>
           )}
 
-          {!!data.noteChef && data.noteChef !== "null" && (
-            <Card style={[utilSpacing.mx5, utilSpacing.mb5, utilSpacing.p4]}>
-              <Text>
-                <Text preset="semiBold" tx="orderChefDetail.noteChef"></Text>
-                <Text text=": "></Text>
-                <Text text={data.noteChef}></Text>
-              </Text>
-            </Card>
+          {showButtonComplete && (
+            <Button
+              preset="gray"
+              style={[utilFlex.selfCenter, utilSpacing.my4]}
+              tx="driverOrderDetailScreen.notDeliver"
+              iconLeft={<Icon name="circle-xmark" color={palette.black}></Icon>}
+              onPress={() => modalStateNotDeliver.setVisible(true)}
+            ></Button>
           )}
-
-          <Card style={[utilSpacing.my2, utilSpacing.mx5, utilSpacing.p4]}>
-            <View style={utilFlex.flexRow}>
-              <Text preset="semiBold" tx="orderChefDetail.revenue"></Text>
-              <Price amount={data.revenue} preset="simple" textStyle={utilText.regular}></Price>
-
-              {!code && (
-                <>
-                  <Text text={` ( ${data.products.length} `}></Text>
-                  <Text
-                    tx={
-                      data.products.length === 1
-                        ? "orderChefDetail.article"
-                        : "orderChefDetail.articles"
-                    }
-                  ></Text>
-                  <Text text=" )"></Text>
-                </>
-              )}
-            </View>
-          </Card>
-
-          <Text
-            caption
-            text={getI18nText("orderChefDetail.orderMade", { date: data.createdDate })}
-            style={[utilSpacing.p5, utilSpacing.pb7]}
-          ></Text>
         </ScrollView>
       )}
-
-      {data?.status === "wc-pending-confirmation" && (
+      {showButtonComplete && (
         <ButtonFooter
-          tx="ordersChefScreen.confirm"
+          tx="driverOrderDetailScreen.slideConfirm"
+          onPress={() => handleChangeStatus(complete)}
+          slideToAction
+        ></ButtonFooter>
+      )}
+
+      {!!data && !data.driverConfirmed && (
+        <ButtonFooter
+          tx="common.confirm"
           onPress={() => handleChangeStatus(confirm)}
         ></ButtonFooter>
+      )}
+
+      {data?.id && (
+        <ModalNotDeliver
+          modalState={modalStateNotDeliver}
+          orderId={data.id}
+          onCancel={handleOnCancel}
+        ></ModalNotDeliver>
       )}
     </Screen>
   )
@@ -320,7 +375,6 @@ const Product = ({
   addons,
   quantity,
   image,
-  noteChef,
   showPrice = true,
   description,
 }: ProductProps) => {
@@ -361,26 +415,23 @@ const Product = ({
           ))}
         </>
       )}
-
-      {!!noteChef && noteChef !== "null" && (
-        <>
-          <Text preset="semiBold" tx="orderChefDetail.noteChef" style={utilSpacing.pt4}></Text>
-          <Text text={noteChef}></Text>
-        </>
-      )}
     </Card>
   )
 }
 
 const styles = StyleSheet.create({
-  amber: {
-    color: palette.blue,
+  bgBlue: {
+    backgroundColor: palette.amber50,
+    borderColor: palette.amber600,
+    borderRadius: spacing[2],
+    borderWidth: 1,
   },
   comment: {
     backgroundColor: palette.whiteGray,
     borderRadius: spacing[2],
     width: "auto",
   },
+
   container: {
     backgroundColor: palette.whiteGray,
   },
@@ -389,12 +440,8 @@ const styles = StyleSheet.create({
     height: 100,
     width: 140,
   },
+
   price: {
     alignSelf: "flex-start",
-  },
-  tag: {
-    alignSelf: "flex-start",
-    backgroundColor: palette.blueBg,
-    borderRadius: 8,
   },
 })

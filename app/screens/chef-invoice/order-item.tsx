@@ -107,14 +107,16 @@ const OrderItem = ({
       </View>
 
       <View style={[utilFlex.flexRow, utilSpacing.mt5, styles.containerButtons]}>
-        {status !== "wc-cancelled" && status !== "wc-billing" && (
-          <Button
-            tx="chefInvoiceScreen.uploadInvoice"
-            size="sm"
-            style={styles.bgAmber}
-            onPress={onUpload}
-          ></Button>
-        )}
+        {status !== "wc-cancelled" &&
+          status !== "wc-billing" &&
+          !userStore.account?.isGeneralRegime && (
+            <Button
+              tx="chefInvoiceScreen.uploadInvoice"
+              size="sm"
+              style={styles.bgAmber}
+              onPress={onUpload}
+            ></Button>
+          )}
 
         {status === "wc-cancelled" && (
           <View style={[styles.status, styles.bgError, utilSpacing.px5, utilSpacing.py2]}>

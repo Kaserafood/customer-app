@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import { useQuery } from "react-query"
 import { Text } from "../../components"
+import { useStores } from "../../models"
 import { Api, DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
@@ -14,6 +15,7 @@ interface Props {
 const Days = ({ onDateChange }: Props) => {
   const api = new Api()
   const [selectedDate, setSelectedDate] = useState("")
+  const { messagesStore } = useStores()
 
   const { data: days } = useQuery("dates-plans", () => api.getDatesPlans(), {
     onSuccess: (data) => {
@@ -21,6 +23,7 @@ const Days = ({ onDateChange }: Props) => {
     },
     onError: (error) => {
       console.log(error)
+      messagesStore.showError()
     },
   })
 

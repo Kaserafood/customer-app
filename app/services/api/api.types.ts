@@ -264,3 +264,76 @@ export interface OrdersChefParams {
   endDate?: string
   typeOrder?: string[]
 }
+
+interface DriverOrderResponse {
+  date: string
+  dateName: string
+  orders: DriverOrder[]
+  isToday?: boolean
+  isTomorrow?: boolean
+}
+
+interface DriverOrder {
+  id: number
+  code: string
+  codeCredit: string
+  status: string
+  customerName: string
+  customerAddress: string
+  customerCity: string
+  deliveryTime: string
+  deliveryDate: string
+  quantityItems: number
+  customerPhone: string
+  driverPayment: number
+  driverPaid: boolean
+  pickUpAddress: string
+  driverConfirmed: boolean
+  driverCanceled: boolean
+}
+
+export type DriverOrders = {
+  data: DriverOrderResponse[]
+} & kind
+
+interface DriverOrderDetails {
+  id: number
+  code?: string
+  codeCredit?: string
+  status: string
+  deliveryTime: string
+  deliveryDate: string
+  statusName: string
+  driverPayment: number
+  driverConfirmed: boolean
+  customerAddress: string
+  customerName: string
+  customerPhone: string
+  chefAddress: string
+  chefPhone: string
+  chefName: string
+  products: Product[]
+  customerNote: string
+  driverCash: number
+  deliveryNote: string
+  isToday: string
+  paymentMethod: string
+  paidByCustomer: boolean
+  driverCanceled: boolean
+  package?: {
+    packages: {
+      dishes: {
+        id: number
+        name: string
+        accompaniments: string
+        quantity: number
+        comment: string
+        price: number
+      }[]
+    }[]
+  }
+}
+
+export type ResponseDriverOrderDetail = {
+  data: DriverOrderDetails
+} & kind

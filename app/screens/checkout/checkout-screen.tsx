@@ -53,8 +53,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
   ({ navigation, route: { params } }) => {
     const { ...methods } = useForm({ mode: "onBlur" })
     const api = new Api()
-
-    const [subscription, setSubscription] = useState(false)
     const isPlan = params?.isPlan
     const {
       addressStore,
@@ -201,7 +199,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   plansStore.config.minimumQuantityFreeDelivery,
                 ),
         }
-        console.log(data)
         createOrderPlan(orderPlan)
       } else {
         createOrderDish(data)
@@ -263,7 +260,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         .add(order)
         .then(async (res) => {
           commonStore.setVisibleLoading(false)
-          __DEV__ && console.log("Code order reponse", res)
+          __DEV__ && console.log("Code order response", res)
 
           if (!res) {
             messagesStore.showError("checkoutScreen.errorOrder", true)
@@ -367,6 +364,12 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         value: getVersion(),
       })
 
+      if (cartStore.taxPercentage > 0)
+        data.push({
+          key: "_tax_amount",
+          value: `${cartStore.calculateTaxAmount(priceDelivery(), plansStore.price)}`,
+        })
+
       return data
     }
 
@@ -377,19 +380,29 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const getTextButtonFooter = (): string => {
+      let text: string
+      const total = getCurrentTotal()
+
       if (isPlan) {
-        return `${getI18nText("checkoutScreen.pay")} ${`${userStore.account?.currency} ${
-          plansStore.price + priceDelivery()
-        }`}`
+        text = `${getI18nText("checkoutScreen.pay")} ${userStore.account?.currency} ${total}`
+      } else {
+        const paymentMethodText = getPaymentMethodId()
+          ? "checkoutScreen.pay"
+          : "checkoutScreen.makeOrder"
+
+        text = `${getI18nText(paymentMethodText)} ${getFormat(total, getCurrency())}`
       }
-      const text = getI18nText(
-        getPaymentMethodId() ? "checkoutScreen.pay" : "checkoutScreen.makeOrder",
-      )
-      return `${text} ${getFormat(getCurrentTotal(), getCurrency())}`
+
+      return text
     }
 
     const getCurrentTotal = (): number => {
-      return cartStore.subtotal + priceDelivery() - (cartStore.discount ?? 0)
+      const tax = cartStore.calculateTaxAmount(priceDelivery(), plansStore.price)
+
+      if (isPlan) {
+        return plansStore.price + priceDelivery() + tax
+      }
+      return cartStore.subtotal + priceDelivery() + tax - (cartStore.discount ?? 0)
     }
 
     const getCurrency = (): string => {
@@ -496,40 +509,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               openPaymentList={() => modalStatePaymentList.setVisible(true)}
               isPlan={isPlan}
             ></SelectPaymentMethod>
-
-            {/* {isPlan && !!userStore?.currentCard?.id && (
-              <Card
-                style={[styles.paymentAutomatic, utilSpacing.mb4, utilSpacing.p0, utilSpacing.mx4]}
-              >
-                <Ripple
-                  style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.p3]}
-                  onPress={() => setSubscription(!subscription)}
-                >
-                  <View>
-                    <Checkbox
-                      rounded
-                      value={subscription}
-                      preset="default"
-                      onToggle={setSubscription}
-                    ></Checkbox>
-                  </View>
-
-                  <View style={utilFlex.flex1}>
-                    <Text
-                      tx="checkoutScreen.paymentAutomatic"
-                      preset="semiBold"
-                      size="md"
-                      style={utilSpacing.mb1}
-                    ></Text>
-                    <Text>
-                      <Text tx="checkoutScreen.paymentAutomaticDescription.part1"></Text>
-                      <Text text="18 de agosto" preset="semiBold"></Text>
-                      <Text tx="checkoutScreen.paymentAutomaticDescription.part2"></Text>
-                    </Text>
-                  </View>
-                </Ripple>
-              </Card>
-            )} */}
 
             <InputText
               name="taxId"

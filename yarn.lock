@@ -13445,6 +13445,11 @@ react-native-bootsplash@^4.1.5:
     jimp "^0.16.1"
     picocolors "^1.0.0"
 
+react-native-bouncy-checkbox@^3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/react-native-bouncy-checkbox/-/react-native-bouncy-checkbox-3.0.7.tgz#011aef92b4fbde2a1f223165626c56a9ffe637fb"
+  integrity sha512-776TgMGt9wTpOQA1TcvFjL5VUn6o945wFYf3Ztqva62/vT2o3JAezLiP7hYh2Svd+PewfWBYSPMs4jeaSoS8Sg==
+
 react-native-calendars@^1.1284.0:
   version "1.1288.1"
   resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1288.1.tgz#5dc0017b1845d3f07b3f061c5d5231bc204026b9"
@@ -14323,6 +14328,11 @@ rn-host-detect@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rn-host-detect/-/rn-host-detect-1.2.0.tgz#8b0396fc05631ec60c1cb8789e5070cdb04d0da0"
   integrity sha512-btNg5kzHcjZZ7t7mvvV/4wNJ9e3MPgrWivkRgWURzXL0JJ0pwWlU4zrbmdlz3HHzHOxhBhHB4D+/dbMFfu4/4A==
+
+rn-slide-button@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/rn-slide-button/-/rn-slide-button-1.0.3.tgz#2573cb4e1f9645543b5dc6bfe4d5b473aa419eea"
+  integrity sha512-quzZNfvNkJ3rTPCTiz5WOezkJoErP3bTiyofOFf4lrpNWPpL2Dt1mXPzxzUC8hYHNl6BQaYuF5VLGL5SIod5Cw==
 
 rsvp@^4.8.4:
   version "4.8.5"

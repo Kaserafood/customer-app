@@ -14,7 +14,7 @@ interface Props {
 
 const SnacksDrinks = observer(({ currentDate }: Props) => {
   const api = new Api()
-  const { cartStore } = useStores()
+  const { cartStore, messagesStore } = useStores()
   const { date, dateNameLong, dateNameShort } = currentDate
 
   const { data: snacksDrinks } = useQuery(
@@ -24,6 +24,7 @@ const SnacksDrinks = observer(({ currentDate }: Props) => {
       enabled: !!date,
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     },
   )

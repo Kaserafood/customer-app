@@ -16,7 +16,7 @@ interface Props {
 
 const Menu = ({ currentDate, showModalDates }: Props) => {
   const navigation = useNavigation()
-  const { userStore, plansStore } = useStores()
+  const { userStore, plansStore, messagesStore } = useStores()
   const api = new Api()
 
   const { data: lunches } = useQuery(
@@ -26,6 +26,7 @@ const Menu = ({ currentDate, showModalDates }: Props) => {
       enabled: !!currentDate.date,
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     },
   )

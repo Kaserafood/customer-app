@@ -18,7 +18,7 @@ interface Props {
 
 const GroupType = observer(({ currentDate, type, title }: Props) => {
   const api = new Api()
-  const { cartStore, plansStore } = useStores()
+  const { cartStore, plansStore, messagesStore } = useStores()
   const { date, dateNameLong, dateNameShort } = currentDate
 
   const data =
@@ -26,6 +26,7 @@ const GroupType = observer(({ currentDate, type, title }: Props) => {
       enabled: !!date,
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     }).data?.data?.slice(0, plansStore.type === "prime" ? 3 : 2) ?? []
 

@@ -25,7 +25,7 @@ const windowWidth = Dimensions.get("window").width
 const Options = observer(
   ({ onShowModalChangePlan, toCheckout, counterCredits, onCounterCreditsChange }: Props) => {
     const navigation = useNavigation()
-    const { plansStore, userStore, cartStore } = useStores()
+    const { plansStore, userStore, cartStore, messagesStore } = useStores()
 
     const totalAvailable = useMemo(() => {
       return plansStore.totalCredits - (cartStore.useCredits + plansStore.consumedCredits)
@@ -37,6 +37,7 @@ const Options = observer(
       },
       onError: (error) => {
         console.log(error)
+        messagesStore.showError()
       },
     })
 
