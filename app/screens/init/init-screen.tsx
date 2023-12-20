@@ -17,9 +17,11 @@ import { setCountryId, setLocale } from "../../services/api"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalCountry } from "./modal-country"
 
+const mixpanel = getInstanceMixpanel()
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
@@ -39,6 +41,8 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       OneSignal.setExternalUserId("-1")
       RNUxcam.setUserProperty("exploreTheApp", "true")
       RNUxcam.logEvent("exploreTheApp")
+      mixpanel.track("Explore The App")
+
       commonStore.setIsSignedIn(true)
     }
 
@@ -68,9 +72,9 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }, [modalCountry.isVisible])
 
     useLayoutEffect(() => {
-      __DEV__ && console.log("in init screen")
       changeNavigationBarColor(color.primary, false, true)
       RNUxcam.tagScreenName("init")
+      mixpanel.track("Init Screen")
     }, [])
 
     return (

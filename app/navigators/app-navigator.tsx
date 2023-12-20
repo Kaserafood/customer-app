@@ -161,6 +161,9 @@ export const AppNavigator = (props: NavigationProps) => {
       driverOrders: {
         path: "orders-driver",
       },
+      checkout: {
+        path: "checkout",
+      },
     },
   }
 

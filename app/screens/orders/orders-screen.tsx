@@ -13,6 +13,9 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing, typography } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
+
+const mixpanel = getInstanceMixpanel()
 
 export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = observer(
   function OrdersScreen({ navigation }) {
@@ -26,6 +29,7 @@ export const OrdersScreen: FC<StackScreenProps<NavigatorParamList, "orders">> = 
           .finally(() => commonStore.setVisibleLoading(false))
       }
       fetchOrders()
+      mixpanel.track("Orders screen")
     }, [])
 
     const [selectedIndex, setSelectedIndex] = useState(0)

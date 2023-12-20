@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
@@ -13,8 +13,10 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { clear } from "../../utils/storage"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalState = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> = observer(
   function AccountScreen({ navigation }) {
     const {
@@ -25,6 +27,10 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
       messagesStore,
       plansStore,
     } = useStores()
+
+    useEffect(() => {
+      mixpanel.track("User Account Screen")
+    }, [])
 
     const closeSession = async () => {
       await clear()

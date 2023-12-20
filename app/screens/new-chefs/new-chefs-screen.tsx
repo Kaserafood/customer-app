@@ -1,9 +1,10 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect } from "react"
 import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
+import RNUxcam from "react-native-ux-cam"
 import { ScreenType, useChef } from "../../common/hooks/useChef"
 import { Header, Screen } from "../../components"
 import { useStores } from "../../models"
@@ -11,18 +12,18 @@ import { Dish } from "../../models/dish"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ChefItemModel } from "../chefs/chef-item"
 import { DataState, ListChef } from "../chefs/chef-list"
-import RNUxcam from "react-native-ux-cam"
 
 const state = new DataState()
+const mixpanel = getInstanceMixpanel()
 export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">> = observer(
   function NewChefsScreen({ navigation }) {
     const { dayStore, dishStore, commonStore, messagesStore, addressStore } = useStores()
     const { formatDishesGroupedByChef } = useChef()
 
     useEffect(() => {
-      __DEV__ && console.log("new chefs useEffect")
       commonStore.setVisibleLoading(true)
       RNUxcam.tagScreenName("newChefs")
       async function fetch() {
@@ -48,6 +49,7 @@ export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">
       }
 
       fetch()
+      mixpanel.track("New chefs screen")
     }, [])
 
     const toScreen = (screen: ScreenType, dish: Dish, userChef: ChefItemModel) => {
@@ -56,7 +58,7 @@ export const NewChefsScreen: FC<StackScreenProps<NavigatorParamList, "newChefs">
        */
       commonStore.setCurrentChefId(0)
       dishStore.clearDishesChef()
-      console.log("toScreen", userChef)
+      mixpanel.track("To menu chef from New chefs screen")
       const chef = {
         ...userChef,
       }

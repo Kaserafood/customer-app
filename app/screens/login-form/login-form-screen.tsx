@@ -19,10 +19,13 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { UNITED_STATES } from "../../utils/constants"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
   screens: [],
 }
+
+const mixpanel = getInstanceMixpanel()
 export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm">> = observer(
   ({ navigation, route: { params } }) => {
     const { commonStore, userStore, messagesStore } = useStores()
@@ -33,6 +36,7 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
         methods.setValue("password", "asdfg")
       }
       RNUxcam.applyOcclusion(hideTextFields)
+      mixpanel.track("Login Screen")
     }, [])
 
     useEffect(
@@ -77,13 +81,21 @@ export const LoginFormScreen: FC<StackScreenProps<NavigatorParamList, "loginForm
             })
             AppEventsLogger.setUserID(userId)
             RNUxcam.setUserProperty("userId", userId)
+            RNUxcam.setUserIdentity(userId)
+            mixpanel.identify(userId)
 
             if (currentUserId === -1) {
               RNUxcam.logEvent("login", {
                 exploreApp: true,
               })
+              mixpanel.track("Login Completed", {
+                exploreApp: true,
+              })
             } else {
               RNUxcam.logEvent("login", {
+                exploreApp: false,
+              })
+              mixpanel.track("Login Completed", {
                 exploreApp: false,
               })
             }

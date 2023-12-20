@@ -23,12 +23,14 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 interface ModalSearchProps {
   modalState: ModalStateHandler
   onDishPress: (dish: DishChef) => void
 }
 const modalStateRequestDish = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchProps) => {
   const { dishStore, dayStore, messagesStore, addressStore } = useStores()
   const [search, setSearch] = useState("")
@@ -36,7 +38,6 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 
   useEffect(() => {
     dishStore.clearSearchDishes()
-
     const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
       setSearch("")
       modalState.setVisible(false)
@@ -75,6 +76,10 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
       RNUxcam.logEvent("searchDish", {
         search,
       })
+
+      mixpanel.track("Search dish", {
+        search,
+      })
       dishStore
         .getSearch(search, dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
         .catch((error: Error) => {
@@ -93,6 +98,10 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
     dayStore.setCurrentDay(day)
 
     RNUxcam.logEvent("changeDate", {
+      screen: "modalSearch",
+    })
+
+    mixpanel.track("Change date", {
       screen: "modalSearch",
     })
   }

@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { ScrollView } from "react-native-gesture-handler"
 import { ButtonFooter, Header, Screen } from "../../components/"
 
@@ -12,6 +12,7 @@ import { useStores } from "../../models"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { Api, ReservationRequest } from "../../services/api"
 import { utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 import Consumption from "./consumption"
@@ -21,6 +22,7 @@ import ScheduleDelivery from "./schedule-delivery"
 
 const modalStateLocation = new ModalStateHandler()
 const api = new Api()
+const mixpanel = getInstanceMixpanel()
 export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSummary">> = observer(
   ({ navigation, route: { params } }) => {
     const {
@@ -31,6 +33,11 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
       commonStore,
       messagesStore,
     } = useStores()
+
+    useEffect(() => {
+      mixpanel.track("Menu plan summary screen")
+    }, [])
+
     const methods = useForm({
       defaultValues: {
         note: "",
@@ -50,7 +57,7 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
             if (account.data) {
               plansStore.setPlan(account.data.plan)
             }
-
+            mixpanel.track("Credits used menu summary screen")
             commonStore.setVisibleLoading(false)
             navigation.navigate("endOrder", {
               orderId: 0,
@@ -75,6 +82,7 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
     const handleContinue = (data) => {
       // Id de usuario va ser -1 cuando entra como "Explora la app"
       if (userStore.userId === -1) {
+        mixpanel.track("To register screen from menu plan summary")
         navigation.navigate("registerForm")
         return
       }
@@ -96,7 +104,10 @@ export const MenuSummaryScreen: FC<StackScreenProps<NavigatorParamList, "menuSum
           userId: userStore.userId,
           commentToChef: data.commentToChef,
         })
-      } else navigation.navigate("checkout", { isPlan: true, commentToChef: data.commentToChef })
+      } else {
+        mixpanel.track("To checkout form menu plan summary")
+        navigation.navigate("checkout", { isPlan: true, commentToChef: data.commentToChef })
+      }
     }
 
     return (

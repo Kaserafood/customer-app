@@ -12,17 +12,20 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
+
+const mixpanel = getInstanceMixpanel()
 
 export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDetail">> = observer(
   function OrderDetailScreen({ route: { params } }) {
     const { orderStore, commonStore } = useStores()
     useEffect(() => {
-      console.log("order detail screen: useEffect", params)
       async function fetch() {
         commonStore.setVisibleLoading(true)
         await orderStore.getDetail(params.id).finally(() => commonStore.setVisibleLoading(false))
       }
       fetch()
+      mixpanel.track("Order detail screen")
     }, [])
 
     const getTitle = () => {

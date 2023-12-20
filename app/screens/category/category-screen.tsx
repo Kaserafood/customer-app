@@ -26,9 +26,12 @@ import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { DishParams } from "../home/dish.types"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
+
 export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">> = observer(
   ({ route: { params }, navigation }) => {
     const [fetched, setFetched] = useState(false)
@@ -77,7 +80,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             setFetched(true)
           })
       }
-
+      mixpanel.track("Category Screen")
       fetch()
     }, [])
 

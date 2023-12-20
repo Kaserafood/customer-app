@@ -1,17 +1,24 @@
+import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
-import { observer } from "mobx-react-lite"
 
+import { useNavigation } from "@react-navigation/native"
+import OneSignal from "react-native-onesignal"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+import RNUxcam from "react-native-ux-cam"
 import images from "../../assets/images"
 import { useStores } from "../../models"
 import { MetaDataCart } from "../../models/cart-store"
 import { Dish } from "../../models/dish"
+import { DishChef } from "../../models/dish-store"
 import { UserChef } from "../../models/user-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalState } from "../../utils/modalState"
+import { getI18nText } from "../../utils/translate"
 import { Button } from "../button/button"
 import { Card } from "../card/card"
 import { Image } from "../image/image"
@@ -19,11 +26,6 @@ import { Modal } from "../modal/modal"
 import { Price } from "../price/price"
 import { Separator } from "../separator/separator"
 import { Text } from "../text/text"
-import { useNavigation } from "@react-navigation/native"
-import { DishChef } from "../../models/dish-store"
-import { getI18nText } from "../../utils/translate"
-import RNUxcam from "react-native-ux-cam"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 export interface ModalCartProps {
   /**
@@ -45,6 +47,8 @@ export interface ModalCartProps {
 /**
  * Modal to show items in cart.
  */
+
+const mixpanel = getInstanceMixpanel()
 export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
   const { modal, onContinue, chef } = props
 
@@ -71,18 +75,42 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
         total: cartStore.subtotal,
         data: JSON.stringify(items),
       })
+
+      mixpanel.track("View Modal Cart", {
+        items,
+      })
     }
   }, [modal.isVisible])
 
   const removeItemCart = (index: number, dish: Dish) => {
     cartStore.removeItem(index)
+
+    if (cartStore.hasItems) {
+      const { dish, quantity } = cartStore.cart[cartStore.cart.length - 1]
+
+      OneSignal.sendTags({
+        dishId: dish.id.toString(),
+        dishName: dish.title,
+        dishPrice: dish.price.toString(),
+        dishImage: dish.image,
+        dishQuantity: quantity.toString(),
+      })
+    } else {
+      OneSignal.deleteTags(["dishId", "dishName", "dishPrice", "dishImage", "dishQuantity"])
+    }
+
     RNUxcam.logEvent("removeDishInCart", {
       id: dish.id,
       name: dish.title,
       price: dish.price,
       currentTotal: cartStore.subtotal,
     })
-
+    mixpanel.track("Remove dish in cart", {
+      id: dish.id,
+      name: dish.title,
+      price: dish.price,
+      currentTotal: cartStore.subtotal,
+    })
     AppEventsLogger.logEvent("RemoveDishInCart", 1, {
       total: cartStore.subtotal,
       dishId: dish.id,
@@ -106,9 +134,18 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       chef: dish.chef.name,
       chefId: dish.chef.id,
     })
+
+    mixpanel.track("Press item in cart", {
+      id: dish.id,
+      name: dish.title,
+      price: dish.price,
+      quantity,
+      chef: dish.chef.name,
+      chefId: dish.chef.id,
+    })
     dishStore.setIsUpdate(true)
     navigation.navigate(
-      "dishDetail" as never,
+      "dishDetail" as any,
       {
         ...dish,
         addons: JSON.parse(addons),
@@ -117,7 +154,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
         quantity,
         noteChef,
         timestamp: new Date().getMilliseconds(),
-      } as never,
+      } as any,
     )
   }
 
@@ -138,6 +175,7 @@ export const ModalCart = observer(function ModalCart(props: ModalCartProps) {
       total: cartStore.subtotal,
       data: JSON.stringify(items),
     })
+    mixpanel.track("From Cart To Checkout", { items })
     onContinue()
   }
   return (
