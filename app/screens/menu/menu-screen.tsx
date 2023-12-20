@@ -12,14 +12,17 @@ import { SHADOW, utilSpacing, utilText } from "../../theme/Util"
 import { getI18nText } from "../../utils/translate"
 import Days from "./days"
 import GroupType from "./group-type"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
+const mixpanel = getInstanceMixpanel()
 export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, plansStore , userStore} = useStores()
+    const { cartStore, plansStore, userStore } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     useEffect(() => {
       cartStore.cleanItemsPlan()
+      mixpanel.track("Menu plan Screen")
     }, [])
 
     useEffect(() => {
@@ -35,7 +38,6 @@ export const MenuScreen: FC<StackScreenProps<NavigatorParamList, "menu">> = obse
     }
 
     const handleScheduleLater = () => {
-
       if (userStore.userId === -1) {
         navigation.navigate("registerForm")
         return

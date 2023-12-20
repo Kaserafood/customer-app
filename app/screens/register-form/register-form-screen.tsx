@@ -21,6 +21,7 @@ import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { GUATEMALA, UNITED_STATES } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { loadString } from "../../utils/storage"
 
 const hideTextFields = {
@@ -28,6 +29,7 @@ const hideTextFields = {
   screens: [],
 }
 const api = new Api()
+const mixpanel = getInstanceMixpanel()
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
@@ -48,6 +50,7 @@ export const RegisterFormScreen: FC<
 
   useEffect(() => {
     RNUxcam.applyOcclusion(hideTextFields)
+    mixpanel.track("Register Screen")
   }, [])
 
   useEffect(
@@ -72,12 +75,17 @@ export const RegisterFormScreen: FC<
             let id = userId.toString()
             if (userStore.countryId === UNITED_STATES) {
               id = `us_${userId}`
+              OneSignal.sendTag("country", "US")
             }
 
             OneSignal.setExternalUserId(id)
             OneSignal.setEmail(data.email)
+
             RNUxcam.setUserProperty("userId", id)
+            RNUxcam.setUserIdentity(id)
+            mixpanel.identify(id)
             await getAccount()
+
             if (currentUserId === -1) {
               await saveAddress(userId)
               commonStore.setVisibleLoading(false)
@@ -85,6 +93,10 @@ export const RegisterFormScreen: FC<
               RNUxcam.logEvent("register", {
                 exploreApp: false,
               })
+              mixpanel.track("Register completed", {
+                exploreApp: false,
+              })
+              OneSignal.sendTag("registered", "1")
               commonStore.setIsSignedIn(true)
               commonStore.setVisibleLoading(false)
               navigation.navigate("map")
@@ -134,6 +146,10 @@ export const RegisterFormScreen: FC<
             RNUxcam.logEvent("register", {
               exploreApp: true,
             })
+            mixpanel.track("Register completed", {
+              exploreApp: false,
+            })
+            OneSignal.sendTag("registered", "1")
             navigation.navigate("checkout", { isPlan: cartStore.inRechargeProcess })
           }
         })

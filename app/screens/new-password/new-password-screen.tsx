@@ -12,8 +12,10 @@ import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalState = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 
 export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPassword">> = observer(
   ({ navigation, route: { params } }) => {
@@ -39,6 +41,10 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
       }
     }, [canRemoveScreen])
 
+    useEffect(() => {
+      mixpanel.track("New password screen")
+    }, [])
+
     const onError: SubmitErrorHandler<any> = (errors) => {
       return console.log({ errors })
     }
@@ -51,6 +57,7 @@ export const NewPasswordScreen: FC<StackScreenProps<NavigatorParamList, "newPass
           .changePassword(params.email, form.password)
           .then((isChanged: boolean) => {
             if (isChanged) {
+              mixpanel.track("Change password completed")
               modalState.setVisible(true)
             }
           })

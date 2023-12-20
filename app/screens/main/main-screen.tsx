@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 import { Icon, Location, Screen } from "../../components"
@@ -16,6 +16,8 @@ import { NavigatorParamList } from "../../navigators"
 import { DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { UNITED_STATES } from "../../utils/constants"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { Banner } from "../home/banner"
 import { ModalWelcome } from "../home/modal-welcome"
@@ -25,7 +27,6 @@ import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
 import Lunches from "./lunches"
 import ValuePrepositions from "./value-prepositions"
-import { UNITED_STATES } from "../../utils/constants"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
@@ -34,6 +35,7 @@ const modalStateDeliveryDatePlan = new ModalStateHandler()
 const modalStateCoverageCredits = new ModalStateHandler()
 const state = new DataState()
 
+const mixpanel = getInstanceMixpanel()
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
     const { cartStore, commonStore, dishStore, plansStore, coverageStore, userStore } = useStores()
@@ -50,6 +52,12 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         id: category.id,
       })
 
+      mixpanel.track("Banner press", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -57,10 +65,17 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 
     const toCategory = (category: Category) => {
       RNUxcam.logEvent("categoryTap", {
-        screen: "chefs",
+        screen: "home",
         category: category.name,
         id: category.id,
       })
+
+      mixpanel.track("Category press", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -109,6 +124,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 
       navigation.navigate("plans", { showBackIcon: true })
     }
+
+    useEffect(() => {
+      mixpanel.track("Main Screen")
+    }, [])
 
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>

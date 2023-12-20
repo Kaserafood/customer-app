@@ -1,9 +1,9 @@
+import { StackScreenProps } from "@react-navigation/stack"
+import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect, useState } from "react"
 import { RefreshControl, ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
-import { StackScreenProps } from "@react-navigation/stack"
-import { observer } from "mobx-react-lite"
 
 import { useChef } from "../../common/hooks/useChef"
 import {
@@ -27,15 +27,18 @@ import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
+import RNUxcam from "react-native-ux-cam"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ChefItemModel } from "./chef-item"
 import { DataState, ListChef } from "./chef-list"
-import RNUxcam from "react-native-ux-cam"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDay = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 type ScreenType = "dishDetail" | "menuChef"
 const state = new DataState()
+const mixpanel = getInstanceMixpanel()
+
 /**
  * Chef screen for show all chefs with dishes
  */
@@ -54,7 +57,6 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
     const { formatDishesGroupedByChef } = useChef()
     const [refreshing, setRefreshing] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
-    const [isFirstTime, setIsFirstTime] = useState(true)
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
@@ -65,6 +67,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       commonStore.setVisibleLoading(true)
 
       fetch()
+      mixpanel.track("Chefs Screen")
     }, [])
 
     useEffect(() => {
@@ -101,6 +104,12 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
         category: category.name,
         id: category.id,
       })
+      mixpanel.track("Category press", {
+        screen: "chefs",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -132,6 +141,9 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
       dayStore.setCurrentDay(day)
 
       RNUxcam.logEvent("changeDate", {
+        screen: "chefs",
+      })
+      mixpanel.track("Change Date", {
         screen: "chefs",
       })
       fetch()

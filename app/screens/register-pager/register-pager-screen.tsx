@@ -12,6 +12,7 @@ import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
 import { utilSpacing, utilText } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -25,6 +26,8 @@ interface Page {
   image: ImageURISource
 }
 
+const mixpanel = getInstanceMixpanel()
+
 export const RegisterPagerScreen: FC<
   StackScreenProps<NavigatorParamList, "registerPager">
 > = observer(({ navigation }) => {
@@ -33,6 +36,7 @@ export const RegisterPagerScreen: FC<
 
   useEffect(() => {
     setPage(0)
+    mixpanel.track("How it works screen")
   }, [])
 
   useEffect(() => {
@@ -68,10 +72,14 @@ export const RegisterPagerScreen: FC<
   const nextPage = () => {
     pageView.setPage(page + 1)
     setPage(page + 1)
+    mixpanel.track("Hot it works step", {
+      step: page + 1,
+    })
   }
   const toRegister = () => {
     pageView.setPage(2)
     setPage(2)
+    mixpanel.track("How it works completed")
     navigation.navigate("registerForm")
   }
 

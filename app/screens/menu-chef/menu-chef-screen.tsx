@@ -36,10 +36,12 @@ import { getI18nText } from "../../utils/translate"
 
 import RNUxcam from "react-native-ux-cam"
 import { ModalLeave } from "./modal-clean-cart"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateCart = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 const modalStateLeave = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
@@ -88,6 +90,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
             })
         })()
       }
+      mixpanel.track("Menu chef screen")
     }, [])
 
     useEffect(
@@ -120,6 +123,10 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       dayStore.setCurrentDay(day)
       await getDishByChef()
       RNUxcam.logEvent("changeDate", {
+        screen: "menuChef",
+      })
+
+      mixpanel.track("Change date", {
         screen: "menuChef",
       })
     }
@@ -175,6 +182,12 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
 
     const openCart = () => {
       RNUxcam.logEvent("openCart", {
+        total: cartStore.subtotal,
+        chefId: params.id,
+        chefName: params.name,
+      })
+
+      mixpanel.track("Open cart", {
         total: cartStore.subtotal,
         chefId: params.id,
         chefName: params.name,

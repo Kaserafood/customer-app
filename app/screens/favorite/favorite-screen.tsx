@@ -12,6 +12,9 @@ import { DishChef } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
+
+const mixpanel = getInstanceMixpanel()
 
 export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">> = observer(
   function FavoriteScreen({ navigation }) {
@@ -29,6 +32,7 @@ export const FavoriteScreen: FC<StackScreenProps<NavigatorParamList, "favorite">
           .finally(() => commonStore.setVisibleLoading(false))
       }
       fetch()
+      mixpanel.track("Favorite Dishes Screen")
     }, [])
 
     const toDetail = (dish: DishChef) => {

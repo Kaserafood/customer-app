@@ -3,6 +3,7 @@ import { StatusBar } from "react-native"
 
 import { color } from "../../theme"
 
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ErrorComponent } from "./error-component"
 
 interface Props {
@@ -14,6 +15,8 @@ interface State {
   error: Error | null
   errorInfo: ErrorInfo | null
 }
+
+const mixpanel = getInstanceMixpanel()
 
 /**
  * This component handles whenever the user encounters a JS error in the
@@ -35,6 +38,8 @@ export class ErrorBoundary extends Component<Props, State> {
       error,
       errorInfo,
     })
+
+    mixpanel.track("Error Screen", this.state)
 
     // You can also log error messages to an error reporting service here
     // This is a great place to put BugSnag, Sentry, Honeybadger, etc:

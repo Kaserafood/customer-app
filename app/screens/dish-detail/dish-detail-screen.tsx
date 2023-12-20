@@ -9,6 +9,7 @@ import Ripple from "react-native-material-ripple"
 import SkeletonPlaceholder from "react-native-skeleton-placeholder"
 import IconRN from "react-native-vector-icons/FontAwesome"
 
+import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
 import { Addons, ButtonFooter, Icon, Image, InputText, Price, Screen, Text } from "../../components"
 import { Separator } from "../../components/separator/separator"
@@ -20,6 +21,7 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { spacing } from "../../theme/spacing"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
@@ -31,6 +33,7 @@ export const AddonContext = createContext({
   // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   onChangeScrollPosition: (position: number) => {},
 })
+const mixpanel = getInstanceMixpanel()
 
 export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDetail">> = observer(
   ({ navigation, route: { params } }) => {
@@ -62,6 +65,13 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
                 chefId: res.chef.id,
                 chefName: res.chef.name,
               })
+              mixpanel.track("Dish detail Screen", {
+                id: res.id,
+                name: res.title,
+                price: res.price,
+                chefId: res.chef.id,
+                chefName: res.chef.name,
+              })
             }
           })
       }
@@ -71,6 +81,13 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         getDish()
       } else {
         RNUxcam.logEvent("dishDetail", {
+          id: params.id,
+          name: params.title,
+          price: params.price,
+          chefId: params.chef.id,
+          chefName: params.chef.name,
+        })
+        mixpanel.track("Dish detail Screen", {
           id: params.id,
           name: params.title,
           price: params.price,
@@ -181,6 +198,16 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
           total,
         })
 
+        mixpanel.track("Can´t Add Item to cart by addons", {
+          id: currentDish.id,
+          name: currentDish.title,
+          price: currentDish.price,
+          chefId: currentDish.chef.id,
+          chefName: currentDish.chef.name,
+          quantity,
+          total,
+        })
+
         return
       }
 
@@ -222,6 +249,26 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         total,
       })
 
+      mixpanel.track("Add item to cart", {
+        id: currentDish.id,
+        name: currentDish.title,
+        price: currentDish.price,
+        chefId: currentDish.chef.id,
+        chefName: currentDish.chef.name,
+        quantity,
+        total,
+      })
+
+      OneSignal.sendTags({
+        dishId: currentDish.id.toString(),
+        dishName: currentDish.title,
+        dishPrice: currentDish.price.toString(),
+        chefName: currentDish.chef.name,
+        chefImage: currentDish.chef.image,
+        dishImage: currentDish.image,
+        dishQuantity: quantity.toString(),
+      })
+
       navigation.navigate("menuChef", { ...params.chef, showModalCart: false })
     }
 
@@ -250,6 +297,14 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         })
 
         RNUxcam.logEvent("changeDishInDetail", {
+          id: dish.id,
+          name: dish.title,
+          price: dish.price,
+          chefId: dish.chef.id,
+          chefName: dish.chef.name,
+        })
+
+        mixpanel.track("Press dish in Dish detail ", {
           id: dish.id,
           name: dish.title,
           price: dish.price,

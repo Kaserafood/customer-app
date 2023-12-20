@@ -15,17 +15,20 @@ import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { spacing } from "../../theme/spacing"
 import { getI18nText } from "../../utils/translate"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
   flex: 1,
 }
 const api = new Api()
+const mixpanel = getInstanceMixpanel()
 export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">> = observer(
   function ({ route: { params }, navigation }) {
     const { orderId, isPlan } = params
     const toMain = () => {
       RNUxcam.logEvent("endOrderContinue")
+      mixpanel.track("Press Continue in end order")
       navigation.navigate("main")
     }
 
@@ -37,6 +40,7 @@ export const EndOrderScreen: FC<StackScreenProps<NavigatorParamList, "endOrder">
       cartStore.cleanItemsPlan()
       if (orderId) setOrder(`${getI18nText("endOrderScreen.order")} #${params.orderId}`)
       setThankYou(`¡${getI18nText("endOrderScreen.thankYou")} ${userStore.displayName}!`)
+      mixpanel.track("End Order Screen")
     }, [])
 
     useQuery("user", () => api.getAccount(userStore.userId, RNLocalize.getTimeZone()), {
