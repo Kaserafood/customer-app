@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import DeviceInfo from "react-native-device-info"
 import { ScrollView } from "react-native-gesture-handler"
@@ -14,12 +14,19 @@ import { ModalStateHandler } from "../../utils/modalState"
 
 import { ModalReportBug } from "./modal-report-bug"
 import { Keyboard } from "react-native"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateReportBug = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
+
 export const ReportBugScreen: FC<StackScreenProps<NavigatorParamList, "reportBug">> = observer(
   function ReportBugScreen() {
     const { userStore, commonStore, messagesStore } = useStores()
     const { ...methods } = useForm({ mode: "onBlur" })
+
+    useEffect(() => {
+      mixpanel.track("Report bug screen")
+    }, [])
 
     const onSubmit = async (data) => {
       const userAgent = await DeviceInfo.getUserAgent()

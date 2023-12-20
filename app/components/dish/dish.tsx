@@ -3,10 +3,10 @@ import React from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import Ripple from "react-native-material-ripple"
 
-import { useStores } from "../../models"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Text } from "../text/text"
@@ -48,6 +48,8 @@ export interface DishProps {
   sizeTextDescription?: "sm" | "md"
 }
 
+const mixpanel = getInstanceMixpanel()
+
 /**
  * Component to display a dish
  */
@@ -61,14 +63,20 @@ export const Dish = observer(function Dish(props: DishProps) {
     currencyCode,
     sizeTextDescription = "sm",
   } = props
-  const { deliveryStore } = useStores()
+
+  const handlePress = () => {
+    mixpanel.track("Dish item press", {
+      dish: JSON.stringify(dish),
+    })
+    onPress?.()
+  }
 
   return (
     <Ripple
       style={[utilSpacing.py3, utilSpacing.px5, style]}
       rippleOpacity={0.2}
       rippleDuration={400}
-      onPress={onPress}
+      onPress={handlePress}
     >
       <View style={utilFlex.flexRow}>
         <View style={[styles.column, styles.containerTextDish, !visibleChefImage && styles.h100]}>

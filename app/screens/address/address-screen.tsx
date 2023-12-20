@@ -15,6 +15,9 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { GUATEMALA } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { saveString } from "../../utils/storage"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
+
+const mixpanel = getInstanceMixpanel()
 
 export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> = observer(
   ({ navigation, route: { params } }) => {
@@ -25,6 +28,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
 
     useEffect(() => {
       fieldAddress.current.focus()
+      mixpanel.track("Add address Screen")
     }, [])
 
     const onError: SubmitErrorHandler<any> = (errors) => {
@@ -56,10 +60,12 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
               userStore.setAddressId(address.id)
               messagesStore.showSuccess(res.message)
               // Regresará a la pantalla de donde halla iniciado el proceso de agregar dirección
+              mixpanel.track("Add address completed")
               navigation.navigate(params.screenToReturn)
             }
           })
           .catch((error: Error) => {
+            mixpanel.track("Add address error")
             messagesStore.showError(error.message)
           })
           .finally(() => commonStore.setVisibleLoading(false))

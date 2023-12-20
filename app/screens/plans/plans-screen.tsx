@@ -20,10 +20,12 @@ import Banner from "./banner"
 import Benefits from "./benefits"
 import CreditSummary from "./credit-summary"
 import Menu from "./menu"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
 const modalStateCoverageCredits = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 
 export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = observer(
   function PlansScreen({ navigation, route: { params } }) {
@@ -33,6 +35,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
     useEffect(() => {
       cartStore.setInRechargeProcess(false)
       RNUxcam.tagScreenName("plans")
+      mixpanel.track("Plans Screen")
     }, [])
 
     const recharge = () => {

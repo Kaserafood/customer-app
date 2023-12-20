@@ -8,8 +8,10 @@ import { Button, Modal, Text } from "../../components"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateWhy = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave: () => void }) => {
   const { modalState, onPressLeave } = props
 
@@ -20,6 +22,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
     })
 
     RNUxcam.logEvent("acceptCleanCart")
+    mixpanel.track("Accept clean cart in menu chef")
   }
 
   const onPressCancel = () => {
@@ -28,6 +31,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
       description: "El usuario presionó 'Regresar' en el menú del chef",
     })
     RNUxcam.logEvent("cancelCleanCart")
+    mixpanel.track("Cancel clean cart in menu chef")
   }
 
   const onPressWhyCleanCart = () => {
@@ -37,6 +41,7 @@ export const ModalLeave = (props: { modalState: ModalStateHandler; onPressLeave:
     })
 
     RNUxcam.logEvent("whyCleanCart")
+    mixpanel.track("Why clean cart in menu chef")
   }
 
   return (

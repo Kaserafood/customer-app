@@ -1,4 +1,3 @@
-import { useIsFocused } from "@react-navigation/native"
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect } from "react"
@@ -22,11 +21,14 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
 import RNUxcam from "react-native-ux-cam"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalSearch } from "./modal-search"
 
 const modalStateRequest = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
 const modalStateSearch = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
+
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
   ({ navigation }) => {
     useLayoutEffect(() => {
@@ -43,6 +45,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
 
     useEffect(() => {
       getAll()
+      mixpanel.track("Search Screen")
     }, [])
 
     const toCategory = (category: Category) => {
@@ -60,6 +63,7 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     const openRequestDish = () => {
       modalStateRequest.setVisible(true)
       RNUxcam.logEvent("search: modalRequestDish")
+      mixpanel.track("Open modal request dish")
       AppEventsLogger.logEvent("openModalRequestDish", 1, {
         description: "Se ha abierto la ventana de solicitar un platillo",
       })
@@ -72,6 +76,14 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
         chefId: dish.chef.id,
         chefName: dish.chef.name,
       })
+
+      mixpanel.track("Press dish in search screen", {
+        id: dish.id,
+        name: dish.title,
+        chefId: dish.chef.id,
+        chefName: dish.chef.name,
+      })
+
       if (cartStore.hasItems) cartStore.cleanItems()
       /**
        *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
@@ -86,11 +98,19 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     const onPressSearch = () => {
       modalStateSearch.setVisible(true)
       RNUxcam.logEvent("search: modalSearch")
+
+      mixpanel.track("Open modal search in Search screen")
     }
 
     const onPressCategory = (category: Category) => {
       toCategory(category)
       RNUxcam.logEvent("search: category", {
+        id: category.id,
+        name: category.name,
+      })
+
+      mixpanel.track("Category press", {
+        screen: "search",
         id: category.id,
         name: category.name,
       })
@@ -210,12 +230,6 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
     )
   },
 )
-
-const FocusAwareStatusBar = observer((props: any) => {
-  const isFocused = useIsFocused()
-
-  return isFocused ? <StatusBar {...props} /> : null
-})
 
 const styles = StyleSheet.create({
   body: {

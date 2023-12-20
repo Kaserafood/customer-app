@@ -17,9 +17,12 @@ import Info from "./info"
 import ModalChangePlan from "./modal-change-plan"
 import Options from "./options"
 import TestDish from "./test-dish"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStatePlan = new ModalStateHandler()
 const api = new Api()
+const mixpanel = getInstanceMixpanel()
+
 export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription">> = observer(
   function SubscriptionScreen({ navigation, route: { params } }) {
     const { plansStore, userStore, cartStore } = useStores()
@@ -27,6 +30,7 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
 
     useEffect(() => {
       cartStore.setInRechargeProcess(true)
+      mixpanel.track("Select credits screen")
     }, [])
 
     useEffect(() => {
@@ -89,8 +93,18 @@ export const Subscription: FC<StackScreenProps<NavigatorParamList, "subscription
       }
 
       if (cartStore.inRechargeProcess && !plansStore.hasCredits) {
+        mixpanel.track("To checkout screen from Select credits screen", {
+          type: plansStore.type,
+          credits: plansStore.totalCredits,
+          price: plansStore.price,
+        })
         goCheckout()
       } else {
+        mixpanel.track("To menu plan screen from Select credits screen", {
+          type: plansStore.type,
+          credits: plansStore.totalCredits,
+          price: plansStore.price,
+        })
         navigation.navigate("menu")
       }
     }
