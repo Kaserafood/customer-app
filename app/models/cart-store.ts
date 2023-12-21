@@ -1,5 +1,6 @@
 import { SnapshotIn, applySnapshot, cast, detach, types } from "mobx-state-tree"
 
+import OneSignal from "react-native-onesignal"
 import { dishChef } from "./dish-store"
 import { metaData } from "./order/order"
 
@@ -176,6 +177,7 @@ export const CartStoreModel = types
     },
     cleanItems() {
       detach(self.cart)
+      OneSignal.deleteTags(["dishId", "dishName", "dishPrice", "dishImage", "dishQuantity"])
     },
     setSubmited(isSubmited: boolean) {
       self.isSubmited = isSubmited

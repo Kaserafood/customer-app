@@ -14,8 +14,8 @@ import { Api } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { spacing } from "../../theme/spacing"
-import { getI18nText } from "../../utils/translate"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { getI18nText } from "../../utils/translate"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.whiteGray,
