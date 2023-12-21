@@ -34,6 +34,7 @@ import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 import { ChefItemModel } from "../chefs/chef-item"
@@ -42,7 +43,6 @@ import { DataState, ListChef } from "./chef-list"
 import { DishParams } from "./dish.types"
 import { ModalWelcome } from "./modal-welcome"
 import PopularDishes from "./popular-dishes"
-import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()

@@ -1,7 +1,6 @@
 import { applySnapshot, detach, flow, Instance, types } from "mobx-state-tree"
 import { setLocaleI18n } from "../i18n"
 import { Api, setLocale } from "../services/api"
-import * as RNLocalize from "react-native-localize"
 
 const country = types.model("Country").props({
   id: types.number,
@@ -28,29 +27,29 @@ export const CountryStoreModel = types
       const result = yield api.getCountries()
       if (result && result.kind === "ok") {
         applySnapshot(self.countries, result.data)
-        const deviceCountry = RNLocalize.getCountry()
-        // console.log("set auto country", result.data)
-        // self.selectedCountry = result.data[0]
-        // setLocaleI18n("es")
-        // setLocale("es")
-        if (result.data?.length > 0) {
-          if (
-            result.data.find(
-              (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
-            )
-          ) {
-            self.selectedCountry = result.data.find(
-              (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
-            )
+        // const deviceCountry = RNLocalize.getCountry()
 
-            setLocaleI18n(self.selectedCountry.language.toLocaleLowerCase())
-            setLocale(self.selectedCountry.language.toLocaleLowerCase())
-          } else {
-            self.selectedCountry = result.data[0]
-            setLocaleI18n("es")
-            setLocale("es")
-          }
-        }
+        self.selectedCountry = result.data[0]
+        setLocaleI18n("es")
+        setLocale("es")
+        // if (result.data?.length > 0) {
+        //   if (
+        //     result.data.find(
+        //       (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
+        //     )
+        //   ) {
+        //     self.selectedCountry = result.data.find(
+        //       (c: Country) => c.code?.toLocaleLowerCase() === deviceCountry.toLocaleLowerCase(),
+        //     )
+
+        //     setLocaleI18n(self.selectedCountry.language.toLocaleLowerCase())
+        //     setLocale(self.selectedCountry.language.toLocaleLowerCase())
+        //   } else {
+        //     self.selectedCountry = result.data[0]
+        //     setLocaleI18n("es")
+        //     setLocale("es")
+        //   }
+        // }
       }
     }),
 
