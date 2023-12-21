@@ -308,7 +308,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
               priceDelivery: order.priceDelivery,
               couponCode: order.couponCode,
               productsLength: order.products.length,
-              products: order.products,
+              products: JSON.stringify(order.products),
               discount: cartStore.discount,
             })
 

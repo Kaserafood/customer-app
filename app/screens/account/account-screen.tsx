@@ -14,6 +14,7 @@ import { utilFlex, utilSpacing } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 import { clear } from "../../utils/storage"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import OneSignal from "react-native-onesignal"
 
 const modalState = new ModalStateHandler()
 const mixpanel = getInstanceMixpanel()
@@ -44,6 +45,8 @@ export const AccountScreen: FC<StackScreenProps<NavigatorParamList, "account">> 
       plansStore.setPlan(undefined)
       cartStore.cleanItems()
       commonStore.setIsSignedIn(false)
+
+      OneSignal.deleteTags(["logged"])
       navigation.navigate("init")
     }
 
