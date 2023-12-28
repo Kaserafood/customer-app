@@ -17,6 +17,7 @@ import { AccountResponse, Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getInstanceMixpanel } from "../utils/mixpanel"
+import { formatPhone } from "../utils/string"
 import { getI18nText } from "../utils/translate"
 
 const api = new Api()
@@ -72,14 +73,17 @@ export function TabMainNavigation({ navigationRef }) {
     if (userStore?.email) {
       OneSignal.setEmail(userStore.email)
       OneSignal.sendTag("name", userStore.displayName)
+
+      mixpanel.getPeople().set("$email", userStore.email)
+      mixpanel.getPeople().set("$name", userStore.displayName)
+      mixpanel.getPeople().set("$phone", formatPhone(userStore.phone))
     }
   }, [userStore?.email, userStore.name, userStore.lastName])
 
   useEffect(() => {
-    if (userStore.userId > 0) {
-      OneSignal.addTrigger("logged", "true")
-    }
-    OneSignal.sendTag("role", userStore.account?.role)
+    if (userStore.userId > 0) OneSignal.addTrigger("logged", "true")
+
+    if (userStore.account?.role) OneSignal.sendTag("role", userStore.account?.role)
   }, [userStore.userId, userStore.account?.role])
 
   return (
