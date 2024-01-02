@@ -5,6 +5,7 @@ import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 
+import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
@@ -13,7 +14,7 @@ import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { ModalState } from "../../utils/modalState"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 interface PropsBanner {
   onPressWelcome: () => void
@@ -24,6 +25,7 @@ const windowWidth = Dimensions.get("window").width
 
 export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
+  const navigation = useNavigation()
 
   const { bannerStore, userStore } = useStores()
 
@@ -52,9 +54,31 @@ export const Banner = observer((props: PropsBanner) => {
     onPressNewChefs()
   }
 
+  const handleRosca = () => {
+    const mixpanel = getInstanceMixpanel()
+    mixpanel.track("Banner press", {
+      type: "rosca-reyes",
+      screen: "dishes",
+    })
+    navigation.navigate("dishDetail", {
+      id: 12202,
+    } as any)
+  }
+
   return (
     <View>
       <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
+          onPress={handleRosca}
+        >
+          <Image
+            style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
+            source={{ uri: "https://kasera.s3.amazonaws.com/images/rosca-reyes.png" }}
+          ></Image>
+        </TouchableOpacity>
+
         {bannerStore.showWelcome && (
           <TouchableOpacity
             activeOpacity={0.7}

@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
 import RNUxcam from "react-native-ux-cam"
-import { Icon, Location, Screen } from "../../components"
+import { Icon, Image, Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
@@ -129,6 +129,16 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       mixpanel.track("Main Screen")
     }, [])
 
+    const handleRoscaReyes = () => {
+      mixpanel.track("Banner press", {
+        type: "rosca-reyes",
+        screen: "main",
+      })
+      navigation.navigate("dishDetail", {
+        id: 12202,
+      } as any)
+    }
+
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
@@ -148,7 +158,12 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView style={styles.container}>
-          {!plansStore.hasActivePlan && <BannerMain onPress={handlePressBanner}></BannerMain>}
+          <TouchableOpacity onPress={handleRoscaReyes}>
+            <Image
+              source={{ uri: "https://kasera.s3.amazonaws.com/images/rosca-reyes.png" }}
+              style={styles.imgRosca}
+            ></Image>
+          </TouchableOpacity>
 
           <ValuePrepositions screenNavigate={handleScreenNavigate}></ValuePrepositions>
           {currentDate?.date && userStore.countryId !== UNITED_STATES && (
@@ -202,6 +217,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     ...SHADOW,
     height: 63,
+  },
+  imgRosca: {
+    height: 230,
+
+    width: "100%",
   },
   location: {
     backgroundColor: color.palette.white,
