@@ -124,21 +124,21 @@ function App() {
 
         RNUxcam.optIntoSchematicRecordings() // Add this line to enable iOS screen recordings
 
-        // Register in mixpanel the url of UXCam session
-        // RNUxcam.addVerificationListener(async (status) => {
-        //   if (status.success) {
-        //     const url = await RNUxcam.urlForCurrentSession()
-        //     if (url) {
-        //       const urlSegments = url.split("/")
-        //       const idSession = urlSegments.at(-1)
+        //  Register in mixpanel the url of UXCam session
+        RNUxcam.addVerificationListener(async (status) => {
+          if (status.success) {
+            const url = await RNUxcam.urlForCurrentSession()
+            if (url) {
+              const urlSegments = url.split("/")
+              const idSession = urlSegments.at(-1)
 
-        //       // mixpanel.track("UXCam: Session Recording link", {
-        //       //   uxcam_session_url: url,
-        //       //   uxcam_session_url_2: `https://app.uxcam.com/app/643729b042c2fb240d392cf5/sessions/list/1/${idSession}`,
-        //       // })
-        //     }
-        //   }
-        // })
+              mixpanel.track("UXCam: Session Recording link", {
+                uxcam_session_url: url,
+                uxcam_session_url_2: `https://app.uxcam.com/app/643729b042c2fb240d392cf5/sessions/list/1/${idSession}`,
+              })
+            }
+          }
+        })
 
         const configuration = {
           userAppKey: "1dg22cwy6m7db2l",
