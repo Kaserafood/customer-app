@@ -30,8 +30,12 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     const toRegister = () => {
       userStore.setUserId(0)
       navigation.navigate("registerPager")
+      mixpanel.track("Register")
     }
-    const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
+    const toLogin = () => {
+      mixpanel.track("Login")
+      navigation.navigate("loginForm", { screenRedirect: "main" })
+    }
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {
         description: "Se ha presionado el botón de 'Explorar el app'",
