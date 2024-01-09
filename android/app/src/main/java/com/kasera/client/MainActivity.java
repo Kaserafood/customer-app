@@ -8,6 +8,8 @@ import com.facebook.react.ReactRootView;
 import com.swmansion.gesturehandler.react.RNGestureHandlerEnabledRootView;
 import com.zoontek.rnbootsplash.RNBootSplash;
 import expo.modules.ReactActivityDelegateWrapper;
+import io.branch.rnbranch.*;
+import android.content.Intent;
 
 public class MainActivity extends ReactActivity {
 
@@ -37,6 +39,20 @@ public class MainActivity extends ReactActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
       }
     };
+  }
+
+  // Override onStart:
+  @Override
+  protected void onStart() {
+      super.onStart();
+      RNBranchModule.initSession(getIntent().getData(), this);
+  }
+  
+  // Override onNewIntent:
+  @Override
+  public void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+      RNBranchModule.onNewIntent(intent);
   }
 
 }

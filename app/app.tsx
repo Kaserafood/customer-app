@@ -87,12 +87,7 @@ function App() {
       async function verifyUser() {
         checkNotificationPermission().then((result) => {
           if (result) {
-            // if (__DEV__) {
-            //   OneSignal.setAppId("f93984d0-c581-4eec-ad26-c3d30c3c7835")
-            // } else {
             OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-
-            // }
 
             OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
               const { notification } = openedEvent
