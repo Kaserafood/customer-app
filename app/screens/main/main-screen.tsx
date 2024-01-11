@@ -131,12 +131,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 
     const handleRoscaReyes = () => {
       mixpanel.track("Banner press", {
-        type: "rosca-reyes",
+        type: "plans",
         screen: "main",
       })
-      navigation.navigate("dishDetail", {
-        id: 12202,
-      } as any)
+      navigation.navigate("plans")
     }
 
     return (
