@@ -85,36 +85,6 @@ function App() {
   } else {
     if (rootStore) {
       async function verifyUser() {
-        checkNotificationPermission().then((result) => {
-          if (result) {
-            // if (__DEV__) {
-            //   OneSignal.setAppId("f93984d0-c581-4eec-ad26-c3d30c3c7835")
-            // } else {
-            OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
-
-            // }
-
-            OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
-              const { notification } = openedEvent
-
-              if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
-
-              const data: any = notification.additionalData
-              if (data && data.type === "coupon") {
-                rootStore?.couponModalStore.setVisible(true)
-                if (data.title?.length > 0) rootStore?.couponModalStore.setTitle(data.title)
-                if (data.subtitle?.length > 0)
-                  rootStore?.couponModalStore.setSubtitle(data.subtitle)
-                if (data.image?.length > 0) rootStore?.couponModalStore.setImage(data.image)
-              }
-
-              if (data.notification_topic != null) {
-                OneSignal.addTrigger("notification_topic", data.notification_topic)
-              }
-            })
-          }
-        })
-
         const userId = await loadString("userId")
         if (userId && userId.length > 0) {
           if (!rootStore.commonStore.isSignedIn) {

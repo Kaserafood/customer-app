@@ -1,19 +1,20 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { FC, useEffect, useLayoutEffect, useRef } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
+import { Keyboard, ScrollView, StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import OneSignal from "react-native-onesignal"
 
 import * as RNLocalize from "react-native-localize"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
 import RNUxcam from "react-native-ux-cam"
 import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
-import { Button, Checkbox, Header, InputText, Screen, Text } from "../../components"
+import { Button, Icon, InputText, Screen, Text } from "../../components"
 import { Address, useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
-import { goBack } from "../../navigators/navigation-utilities"
+import { goBack } from "../../navigators"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { Api } from "../../services/api"
 import { spacing } from "../../theme"
@@ -33,7 +34,7 @@ const mixpanel = getInstanceMixpanel()
 export const RegisterFormScreen: FC<
   StackScreenProps<NavigatorParamList, "registerForm">
 > = observer(({ navigation }) => {
-  const [terms, setTerms] = useState(false)
+  // const [terms, setTerms] = useState(false)
   const { ...methods } = useForm({ mode: "onBlur" })
   const {
     userStore,
@@ -53,6 +54,10 @@ export const RegisterFormScreen: FC<
     mixpanel.track("Register Screen")
   }, [])
 
+  useLayoutEffect(() => {
+    changeNavigationBarColor(color.palette.white, false, true)
+  }, [])
+
   useEffect(
     () =>
       navigation.addListener("beforeRemove", () => {
@@ -62,52 +67,52 @@ export const RegisterFormScreen: FC<
   )
 
   const onSubmit = (data: UserRegister) => {
-    if (!terms) messagesStore.showInfo("registerFormScreen.acceptsTerms", true)
-    else {
-      Keyboard.dismiss()
-      commonStore.setVisibleLoading(true)
-      __DEV__ && console.log(data)
-      const currentUserId = userStore.userId
-      userStore
-        .register({ ...data, countryId: userStore.countryId })
-        .then(async (userId) => {
-          if (userId > 0) {
-            let id = userId.toString()
-            if (userStore.countryId === UNITED_STATES) {
-              id = `us_${userId}`
-              OneSignal.sendTag("country", "US")
-            }
-
-            OneSignal.setExternalUserId(id)
-            OneSignal.setEmail(data.email)
-
-            RNUxcam.setUserProperty("userId", id)
-            RNUxcam.setUserIdentity(id)
-            mixpanel.identify(id)
-            await getAccount()
-
-            if (currentUserId === -1) {
-              await saveAddress(userId)
-              commonStore.setVisibleLoading(false)
-            } else {
-              RNUxcam.logEvent("register", {
-                exploreApp: false,
-              })
-              mixpanel.track("Register completed", {
-                exploreApp: false,
-              })
-              OneSignal.sendTag("registered", "1")
-              commonStore.setIsSignedIn(true)
-              commonStore.setVisibleLoading(false)
-              navigation.navigate("map")
-            }
+    // if (!terms) messagesStore.showInfo("registerFormScreen.acceptsTerms", true)
+    // else {
+    Keyboard.dismiss()
+    commonStore.setVisibleLoading(true)
+    __DEV__ && console.log(data)
+    const currentUserId = userStore.userId
+    userStore
+      .register({ ...data, countryId: userStore.countryId })
+      .then(async (userId) => {
+        if (userId > 0) {
+          let id = userId.toString()
+          if (userStore.countryId === UNITED_STATES) {
+            id = `us_${userId}`
+            OneSignal.sendTag("country", "US")
           }
-        })
-        .catch((error: Error) => {
-          commonStore.setVisibleLoading(false)
-          messagesStore.showError(error.message)
-        })
-    }
+
+          OneSignal.setExternalUserId(id)
+          OneSignal.setEmail(data.email)
+
+          RNUxcam.setUserProperty("userId", id)
+          RNUxcam.setUserIdentity(id)
+          mixpanel.identify(id)
+          await getAccount()
+
+          if (currentUserId === -1) {
+            await saveAddress(userId)
+            commonStore.setVisibleLoading(false)
+          } else {
+            RNUxcam.logEvent("register", {
+              exploreApp: false,
+            })
+            mixpanel.track("Register completed", {
+              exploreApp: false,
+            })
+            OneSignal.sendTag("registered", "1")
+            commonStore.setIsSignedIn(true)
+            commonStore.setVisibleLoading(false)
+            navigation.navigate("map")
+          }
+        }
+      })
+      .catch((error: Error) => {
+        commonStore.setVisibleLoading(false)
+        messagesStore.showError(error.message)
+      })
+    // }
   }
 
   const getAccount = async () => {
@@ -165,63 +170,50 @@ export const RegisterFormScreen: FC<
   }
   return (
     <>
-      <Screen preset="fixed" bottomBar="dark-content">
-        <Header headerTx="registerFormScreen.title" leftIcon="back" onLeftPress={goBack} />
+      <Screen preset="fixed" bottomBar="light-content">
+        <StatusBar backgroundColor={color.palette.white} barStyle={"default"} />
 
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-          <View style={styles.containerForm}>
-            <Text preset="semiBold" tx="registerFormScreen.info" style={utilSpacing.mb6} />
+          <View style={[styles.containerForm, utilSpacing.p5]}>
+            <View>
+              <TouchableOpacity onPress={goBack}>
+                <Icon name="arrow-left" size={24} color={color.text}></Icon>
+              </TouchableOpacity>
+            </View>
 
+            <Text
+              size="lg"
+              tx="registerFormScreen.title"
+              style={[{ fontSize: 24 }, utilSpacing.pb6, utilSpacing.mt4]}
+              preset="bold"
+            ></Text>
             <FormProvider {...methods}>
-              <InputText
-                name="name"
-                placeholderTx="registerFormScreen.firstName"
-                styleContainer={styles.input}
-                rules={{
-                  required: "registerFormScreen.firstNameRequired",
-                }}
-                maxLength={100}
-              ></InputText>
-              <InputText
-                name="lastName"
-                placeholderTx="registerFormScreen.lastName"
-                styleContainer={styles.input}
-                rules={{
-                  required: "registerFormScreen.lastNameRequired",
-                }}
-                maxLength={100}
-              ></InputText>
-              <InputText
-                name="phone"
-                forwardedRef={fieldPhone}
-                keyboardType="phone-pad"
-                placeholderTx="registerFormScreen.phone"
-                styleContainer={styles.input}
-                rules={{
-                  required: "registerFormScreen.phoneRequired",
-                  minLength: {
-                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
-                    message:
-                      userStore.countryId === GUATEMALA
-                        ? "registerFormScreen.phoneFormatIncorrectGt"
-                        : "registerFormScreen.phoneFormatIncorrect",
-                  },
-                }}
-                mask={countryStore.selectedCountry.maskPhone}
-                prefix={
-                  <TouchableOpacity
-                    activeOpacity={1}
-                    onPress={() => {
-                      fieldPhone?.current.focus()
+              <View style={[utilFlex.flexRow, utilSpacing.mb5]}>
+                <View style={[utilFlex.flex1, utilSpacing.mr3]}>
+                  <InputText
+                    name="name"
+                    placeholderTx="registerFormScreen.firstName"
+                    styleContainer={[styles.input]}
+                    rules={{
+                      required: "registerFormScreen.firstNameRequired",
                     }}
-                  >
-                    <Text
-                      style={[utilSpacing.ml3, utilText.textGray]}
-                      text={countryStore.selectedCountry.prefixPhone}
-                    ></Text>
-                  </TouchableOpacity>
-                }
-              ></InputText>
+                    maxLength={100}
+                  ></InputText>
+                </View>
+
+                <View style={[utilFlex.flex1, utilSpacing.ml3]}>
+                  <InputText
+                    name="lastName"
+                    placeholderTx="registerFormScreen.lastName"
+                    styleContainer={[styles.input]}
+                    rules={{
+                      required: "registerFormScreen.lastNameRequired",
+                    }}
+                    maxLength={100}
+                  ></InputText>
+                </View>
+              </View>
+
               <InputText
                 name="email"
                 keyboardType="email-address"
@@ -250,49 +242,77 @@ export const RegisterFormScreen: FC<
                 }}
                 maxLength={100}
               ></InputText>
-              <View style={styles.containerTermsBtn}>
-                <View style={[utilFlex.flexRow, utilSpacing.mb4, utilFlex.flexCenterVertical]}>
+
+              <InputText
+                name="phone"
+                forwardedRef={fieldPhone}
+                keyboardType="phone-pad"
+                placeholderTx="registerFormScreen.phone"
+                styleContainer={styles.input}
+                rules={{
+                  required: "registerFormScreen.phoneRequired",
+                  minLength: {
+                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
+                    message:
+                      userStore.countryId === GUATEMALA
+                        ? "registerFormScreen.phoneFormatIncorrectGt"
+                        : "registerFormScreen.phoneFormatIncorrect",
+                  },
+                }}
+                mask={countryStore.selectedCountry.maskPhone}
+                prefix={
                   <TouchableOpacity
-                    onPress={() => setTerms(!terms)}
-                    activeOpacity={1}
-                    style={utilSpacing.p4}
+                    activeOpacity={0}
+                    onPress={() => {
+                      fieldPhone?.current.focus()
+                    }}
                   >
-                    <Checkbox value={terms}></Checkbox>
+                    <Text
+                      style={[utilSpacing.ml3, utilText.textGray]}
+                      text={countryStore.selectedCountry.prefixPhone}
+                    ></Text>
                   </TouchableOpacity>
+                }
+              ></InputText>
 
-                  <View style={styles.containerTermsText}>
-                    <Text
-                      size="sm"
-                      tx="registerFormScreen.acceptThe"
-                      style={styles.lineHeight}
-                    ></Text>
-                    <Text
-                      size="sm"
-                      onPress={goTerms}
-                      style={[styles.textPrimary, styles.lineHeight]}
-                      tx="registerFormScreen.termsAndConditions"
-                    ></Text>
-                    <Text size="sm" tx="registerFormScreen.andThe" style={styles.lineHeight}></Text>
-                    <Text
-                      size="sm"
-                      onPress={goPrivacy}
-                      style={[styles.textPrimary, styles.lineHeight]}
-                      tx="registerFormScreen.privacyPolicy"
-                    ></Text>
-                  </View>
-                </View>
-
+              <View style={styles.containerTermsBtn}>
                 <Button
                   tx="registerFormScreen.register"
                   onPress={methods.handleSubmit(onSubmit, onError)}
                   block
                   style={[styles.btn, utilSpacing.my5]}
                 ></Button>
-                <TouchableOpacity style={[utilFlex.selfCenter, utilSpacing.p4]} onPress={toLogin}>
+
+                <View style={styles.containerTermsText}>
+                  <Text
+                    size="sm"
+                    tx="registerFormScreen.acceptThe"
+                    style={styles.lineHeight}
+                  ></Text>
+                  <Text
+                    size="sm"
+                    onPress={goTerms}
+                    style={[styles.textPrimary, styles.lineHeight]}
+                    tx="registerFormScreen.termsAndConditions"
+                  ></Text>
+                  <Text size="sm" tx="registerFormScreen.andThe" style={styles.lineHeight}></Text>
+                  <Text
+                    size="sm"
+                    onPress={goPrivacy}
+                    style={[styles.textPrimary, styles.lineHeight]}
+                    tx="registerFormScreen.privacyPolicy"
+                  ></Text>
+                  <Text size="sm" tx="registerFormScreen.ofKasera" style={styles.lineHeight}></Text>
+                </View>
+
+                <TouchableOpacity
+                  style={[utilFlex.selfCenter, utilSpacing.p4, utilSpacing.mt5]}
+                  onPress={toLogin}
+                >
                   <Text
                     size="lg"
                     preset="bold"
-                    style={styles.textPrimary}
+                    style={utilText.textPrimary}
                     tx="registerFormScreen.logIn"
                   ></Text>
                 </TouchableOpacity>
@@ -317,8 +337,7 @@ const styles = StyleSheet.create({
   containerForm: {
     display: "flex",
     flexDirection: "column",
-    paddingTop: spacing[6],
-    width: "80%",
+    width: "100%",
   },
 
   containerTermsBtn: {
@@ -345,5 +364,6 @@ const styles = StyleSheet.create({
   },
   textPrimary: {
     color: color.primary,
+    textDecorationLine: "underline",
   },
 })

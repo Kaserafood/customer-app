@@ -54,31 +54,9 @@ export const Banner = observer((props: PropsBanner) => {
     onPressNewChefs()
   }
 
-  const handleRosca = () => {
-    const mixpanel = getInstanceMixpanel()
-    mixpanel.track("Banner press", {
-      type: "rosca-reyes",
-      screen: "dishes",
-    })
-    navigation.navigate("dishDetail", {
-      id: 12202,
-    } as any)
-  }
-
   return (
     <View>
       <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
-          onPress={handleRosca}
-        >
-          <Image
-            style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
-            source={{ uri: "https://kasera.s3.amazonaws.com/images/rosca-reyes.png" }}
-          ></Image>
-        </TouchableOpacity>
-
         {bannerStore.showWelcome && (
           <TouchableOpacity
             activeOpacity={0.7}

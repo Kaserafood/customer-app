@@ -1,7 +1,6 @@
 let url = ""
 if (__DEV__) {
   url = "http://192.168.0.18:3001"
-  url = "https://customer-api.kaserafood.com/v0.9.30"
 } else {
   url = "https://customer-api.kaserafood.com/v0.9.30"
 }

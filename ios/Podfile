@@ -22,7 +22,7 @@ target 'ClientApp' do
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse/Permission-LocationWhenInUse.podspec"
 
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications/Permission-Notifications.podspec"
-
+  pod 'react-native-branch', path: '../node_modules/react-native-branch'
 
   target 'ClientAppTests' do
     inherit! :complete

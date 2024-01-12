@@ -1,12 +1,12 @@
-import { Platform } from "react-native"
+import { Alert, Platform } from "react-native"
 import { Settings } from "react-native-fbsdk-next"
 import {
+  Permission,
+  RESULTS,
   check,
   checkNotifications,
-  Permission,
   request,
   requestNotifications,
-  RESULTS,
 } from "react-native-permissions"
 import { getTrackingStatus, requestTrackingPermission } from "react-native-tracking-transparency"
 
@@ -60,9 +60,9 @@ export async function requestNotificationPermission(): Promise<boolean> {
 }
 
 export async function checkNotificationPermission(): Promise<boolean> {
-  return checkNotifications()
+  return await checkNotifications()
     .then(async ({ status }) => {
-      if (status === RESULTS.DENIED) return await requestNotificationPermission()
+      if (status === RESULTS.DENIED) return false
       else if (status === RESULTS.GRANTED) return true
       return false
     })
