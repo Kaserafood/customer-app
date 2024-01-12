@@ -12,7 +12,7 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
-#import <RNBranch/RNBranch.h>
+
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -27,7 +27,7 @@ static void InitializeFlipper(UIApplication *application) {
 #import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <React/RCTLinkingManager.h> 
-
+#import <RNBranch/RNBranch.h>
 
 @implementation AppDelegate
 
@@ -65,7 +65,7 @@ static void InitializeFlipper(UIApplication *application) {
   [RNBootSplash initWithStoryboard:@"BootSplash" rootView:rootView];
   [super application:application didFinishLaunchingWithOptions:launchOptions];
 
-  [RNBranch.branch checkPasteboardOnInstall]; 
+  //[RNBranch.branch checkPasteboardOnInstall]; 
   // Uncomment this line to use the test key instead of the live one.
   // [RNBranch useTestInstance];
   [RNBranch initSessionWithLaunchOptions:launchOptions isReferrable:YES];
@@ -73,6 +73,8 @@ static void InitializeFlipper(UIApplication *application) {
 
   return YES;
 }
+
+
 
 - (NSArray<id<RCTBridgeModule>> *)extraModulesForBridge:(RCTBridge *)bridge
 {
@@ -94,6 +96,8 @@ static void InitializeFlipper(UIApplication *application) {
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
+  
+  [RNBranch application:app openURL:url options:options];
   if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
     return YES;
   }
@@ -105,10 +109,6 @@ static void InitializeFlipper(UIApplication *application) {
   return NO;
 }
 
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options {
-    [RNBranch application:app openURL:url options:options];
-    return YES;
-}
 
 - (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
    [RNBranch continueUserActivity:userActivity];
