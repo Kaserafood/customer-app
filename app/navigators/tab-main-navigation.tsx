@@ -4,6 +4,7 @@ import React, { useEffect } from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
+import { Linking } from "react-native"
 import * as RNLocalize from "react-native-localize"
 import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
@@ -17,6 +18,7 @@ import { AccountResponse, Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getInstanceMixpanel } from "../utils/mixpanel"
+import { checkNotificationPermission } from "../utils/permissions"
 import { formatPhone } from "../utils/string"
 import { getI18nText } from "../utils/translate"
 
@@ -25,7 +27,7 @@ const mixpanel = getInstanceMixpanel()
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const insets = useSafeAreaInsets()
-  const { userStore, plansStore, messagesStore } = useStores()
+  const { userStore, plansStore, messagesStore, addressStore, couponModalStore } = useStores()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
   }
@@ -143,14 +145,6 @@ export function TabMainNavigation({ navigationRef }) {
           tabBarIcon: ({ color }) => {
             return (
               <>
-                {/* <View style={styles.badge}>
-                  <Text
-                    size="sm"
-                    style={utilText.textWhite}
-                    preset="semiBold"
-                    tx="tabMainNavigation.new"
-                  ></Text>
-                </View> */}
                 <Icon style={utilSpacing.mt1} name="utensils" size={26} color={color} />
               </>
             )
@@ -190,26 +184,6 @@ export function TabMainNavigation({ navigationRef }) {
           },
         }}
       />
-      {/* 
-      <Tab.Screen
-        options={{
-          // eslint-disable-next-line react/display-name
-          tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="magnifying-glass" size={26} color={color} />
-          },
-        }}
-        name={getI18nText("tabMainNavigation.search")}
-        component={SearchScreen}
-        listeners={{
-          tabPress: () => {
-            RNUxcam.logEvent("tabPress", { name: "search" })
-            AppEventsLogger.logEvent("tabPress", 1, {
-              name: "search",
-              description: "El usuario presionó la opción 'buscar' en el menú principal",
-            })
-          },
-        }}
-      /> */}
 
       <Tab.Screen
         options={{
@@ -236,14 +210,3 @@ export function TabMainNavigation({ navigationRef }) {
     </Tab.Navigator>
   )
 }
-
-// const styles = StyleSheet.create({
-//   badge: {
-//     backgroundColor: color.palette.green,
-//     borderRadius: 8,
-//     paddingHorizontal: 6,
-//     paddingVertical: 2,
-//     position: "absolute",
-//     top: -8,
-//   },
-// })

@@ -34,7 +34,7 @@ const CONTAINER_ERROR: ViewStyle = {
   bottom: -18,
 }
 const CONTAINER_INPUT: ViewStyle = {
-  backgroundColor: color.palette.grayLight,
+  backgroundColor: color.palette.gray300,
   borderRadius: spacing[2],
 }
 
@@ -107,7 +107,7 @@ const ControlledInput = function InputText(props: InputTextProps) {
             placeholder={actualPlaceholder}
             placeholderTextColor={color.palette.grayDark}
             underlineColorAndroid={color.transparent}
-            style={[stylesInput, utilSpacing.px3]}
+            style={[stylesInput, utilSpacing.px4]}
             ref={forwardedRef}
             onChangeText={field.onChange}
             onBlur={field.onBlur}
