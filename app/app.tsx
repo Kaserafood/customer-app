@@ -33,7 +33,7 @@ import { getInstanceMixpanel, initializeMixpanel } from "./utils/mixpanel"
 import { checkNotificationPermission, trackingPermission } from "./utils/permissions"
 import * as storage from "./utils/storage"
 import { loadString } from "./utils/storage"
-
+import branch from 'react-native-branch'
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
@@ -85,6 +85,46 @@ function App() {
   } else {
     if (rootStore) {
       async function verifyUser() {
+
+    
+        var qrCodeSettings = {
+          width: 500,
+          codeColor: "#3b2016",
+          backgroundColor: "#a8e689",
+          centerLogo: "https://cdn.branch.io/branch-assets/159857dsads5682753-og_image.png",
+          margin: 1,
+          imageFormat: "PNG"
+      };
+      
+      var buoOptions = {
+          title: "A Test Title",
+          contentDescription: "A test content desc",
+          contentMetadata: {
+              price: "200",
+              productName: "QR Code Scanner",
+              customMetadata: { "someKey": "someValue", "anotherKey": "anotherValue" }
+          }
+      };
+      
+      var lp = {
+          feature: "qrCode",
+          tags: ["test", "working"],
+          channel: "facebook",
+          campaign: "posters"
+      };
+      
+      var controlParams = {
+          $desktop_url: "https://www.desktop.com",
+          $fallback_url: "https://www.fallback.com"
+      };
+      
+      try {
+          var result = await branch.getBranchQRCode(qrCodeSettings, buoOptions, lp, controlParams);
+      }
+      catch (err) {
+          console.log('QR Code Err: ', err);
+      }
+
         checkNotificationPermission().then((result) => {
           if (result) {
             OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
