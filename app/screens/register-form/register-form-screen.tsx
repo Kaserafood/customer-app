@@ -2,7 +2,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect, useRef } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Keyboard, ScrollView, StatusBar, StyleSheet, View } from "react-native"
+import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import OneSignal from "react-native-onesignal"
@@ -170,9 +170,12 @@ export const RegisterFormScreen: FC<
   }
   return (
     <>
-      <Screen preset="fixed" bottomBar="light-content">
-        <StatusBar backgroundColor={color.palette.white} barStyle={"default"} />
-
+      <Screen
+        preset="fixed"
+        bottomBar="light-content"
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+      >
         <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
           <View style={[styles.containerForm, utilSpacing.p5]}>
             <View>
