@@ -50,7 +50,11 @@
     "status": "Estado",
     "no": "No",
     "paid": "Pagado",
-    "completed": "Completado"
+    "completed": "Completado",
+    "activateNotifications": "Activar notificaciones",
+    "notNow": "Ahora no",
+    "dontLeaveOffer": "No te pierdas jamas de una excelente oferta",
+    "enableNotifications": "Activa las notificaciones para estar al tanto de las ofertas y del estado de tus pedidos"
   },
   "initScreen": {
     "homemadeFood": "Comida Kasera",
@@ -62,12 +66,12 @@
   },
   "registerFormScreen": {
     "title": "Regístrate",
-    "firstName": "Nombre:",
-    "lastName": "Apellido:",
-    "email": "Correo:",
-    "password": "Contraseña:",
-    "phone": "Teléfono:",
-    "acceptThe": "Acepto los",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo",
+    "password": "Contraseña",
+    "phone": "Teléfono",
+    "acceptThe": "Al presionar 'Crear cuenta' aceptas los",
     "termsAndConditions": " términos y condiciones ",
     "andThe": " y las ",
     "privacyPolicy": " políticas de privacidad",
@@ -83,7 +87,8 @@
     "phoneFormatIncorrect": "Parece que tu número es incorrecto. Ingresa el código de area",
     "passwordMinLength": "La contraseña debe tener al menos 4 caracteres",
     "logIn": "Iniciar sesión",
-    "phoneFormatIncorrectGt": "Número de teléfono inválido"
+    "phoneFormatIncorrectGt": "Número de teléfono inválido",
+    "ofKasera": " de Kasera"
   },
   "errorScreen": {
     "title": "Error",

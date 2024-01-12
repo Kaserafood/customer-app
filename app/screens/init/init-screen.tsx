@@ -4,33 +4,38 @@ import React, { FC, useEffect, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
-import changeNavigationBarColor from "react-native-navigation-bar-color"
 import OneSignal from "react-native-onesignal"
 
-import { useSafeAreaInsets } from "react-native-safe-area-context"
+import changeNavigationBarColor from "react-native-navigation-bar-color"
 import RNUxcam from "react-native-ux-cam"
-import { Button, Icon, Text } from "../../components"
+import { Button, Text } from "../../components"
 import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { setCountryId, setLocale } from "../../services/api"
-import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
+import { utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { ModalCountry } from "./modal-country"
 
+const mixpanel = getInstanceMixpanel()
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
     const { userStore, commonStore, countryStore } = useStores()
-    const insets = useSafeAreaInsets()
+    // const insets = useSafeAreaInsets()
 
     const toRegister = () => {
       userStore.setUserId(0)
       navigation.navigate("registerPager")
+      mixpanel.track("Register")
     }
-    const toLogin = () => navigation.navigate("loginForm", { screenRedirect: "main" })
+    const toLogin = () => {
+      mixpanel.track("Login")
+      navigation.navigate("loginForm", { screenRedirect: "main" })
+    }
     const setDataStore = () => {
       AppEventsLogger.logEvent("initScreenAppExplore", 1, {
         description: "Se ha presionado el botón de 'Explorar el app'",
@@ -39,12 +44,14 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       OneSignal.setExternalUserId("-1")
       RNUxcam.setUserProperty("exploreTheApp", "true")
       RNUxcam.logEvent("exploreTheApp")
+      mixpanel.track("Explore The App")
+
       commonStore.setIsSignedIn(true)
     }
 
-    useEffect(() => {
-      modalCountry.setVisible(true)
-    }, [])
+    // useEffect(() => {
+    //   // modalCountry.setVisible(true)
+    // }, [])
 
     useEffect(() => {
       if (countryStore.countries?.length > 0) {
@@ -68,15 +75,15 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     }, [modalCountry.isVisible])
 
     useLayoutEffect(() => {
-      __DEV__ && console.log("in init screen")
       changeNavigationBarColor(color.primary, false, true)
       RNUxcam.tagScreenName("init")
+      mixpanel.track("Init Screen")
     }, [])
 
     return (
       <ScrollView contentContainerStyle={styles.root}>
         <StatusBar backgroundColor={color.primary} barStyle={"light-content"} />
-
+        {/* 
         {countryStore.selectedCountry && (
           <TouchableOpacity
             activeOpacity={0.5}
@@ -99,7 +106,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             <Text text={countryStore.selectedCountry.name}></Text>
             <Icon name="angle-down" size={20} style={utilSpacing.px3} color={color.text}></Icon>
           </TouchableOpacity>
-        )}
+        )} */}
 
         <Image style={styles.imageLogo} source={require("./icon-white.png")}></Image>
         <Text style={styles.textTitle} preset="semiBold" tx="initScreen.homemadeFood"></Text>

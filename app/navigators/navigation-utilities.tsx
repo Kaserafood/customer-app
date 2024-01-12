@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react"
-import { BackHandler } from "react-native"
 import {
-  createNavigationContainerRef,
   NavigationAction,
   NavigationState,
   PartialState,
+  createNavigationContainerRef,
 } from "@react-navigation/native"
+import { useEffect, useRef, useState } from "react"
+import { BackHandler } from "react-native"
 import RNUxcam from "react-native-ux-cam"
 
 /* eslint-disable */

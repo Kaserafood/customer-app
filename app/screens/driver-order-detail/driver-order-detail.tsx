@@ -369,17 +369,7 @@ interface ProductProps {
   }[]
 }
 
-const Product = ({
-  name,
-  price,
-  addons,
-  quantity,
-  image,
-  showPrice = true,
-  description,
-}: ProductProps) => {
-  const { userStore } = useStores()
-
+const Product = ({ name, addons, quantity, image, description }: ProductProps) => {
   return (
     <Card style={[utilSpacing.mb5, utilSpacing.mx5, utilSpacing.p4]}>
       <View style={utilFlex.flexRow}>
@@ -390,14 +380,6 @@ const Product = ({
             <Text preset="bold" text={name}></Text>
           </Text>
           {description && <Text text={description}></Text>}
-
-          {showPrice && (
-            <Price
-              style={[styles.price, utilSpacing.mt4]}
-              amount={+price}
-              currencyCode={userStore.account?.currency}
-            ></Price>
-          )}
         </View>
       </View>
       {!!addons && addons.length > 0 && (
@@ -439,9 +421,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     height: 100,
     width: 140,
-  },
-
-  price: {
-    alignSelf: "flex-start",
   },
 })

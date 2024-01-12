@@ -33,10 +33,12 @@ import { loadString, saveString } from "../../utils/storage"
 import { getI18nText } from "../../utils/translate"
 
 import * as RNLocalize from "react-native-localize"
+import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
 import { useMutation } from "react-query"
 import { Api, OrderPlanRequest } from "../../services/api"
 import { MEXICO } from "../../utils/constants"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
 import { ModalCoupon } from "./modal-coupon"
@@ -48,6 +50,7 @@ const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
 const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
   ({ navigation, route: { params } }) => {
@@ -85,12 +88,21 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       })
 
       RNUxcam.logEvent("checkout")
+      mixpanel.track("Checkout Screen")
     }, [])
 
     useEffect(() => {
       if (!cartStore.hasItems && !isPlan) {
         console.log("to main screen")
         navigation.navigate("main")
+      }
+
+      if (!(userStore.userId > 0)) {
+        OneSignal.getTags((tags) => {
+          if (tags && tags.chefId) {
+            navigation.navigate("menuChef", { id: tags.chefId, showModalCart: true } as any)
+          }
+        })
       }
     }, [navigation])
 
@@ -123,8 +135,10 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           } else if (planId === -1) {
             messagesStore.showError("checkoutScreen.errorOrderPayment", true)
             RNUxcam.logEvent("checkout: errorOrderPayment")
+            mixpanel.track("Checkout: Error on plan order payment")
           } else {
             RNUxcam.logEvent("checkout: errorOrder")
+            mixpanel.track("Checkout: Error on plan order")
             messagesStore.showError("checkoutScreen.errorOrder", true)
           }
           commonStore.setVisibleLoading(false)
@@ -154,6 +168,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
     const onError: SubmitErrorHandler<any> = (errors) => {
       RNUxcam.logEvent("checkout: errorSubmit", { errors })
+      mixpanel.track("Checkout: Error form validation", { errors })
       __DEV__ && console.log({ errors })
     }
 
@@ -162,6 +177,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         if (!getPaymentMethodId() && !userStore.paymentCash) {
           messagesStore.showError("checkoutScreen.errorSelectPaymentMethod", true)
           RNUxcam.logEvent("checkout: errorSelectPaymentMethod")
+          mixpanel.track("Checkout: Error not payment method selected")
           return
         }
         commonStore.setVisibleLoading(true)
@@ -224,12 +240,14 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       if (!dayStore.currentDay) {
         messagesStore.showError("checkoutScreen.errorDayDelivery" as TxKeyPath, true)
         RNUxcam.logEvent("checkout: errorDayDelivery")
+        mixpanel.track("Checkout: Error not day delivery selected")
         return
       }
 
       if (labelDeliveryTime.length === 0 && !isPlan) {
         messagesStore.showError("checkoutScreen.errorTimeDelivery" as TxKeyPath, true)
         RNUxcam.logEvent("checkout: errorTimeDelivery")
+        mixpanel.track("Checkout: Error no delivery time selected")
         return
       }
 
@@ -265,6 +283,8 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           if (!res) {
             messagesStore.showError("checkoutScreen.errorOrder", true)
             RNUxcam.logEvent("checkout: errorOrder")
+            mixpanel.track("Checkout: Error on create order")
+
             return
           }
 
@@ -272,14 +292,30 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             await saveString("taxId", data.taxId)
             await saveString("customerNote", data.customerNote)
             await saveString("deliveryTime", labelDeliveryTime)
-            cartStore.setDiscount(0)
+
             __DEV__ && console.log("order added", res.data)
 
+            // Track Result
             AppEventsLogger.logPurchase(getCurrentTotal(), getCurrency(), {
               description: "El usuario ha realizado un pedido",
             })
 
             RNUxcam.logEvent("checkout: successOrder")
+
+            mixpanel.track("Checkout: Order purchased", {
+              customerId: order.customerId,
+              total: order.total,
+              priceDelivery: order.priceDelivery,
+              couponCode: order.couponCode,
+              productsLength: order.products.length,
+              products: JSON.stringify(order.products),
+              discount: cartStore.discount,
+            })
+
+            OneSignal.sendTag("purchased", "1")
+            OneSignal.deleteTags(["dishId", "dishName", "dishPrice", "dishImage", "dishQuantity"])
+
+            cartStore.setDiscount(0)
 
             navigation.navigate("endOrder", {
               orderId: Number(res.data),
@@ -291,13 +327,16 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
           } else if (Number(res.data) === -1) {
             messagesStore.showError("checkoutScreen.errorOrderPayment", true)
             RNUxcam.logEvent("checkout: errorOrderPayment")
+            mixpanel.track("Checkout: Error on payment order")
           } else {
             RNUxcam.logEvent("checkout: errorOrder")
             messagesStore.showError("checkoutScreen.errorOrder", true)
+            mixpanel.track("Checkout: Error on process order")
           }
         })
         .catch((error: Error) => {
           RNUxcam.logEvent("checkout: ERROR CRITICAL")
+          mixpanel.track("Checkout: Error on create order")
           messagesStore.showError(error.message)
         })
         .finally(() => commonStore.setVisibleLoading(false))
@@ -417,14 +456,15 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const onPressAddress = () => {
-      console.log("on press address")
       modalStateLocation.setVisible(true)
       RNUxcam.logEvent("checkout: onPressAddress")
+      mixpanel.track("Checkout: Press change address delivery")
     }
 
     const onPressCoupon = () => {
       modalStateCoupon.setVisible(true)
       RNUxcam.logEvent("checkout: onPressCoupon")
+      mixpanel.track("Checkout: Press use coupon")
     }
 
     const priceDelivery = () => {

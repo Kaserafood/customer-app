@@ -1,9 +1,10 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useState } from "react"
-import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import React, { FC, useEffect, useState } from "react"
+import { Linking, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
-import { Icon, Location, Screen } from "../../components"
+import { Icon, Image, Location, Screen } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
@@ -16,7 +17,10 @@ import { NavigatorParamList } from "../../navigators"
 import { DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { UNITED_STATES } from "../../utils/constants"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
+import { checkNotificationPermission, requestNotificationPermission } from "../../utils/permissions"
 import { Banner } from "../home/banner"
 import { ModalWelcome } from "../home/modal-welcome"
 import BannerMain from "./banner-main"
@@ -24,19 +28,30 @@ import Categories from "./categories"
 import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
 import Lunches from "./lunches"
+import ModalNotificationInfo from "./modal-notification-info"
 import ValuePrepositions from "./value-prepositions"
-import { UNITED_STATES } from "../../utils/constants"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
 const modalStateWhy = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
 const modalStateCoverageCredits = new ModalStateHandler()
+const modalStateNotification = new ModalStateHandler()
 const state = new DataState()
 
+const mixpanel = getInstanceMixpanel()
 export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = observer(
   ({ navigation, route: { params } }) => {
-    const { cartStore, commonStore, dishStore, plansStore, coverageStore, userStore } = useStores()
+    const {
+      cartStore,
+      commonStore,
+      dishStore,
+      plansStore,
+      coverageStore,
+      userStore,
+      couponModalStore,
+      addressStore,
+    } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
 
     const onBannerPress = (banner: BannerModel) => {
@@ -50,6 +65,12 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         id: category.id,
       })
 
+      mixpanel.track("Banner press", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -57,10 +78,17 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 
     const toCategory = (category: Category) => {
       RNUxcam.logEvent("categoryTap", {
-        screen: "chefs",
+        screen: "home",
         category: category.name,
         id: category.id,
       })
+
+      mixpanel.track("Category press", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -110,6 +138,58 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       navigation.navigate("plans", { showBackIcon: true })
     }
 
+    useEffect(() => {
+      mixpanel.track("Main Screen")
+    }, [])
+
+    const handleRoscaReyes = () => {
+      mixpanel.track("Banner press", {
+        type: "plans",
+        screen: "main",
+      })
+      navigation.navigate("plans")
+    }
+
+    useEffect(() => {
+      if (addressStore.current.id > 0) {
+        checkNotificationPermission().then((result) => {
+          if (!result) {
+            if (userStore.requestEnableNotification) modalStateNotification.setVisible(true)
+          } else {
+            enableNotifications()
+          }
+        })
+      }
+    }, [addressStore.current?.id])
+
+    const enableNotifications = () => {
+      OneSignal.setAppId("c6f16d8c-f9d4-4d3b-8f25-a1b24ac2244a")
+
+      requestNotificationPermission().then((res) => {
+        if (res) {
+          mixpanel.track("Enabled Notifications")
+          modalStateNotification.setVisible(false)
+          OneSignal.setNotificationOpenedHandler(async (openedEvent) => {
+            const { notification } = openedEvent
+
+            if (notification.launchURL?.length > 0) Linking.openURL(notification.launchURL)
+
+            const data: any = notification.additionalData
+            if (data && data.type === "coupon") {
+              couponModalStore.setVisible(true)
+              if (data.title?.length > 0) couponModalStore.setTitle(data.title)
+              if (data.subtitle?.length > 0) couponModalStore.setSubtitle(data.subtitle)
+              if (data.image?.length > 0) couponModalStore.setImage(data.image)
+            }
+
+            if (data.notification_topic != null) {
+              OneSignal.addTrigger("notification_topic", data.notification_topic)
+            }
+          })
+        }
+      })
+    }
+
     return (
       <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
@@ -129,7 +209,12 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView style={styles.container}>
-          {!plansStore.hasActivePlan && <BannerMain onPress={handlePressBanner}></BannerMain>}
+          <TouchableOpacity onPress={handleRoscaReyes}>
+            <Image
+              source={{ uri: "https://kasera.s3.amazonaws.com/images/rosca-reyes.png" }}
+              style={styles.imgRosca}
+            ></Image>
+          </TouchableOpacity>
 
           <ValuePrepositions screenNavigate={handleScreenNavigate}></ValuePrepositions>
           {currentDate?.date && userStore.countryId !== UNITED_STATES && (
@@ -165,6 +250,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         <ModalWithoutCoverageCredits
           modalState={modalStateCoverageCredits}
         ></ModalWithoutCoverageCredits>
+        <ModalNotificationInfo
+          enablePress={enableNotifications}
+          state={modalStateNotification}
+        ></ModalNotificationInfo>
       </Screen>
     )
   },
@@ -183,6 +272,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     ...SHADOW,
     height: 63,
+  },
+  imgRosca: {
+    height: 230,
+
+    width: "100%",
   },
   location: {
     backgroundColor: color.palette.white,

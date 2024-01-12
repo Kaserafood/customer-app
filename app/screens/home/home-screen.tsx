@@ -34,6 +34,7 @@ import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 import { ChefItemModel } from "../chefs/chef-item"
@@ -49,6 +50,7 @@ const modalStateRequestDish = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
 const state = new DataState()
+const mixpanel = getInstanceMixpanel()
 /**
  * Home Screen to show main dishes
  */
@@ -83,6 +85,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         id: category.id,
       })
 
+      mixpanel.track("Category press", {
+        screen: "home",
+        category: category.name,
+        id: category.id,
+      })
+
       navigation.navigate("category", {
         ...category,
       })
@@ -95,6 +103,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         image: "",
       }
       RNUxcam.logEvent("bannerTap", {
+        category: category.name,
+        id: category.id,
+      })
+
+      mixpanel.track("Banner press", {
+        screen: "home",
         category: category.name,
         id: category.id,
       })
@@ -144,6 +158,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       RNUxcam.logEvent("changeDate", {
         screen: "home",
       })
+      mixpanel.track("Change date", {
+        screen: "home",
+      })
       await dishStore
         .getAll(params)
         .catch((error: Error) => {
@@ -177,6 +194,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       setUserStoreData()
 
       if (addressStore.current.id) fetch(false, null)
+      mixpanel.track("Dishes Screen")
     }, [])
 
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
@@ -196,7 +214,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         cleanCurrentDishes: true,
         tokenPagination,
       }
-      console.log("Fetch home data")
+
       await Promise.all([
         dishStore.getAll(params),
         categoryStore.getAll(),

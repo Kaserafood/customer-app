@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.kasera.client" xmlns:tools="http://schemas.android.com/tools">
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-  <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+  <uses-permission android:name="com.google.android.gms.permission.AD_ID"  tools:node="remove"/>
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/BootTheme">
     <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
     <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
@@ -10,27 +10,36 @@
     <meta-data android:name="com.onesignal.suppressLaunchURLs" android:value="true"/>
     
     <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode" android:launchMode="singleTask" android:exported="true" android:windowSoftInputMode="adjustResize"  >
+       <!-- Branch URI Scheme -->
+      <intent-filter>
+        <data android:scheme="kasera"/>
+        <action android:name="android.intent.action.VIEW" />
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+      </intent-filter>
+
+       <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW"/>
+        <category android:name="android.intent.category.DEFAULT"/>
+        <category android:name="android.intent.category.BROWSABLE"/>
+        <data android:scheme="myurischeme" android:host="open"/>
+        <data android:scheme="https" android:host="kasera.test-app.link" />
+        <data android:scheme="https" android:host="kasera-alternate.test-app.link" />
+        <data android:scheme="https" android:host="link.kaserafood.com" />
+        <data android:scheme="https" android:host="kasera-alternate.app.link" />
+      </intent-filter>
       <intent-filter >
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
-      <intent-filter>
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="kasera" />
-      </intent-filter>
-      <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="http" />
-        <data android:scheme="https" />
-        <data android:host="kaserafood.com" android:pathPrefix="/product" />
-        <data android:host="kaserafood.com" android:pathPrefix="/menu" />
-        <data android:host="www.kaserafood.com" android:pathPrefix="/product" />
-        <data android:host="www.kaserafood.com" android:pathPrefix="/menu" />
-      </intent-filter>
     </activity>
+
+    <!-- Branch init -->
+    <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_gDovRMwommMzMByqJdSgYcmaCEoYxaLg" />
+    <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_dAetGGBgdnStIFDFNgIg6onnrug5uiTC" />
+    <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />     <!-- Set to true to use Branch_Test_Key (useful when simulating installs and/or switching between debug and production flavors) -->
+
   </application>
+
+
 </manifest>

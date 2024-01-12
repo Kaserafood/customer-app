@@ -41,6 +41,7 @@ import {
 
 import { ChefInvoiceScreen } from "../screens/chef-invoice/chef-invoice-screen"
 import { DriverOrderDetail } from "../screens/driver-order-detail/driver-order-detail"
+import { DriverOrdersHistoryScreen } from "../screens/driver-orders-history/driver-orders-history-screen"
 import { DriverOrdersScreen } from "../screens/driver-orders/driver-orders-screen"
 import { FormPlans } from "../screens/form-plans/form-plans-screen"
 import { MenuSummaryScreen } from "../screens/menu-summary/menu-summary-screen"
@@ -51,7 +52,6 @@ import { Subscription } from "../screens/subscription/subscription-screen"
 import DrawerNavigation from "./drawer-navigation"
 import { navigationRef, useBackButtonHandler } from "./navigation-utilities"
 import { NavigatorParamList } from "./navigator-param-list"
-import { DriverOrdersHistoryScreen } from "../screens/driver-orders-history/driver-orders-history-screen"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -161,11 +161,19 @@ export const AppNavigator = (props: NavigationProps) => {
       driverOrders: {
         path: "orders-driver",
       },
+      checkout: {
+        path: "checkout",
+      },
     },
   }
 
   const linking = {
-    prefixes: ["kasera://", "https://kaserafood.com"],
+    prefixes: [
+      "kasera://",
+      "https://kaserafood.com",
+      "https://kasera.test-app.link",
+      "https://link.kaserafood.com",
+    ],
     config,
   }
 

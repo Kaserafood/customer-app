@@ -21,6 +21,7 @@ import { getI18nText } from "../../utils/translate"
 import { ModalWithoutCoverage } from "./modal-without-coverage"
 
 import { isPointInPolygon } from "geolib"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 class LoadingState {
   loading = true
@@ -38,6 +39,7 @@ const loadingState = new LoadingState()
 const modalAddressState = new ModalStateHandler()
 const modalWithoutCoverage = new ModalStateHandler()
 const modalLocation = new ModalStateHandler()
+const mixpanel = getInstanceMixpanel()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
@@ -96,6 +98,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
       if (!canGoBack() || !userStore.addressId) {
         modalLocation.setVisible(true)
       }
+      mixpanel.track("Map Screen")
     }, [])
 
     const toAddress = () => {
@@ -116,6 +119,9 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
         })
 
         if (isPointInCoverage) {
+          mixpanel.track("Location completed", {
+            "Screen to return": params?.screenToReturn || "main",
+          })
           navigation.navigate("address", {
             latitude: location.latitude,
             longitude: location.longitude,
@@ -128,6 +134,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             screenToReturn: params?.screenToReturn || "main",
           })
         } else {
+          mixpanel.track("Location without coverage")
           __DEV__ && console.log("No esta dentro del poligono")
           modalWithoutCoverage.setVisible(true)
         }
@@ -275,7 +282,6 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           onPressAddress={onPressAddress}
         ></ModalAutocomplete>
         <ModalWithoutCoverage modalState={modalWithoutCoverage}></ModalWithoutCoverage>
-        {/* <ModalNecessaryLocation modalState={modalLocation}></ModalNecessaryLocation> */}
       </Screen>
     )
   },

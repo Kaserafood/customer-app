@@ -5,6 +5,7 @@ import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 
+import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
@@ -13,7 +14,7 @@ import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { ModalState } from "../../utils/modalState"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 interface PropsBanner {
   onPressWelcome: () => void
@@ -24,6 +25,7 @@ const windowWidth = Dimensions.get("window").width
 
 export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
+  const navigation = useNavigation()
 
   const { bannerStore, userStore } = useStores()
 

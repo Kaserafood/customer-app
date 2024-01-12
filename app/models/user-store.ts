@@ -80,6 +80,7 @@ export const UserRegisterModel = userRegister
     isTester: types.maybeNull(types.boolean),
     countryId: types.maybeNull(types.number),
     account: types.maybeNull(account),
+    requestEnableNotification: types.optional(types.boolean, true),
   })
   .extend(withEnvironment)
   .views((self) => ({
@@ -316,5 +317,8 @@ export const UserRegisterModel = userRegister
     setPaymentCash: (paymentCash: boolean) => {
       self.currentCard = undefined
       self.paymentCash = paymentCash
+    },
+    setRequestEnableNotification: (value: boolean) => {
+      self.requestEnableNotification = value
     },
   }))

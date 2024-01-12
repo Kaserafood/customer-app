@@ -4,7 +4,9 @@ import React, { useEffect } from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
+import { Linking } from "react-native"
 import * as RNLocalize from "react-native-localize"
+import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
 import { useQuery } from "react-query"
 import { Icon } from "../components"
@@ -15,13 +17,17 @@ import { MainScreen } from "../screens/main/main-screen"
 import { AccountResponse, Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
+import { getInstanceMixpanel } from "../utils/mixpanel"
+import { checkNotificationPermission } from "../utils/permissions"
+import { formatPhone } from "../utils/string"
 import { getI18nText } from "../utils/translate"
 
 const api = new Api()
+const mixpanel = getInstanceMixpanel()
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const insets = useSafeAreaInsets()
-  const { userStore, plansStore, messagesStore } = useStores()
+  const { userStore, plansStore, messagesStore, addressStore, couponModalStore } = useStores()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
   }
@@ -34,6 +40,8 @@ export function TabMainNavigation({ navigationRef }) {
         const { currency, date, role, isGeneralRegime, kaseraTaxId, plan } = data.data
 
         userStore.setAccount({ currency, date, role, isGeneralRegime, kaseraTaxId })
+
+        OneSignal.sendTag("role", role)
 
         plansStore.setPlan(plan)
       },
@@ -62,6 +70,23 @@ export function TabMainNavigation({ navigationRef }) {
       setLocaleI18n("en")
     }
   }, [userStore.countryId])
+
+  useEffect(() => {
+    if (userStore?.email) {
+      OneSignal.setEmail(userStore.email)
+      OneSignal.sendTag("name", userStore.displayName)
+
+      mixpanel.getPeople().set("$email", userStore.email)
+      mixpanel.getPeople().set("$name", userStore.displayName)
+      mixpanel.getPeople().set("$phone", formatPhone(userStore.phone))
+    }
+  }, [userStore?.email, userStore.name, userStore.lastName])
+
+  useEffect(() => {
+    if (userStore.userId > 0) OneSignal.addTrigger("logged", "true")
+
+    if (userStore.account?.role) OneSignal.sendTag("role", userStore.account?.role)
+  }, [userStore.userId, userStore.account?.role])
 
   return (
     <Tab.Navigator
@@ -105,6 +130,7 @@ export function TabMainNavigation({ navigationRef }) {
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "Home" })
+            mixpanel.track("Main navigation", { name: "Inicio" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "Home",
               description: "El usuario presionó la opción 'Home' en el menu principal",
@@ -119,14 +145,6 @@ export function TabMainNavigation({ navigationRef }) {
           tabBarIcon: ({ color }) => {
             return (
               <>
-                {/* <View style={styles.badge}>
-                  <Text
-                    size="sm"
-                    style={utilText.textWhite}
-                    preset="semiBold"
-                    tx="tabMainNavigation.new"
-                  ></Text>
-                </View> */}
                 <Icon style={utilSpacing.mt1} name="utensils" size={26} color={color} />
               </>
             )
@@ -137,6 +155,7 @@ export function TabMainNavigation({ navigationRef }) {
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "Packages" })
+            mixpanel.track("Main navigation", { name: "Packages" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "Packages",
               description: "El usuario presionó la opción 'Paquetes' en el menu principal",
@@ -157,6 +176,7 @@ export function TabMainNavigation({ navigationRef }) {
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "chefs" })
+            mixpanel.track("Main navigation", { name: "Chefs" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "chefs",
               description: "El usuario presionó la opción 'chefs' en el menú principal",
@@ -164,26 +184,6 @@ export function TabMainNavigation({ navigationRef }) {
           },
         }}
       />
-      {/* 
-      <Tab.Screen
-        options={{
-          // eslint-disable-next-line react/display-name
-          tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="magnifying-glass" size={26} color={color} />
-          },
-        }}
-        name={getI18nText("tabMainNavigation.search")}
-        component={SearchScreen}
-        listeners={{
-          tabPress: () => {
-            RNUxcam.logEvent("tabPress", { name: "search" })
-            AppEventsLogger.logEvent("tabPress", 1, {
-              name: "search",
-              description: "El usuario presionó la opción 'buscar' en el menú principal",
-            })
-          },
-        }}
-      /> */}
 
       <Tab.Screen
         options={{
@@ -199,6 +199,7 @@ export function TabMainNavigation({ navigationRef }) {
             e.preventDefault()
             openDrawer()
             RNUxcam.logEvent("tabPress", { name: "more" })
+            mixpanel.track("Main navigation", { name: "More options" })
             AppEventsLogger.logEvent("tabPress", 1, {
               name: "more",
               description: "El usuario presionó la opción 'más' en el menú principal",
@@ -209,14 +210,3 @@ export function TabMainNavigation({ navigationRef }) {
     </Tab.Navigator>
   )
 }
-
-// const styles = StyleSheet.create({
-//   badge: {
-//     backgroundColor: color.palette.green,
-//     borderRadius: 8,
-//     paddingHorizontal: 6,
-//     paddingVertical: 2,
-//     position: "absolute",
-//     top: -8,
-//   },
-// })
