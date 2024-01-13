@@ -77,7 +77,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
 
   useEffect(() => {
     async function fetch() {
-      if (userStore.userId && userStore.userId > 0)
+      if (userStore.userId && userStore.userId > 0 && userStore.addressId !== -1)
         if (addressStore.addresses.length === 0) {
           __DEV__ && console.log("GETTING ADDRESS LISET USER")
           await addressStore.getAll(userStore.userId)
@@ -91,7 +91,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
         }
     }
 
-    if (userStore.userId === -1) modalPersistent.setPersistent(true)
+    if (userStore.userId === -1 && userStore.addressId !== -1) modalPersistent.setPersistent(true)
 
     fetch()
   }, [userStore.userId])

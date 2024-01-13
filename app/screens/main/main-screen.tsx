@@ -2,9 +2,10 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
 import { Linking, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import Ripple from "react-native-material-ripple"
 import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
-import { Icon, Image, Location, Screen } from "../../components"
+import { Icon, Image, Location, Screen, Text } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
@@ -200,12 +201,33 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
             style={[utilSpacing.pl5, utilSpacing.pr4]}
           ></Location>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[utilSpacing.py3, utilSpacing.px4, styles.btnSearch, utilSpacing.mr5]}
             onPress={() => navigation.navigate("search")}
           >
             <Icon name="magnifying-glass" color={color.primary} size={22}></Icon>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
+        </View>
+
+        <View style={[styles.containerSearch, utilSpacing.mt5]}>
+          <Ripple
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            rippleContainerBorderRadius={150}
+            style={[
+              styles.search,
+              utilSpacing.py5,
+              utilSpacing.px4,
+              utilFlex.flexRow,
+
+              utilFlex.flexCenterVertical,
+              SHADOW,
+            ]}
+            onPress={() => navigation.navigate("search")}
+          >
+            <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
+            <Text tx="mapScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+          </Ripple>
         </View>
 
         <ScrollView style={styles.container}>
@@ -269,9 +291,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerLocation: {
-    backgroundColor: color.primary,
-    ...SHADOW,
-    height: 63,
+    // backgroundColor: color.primary,
+    // ...SHADOW,
+    // height: 63,
+  },
+  containerSearch: {
+    minWidth: 300,
+    // position: "absolute",
+    // top: 0,
+    width: "80%",
   },
   imgRosca: {
     height: 230,
@@ -280,5 +308,10 @@ const styles = StyleSheet.create({
   },
   location: {
     backgroundColor: color.palette.white,
+  },
+
+  search: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[3],
   },
 })

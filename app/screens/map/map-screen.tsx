@@ -43,7 +43,7 @@ const mixpanel = getInstanceMixpanel()
 
 export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observer(
   ({ navigation, route: { params } }) => {
-    const { messagesStore, coverageStore, commonStore, userStore } = useStores()
+    const { messagesStore, coverageStore, commonStore, userStore, addressStore } = useStores()
     const { fetchAddressText, getCurrentPosition } = useLocation(messagesStore)
     const mapRef = useRef<MapView>(null)
 
@@ -122,7 +122,8 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           mixpanel.track("Location completed", {
             "Screen to return": params?.screenToReturn || "main",
           })
-          navigation.navigate("address", {
+
+          addressStore.setCurrent({
             latitude: location.latitude,
             longitude: location.longitude,
             addressMap: address.formatted,
@@ -131,11 +132,32 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             country: address.country,
             city: address.city,
             region: address.region,
-            screenToReturn: params?.screenToReturn || "main",
-          })
+          } as any)
+
+          userStore.setAddressId(-1)
+
+          navigation.navigate("main")
+
+          // navigation.navigate("address", {
+          //   latitude: location.latitude,
+          //   longitude: location.longitude,
+          //   addressMap: address.formatted,
+          //   latitudeDelta: location.latitudeDelta,
+          //   longitudeDelta: location.longitudeDelta,
+          //   country: address.country,
+          //   city: address.city,
+          //   region: address.region,
+          //   screenToReturn: params?.screenToReturn || "main",
+          // })
         } else {
-          mixpanel.track("Location without coverage")
-          __DEV__ && console.log("No esta dentro del poligono")
+          mixpanel.track("Location without coverage", {
+            latitude: location.latitude,
+            longitude: location.longitude,
+            country: address.country,
+            city: address.city,
+            region: address.region,
+          })
+
           modalWithoutCoverage.setVisible(true)
         }
       } else {

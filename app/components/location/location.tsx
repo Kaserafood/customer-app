@@ -29,13 +29,15 @@ export const Location = observer(function Location(props: LocationProps) {
   return (
     <View style={[styles.containerAddress, style]}>
       <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
-        <Icon name="location-dot1" size={24} color={color.primary} />
+        <Icon name="location-dot1" size={24} color={color.text} />
         <Text
           numberOfLines={1}
           style={styles.textAddress}
-          text={addressStore.current.address}
+          preset="bold"
+          size="lg"
+          text={addressStore.current.address || addressStore.current.addressMap}
         ></Text>
-        <Icon name="angle-right1" style={styles.icon} size={24} color={color.primary} />
+        <Icon name="angle-right1" style={styles.icon} size={24} color={color.text} />
       </TouchableOpacity>
     </View>
   )
@@ -43,16 +45,17 @@ export const Location = observer(function Location(props: LocationProps) {
 
 const styles = StyleSheet.create({
   btnAddress: {
-    backgroundColor: color.palette.white,
-    borderRadius: spacing[3],
+    // backgroundColor: color.palette.white,
+    // borderRadius: spacing[3],
     display: "flex",
     flexDirection: "row",
-    flex: 1,
-    paddingHorizontal: spacing[4],
-    paddingVertical: spacing[0],
-    alignItems: "center",
+    // flex: 1,
+    // paddingHorizontal: spacing[4],
+    // paddingVertical: spacing[0],
+    // alignItems: "center",
   },
   containerAddress: {
+    backgroundColor: "red",
     flex: 1,
   },
   icon: {
@@ -65,7 +68,8 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     marginLeft: spacing[2],
     marginRight: spacing[2],
-    position: "relative",
+    // position: "relative",
+
     top: 2,
   },
 })
