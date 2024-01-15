@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
   containerAddress: {
-    backgroundColor: "red",
     flex: 1,
   },
   icon: {
@@ -64,7 +63,7 @@ const styles = StyleSheet.create({
 
   textAddress: {
     color: color.text,
-    flex: 1,
+    // flex: 1,
     marginBottom: 0,
     marginLeft: spacing[2],
     marginRight: spacing[2],

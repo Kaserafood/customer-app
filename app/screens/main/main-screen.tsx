@@ -17,7 +17,7 @@ import { DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList } from "../../navigators"
 import { DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
-import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
 import { UNITED_STATES } from "../../utils/constants"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -192,41 +192,39 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
     }
 
     return (
-      <Screen preset="fixed" statusBar="dark-content" statusBarBackgroundColor={color.primary}>
+      <Screen
+        preset="fixed"
+        bottomBar="light-content"
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+      >
         <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
             }}
-            style={[utilSpacing.pl5, utilSpacing.pr4]}
+            style={[utilSpacing.pl5, utilSpacing.pr5]}
           ></Location>
-
-          {/* <TouchableOpacity
-            style={[utilSpacing.py3, utilSpacing.px4, styles.btnSearch, utilSpacing.mr5]}
-            onPress={() => navigation.navigate("search")}
-          >
-            <Icon name="magnifying-glass" color={color.primary} size={22}></Icon>
-          </TouchableOpacity> */}
         </View>
 
-        <View style={[styles.containerSearch, utilSpacing.mt5]}>
+        <View style={[styles.containerSearch, utilSpacing.px5]}>
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}
             rippleContainerBorderRadius={150}
             style={[
               styles.search,
-              utilSpacing.py5,
+              utilSpacing.py4,
               utilSpacing.px4,
+              utilSpacing.mb4,
               utilFlex.flexRow,
-
+              styles.shadow,
               utilFlex.flexCenterVertical,
-              SHADOW,
             ]}
             onPress={() => navigation.navigate("search")}
           >
-            <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
-            <Text tx="mapScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+            <Icon name="search" type="Octicons" color={color.palette.grayDark} size={18}></Icon>
+            <Text tx="mainScreen.search" style={utilSpacing.ml3}></Text>
           </Ripple>
         </View>
 
@@ -296,10 +294,8 @@ const styles = StyleSheet.create({
     // height: 63,
   },
   containerSearch: {
-    minWidth: 300,
     // position: "absolute",
     // top: 0,
-    width: "80%",
   },
   imgRosca: {
     height: 230,
@@ -313,5 +309,16 @@ const styles = StyleSheet.create({
   search: {
     backgroundColor: color.palette.white,
     borderRadius: spacing[3],
+  },
+  shadow: {
+    elevation: 5,
+    shadowColor: color.palette.black,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.15,
+
+    shadowRadius: 20,
   },
 })
