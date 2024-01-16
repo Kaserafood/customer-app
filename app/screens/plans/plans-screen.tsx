@@ -14,6 +14,7 @@ import { useStores } from "../../models"
 import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
@@ -60,7 +61,7 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
             )}
           </View>
 
-          <View style={[utilFlex.flex1, utilSpacing.ml3]}>
+          <View style={[utilFlex.flex1, utilSpacing.pb4, styles.borderBottom]}>
             <Location
               onPress={() => {
                 modalStateLocation.setVisible(true)
@@ -121,6 +122,10 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
 )
 
 const styles = StyleSheet.create({
+  borderBottom: {
+    borderBottomColor: palette.grayLight,
+    borderBottomWidth: 1,
+  },
   btnBack: {
     alignItems: "center",
     backgroundColor: color.primaryDarker,
