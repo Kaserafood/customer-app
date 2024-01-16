@@ -88,7 +88,6 @@ const Sliders: FC<Props> = ({ onWithoutCoverage }) => {
         initialPage={page}
         ref={pageView}
         scrollEnabled={true}
-        showPageIndicator
         overdrag
         transitionStyle="scroll"
         onPageSelected={(e) => {
