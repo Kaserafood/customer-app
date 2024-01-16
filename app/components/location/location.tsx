@@ -1,9 +1,10 @@
 import { observer } from "mobx-react-lite"
 import React from "react"
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native"
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native"
 
 import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
+import { utilSpacing } from "../../theme/Util"
 import { Icon } from "../icon/icon"
 import { Text } from "../text/text"
 
@@ -27,19 +28,28 @@ export const Location = observer(function Location(props: LocationProps) {
   const { addressStore } = useStores()
 
   return (
-    <View style={[styles.containerAddress, style]}>
-      <TouchableOpacity onPressIn={() => onPress()} style={styles.btnAddress} activeOpacity={0.7}>
-        <Icon name="location-dot1" size={24} color={color.text} />
-        <Text
-          numberOfLines={1}
-          style={styles.textAddress}
-          preset="bold"
-          size="lg"
-          text={addressStore.current.address || addressStore.current.addressMap}
-        ></Text>
-        <Icon name="angle-right1" style={styles.icon} size={24} color={color.text} />
-      </TouchableOpacity>
-    </View>
+    // <View>
+    <TouchableOpacity
+      onPressIn={() => onPress()}
+      style={[styles.btnAddress, style]}
+      activeOpacity={0.7}
+    >
+      <Icon name="location-dot1" size={24} color={color.text} />
+      <Text
+        numberOfLines={1}
+        style={styles.textAddress}
+        preset="bold"
+        size="lg"
+        text={addressStore.current.address || addressStore.current.addressMap}
+      ></Text>
+      <Icon
+        name="angle-right1"
+        style={[styles.icon, utilSpacing.ml2]}
+        size={24}
+        color={color.text}
+      />
+    </TouchableOpacity>
+    // </View>
   )
 })
 
@@ -49,21 +59,24 @@ const styles = StyleSheet.create({
     // borderRadius: spacing[3],
     display: "flex",
     flexDirection: "row",
+    width: "100%",
+
     // flex: 1,
     // paddingHorizontal: spacing[4],
     // paddingVertical: spacing[0],
     // alignItems: "center",
   },
-  containerAddress: {
-    flex: 1,
-  },
+  // containerAddress: {
+  //   flex: 1,
+  //   width: "100%",
+  // },
   icon: {
     transform: [{ rotate: "90deg" }],
   },
 
   textAddress: {
     color: color.text,
-    // flex: 1,
+    flex: 1,
     marginBottom: 0,
     marginLeft: spacing[2],
     marginRight: spacing[2],

@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native"
 import React from "react"
 import { StyleSheet, View } from "react-native"
 import images from "../../assets/images"
@@ -11,14 +10,12 @@ interface Props {
 }
 
 const ValuePrepositions = ({ screenNavigate }: Props) => {
-  const navigation = useNavigation()
-
   const toScreen = (screen: "plans" | "dishes") => {
     screenNavigate(screen)
   }
 
   return (
-    <View style={utilSpacing.p5}>
+    <View style={utilSpacing.px5}>
       <Text size="lg" preset="bold" tx="mainScreen.whatDoYouNeed"></Text>
       <View style={[utilFlex.flexRow, utilSpacing.pt5]}>
         <Card

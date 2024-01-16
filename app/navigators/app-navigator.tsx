@@ -164,6 +164,9 @@ export const AppNavigator = (props: NavigationProps) => {
       checkout: {
         path: "checkout",
       },
+      plans: {
+        path: "plans",
+      },
     },
   }
 

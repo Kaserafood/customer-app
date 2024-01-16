@@ -1,11 +1,11 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useState } from "react"
-import { Linking, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native"
+import React, { FC, useEffect, useRef, useState } from "react"
+import { Linking, ScrollView, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
-import { Icon, Image, Location, Screen, Text } from "../../components"
+import { Icon, Location, Screen, Text } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { ModalWithoutCoverageCredits } from "../../components/modal-coverage/modal-without-coverage-credits"
@@ -18,6 +18,7 @@ import { NavigatorParamList } from "../../navigators"
 import { DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 import { UNITED_STATES } from "../../utils/constants"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -30,6 +31,7 @@ import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
 import Lunches from "./lunches"
 import ModalNotificationInfo from "./modal-notification-info"
+import Sliders from "./sliders"
 import ValuePrepositions from "./value-prepositions"
 
 const modalStateLocation = new ModalStateHandler()
@@ -54,6 +56,8 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       addressStore,
     } = useStores()
     const [currentDate, setCurrentDate] = useState<DatePlan>()
+
+    const [isAtTop, setIsAtTop] = useState(true)
 
     const onBannerPress = (banner: BannerModel) => {
       const category: Category = {
@@ -143,14 +147,6 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       mixpanel.track("Main Screen")
     }, [])
 
-    const handleRoscaReyes = () => {
-      mixpanel.track("Banner press", {
-        type: "plans",
-        screen: "main",
-      })
-      navigation.navigate("plans")
-    }
-
     useEffect(() => {
       if (addressStore.current.id > 0) {
         checkNotificationPermission().then((result) => {
@@ -191,6 +187,19 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       })
     }
 
+    const handleSearch = () => {
+      mixpanel.track("Search Main Screen press")
+      navigation.navigate("search")
+    }
+
+    const handleScroll = (event) => {
+      const { contentOffset } = event.nativeEvent
+
+      const isAtTop = contentOffset.y === 0
+
+      setIsAtTop(isAtTop)
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -207,7 +216,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           ></Location>
         </View>
 
-        <View style={[styles.containerSearch, utilSpacing.px5]}>
+        <View style={[styles.containerSearch, utilSpacing.px5, !isAtTop && styles.borderBottom]}>
           <Ripple
             rippleOpacity={0.2}
             rippleDuration={400}
@@ -221,20 +230,15 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
               styles.shadow,
               utilFlex.flexCenterVertical,
             ]}
-            onPress={() => navigation.navigate("search")}
+            onPress={handleSearch}
           >
-            <Icon name="search" type="Octicons" color={color.palette.grayDark} size={18}></Icon>
+            <Icon name="search" type="Octicons" color={color.palette.black} size={18}></Icon>
             <Text tx="mainScreen.search" style={utilSpacing.ml3}></Text>
           </Ripple>
         </View>
 
-        <ScrollView style={styles.container}>
-          <TouchableOpacity onPress={handleRoscaReyes}>
-            <Image
-              source={{ uri: "https://kasera.s3.amazonaws.com/images/rosca-reyes.png" }}
-              style={styles.imgRosca}
-            ></Image>
-          </TouchableOpacity>
+        <ScrollView onScroll={handleScroll} style={styles.container}>
+          <Sliders onWithoutCoverage={() => modalStateCoverageCredits.setVisible(true)}></Sliders>
 
           <ValuePrepositions screenNavigate={handleScreenNavigate}></ValuePrepositions>
           {currentDate?.date && userStore.countryId !== UNITED_STATES && (
@@ -280,6 +284,10 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
 )
 
 const styles = StyleSheet.create({
+  borderBottom: {
+    borderBottomColor: palette.grayLight,
+    borderBottomWidth: 1,
+  },
   btnSearch: {
     backgroundColor: color.palette.white,
     borderRadius: spacing[3],
@@ -302,10 +310,10 @@ const styles = StyleSheet.create({
 
     width: "100%",
   },
+
   location: {
     backgroundColor: color.palette.white,
   },
-
   search: {
     backgroundColor: color.palette.white,
     borderRadius: spacing[3],

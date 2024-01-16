@@ -14,13 +14,13 @@ import { useStores } from "../../models"
 import { DatePlan } from "../../services/api"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
 import Banner from "./banner"
 import Benefits from "./benefits"
 import CreditSummary from "./credit-summary"
 import Menu from "./menu"
-import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateDeliveryDatePlan = new ModalStateHandler()
@@ -44,28 +44,29 @@ export const PlansScreen: FC<StackScreenProps<NavigatorParamList, "plans">> = ob
     }
 
     return (
-      <Screen preset="fixed" style={styles.container}>
-        <View style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow]}>
-          {params && params?.showBackIcon && (
-            <TouchableOpacity
-              style={[styles.btnBack, utilSpacing.ml5]}
-              onPress={goBack}
-              activeOpacity={0.5}
-            >
-              <Icon
-                name="angle-left-1"
-                style={utilSpacing.mr2}
-                size={24}
-                color={color.palette.white}
-              ></Icon>
-            </TouchableOpacity>
-          )}
-          <Location
-            onPress={() => {
-              modalStateLocation.setVisible(true)
-            }}
-            style={utilSpacing.px5}
-          ></Location>
+      <Screen
+        preset="fixed"
+        style={styles.container}
+        bottomBar="light-content"
+        statusBar="dark-content"
+        statusBarBackgroundColor={color.palette.white}
+      >
+        <View style={[utilSpacing.pt4, utilSpacing.px5, utilFlex.flexRow]}>
+          <View>
+            {params && params?.showBackIcon && (
+              <TouchableOpacity onPress={goBack}>
+                <Icon name="arrow-left" size={24} color={color.text}></Icon>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View style={[utilFlex.flex1, utilSpacing.ml3]}>
+            <Location
+              onPress={() => {
+                modalStateLocation.setVisible(true)
+              }}
+            ></Location>
+          </View>
         </View>
         <ScrollView style={[styles.container, utilSpacing.pb6]}>
           {!plansStore.hasActivePlan ? (
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.background,
   },
   containerLocation: {
-    backgroundColor: color.primary,
-    height: 63,
+    // backgroundColor: color.primary,
+    // height: 63,
   },
 })
