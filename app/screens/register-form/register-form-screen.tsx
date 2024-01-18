@@ -307,18 +307,6 @@ export const RegisterFormScreen: FC<
                   ></Text>
                   <Text size="sm" tx="registerFormScreen.ofKasera" style={styles.lineHeight}></Text>
                 </View>
-
-                <TouchableOpacity
-                  style={[utilFlex.selfCenter, utilSpacing.p4, utilSpacing.mt5]}
-                  onPress={toLogin}
-                >
-                  <Text
-                    size="lg"
-                    preset="bold"
-                    style={utilText.textPrimary}
-                    tx="registerFormScreen.logIn"
-                  ></Text>
-                </TouchableOpacity>
               </View>
             </FormProvider>
           </View>

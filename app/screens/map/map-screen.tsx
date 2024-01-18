@@ -123,6 +123,8 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             "Screen to return": params?.screenToReturn || "main",
           })
 
+          const currentAddressId = addressStore.current.id
+
           addressStore.setCurrent({
             latitude: location.latitude,
             longitude: location.longitude,
@@ -134,21 +136,23 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
             region: address.region,
           } as any)
 
-          userStore.setAddressId(-1)
+          if (currentAddressId > 0) {
+            navigation.navigate("address", {
+              latitude: location.latitude,
+              longitude: location.longitude,
+              addressMap: address.formatted,
+              latitudeDelta: location.latitudeDelta,
+              longitudeDelta: location.longitudeDelta,
+              country: address.country,
+              city: address.city,
+              region: address.region,
+              screenToReturn: params?.screenToReturn || "main",
+            })
+          } else {
+            userStore.setAddressId(-1)
 
-          navigation.navigate("main")
-
-          // navigation.navigate("address", {
-          //   latitude: location.latitude,
-          //   longitude: location.longitude,
-          //   addressMap: address.formatted,
-          //   latitudeDelta: location.latitudeDelta,
-          //   longitudeDelta: location.longitudeDelta,
-          //   country: address.country,
-          //   city: address.city,
-          //   region: address.region,
-          //   screenToReturn: params?.screenToReturn || "main",
-          // })
+            navigation.navigate("main")
+          }
         } else {
           mixpanel.track("Location without coverage", {
             latitude: location.latitude,
