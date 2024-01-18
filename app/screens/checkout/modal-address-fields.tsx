@@ -7,12 +7,14 @@ import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { GUATEMALA } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalState } from "../../utils/modalState"
 
 interface Props {
   state: ModalState
   onOkPress: (data) => void
 }
+const mixpanel = getInstanceMixpanel()
 
 const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
   const { countryStore, userStore } = useStores()
@@ -20,7 +22,13 @@ const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
   const methods = useForm({ mode: "onBlur" })
 
   const onSubmit = (data) => {
+    mixpanel.track("Address modal OK")
     onOkPress(data)
+    state.setVisible(false)
+  }
+
+  const handleHide = () => {
+    mixpanel.track("Address modal Cancel")
     state.setVisible(false)
   }
 
@@ -42,15 +50,6 @@ const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
               styleContainer={[utilSpacing.mb6]}
               maxLength={50}
             ></InputText>
-
-            {/* <InputText
-              preset="card"
-              name="instructionsDelivery"
-              placeholderTx="addressScreen.instructionsDeliveryPlaceholder"
-              labelTx="addressScreen.instructionsDelivery"
-              styleContainer={utilSpacing.mb6}
-              maxLength={200}
-            ></InputText> */}
 
             <InputText
               preset="card"
@@ -86,7 +85,7 @@ const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
               tx="common.cancel"
               preset="gray"
               style={[utilFlex.flex1, utilSpacing.mr2]}
-              onPress={() => state.setVisible(false)}
+              onPress={handleHide}
             ></Button>
 
             <Button

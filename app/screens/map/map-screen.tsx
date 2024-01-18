@@ -151,7 +151,11 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           } else {
             userStore.setAddressId(-1)
 
-            navigation.navigate("main")
+            if (params.isExplore) {
+              commonStore.setIsSignedIn(true)
+            } else {
+              navigation.navigate("main")
+            }
           }
         } else {
           mixpanel.track("Location without coverage", {

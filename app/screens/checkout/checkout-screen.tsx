@@ -528,6 +528,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         })
     }
 
+    const handleOpenModalAddress = () => {
+      modalAddressFields.setVisible(true)
+      mixpanel.track("Open modal address fields")
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -579,7 +584,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
                   text="Datos adicionales de direccion"
                   preset="gray"
                   style={[utilSpacing.mb6, utilSpacing.mx4]}
-                  onPress={() => modalAddressFields.setVisible(true)}
+                  onPress={handleOpenModalAddress}
                 ></Button>
               </View>
             )}
