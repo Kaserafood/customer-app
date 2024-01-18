@@ -84,6 +84,9 @@
 			<string>icomoon.ttf</string>
 			<string>FontAwesome.ttf</string>
 			<string>MaterialIcons.ttf</string>
+			<string>Octicons.ttf</string>
+			<string>Feather.ttf</string>
+			<string>Ionicons.ttf</string>
 		</array>
 		<key>UIBackgroundModes</key>
 		<array>
