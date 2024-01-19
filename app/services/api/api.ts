@@ -680,4 +680,11 @@ export class Api {
   async driverCancelOrder(orderId: number, userId: number, reason: string): Promise<ValueResponse> {
     return await this.request({ orderId, userId, reason }, `/drivers/cancel-order`, "POST")
   }
+
+  /**
+   * @description Get main banners
+   */
+  async getMainBanners(userId: number): Promise<any> {
+    return await this.request({ userId }, `/banners/main`, "GET")
+  }
 }

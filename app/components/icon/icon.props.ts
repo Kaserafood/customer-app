@@ -21,4 +21,6 @@ export interface IconProps {
    * Size of the icon, can also be passed as fontSize in the style object.
    */
   size?: number
+
+  type?: "Custom" | "Octicons" | "Feather" | "Ionicons"
 }

@@ -24,8 +24,7 @@ const mixpanel = getInstanceMixpanel()
 const modalCountry = new ModalStateHandler()
 export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = observer(
   ({ navigation }) => {
-    const { userStore, commonStore, countryStore } = useStores()
-    // const insets = useSafeAreaInsets()
+    const { userStore, countryStore } = useStores()
 
     const toRegister = () => {
       userStore.setUserId(0)
@@ -45,8 +44,9 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
       RNUxcam.setUserProperty("exploreTheApp", "true")
       RNUxcam.logEvent("exploreTheApp")
       mixpanel.track("Explore The App")
-
-      commonStore.setIsSignedIn(true)
+      navigation.navigate("registerPager", {
+        isExplore: true,
+      })
     }
 
     // useEffect(() => {

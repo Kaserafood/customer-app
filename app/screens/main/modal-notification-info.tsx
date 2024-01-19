@@ -27,7 +27,7 @@ const ModalNotificationInfo: FC<Props> = ({ state, enablePress }) => {
   }
 
   return (
-    <Modal state={state}>
+    <Modal state={state} onHide={handleHideModal}>
       <View style={utilSpacing.p4}>
         <Text tx="common.dontLeaveOffer" preset="bold" size="xl" style={utilSpacing.mb4}></Text>
         <Text tx="common.enableNotifications"></Text>

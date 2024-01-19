@@ -77,7 +77,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
 
   useEffect(() => {
     async function fetch() {
-      if (userStore.userId && userStore.userId > 0)
+      if (userStore.userId && userStore.userId > 0 && userStore.addressId !== -1)
         if (addressStore.addresses.length === 0) {
           __DEV__ && console.log("GETTING ADDRESS LISET USER")
           await addressStore.getAll(userStore.userId)
@@ -91,7 +91,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
         }
     }
 
-    if (userStore.userId === -1) modalPersistent.setPersistent(true)
+    if (userStore.userId === -1 && userStore.addressId !== -1) modalPersistent.setPersistent(true)
 
     fetch()
   }, [userStore.userId])
@@ -199,7 +199,7 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
               ></Text>
 
               <Ripple
-                style={utilSpacing.px5}
+                style={[utilSpacing.px5, utilSpacing.mb5]}
                 rippleOpacity={0.2}
                 rippleDuration={400}
                 onPressIn={toMap}
@@ -227,20 +227,6 @@ export const ModalLocation = observer(function Location(props: LocationProps) {
                   </View>
                 </Card>
               </Ripple>
-
-              <Ripple
-                rippleOpacity={0.2}
-                rippleDuration={400}
-                style={[styles.btnAddressAdd, utilSpacing.mx5]}
-                onPressIn={toMap}
-              >
-                <Text
-                  preset="bold"
-                  style={utilFlex.selfCenter}
-                  tx="modalLocation.addAddress"
-                ></Text>
-              </Ripple>
-
               <AddressList></AddressList>
             </View>
           </View>
@@ -282,7 +268,7 @@ const AddressItem = observer((props: { address: Address }) => {
       style={[utilSpacing.px5, utilFlex.flexCenterVertical]}
       onPress={() => updateAddressId(address.id)}
     >
-      <View style={[utilFlex.flexRow, utilSpacing.py3]}>
+      <View style={[utilFlex.flexRow, utilSpacing.py3, utilFlex.flexCenterVertical]}>
         {addressStore.current.id === address.id ? (
           <Animated.View entering={ZoomIn} exiting={ZoomOut}>
             <IconRN name="check-circle" size={30} color={color.primary} />
@@ -291,13 +277,15 @@ const AddressItem = observer((props: { address: Address }) => {
           <View style={styles.w30}></View>
         )}
         <View style={[utilFlex.flex1, utilSpacing.ml3]}>
-          <Text numberOfLines={1} preset="semiBold" text={address.name}></Text>
-          <Text
-            size="sm"
-            numberOfLines={2}
-            style={styles.addressSubtitle}
-            text={address.address}
-          ></Text>
+          <Text numberOfLines={1} preset="semiBold" text={address.name || address.address}></Text>
+          {!!address.name && (
+            <Text
+              size="sm"
+              numberOfLines={2}
+              style={styles.addressSubtitle}
+              text={address.address}
+            ></Text>
+          )}
         </View>
       </View>
     </Ripple>

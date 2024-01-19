@@ -40,7 +40,7 @@ const Button = (props: ButtonProps) => {
     />
   )
 
-  __DEV__ && console.log("Button", preset, viewStyle.width)
+  // __DEV__ && console.log("Button", preset, viewStyle.width)
   return (
     <TouchableOpacity
       style={[

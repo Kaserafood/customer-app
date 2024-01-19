@@ -344,12 +344,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         <StatusBar barStyle="light-content" backgroundColor={"transparent"} translucent></StatusBar>
         <View style={styles.containerBtnBack}>
           <TouchableOpacity onPress={handleBack}>
-            <Icon
-              name="angle-left-1"
-              style={styles.iconBack}
-              size={24}
-              color={color.palette.white}
-            ></Icon>
+            <Icon name="angle-left-1" style={styles.iconBack} size={24} color={color.text}></Icon>
           </TouchableOpacity>
         </View>
         <ScrollView ref={scrollRef}>
@@ -495,7 +490,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   containerBtnBack: {
-    backgroundColor: color.palette.blackTransparent,
+    backgroundColor: color.palette.white,
     borderRadius: 25,
     height: 45,
     left: 20,

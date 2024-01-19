@@ -8,6 +8,7 @@ import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import LottieView from "lottie-react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import Ripple from "react-native-material-ripple"
 import RNUxcam from "react-native-ux-cam"
 import { ScreenType, useChef } from "../../common/hooks/useChef"
 import {
@@ -33,7 +34,8 @@ import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { color, spacing } from "../../theme"
-import { SHADOW, utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
@@ -71,6 +73,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       addressStore,
     } = useStores()
     const { currentDay } = dayStore
+    const [isAtTop, setIsAtTop] = useState(true)
 
     useEffect(() => {
       if (addressStore.current?.latitude && addressStore.current?.longitude) {
@@ -259,6 +262,12 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
     }
 
     const onScroll = (event) => {
+      const { contentOffset } = event.nativeEvent
+
+      const isAtTop = contentOffset.y === 0
+
+      setIsAtTop(isAtTop)
+
       if (isCloseToBottom(event.nativeEvent) && fetchData && dishStore.dishes.length > 0) {
         setFetchData(false)
         setIsFetchingMoreData(true)
@@ -323,15 +332,20 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       return data
     }
 
+    const handleSearch = () => {
+      mixpanel.track("Search Dish Screen press")
+      navigation.navigate("search")
+    }
+
     return (
       <Screen
         preset="fixed"
         style={styles.container}
         statusBar="dark-content"
-        statusBarBackgroundColor={color.primary}
+        statusBarBackgroundColor={color.palette.white}
       >
         <View
-          style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow, utilSpacing.pr5]}
+          style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow, utilSpacing.px5]}
         >
           {params && params?.showBackIcon && (
             <TouchableOpacity
@@ -351,15 +365,28 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
             onPress={() => {
               modalStateLocation.setVisible(true)
             }}
-            style={[utilSpacing.pl5, utilSpacing.pr4]}
           ></Location>
+        </View>
 
-          <TouchableOpacity
-            style={[utilSpacing.py3, utilSpacing.px4, styles.btnSearch]}
-            onPress={() => navigation.navigate("search")}
+        <View style={[utilSpacing.px5, !isAtTop && styles.borderBottom]}>
+          <Ripple
+            rippleOpacity={0.2}
+            rippleDuration={400}
+            rippleContainerBorderRadius={150}
+            style={[
+              styles.search,
+              utilSpacing.py4,
+              utilSpacing.px4,
+              utilSpacing.mb4,
+              utilFlex.flexRow,
+              styles.shadow,
+              utilFlex.flexCenterVertical,
+            ]}
+            onPress={handleSearch}
           >
-            <Icon name="magnifying-glass" color={color.primary} size={22}></Icon>
-          </TouchableOpacity>
+            <Icon name="search" type="Octicons" color={color.palette.black} size={18}></Icon>
+            <Text tx="mainScreen.search" style={utilSpacing.ml3}></Text>
+          </Ripple>
         </View>
         <ScrollView
           style={styles.container}
@@ -510,6 +537,10 @@ const ListDishes = observer(function ListDishes(props: {
 })
 
 const styles = StyleSheet.create({
+  borderBottom: {
+    borderBottomColor: palette.grayLight,
+    borderBottomWidth: 1,
+  },
   btnBack: {
     alignItems: "center",
     backgroundColor: color.primaryDarker,
@@ -533,9 +564,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerLocation: {
-    backgroundColor: color.primary,
-    ...SHADOW,
-    height: 63,
+    // backgroundColor: color.primary,
+    // ...SHADOW,
+    // height: 63,
   },
   iconShipping: {
     height: 24,
@@ -548,5 +579,20 @@ const styles = StyleSheet.create({
     height: 30,
     width: "auto",
     zIndex: 10000,
+  },
+  search: {
+    backgroundColor: color.palette.white,
+    borderRadius: spacing[3],
+  },
+  shadow: {
+    elevation: 5,
+    shadowColor: color.palette.black,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.15,
+
+    shadowRadius: 20,
   },
 })

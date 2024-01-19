@@ -102,7 +102,6 @@ const AppStack = observer(() => {
           <Stack.Screen name="ordersChef" component={OrdersChefScreen} />
           <Stack.Screen name="orderChefDetail" component={OrderChefDetailScreen} />
           <Stack.Screen name="chefInvoice" component={ChefInvoiceScreen} />
-          <Stack.Screen name="map" component={MapScreen} />
         </Stack.Group>
       )}
       <Stack.Group navigationKey={`${commonStore.isSignedIn}`}>
@@ -125,6 +124,7 @@ const AppStack = observer(() => {
         <Stack.Screen name="driverOrders" component={DriverOrdersScreen} />
         <Stack.Screen name="driverOrderDetail" component={DriverOrderDetail} />
         <Stack.Screen name="driverOrdersHistory" component={DriverOrdersHistoryScreen} />
+        <Stack.Screen name="map" component={MapScreen} />
       </Stack.Group>
     </Stack.Navigator>
   )
@@ -163,6 +163,9 @@ export const AppNavigator = (props: NavigationProps) => {
       },
       checkout: {
         path: "checkout",
+      },
+      plans: {
+        path: "plans",
       },
     },
   }

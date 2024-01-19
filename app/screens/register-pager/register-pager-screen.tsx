@@ -13,6 +13,7 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { color } from "../../theme"
 import { utilSpacing, utilText } from "../../theme/Util"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -30,8 +31,9 @@ const mixpanel = getInstanceMixpanel()
 
 export const RegisterPagerScreen: FC<
   StackScreenProps<NavigatorParamList, "registerPager">
-> = observer(({ navigation }) => {
+> = observer(({ navigation, route: { params } }) => {
   const [page, setPage] = useState(0)
+  const { commonStore } = useStores()
   let pageView = null
 
   useEffect(() => {
@@ -80,7 +82,14 @@ export const RegisterPagerScreen: FC<
     pageView.setPage(2)
     setPage(2)
     mixpanel.track("How it works completed")
-    navigation.navigate("registerForm")
+    if (params?.isExplore) {
+      navigation.navigate("map", {
+        isExplore: true,
+        screenToReturn: "main",
+      })
+    } else {
+      navigation.navigate("registerForm")
+    }
   }
 
   return (

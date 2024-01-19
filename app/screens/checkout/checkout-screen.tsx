@@ -8,6 +8,7 @@ import { AppEventsLogger } from "react-native-fbsdk-next"
 import Ripple from "react-native-material-ripple"
 
 import {
+  Button,
   ButtonFooter,
   Card,
   Header,
@@ -41,6 +42,7 @@ import { MEXICO } from "../../utils/constants"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import DeliveryLabel from "./delivery-label"
 import { DeliveryTimeList } from "./delivery-time-list"
+import ModalAddressFields from "./modal-address-fields"
 import { ModalCoupon } from "./modal-coupon"
 import { ModalPaymentList } from "./modal-payment-list"
 import SelectPaymentMethod from "./select-payment-mehtod"
@@ -50,6 +52,7 @@ const modalStateLocation = new ModalStateHandler()
 const modalDelivery = new ModalStateHandler()
 const modalStateCoupon = new ModalStateHandler()
 const modalStatePaymentList = new ModalStateHandler()
+const modalAddressFields = new ModalStateHandler()
 const mixpanel = getInstanceMixpanel()
 
 export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">> = observer(
@@ -68,6 +71,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       plansStore,
     } = useStores()
     const [labelDeliveryTime, setLabelDeliveryTime] = useState("")
+    const [currentAddressData, setCurrentAddressData] = useState({
+      name: "",
+      numHouseApartment: "",
+      phone: "",
+    })
 
     const [coupon, setCoupon] = useState<Coupon>()
 
@@ -167,12 +175,19 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return label
     }
     const onError: SubmitErrorHandler<any> = (errors) => {
-      RNUxcam.logEvent("checkout: errorSubmit", { errors })
+      // RNUxcam.logEvent("checkout: errorSubmit", { errors })
       mixpanel.track("Checkout: Error form validation", { errors })
       __DEV__ && console.log({ errors })
+      if (errors.fullAddress) {
+        messagesStore.showError("addressScreen.addressCompleteRequired", true)
+      }
     }
 
     const sendOrder = async (data) => {
+      if (!addressStore.current.id) {
+        await saveAddress(data.customerNote, data.fullAddress)
+      }
+
       if (isPlan) {
         if (!getPaymentMethodId() && !userStore.paymentCash) {
           messagesStore.showError("checkoutScreen.errorSelectPaymentMethod", true)
@@ -452,7 +467,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       const address = ""
       if (addressStore.current.name && addressStore.current.name.trim().length > 0)
         address.concat(" - ")
-      return address.concat(addressStore.current.address)
+      return address.concat(addressStore.current.address || addressStore.current.addressMap)
     }
 
     const onPressAddress = () => {
@@ -481,6 +496,43 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return cartStore.cart[0]?.dish.chef.priceDelivery
     }
 
+    const handleAddressData = (data) => {
+      setCurrentAddressData(data)
+    }
+
+    const saveAddress = async (customerNote: string, fullAddress: string) => {
+      const address = {
+        ...addressStore.current,
+        ...currentAddressData,
+        address: fullAddress,
+        instructionsDelivery: customerNote,
+        userId: userStore.userId,
+      }
+
+      commonStore.setVisibleLoading(true)
+      return await addressStore
+        .add(address)
+        .then((res) => {
+          if (res) {
+            address.id = res.data as number
+            addressStore.setCurrent({ ...address })
+            userStore.setAddressId(address.id)
+            mixpanel.track("Add address from checkout")
+            console.log("Saved address", res.data)
+          }
+        })
+        .catch((error: Error) => {
+          mixpanel.track("Add address error checkout")
+          messagesStore.showError(error.message)
+          commonStore.setVisibleLoading(false)
+        })
+    }
+
+    const handleOpenModalAddress = () => {
+      modalAddressFields.setVisible(true)
+      mixpanel.track("Open modal address fields")
+    }
+
     return (
       <Screen
         preset="fixed"
@@ -498,17 +550,44 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             style={[utilSpacing.mb5, utilSpacing.mt6, utilSpacing.mx4]}
           ></Text>
           <FormProvider {...methods}>
-            <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPressAddress}>
-              <InputText
-                name="address"
-                preset="card"
-                labelTx="checkoutScreen.address"
-                placeholderTx="checkoutScreen.addressPlaceholder"
-                editable={false}
-                value={getAddressText()}
-                iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
-              ></InputText>
-            </Ripple>
+            {addressStore.current.id > 0 && (
+              <Ripple rippleOpacity={0.2} rippleDuration={400} onPress={onPressAddress}>
+                <InputText
+                  name="address"
+                  preset="card"
+                  labelTx="checkoutScreen.address"
+                  placeholderTx="checkoutScreen.addressPlaceholder"
+                  editable={false}
+                  value={getAddressText()}
+                  iconRight={<Icon name="angle-right" size={18} color={color.palette.grayDark} />}
+                ></InputText>
+              </Ripple>
+            )}
+
+            {!addressStore.current.id && (
+              <View>
+                <InputText
+                  preset="card"
+                  name="fullAddress"
+                  placeholderTx="addressScreen.addressPlaceholder"
+                  rules={{
+                    required: "addressScreen.addressCompleteRequired",
+                  }}
+                  labelTx="addressScreen.addressComplete"
+                  styleContainer={[utilSpacing.mb3]}
+                  maxLength={400}
+                  required
+                ></InputText>
+
+                <Button
+                  size="sm"
+                  text="Datos adicionales de direccion"
+                  preset="gray"
+                  style={[utilSpacing.mb6, utilSpacing.mx4]}
+                  onPress={handleOpenModalAddress}
+                ></Button>
+              </View>
+            )}
 
             <InputText
               name="customerNote"
@@ -598,6 +677,10 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         <ModalDeliveryDate modal={modalDelivery}></ModalDeliveryDate>
         <ModalCoupon stateModal={modalStateCoupon} onUseCoupon={setCoupon}></ModalCoupon>
         <ModalPaymentList stateModal={modalStatePaymentList} isPlan={isPlan}></ModalPaymentList>
+        <ModalAddressFields
+          onOkPress={handleAddressData}
+          state={modalAddressFields}
+        ></ModalAddressFields>
       </Screen>
     )
   },

@@ -4,7 +4,7 @@ import { DishChef } from "../models/dish-store"
 import { UserChef } from "../models/user-store"
 
 interface registerPageParams {
-  init: boolean
+  isExplore?: boolean
 }
 
 interface addressScreenParams extends mapScreenParams {
@@ -29,6 +29,7 @@ interface endOrderParams {
 
 interface mapScreenParams {
   screenToReturn: "main" | "checkout" | "menuSummary"
+  isExplore?: boolean
 }
 
 interface tokenScreenParams {
