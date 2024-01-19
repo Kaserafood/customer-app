@@ -581,7 +581,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
                 <Button
                   size="sm"
-                  text="Datos adicionales de direccion"
+                  text="Datos adicionales de dirección"
                   preset="gray"
                   style={[utilSpacing.mb6, utilSpacing.mx4]}
                   onPress={handleOpenModalAddress}

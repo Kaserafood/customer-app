@@ -3,7 +3,6 @@ import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useLayoutEffect, useRef } from "react"
 import { FormProvider, SubmitErrorHandler, useForm } from "react-hook-form"
 import { Keyboard, ScrollView, StyleSheet, View } from "react-native"
-import { AppEventsLogger } from "react-native-fbsdk-next"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import OneSignal from "react-native-onesignal"
 
@@ -12,7 +11,7 @@ import changeNavigationBarColor from "react-native-navigation-bar-color"
 import RNUxcam from "react-native-ux-cam"
 import { UXCamOcclusionType } from "react-native-ux-cam/UXCamOcclusion"
 import { Button, Icon, InputText, Screen, Text } from "../../components"
-import { Address, useStores } from "../../models"
+import { useStores } from "../../models"
 import { UserRegister } from "../../models/user-store"
 import { goBack } from "../../navigators"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
@@ -23,7 +22,6 @@ import { color } from "../../theme/color"
 import { GUATEMALA, UNITED_STATES } from "../../utils/constants"
 import { getMaskLength } from "../../utils/mask"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
-import { loadString } from "../../utils/storage"
 
 const hideTextFields = {
   type: UXCamOcclusionType.OccludeAllTextFields,
@@ -91,19 +89,22 @@ export const RegisterFormScreen: FC<
           mixpanel.identify(id)
           await getAccount()
 
+          RNUxcam.logEvent("register", {
+            exploreApp: currentUserId === -1,
+          })
+          mixpanel.track("Register completed", {
+            exploreApp: currentUserId === -1,
+          })
+          OneSignal.sendTag("registered", "1")
+          commonStore.setIsSignedIn(true)
+          commonStore.setVisibleLoading(false)
+
           if (currentUserId === -1) {
-            await saveAddress(userId)
-            commonStore.setVisibleLoading(false)
+            // await saveAddress(userId)
+            // commonStore.setVisibleLoading(false)
+            userStore.setAddressId(-1)
+            navigation.navigate("checkout", { isPlan: cartStore.inRechargeProcess })
           } else {
-            RNUxcam.logEvent("register", {
-              exploreApp: false,
-            })
-            mixpanel.track("Register completed", {
-              exploreApp: false,
-            })
-            OneSignal.sendTag("registered", "1")
-            commonStore.setIsSignedIn(true)
-            commonStore.setVisibleLoading(false)
             navigation.navigate("map")
           }
         }
@@ -126,44 +127,44 @@ export const RegisterFormScreen: FC<
     __DEV__ && console.log({ errors })
   }
 
-  const saveAddress = async (userId: number) => {
-    const currentAddress = await loadString("address")
-    if (currentAddress.length > 0) {
-      const address: Address = JSON.parse(currentAddress)
-      address.userId = userId
-      await addressStore
-        .add(address)
-        .then((res) => {
-          if (res) {
-            address.id = Number(res.data)
-            addressStore.setCurrent({ ...address })
-            userStore.setAddressId(address.id)
-            userStore.updateAddresId(userId, address.id)
-            commonStore.setIsSignedIn(true)
+  // const saveAddress = async (userId: number) => {
+  //   const currentAddress = await loadString("address")
+  //   if (currentAddress?.length > 0) {
+  //     const address: Address = JSON.parse(currentAddress)
+  //     address.userId = userId
+  //     await addressStore
+  //       .add(address)
+  //       .then((res) => {
+  //         if (res) {
+  //           address.id = Number(res.data)
+  //           addressStore.setCurrent({ ...address })
+  //           userStore.setAddressId(address.id)
+  //           userStore.updateAddresId(userId, address.id)
+  //           commonStore.setIsSignedIn(true)
 
-            AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
-              [AppEventsLogger.AppEventParams.RegistrationMethod]: "email",
-              [AppEventsLogger.AppEventParams.Currency]: "GTQ",
-              description: "Nuevo usuario registrado con email",
-            })
-            AppEventsLogger.setUserID(userId.toString())
+  //           AppEventsLogger.logEvent(AppEventsLogger.AppEvents.CompletedRegistration, {
+  //             [AppEventsLogger.AppEventParams.RegistrationMethod]: "email",
+  //             [AppEventsLogger.AppEventParams.Currency]: "GTQ",
+  //             description: "Nuevo usuario registrado con email",
+  //           })
+  //           AppEventsLogger.setUserID(userId.toString())
 
-            RNUxcam.logEvent("register", {
-              exploreApp: true,
-            })
-            mixpanel.track("Register completed", {
-              exploreApp: false,
-            })
-            OneSignal.sendTag("registered", "1")
-            navigation.navigate("checkout", { isPlan: cartStore.inRechargeProcess })
-          }
-        })
-        .catch((error: Error) => {
-          messagesStore.showError(error.message)
-        })
-        .finally(() => commonStore.setVisibleLoading(false))
-    }
-  }
+  //           RNUxcam.logEvent("register", {
+  //             exploreApp: true,
+  //           })
+  //           mixpanel.track("Register completed", {
+  //             exploreApp: false,
+  //           })
+  //           OneSignal.sendTag("registered", "1")
+  //           navigation.navigate("checkout", { isPlan: cartStore.inRechargeProcess })
+  //         }
+  //       })
+  //       .catch((error: Error) => {
+  //         messagesStore.showError(error.message)
+  //       })
+  //       .finally(() => commonStore.setVisibleLoading(false))
+  //   }
+  // }
 
   const toLogin = () => {
     navigation.navigate("loginForm", { screenRedirect: "checkout" })
