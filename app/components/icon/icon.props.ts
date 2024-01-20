@@ -22,5 +22,5 @@ export interface IconProps {
    */
   size?: number
 
-  type?: "Custom" | "Octicons" | "Feather" | "Ionicons"
+  type?: "Custom" | "Octicons" | "Feather" | "Ionicons" | "FontAwesome"
 }

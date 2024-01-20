@@ -332,10 +332,26 @@ export class Api {
 
   /**
    *
-   * @description Get days to delivery available for a specific chef
+   * @description Get dates to delivery available for a specific chef
    */
   async getDaysByChefDelivery(timeZone: string, chefId: number): Promise<DayResponse> {
     return await this.request({ timeZone }, `/deliveries/days/${chefId}`, "GET")
+  }
+
+  /**
+   *
+   * @description Get banner image by chef
+   */
+  async getBanner(chefId: number): Promise<ValueResponse> {
+    return await this.request({}, `/chefs/banner/${chefId}`, "GET")
+  }
+
+  /**
+   *
+   * @description Get days by chef
+   */
+  async getDaysByChef(chefId: number): Promise<ValueResponse> {
+    return await this.request({}, `/deliveries/days-name/${chefId}`, "GET")
   }
 
   /**
