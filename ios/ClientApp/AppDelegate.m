@@ -68,6 +68,7 @@ static void InitializeFlipper(UIApplication *application) {
   //[RNBranch.branch checkPasteboardOnInstall]; 
   // Uncomment this line to use the test key instead of the live one.
   // [RNBranch useTestInstance];
+  [[Branch getInstance] setRequestMetadataKey:@"$mixpanel_distinct_id" value:[Mixpanel sharedInstance].distinctId];
   [RNBranch initSessionWithLaunchOptions:launchOptions isReferrable:YES];
   NSURL *jsCodeLocation;
 

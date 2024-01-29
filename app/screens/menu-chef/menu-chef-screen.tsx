@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { ScrollView, StatusBar, StyleSheet, View } from "react-native"
+import { ScrollView, StatusBar, StyleSheet, TouchableHighlight, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 
 import {
@@ -26,12 +26,14 @@ import { ModalStateHandler } from "../../utils/modalState"
 import { getFormat } from "../../utils/price"
 import { getI18nText } from "../../utils/translate"
 
+import branch from "react-native-branch"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import RNUxcam from "react-native-ux-cam"
 import { useQuery } from "react-query"
 import { goBack } from "../../navigators"
 import { Api } from "../../services/api"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { shareMessage } from "../../utils/string"
 import { ModalLeave } from "./modal-clean-cart"
 
 const modalStateCart = new ModalStateHandler()
@@ -42,7 +44,14 @@ const api = new Api()
 
 export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">> = observer(
   ({ navigation, route: { params } }) => {
-    const { commonStore, dishStore, cartStore, userStore, messagesStore } = useStores()
+    const {
+      commonStore,
+      dishStore,
+      cartStore,
+      userStore,
+      messagesStore,
+      addressStore,
+    } = useStores()
     const [currentAction, setCurrentAction] = useState<any>()
     const [dishes, setDishes] = useState<DishChef[]>([])
     const [days, setDays] = useState<string[]>([])
@@ -63,10 +72,11 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       // El nombre no va venir en params si abre esta ventana desde el push notification
       if (!params.name || params.name?.length === 0) {
         RNUxcam.tagScreenName("menuChef")
+        const { latitude, longitude } = addressStore.current
         commonStore.setVisibleLoading(true)
         ;(async () => {
           userStore
-            .getInfoChef(params.id)
+            .getInfoChef(params.id, latitude, longitude)
             .then((chef) => {
               if (chef) navigation.setParams({ ...chef, id: Number(params.id) })
             })
@@ -208,6 +218,43 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
 
       modalStateCart.setVisible(true)
     }
+
+    const handleShare = async () => {
+      const id = `chefs/${params.id}`
+      const branchUniversalObject = await branch.createBranchUniversalObject(id, {
+        title: params.name,
+        contentDescription: params.description,
+        contentImageUrl: params.image,
+        contentMetadata: {
+          customMetadata: {
+            userId: userStore.userId.toString(),
+            $deeplink_path: `chefs/${params.id}`,
+          },
+        },
+      })
+
+      const linkProperties = {
+        feature: "share",
+        channel: "app",
+        userId: userStore.userId,
+      }
+
+      const controlParams = {}
+
+      const { url } = await branchUniversalObject.generateShortUrl(linkProperties, controlParams)
+      const responseShare = await shareMessage(
+        `Mira el menu del chef ${params.name} en Kasera \n\n${url}`,
+      )
+
+      if (responseShare)
+        mixpanel.track("Share", {
+          id,
+          type: "chef",
+          branchData: branchUniversalObject,
+          url,
+        })
+      else mixpanel.track("Error Share")
+    }
     return (
       <>
         <View style={styles.container}>
@@ -235,6 +282,16 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 style={[styles.imageChef, utilSpacing.ml5]}
                 source={{ uri: params.image }}
               ></Image>
+
+              <TouchableHighlight style={styles.btnShare} onPress={handleShare}>
+                <Icon
+                  name="share-2"
+                  type="Feather"
+                  style={styles.iconShare}
+                  size={24}
+                  color={color.text}
+                ></Icon>
+              </TouchableHighlight>
             </View>
 
             <View style={[utilSpacing.px5, utilSpacing.mt8]}>
@@ -336,11 +393,22 @@ const styles = StyleSheet.create({
     backgroundColor: color.palette.white,
     borderRadius: 25,
     height: 45,
-
     position: "relative",
-
     width: 45,
     zIndex: 10,
+    ...SHADOW,
+  },
+
+  btnShare: {
+    backgroundColor: color.palette.white,
+    borderRadius: 25,
+    height: 45,
+    position: "absolute",
+    right: 20,
+    top: 40,
+    width: 45,
+    zIndex: 10,
+
     ...SHADOW,
   },
   card: {
@@ -379,6 +447,11 @@ const styles = StyleSheet.create({
   iconBack: {
     marginLeft: 16,
     marginTop: 12,
+  },
+
+  iconShare: {
+    marginLeft: 10,
+    marginTop: 10,
   },
   imageChef: {
     borderColor: color.palette.white,

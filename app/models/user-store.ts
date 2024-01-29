@@ -234,9 +234,11 @@ export const UserRegisterModel = userRegister
     }),
     getInfoChef: flow(function* getInfoChefs(
       chefId: number,
+      latitude: number,
+      longitude: number,
     ): Generator<any, UserChef, ChefResponse> {
       const api = new Api()
-      const result = yield api.getInfoChef(chefId)
+      const result = yield api.getInfoChef(chefId, latitude, longitude)
       if (result.kind === "ok") return result.data as UserChef
 
       return null
