@@ -283,7 +283,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                 source={{ uri: params.image }}
               ></Image>
 
-              <TouchableHighlight style={styles.btnShare} onPress={handleShare}>
+              {/* <TouchableHighlight style={styles.btnShare} onPress={handleShare}>
                 <Icon
                   name="share-2"
                   type="Feather"
@@ -291,7 +291,7 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
                   size={24}
                   color={color.text}
                 ></Icon>
-              </TouchableHighlight>
+              </TouchableHighlight> */}
             </View>
 
             <View style={[utilSpacing.px5, utilSpacing.mt8]}>
