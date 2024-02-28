@@ -14,7 +14,6 @@ import { ScreenType, useChef } from "../../common/hooks/useChef"
 import {
   Categories,
   Chip,
-  DayDelivery,
   Dish,
   EmptyData,
   Icon,
@@ -34,7 +33,7 @@ import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
 import { NavigatorParamList, goBack } from "../../navigators"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
@@ -394,16 +393,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           onScroll={onScroll}
         >
           <PopularDishes onPressDish={(dish) => toDetail(dish)}></PopularDishes>
-          <Separator style={[utilSpacing.mx5, utilSpacing.mt3]}></Separator>
-          <View style={utilSpacing.pl5}>
-            <DayDelivery
-              days={dayStore.days}
-              onWhyPress={(state) => modalStateWhy.setVisible(state)}
-              onPress={(day) => {
-                onChangeDay(day)
-              }}
-            ></DayDelivery>
-          </View>
 
           <Separator style={utilSpacing.m5}></Separator>
           <Categories
@@ -430,7 +419,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
               <Chip
                 onPress={() => modalDeliveryDate.setVisible(true)}
                 text={currentDay.dayName}
-                style={[utilSpacing.ml3, styles.chip]}
+                style={[utilSpacing.ml3, styles.chip, utilSpacing.px5]}
+                textstyle={utilText.bold}
               ></Chip>
             </View>
             {dishStore.dishes.length > 0 && (
