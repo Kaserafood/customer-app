@@ -120,7 +120,7 @@ export class Api {
       function (response) {
         // Any status code that lie within the range of 2xx cause this function to trigger
 
-        //  __DEV__ && console.log("Response : " + JSON.stringify(response, null, 2))
+        // __DEV__ && console.log(`Response : ${JSON.stringify(response, null, 2)}`)
 
         return response
       },
@@ -269,8 +269,8 @@ export class Api {
    *
    * @description Get information from a specific user chef
    */
-  async getInfoChef(chefId: number): Promise<ChefResponse> {
-    return await this.request({}, `/users/chefs/${chefId}`, "GET")
+  async getInfoChef(chefId: number, latitude, longitude): Promise<ChefResponse> {
+    return await this.request({ latitude, longitude }, `/users/chefs/${chefId}`, "GET")
   }
 
   /**

@@ -19,6 +19,9 @@ import "./utils/ignore-warnings"
 
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 
+import { Linking } from "react-native"
+import branch from "react-native-branch"
+import { useEffectAsync } from "react-native-text-input-mask"
 import RNUxcam from "react-native-ux-cam"
 import { QueryClient, QueryClientProvider } from "react-query"
 import { Loader, Messages, ModalCoupon } from "./components"
@@ -67,9 +70,47 @@ function App() {
         })
       trackingPermission()
     })()
+
     return () => {
       OneSignal.clearHandlers()
     }
+  }, [])
+
+  useEffectAsync(async () => {
+    // Listener
+    branch.subscribe({
+      onOpenStart: ({ uri, cachedInitialEvent }) => {
+        console.log(
+          `subscribe onOpenStart, will open ${uri} cachedInitialEvent is ${cachedInitialEvent}`,
+        )
+      },
+      onOpenComplete: ({ error, params, uri }) => {
+        if (error) {
+          console.error(`subscribe onOpenComplete, Error from opening uri: ${uri} error: ${error}`)
+        } else if (params) {
+          if (!params["+clicked_branch_link"]) {
+            if (params["+non_branch_link"]) {
+              console.log(`non_branch_link: ${uri}`)
+              // Route based on non-Branch links
+            }
+          } else {
+            // Handle params
+            const deepLinkPath = params.$deeplink_path as string
+            const canonicalUrl = params.$canonical_url as string
+            // Route based on Branch link data
+
+            if (deepLinkPath) Linking.openURL(`kasera://${deepLinkPath}`)
+
+            console.log("branch link", deepLinkPath, canonicalUrl)
+          }
+        }
+      },
+    })
+
+    const latestParams = await branch.getLatestReferringParams() // Params from last open
+    const installParams = await branch.getFirstReferringParams() // Params from original install
+
+    console.log("PARAMS BRANCH", latestParams, installParams)
   }, [])
 
   // Before we show the app, we have to wait for our state to be ready.

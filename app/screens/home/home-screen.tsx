@@ -7,6 +7,7 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import LottieView from "lottie-react-native"
+import branch from "react-native-branch"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import RNUxcam from "react-native-ux-cam"

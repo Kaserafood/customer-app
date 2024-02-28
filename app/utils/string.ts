@@ -1,3 +1,5 @@
+import { Share } from "react-native"
+import { getInstanceMixpanel } from "./mixpanel"
 import { getFormat } from "./price"
 
 const replaceAll = (str: string, find: string, replace: string) => {
@@ -19,6 +21,7 @@ export const getLabelMetaCart = (value, label, total, currencyCode) => {
   return result
 }
 
+const mixpanel = getInstanceMixpanel()
 export const formatPhone = (number: string) => {
   if (!number || number.length === 0) return null
 
@@ -31,4 +34,21 @@ export const formatPhone = (number: string) => {
   else phone = `+1${phone}`
 
   return null
+}
+
+export const shareMessage = async (message: string): Promise<boolean> => {
+  try {
+    const result = await Share.share({
+      message,
+    })
+
+    if (result.action === Share.sharedAction) {
+      return true
+    }
+
+    return false
+  } catch (error) {
+    __DEV__ && console.log("EERO SHARE", error.message)
+    return false
+  }
 }

@@ -69,6 +69,7 @@ public class MainApplication extends Application implements ReactApplication {
 
     RNBranchModule.enableLogging();
     RNBranchModule.getAutoInstance(this);
+    RNBranchModule.getInstance().setRequestMetadata("$mixpanel_distinct_id", mp.getDistinctId());
   }
 
   @Override
