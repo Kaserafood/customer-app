@@ -25,8 +25,8 @@ import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { getFormat } from "../../utils/price"
 import { generateUUID } from "../../utils/security"
 import { getI18nText } from "../../utils/translate"
-import ListDish from "./ListDish"
-import SkeletonLoadingDish from "./SkeletonLoadingDish"
+import ListDish from "./list-dish"
+import SkeletonLoadingDish from "./skeleton-loading-dish"
 
 export const AddonContext = createContext({
   currencyCode: "",
@@ -127,9 +127,9 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
 
     useEffect(() => {
       if (params.addons) {
-        if (dishStore.isUpdate) addonStore.setAddons(params.addons)
-        else addonStore.initState(params.addons.filter((addon) => addon.hideInApp !== "yes"))
         __DEV__ && console.log("Addons", JSON.parse(JSON.stringify(addonStore.addons)))
+        if (dishStore.isUpdate) addonStore.setAddons(params.addons)
+        else addonStore.initState(params.addons)
       }
     }, [params.addons])
 
@@ -289,7 +289,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         setCurrentDish({ ...dish, chef: params.chef })
         setQuantity(1)
         setTotal(dish.price)
-        addonStore.initState(dish.addons.filter((addon) => addon.hideInApp !== "yes"))
+        addonStore.initState(dish.addons)
         methods.setValue("comment", "")
         scrollRef.current?.scrollTo({
           y: 0,

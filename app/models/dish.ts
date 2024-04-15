@@ -7,33 +7,30 @@ export const dependencies = types.model("DependenciesAddon", {
 export interface DependenciesAddon extends SnapshotIn<typeof dependencies> {}
 
 export const option = types.model("Option").props({
-  label: types.maybeNull(types.string),
+  name: types.maybeNull(types.string),
   price: types.maybeNull(types.number),
-  image: types.maybeNull(types.string),
-  priceType: types.maybeNull(types.string),
   checked: types.maybeNull(types.boolean),
   disabled: types.maybeNull(types.boolean),
 })
 
+const type = types.model("type").props({
+  label: types.maybeNull(types.string),
+  value: types.maybeNull(types.string),
+})
+
 export const addonItem = types.model("AddonItem").props({
-  name: types.maybeNull(types.string),
-  value: types.maybeNull(types.number),
+  id: types.string,
+  title: types.maybeNull(types.string),
+  value: types.maybe(types.number),
   price: types.maybeNull(types.number),
   total: types.maybeNull(types.number),
   label: types.maybeNull(types.string),
-  min: types.maybeNull(types.number),
+  initialValue: types.maybeNull(types.number),
   checked: types.maybeNull(types.boolean),
-  options: types.maybeNull(types.array(option)),
-  dependencies: types.maybeNull(dependencies),
-  type: types.maybeNull(types.string),
-  incrementable: types.maybeNull(types.string),
-  showTitle: types.maybeNull(types.string),
-  optionBoolean: types.maybeNull(types.string),
-  multipleChoice: types.maybeNull(types.string),
-  required: types.maybeNull(types.number),
-  hash: types.maybeNull(types.string),
-  numOptionSelectables: types.maybeNull(types.number),
-  hideInApp: types.maybeNull(types.string),
+  multipleItems: types.maybeNull(types.array(option)),
+  type: types.maybeNull(type),
+  required: types.maybeNull(types.boolean),
+  optionsQuantity: types.maybeNull(types.number),
 })
 
 export const dish = types.model("Dish").props({

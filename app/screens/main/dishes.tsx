@@ -56,7 +56,7 @@ const Dishes = observer(({ onWhyPress, onDishPress }: Props) => {
   }
 
   return (
-    <View style={[utilSpacing.py5, utilSpacing.mt5]}>
+    <View style={utilSpacing.py5}>
       <View style={utilSpacing.pl5}>
         <View style={[styles.containerTitle, utilFlex.flexRow]}>
           <Text tx="mainScreen.book" preset="bold" size="lg"></Text>

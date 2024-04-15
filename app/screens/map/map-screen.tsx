@@ -151,7 +151,7 @@ export const MapScreen: FC<StackScreenProps<NavigatorParamList, "map">> = observ
           } else {
             userStore.setAddressId(-1)
 
-            if (params.isExplore) {
+            if (params?.isExplore) {
               commonStore.setIsSignedIn(true)
             } else {
               navigation.navigate("main")

@@ -1,20 +1,12 @@
 import { applySnapshot, cast, detach, Instance, SnapshotIn, types } from "mobx-state-tree"
 
-import {
-  getAddonsMultileChoice,
-  getTotal,
-  isDependencyQuantity,
-} from "../../components/addons/util"
 import { getLabelMetaCart } from "../../utils/string"
 import { getMinValue } from "../../utils/validate"
 import { MetaDataCart } from "../cart-store"
 import { addonItem, option } from "../dish"
 
-export const MULTIPLE_CHOICE = "multiple_choice"
-export const INPUT_MULTIPLER = "input_multiplier"
+export const MULTIPLE_CHOICE = "multiple"
 export const CHECKBOX = "checkbox"
-export const TRUE = "yes"
-export const FALSE = ""
 
 export interface Option extends SnapshotIn<typeof option> {}
 
@@ -27,8 +19,8 @@ export const AddonModel = types
     addons: types.optional(types.array(addonItem), []),
   })
   .views((self) => ({
-    findAddonByName(name: string) {
-      return self.addons.find((addon) => addon.name === name)
+    findAddonById(id: string) {
+      return self.addons.find((addon) => addon.id === id)
     },
     getMetaData(currencyCode: string): MetaDataCart[] {
       const metaData = []
@@ -40,7 +32,7 @@ export const AddonModel = types
           )
         if (addon.checked) {
           const meta: MetaDataCart = {
-            key: addon.name,
+            key: addon.title,
             value: getLabelMetaCart(
               addon.value,
               addon.label,
@@ -50,13 +42,16 @@ export const AddonModel = types
             total: Number(addon.total ?? 0),
           }
 
-          if (addon.options && addon.options.filter((option) => option.checked).length > 0) {
-            const label = addon.options
+          if (
+            addon.multipleItems &&
+            addon.multipleItems.filter((option) => option.checked).length > 0
+          ) {
+            const label = addon.multipleItems
               .filter((option) => option.checked)
-              .map((option) => option.label)
+              .map((option) => option.name)
               .join(", ")
 
-            meta.total = addon.options
+            meta.total = addon.multipleItems
               .filter((option) => option.checked)
               .reduce((total, option) => (total += Number(option.price ?? 0)), 0)
 
@@ -73,11 +68,11 @@ export const AddonModel = types
     get total() {
       let total = 0
       self.addons.forEach((addon) => {
-        if (addon.checked || addon.required === 1) {
+        if (addon.checked || addon.required) {
           total += Number(addon.total)
 
-          if (addon.options) {
-            addon.options
+          if (addon.multipleItems) {
+            addon.multipleItems
               .filter((option) => option.checked)
               .forEach((option) => {
                 total += Number(option.price)
@@ -92,27 +87,32 @@ export const AddonModel = types
       return self.addons.length > 0
     },
   }))
+  .actions(() => ({
+    getTotal: (min: number, value: number, price: number) => {
+      /**
+       * El total se calcula de la siguiente manera:
+       * A la cantidad del complemento se le resta el resultado de restar la
+       * cantidad minima menos uno, esto es porque, por ejemplo si se tiene una cantidad
+       * minima de 3 y no se hace la resta correspondiente se estaria sumando el precio
+       * de tres veces el producto cuando en realidad solo deber ser uno. EL uno se resta
+       * porque ya se cuenta el precio del producto en si. Finalmente se multiplica por el precio
+       */
+      if (min >= 1) return (value - (min - 1)) * price
+
+      return value * price
+    },
+    getMultipleChoiceWithTitle: (addons: AddonItem[]) => {
+      return addons.filter((addon) => addon.title && addon.type?.value === MULTIPLE_CHOICE)
+    },
+  }))
   .actions((self) => ({
     setAddons: (addons: AddonItemModel[]) => {
-      applySnapshot(self.addons, addons)
+      applySnapshot(self.addons, JSON.parse(JSON.stringify(addons)))
     },
     updateAddon: (addon: AddonItemModel) => {
-      const index = self.addons.findIndex((item) => item.name === addon.name)
+      const index = self.addons.findIndex((item) => item.id === addon.id)
+
       applySnapshot(self.addons[index], addon)
-    },
-    getNumberOptionSelectables: (addon: AddonItem, addons: AddonItem[]) => {
-      // Si la dependencia es de tipo "Cantidad"
-      if (isDependencyQuantity(addon)) {
-        const addonName: string = getAddonsMultileChoice(addons).find(
-          (item) => item.hash === addon.dependencies.hash,
-        ).name
-
-        const addonItem = self.findAddonByName(addonName)
-
-        return Number(addonItem.options.find((option) => option.checked)?.label) ?? 0
-      }
-
-      return Number(addon.numOptionSelectables)
     },
   }))
   .actions((self) => ({
@@ -122,39 +122,42 @@ export const AddonModel = types
         // The name property should be used as key in the state because does not exits ID
         let state = {
           ...addon,
-          value: getMinValue(addon.required, addon.min),
+          value: getMinValue(addon.required, addon.initialValue),
           total: addon.price,
           label: addon.label,
-          min: getMinValue(addon.required, addon.min),
+          min: getMinValue(addon.required, addon.initialValue),
           options: undefined,
           dependencies: undefined,
           checked: false,
         }
-        if (addon.type === MULTIPLE_CHOICE || addon.type === CHECKBOX) {
+        if (addon.type.value === MULTIPLE_CHOICE || addon.type.value === CHECKBOX) {
           state = {
             ...state,
             checked: false,
-            options: addon.options.map((option) => ({
+            options: addon.multipleItems.map((option) => ({
               ...option,
               checked: false,
               disabled: false,
             })),
-            dependencies: addon?.dependencies?.hash ? { ...addon.dependencies } : undefined,
           }
-          if (addon.required === 1 && addon.optionBoolean !== TRUE && addon.multipleChoice !== TRUE)
+          if (
+            addon.required &&
+            addon.type.value !== CHECKBOX &&
+            addon.type.value !== MULTIPLE_CHOICE
+          )
             state.checked = true
         }
         addonsState.push(state)
       })
       self.setAddons(addonsState)
     },
-    changeValueIncrement: (name: string, value: number, isIncrement: boolean) => {
-      const addon = self.findAddonByName(name)
+    changeValueIncrement: (id: string, value: number, isIncrement: boolean) => {
+      const addon = self.findAddonById(id)
       addon.value = isIncrement ? value + 1 : value - 1
 
       if (addon.value >= 1) {
         addon.checked = true
-        addon.total = getTotal(addon.min, addon.value, addon.price)
+        addon.total = self.getTotal(addon.initialValue, addon.value, addon.price)
       } else {
         addon.checked = false
         addon.total = addon.price
@@ -163,34 +166,37 @@ export const AddonModel = types
       self.updateAddon(addon)
     },
     calculateTotal(addon: AddonItemModel) {
-      addon.total = getTotal(addon.min, addon.value, addon.price)
+      addon.total = self.getTotal(addon.initialValue, addon.value, addon.price)
       self.updateAddon(addon)
     },
-    changeValueChecked: (name: string, isChecked: boolean) => {
-      const addon = self.findAddonByName(name)
+    changeValueChecked: (id: string, isChecked: boolean) => {
+      const addon = self.findAddonById(id)
       addon.checked = isChecked
-      if (isChecked) addon.total = addon.options[0].price
+      if (isChecked) addon.total = addon.price
       else addon.total = 0
 
       self.updateAddon(addon)
     },
-    changeValueCheckedOption: (name: string, optionSelected: Option, isChecked: boolean) => {
-      const addon = self.findAddonByName(name)
-      addon.options = addon.options.map((option) => {
-        if (option.label === optionSelected.label) option.checked = isChecked
-        return option
-      }) as any
+    changeValueCheckedOption: (id: string, optionSelected: Option, isChecked: boolean) => {
+      const addon = self.findAddonById(id)
 
-      const countChecked = addon.options.filter((option) => option.checked).length
+      addon.multipleItems = cast(
+        addon.multipleItems.map((option) => {
+          if (option.name === optionSelected.name) option.checked = isChecked
+          return option
+        }),
+      )
+
+      const countChecked = addon.multipleItems.filter((option) => option.checked).length
       if (countChecked > 0) addon.checked = true
 
       self.updateAddon(addon)
     },
-    uncheckAllOptions: (name: string) => {
-      const addon = self.findAddonByName(name)
+    uncheckAllOptions: (id: string) => {
+      const addon = self.findAddonById(id)
 
-      addon.options = cast(
-        addon.options.map((option) => {
+      addon.multipleItems = cast(
+        addon.multipleItems.map((option) => {
           option.checked = false
           return option
         }),
@@ -198,15 +204,13 @@ export const AddonModel = types
 
       self.updateAddon(addon)
     },
-    onDisableOptions: (name: string, options: Option[], isDisabled: boolean) => {
-      const addon = self.findAddonByName(name)
-      addon.options = cast(
-        addon.options.map((option) => {
-          const includes = options.find((opt) => opt.label === option.label)
+    onDisableOptions: (id: string, options: Option[], isDisabled: boolean) => {
+      const addon = self.findAddonById(id)
+      addon.multipleItems = cast(
+        addon.multipleItems.map((option) => {
+          const includes = options.find((opt) => opt.name === option.name)
           const opt = { ...option }
-          if (includes) {
-            opt.disabled = isDisabled
-          }
+          if (includes) opt.disabled = isDisabled
 
           return opt
         }),
@@ -217,12 +221,11 @@ export const AddonModel = types
 
     isValidAddonsMultiChoice: (addons: AddonItem[]) => {
       let isValid = true
-      if (getAddonsMultileChoice(addons).length > 0) {
-        getAddonsMultileChoice(addons).forEach((addon) => {
-          const selectable = self.getNumberOptionSelectables(addon, addons)
-          const selected = addon.options.filter((option) => option.checked).length
+      if (self.getMultipleChoiceWithTitle(addons).length > 0) {
+        self.getMultipleChoiceWithTitle(addons).forEach((addon) => {
+          const selected = addon.multipleItems.filter((option) => option.checked).length
 
-          if (selected < selectable) isValid = false
+          if (selected < addon.optionsQuantity) isValid = false
         })
       }
 

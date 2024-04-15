@@ -63,16 +63,17 @@ export const DishStoreModel = types
       )
 
       if (result && result.kind === "ok") {
-        if (categoryId) applySnapshot(self.dishesCategory, result.data)
+        const formatted = result.data?.dishes
+
+        if (categoryId) applySnapshot(self.dishesCategory, formatted)
         else {
           self.currentTokenPagination = result.data?.tokenPagination
           if (tokenPagination) {
-            if (!result.data?.dishes || result.data?.dishes.length === 0)
-              return { isEmptyResult: true }
-            applySnapshot(self.dishes, self.dishes.concat(result.data?.dishes))
+            if (!formatted || formatted.length === 0) return { isEmptyResult: true }
+            applySnapshot(self.dishes, self.dishes.concat(formatted))
           } else {
-            if (result.data?.dishes && !isFavorite) applySnapshot(self.dishes, result.data?.dishes)
-            else if (result.data?.length > 0) applySnapshot(self.dishesFavorites, result.data)
+            if (result.data?.dishes && !isFavorite) applySnapshot(self.dishes, formatted)
+            else if (result.data?.length > 0) applySnapshot(self.dishesFavorites, formatted)
           }
         }
       }

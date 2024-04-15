@@ -30,7 +30,7 @@ const modalStateSearch = new ModalStateHandler()
 const mixpanel = getInstanceMixpanel()
 
 export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = observer(
-  ({ navigation }) => {
+  ({ navigation, route: { params } }) => {
     useLayoutEffect(() => {
       changeNavigationBarColor(color.palette.white, true, true)
     }, [])
@@ -124,16 +124,19 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
       >
         <StatusBar barStyle="dark-content" backgroundColor={"transparent"} translucent></StatusBar>
         <ScrollView style={styles.body}>
-          <View style={utilSpacing.mb5}>
+          <View style={utilSpacing.my5}>
             <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical, utilSpacing.mb5]}>
-              <TouchableOpacity style={styles.btnBack} onPress={goBack} activeOpacity={0.5}>
-                <Icon
-                  name="angle-left-1"
-                  style={utilSpacing.mr2}
-                  size={24}
-                  color={color.text}
-                ></Icon>
-              </TouchableOpacity>
+              {params?.showBackButton && (
+                <TouchableOpacity style={styles.btnBack} onPress={goBack} activeOpacity={0.5}>
+                  <Icon
+                    name="angle-left-1"
+                    style={utilSpacing.mr2}
+                    size={24}
+                    color={color.text}
+                  ></Icon>
+                </TouchableOpacity>
+              )}
+
               <View style={utilFlex.flex1}>
                 <TouchableOpacity
                   style={[

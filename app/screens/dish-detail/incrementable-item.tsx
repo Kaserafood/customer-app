@@ -10,30 +10,30 @@ import Animated, {
 } from "react-native-reanimated"
 import IconRN from "react-native-vector-icons/MaterialIcons"
 
+import { Card } from "../../components/card/card"
+import { Price } from "../../components/price/price"
+import { Text } from "../../components/text/text"
 import { AddonItem } from "../../models/addons/addon"
-import { AddonContext } from "../../screens/dish-detail/dish-detail-screen"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { Card } from "../card/card"
-import { Price } from "../price/price"
-import { Text } from "../text/text"
+import { AddonContext } from "./dish-detail-screen"
 
 export interface IncrementableProps {
-  onPress?: (name: string, value: number, isIncrement: boolean) => void
-  onChecked?: (name: string, isChecked: boolean) => void
-  onCheckedOption?: (name: string, option: any, isChecked: boolean) => void
-  uncheckAllOptions?: (name: string) => void
-  onDisableOptions?: (name: string, options: any, isDisabled: boolean) => void
+  onPress?: (id: string, value: number, isIncrement: boolean) => void
+  onChecked?: (id: string, isChecked: boolean) => void
+  onCheckedOption?: (id: string, option: any, isChecked: boolean) => void
+  uncheckAllOptions?: (id: string) => void
+  onDisableOptions?: (id: string, options: any, isDisabled: boolean) => void
   addon?: AddonItem
 }
 
 export const Incrementable = observer((props: IncrementableProps) => {
   const { onPress, addon } = props
 
-  const { required, name, label, value } = addon
-  const [min, setMin] = useState(props.addon.min)
-  const [isVisibleMinus, setIsVisibleMinus] = useState(required === 1)
-  const offset = useSharedValue(required === 1 ? 30 : 0)
+  const { required, id, label, value } = addon
+  const [min, setMin] = useState(addon.initialValue)
+  const [isVisibleMinus, setIsVisibleMinus] = useState(required && value > 0)
+  const offset = useSharedValue(required ? 30 : 0)
 
   useEffect(() => {
     if (min === 0) {
@@ -44,6 +44,13 @@ export const Incrementable = observer((props: IncrementableProps) => {
       offset.value = 30
     }
   }, [])
+
+  useEffect(() => {
+    if (value === 0) {
+      setIsVisibleMinus(false)
+      offset.value = 30
+    }
+  }, [value])
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -57,20 +64,19 @@ export const Incrementable = observer((props: IncrementableProps) => {
       offset.value = 30
     }
 
-    onPress(name, value, true)
+    onPress(id, value, true)
   }
 
   const minus = () => {
-    console.log(required, ` ${min}`)
     // Se valida si el valor es mayor o igual al valor minimo requerido para el campo
     if (Number(value) - 1 >= min) {
-      onPress(name, Number(value), false)
-    } else {
+      onPress(id, Number(value), false)
+
       // Si no es requerido, se oculta el boton de restar y se hace la resta correspondiente
-      if (required !== 1) {
+      if (!required && Number(value) - 1 === 0) {
         setIsVisibleMinus(false)
         offset.value = 0
-        onPress(name, Number(value), false)
+        // onPress(id, Number(value), false)
       }
     }
   }
@@ -81,7 +87,7 @@ export const Incrementable = observer((props: IncrementableProps) => {
         <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
           <Animated.View style={animatedStyles}>
             <TouchableOpacity
-              onPress={() => minus()}
+              onPress={minus}
               style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
             >
               <IconRN name="remove" color={color.palette.black} size={24}></IconRN>
@@ -94,7 +100,7 @@ export const Incrementable = observer((props: IncrementableProps) => {
 
       <View style={[utilFlex.flexRow, utilFlex.flexCenterVertical]}>
         <TouchableOpacity
-          onPress={() => plus()}
+          onPress={plus}
           style={[styles.btnRounded, utilSpacing.my4, utilFlex.flexCenter]}
         >
           <IconRN name="add" color={color.palette.black} size={24}></IconRN>
@@ -104,7 +110,7 @@ export const Incrementable = observer((props: IncrementableProps) => {
       <Text numberOfLines={1} style={[utilSpacing.ml4, utilFlex.flex1]} text={label}></Text>
 
       <PriceOption
-        amout={addon.total}
+        amount={addon.total}
         isVisiblePriceUnity={addon.value > 1}
         priceUnity={addon.price}
         isVisiblePlus={isVisibleMinus}
@@ -113,49 +119,51 @@ export const Incrementable = observer((props: IncrementableProps) => {
   )
 })
 
-export const PriceOption = (props: {
-  amout: number
-  isVisiblePriceUnity?: boolean
-  isVisiblePlus?: boolean
-  priceUnity?: number
-}) => {
-  const { amout, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
-  const { currencyCode } = useContext(AddonContext)
-  if (amout > 0) {
-    return (
-      <View>
-        <View style={utilFlex.felxColumn}>
-          <View style={utilFlex.flexRow}>
-            {isVisiblePlus && <Text text="+"></Text>}
-            <Price
-              preset="simple"
-              textStyle={[utilSpacing.pr4, utilSpacing.pl2]}
-              amount={amout}
-              currencyCode={currencyCode}
-            ></Price>
+export const PriceOption = observer(
+  (props: {
+    amount: number
+    isVisiblePriceUnity?: boolean
+    isVisiblePlus?: boolean
+    priceUnity?: number
+  }) => {
+    const { amount, isVisiblePriceUnity, priceUnity, isVisiblePlus } = props
+    const { currencyCode } = useContext(AddonContext)
+    if (amount > 0) {
+      return (
+        <View>
+          <View style={utilFlex.flexColumn}>
+            <View style={utilFlex.flexRow}>
+              {isVisiblePlus && <Text text="+"></Text>}
+              <Price
+                preset="simple"
+                textStyle={[utilSpacing.pr4, utilSpacing.pl2]}
+                amount={amount}
+                currencyCode={currencyCode}
+              ></Price>
+            </View>
+
+            {isVisiblePriceUnity && (
+              <Animated.View entering={FadeInDown} exiting={FadeOutDown}>
+                <View style={utilFlex.flexRow}>
+                  <Price
+                    preset="simple"
+                    style={[styles.price, utilSpacing.px1]}
+                    textStyle={[utilText.textGray, utilText.textSm]}
+                    amount={priceUnity}
+                    currencyCode={currencyCode}
+                  ></Price>
+                  <Text caption size="sm" tx="addons.each"></Text>
+                </View>
+              </Animated.View>
+            )}
           </View>
-
-          {isVisiblePriceUnity && (
-            <Animated.View entering={FadeInDown} exiting={FadeOutDown}>
-              <View style={utilFlex.flexRow}>
-                <Price
-                  preset="simple"
-                  style={[styles.price, utilSpacing.px1]}
-                  textStyle={[utilText.textGray, utilText.textSm]}
-                  amount={priceUnity}
-                  currencyCode={currencyCode}
-                ></Price>
-                <Text caption size="sm" tx="addons.each"></Text>
-              </View>
-            </Animated.View>
-          )}
         </View>
-      </View>
-    )
-  }
+      )
+    }
 
-  return null
-}
+    return null
+  },
+)
 
 const styles = StyleSheet.create({
   btnRounded: {

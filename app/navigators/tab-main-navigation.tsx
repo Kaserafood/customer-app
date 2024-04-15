@@ -4,7 +4,6 @@ import React, { useEffect } from "react"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
-import { Linking } from "react-native"
 import * as RNLocalize from "react-native-localize"
 import OneSignal from "react-native-onesignal"
 import RNUxcam from "react-native-ux-cam"
@@ -12,13 +11,12 @@ import { useQuery } from "react-query"
 import { Icon } from "../components"
 import { setLocaleI18n } from "../i18n"
 import { useStores } from "../models"
-import { HomeScreen, PlansScreen, SearchScreen } from "../screens"
+import { HomeScreen, SearchScreen } from "../screens"
 import { MainScreen } from "../screens/main/main-screen"
 import { AccountResponse, Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
 import { getInstanceMixpanel } from "../utils/mixpanel"
-import { checkNotificationPermission } from "../utils/permissions"
 import { formatPhone } from "../utils/string"
 import { getI18nText } from "../utils/translate"
 
@@ -145,21 +143,17 @@ export function TabMainNavigation({ navigationRef }) {
           tabBarIcon: ({ color }) => {
             return (
               <>
-                <Icon style={utilSpacing.mt1} name="utensils" size={26} color={color} />
+                <Icon style={utilSpacing.mt1} name="magnifying-glass" size={26} color={color} />
               </>
             )
           },
         }}
-        name={getI18nText("tabMainNavigation.packages")}
-        component={PlansScreen}
+        name={getI18nText("tabMainNavigation.search")}
+        component={SearchScreen}
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "Packages" })
             mixpanel.track("Main navigation", { name: "Packages" })
-            AppEventsLogger.logEvent("tabPress", 1, {
-              name: "Packages",
-              description: "El usuario presionó la opción 'Paquetes' en el menu principal",
-            })
           },
         }}
       />

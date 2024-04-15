@@ -91,7 +91,7 @@ const SelectPaymentMethod = ({ openPaymentList, isPlan }: SelectPaymentMethodPro
               ]}
             >
               <View style={[utilFlex.flex1, utilSpacing.ml4]}>
-                <View style={utilFlex.felxColumn}>
+                <View style={utilFlex.flexColumn}>
                   <Text
                     tx="checkoutScreen.paymentCash"
                     preset="semiBold"

@@ -84,8 +84,10 @@ export function isNumber(value: string) {
   return !isNaN(Number(value))
 }
 
-export function getMinValue(required: number, min: number) {
+export function getMinValue(required: boolean, min: number) {
+  if (!min) return 0
+
   if (required || min === 0) return min
 
-  return min - 1
+  return min 
 }

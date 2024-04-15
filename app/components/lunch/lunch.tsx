@@ -88,7 +88,7 @@ const Lunch = observer(
             ></Image>
           )}
 
-          <View style={[utilFlex.flex1, utilFlex.felxColumn]}>
+          <View style={[utilFlex.flex1, utilFlex.flexColumn]}>
             <View>
               <Text text={name} preset="semiBold" numberOfLines={2} style={utilSpacing.mb2}></Text>
               <Text text={description} style={utilSpacing.mb3} numberOfLines={2}></Text>

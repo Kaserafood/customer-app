@@ -60,7 +60,7 @@ export const utilText = StyleSheet.create({
 })
 
 export const utilFlex = StyleSheet.create({
-  felxColumn: {
+  flexColumn: {
     display: "flex",
     flexDirection: "column",
   },

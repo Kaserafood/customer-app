@@ -11,8 +11,8 @@ import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { getI18nText } from "../../utils/translate"
 
 const mixpanel = getInstanceMixpanel()
 
@@ -168,7 +168,7 @@ const StateItem = (params: { status: TxKeyPath; isActive?: boolean; isHideLine?:
   const { status, isActive, isHideLine } = params
   return (
     <View style={utilFlex.flexRow}>
-      <View style={utilFlex.felxColumn}>
+      <View style={utilFlex.flexColumn}>
         <Icon
           style={utilFlex.selfCenter}
           name={isActive ? "heart" : "heart1"}

@@ -67,9 +67,10 @@ public class MainApplication extends Application implements ReactApplication {
     initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     ApplicationLifecycleDispatcher.onApplicationCreate(this);
 
+    // MixpanelAPI mp = MixpanelAPI.getInstance(this, "<your project token>");
     RNBranchModule.enableLogging();
     RNBranchModule.getAutoInstance(this);
-    RNBranchModule.getInstance().setRequestMetadata("$mixpanel_distinct_id", mp.getDistinctId());
+    // RNBranchModule.getInstance().setRequestMetadata("$mixpanel_distinct_id", mp.getDistinctId());
   }
 
   @Override

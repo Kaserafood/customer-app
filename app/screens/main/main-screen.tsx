@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useRef, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { Linking, ScrollView, StyleSheet, View } from "react-native"
 import Ripple from "react-native-material-ripple"
 import OneSignal from "react-native-onesignal"
@@ -19,20 +19,15 @@ import { DatePlan } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { palette } from "../../theme/palette"
-import { UNITED_STATES } from "../../utils/constants"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { checkNotificationPermission, requestNotificationPermission } from "../../utils/permissions"
 import { Banner } from "../home/banner"
 import { ModalWelcome } from "../home/modal-welcome"
-import BannerMain from "./banner-main"
 import Categories from "./categories"
 import Chefs, { DataState } from "./chefs"
 import Dishes from "./dishes"
-import Lunches from "./lunches"
 import ModalNotificationInfo from "./modal-notification-info"
-import Sliders from "./sliders"
-import ValuePrepositions from "./value-prepositions"
 
 const modalStateLocation = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
@@ -125,24 +120,6 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
       navigation.navigate("subscription")
     }
 
-    const handleScreenNavigate = (screen: "plans" | "dishes") => {
-      if (!coverageStore.hasCoverageCredits && screen === "plans") {
-        modalStateCoverageCredits.setVisible(true)
-        return
-      }
-
-      navigation.navigate(screen, { showBackIcon: true })
-    }
-
-    const handleLunchPress = () => {
-      if (!coverageStore.hasCoverageCredits) {
-        modalStateCoverageCredits.setVisible(true)
-        return
-      }
-
-      navigation.navigate("plans", { showBackIcon: true })
-    }
-
     useEffect(() => {
       mixpanel.track("Main Screen")
     }, [])
@@ -225,7 +202,7 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
               styles.search,
               utilSpacing.py4,
               utilSpacing.px4,
-              utilSpacing.mb4,
+              utilSpacing.mb2,
               utilFlex.flexRow,
               styles.shadow,
               utilFlex.flexCenterVertical,
@@ -238,17 +215,6 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
         </View>
 
         <ScrollView onScroll={handleScroll} style={styles.container}>
-          <Sliders onWithoutCoverage={() => modalStateCoverageCredits.setVisible(true)}></Sliders>
-
-          <ValuePrepositions screenNavigate={handleScreenNavigate}></ValuePrepositions>
-          {currentDate?.date && userStore.countryId !== UNITED_STATES && (
-            <Lunches
-              currentDate={currentDate}
-              showModalDates={() => modalStateDeliveryDatePlan.setVisible(true)}
-              toPlans={handleLunchPress}
-            ></Lunches>
-          )}
-
           <Dishes
             onWhyPress={(state) => modalStateWhy.setVisible(state)}
             onDishPress={toDetail}
@@ -262,7 +228,6 @@ export const MainScreen: FC<StackScreenProps<NavigatorParamList, "main">> = obse
           </View>
           <Categories onPress={(category) => toCategory(category)}></Categories>
           <Chefs state={state}></Chefs>
-          {!plansStore.hasActivePlan && <BannerMain onPress={handlePressBanner}></BannerMain>}
         </ScrollView>
         <ModalLocation screenToReturn="main" modal={modalStateLocation}></ModalLocation>
         <DayDeliveryModal modal={modalStateWhy}></DayDeliveryModal>

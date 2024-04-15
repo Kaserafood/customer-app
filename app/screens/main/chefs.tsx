@@ -76,10 +76,6 @@ const Chefs = observer(function ListChef(props: { state: DataState }) {
   const navigation = useNavigation<chefScreenProp>()
 
   const toScreen = (screen: ScreenType, dish: Dish, userChef: ChefItemModel) => {
-    /**
-     *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
-     */
-
     commonStore.setCurrentChefId(0)
     dishStore.clearDishesChef()
     dishStore.setIsUpdate(false)

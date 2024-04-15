@@ -1,7 +1,7 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
 import React, { FC, useEffect, useState } from "react"
-import { ScrollView, StatusBar, StyleSheet, TouchableHighlight, View } from "react-native"
+import { ScrollView, StatusBar, StyleSheet, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 
 import {
@@ -183,18 +183,6 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
         navigation.navigate("registerForm")
       } else navigation.navigate("checkout")
     }
-
-    // const getCategoriesName = (categories: Category[]) => {
-    //   let categoriesStr = ""
-    //   if (categories && Array.isArray(categories)) {
-    //     categories.forEach((category) => {
-    //       categoriesStr += `${category.name} - `
-    //     })
-    //     return categoriesStr.substring(0, categoriesStr.length - 2)
-    //   }
-
-    //   return ""
-    // }
 
     const openCart = () => {
       RNUxcam.logEvent("openCart", {

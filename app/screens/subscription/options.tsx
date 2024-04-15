@@ -281,7 +281,7 @@ const Options = observer(
                     ></Text>
                   </View>
 
-                  <View style={[utilFlex.felxColumn, utilFlex.flexCenter, utilSpacing.mt5]}>
+                  <View style={[utilFlex.flexColumn, utilFlex.flexCenter, utilSpacing.mt5]}>
                     <Text
                       preset="bold"
                       text={getI18nText("subscriptionScreen.priceCustom", {

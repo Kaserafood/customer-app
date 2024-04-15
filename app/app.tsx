@@ -86,7 +86,7 @@ function App() {
       },
       onOpenComplete: ({ error, params, uri }) => {
         if (error) {
-          console.error(`subscribe onOpenComplete, Error from opening uri: ${uri} error: ${error}`)
+          // console.error(`subscribe onOpenComplete, Error from opening uri: ${uri} error: ${error}`)
         } else if (params) {
           if (!params["+clicked_branch_link"]) {
             if (params["+non_branch_link"]) {

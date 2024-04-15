@@ -82,6 +82,10 @@ interface orderDriverProps {
   timestamp: string
 }
 
+interface searchProps {
+  showBackButton?: boolean
+}
+
 export type NavigatorParamList = {
   init: undefined
   registerForm: undefined
@@ -97,7 +101,7 @@ export type NavigatorParamList = {
   category: Category
   home: undefined
   chefs: undefined
-  search: undefined
+  search: searchProps
   map: mapScreenParams
   address: addressScreenParams
   orders: undefined

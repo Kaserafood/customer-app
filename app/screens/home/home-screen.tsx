@@ -7,7 +7,6 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import LottieView from "lottie-react-native"
-import branch from "react-native-branch"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import RNUxcam from "react-native-ux-cam"
@@ -167,7 +166,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       await dishStore
         .getAll(params)
         .catch((error: Error) => {
-          messagesStore.showError(error.message)
+          messagesStore.showError("common.error")
+          console.log(error)
         })
         .finally(() => {
           commonStore.setVisibleLoading(false)
@@ -233,7 +233,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           }
         })
         .catch((error: Error) => {
-          messagesStore.showError(error.message)
+          messagesStore.showError("common.someError", true)
+          __DEV__ && console.log(error)
         })
         .finally(() => {
           commonStore.setVisibleLoading(false)
@@ -247,17 +248,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
       dishStore
         .getGroupedByChef(dayStore.currentDay.date, RNLocalize.getTimeZone(), latitude, longitude)
         .then(() => {
-          // fake data =
-          // const data = []
-
-          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
-          // data.push(formatDishesGroupedByChef(dishStore.dishesGroupedByChef)[0])
           state.setData(formatDishesGroupedByChef(dishStore.dishesGroupedByChef))
         })
         .catch((error: Error) => {
-          messagesStore.showError(error.message)
+          messagesStore.showError("common.someError", true)
+          __DEV__ && console.log(error)
         })
     }
 
