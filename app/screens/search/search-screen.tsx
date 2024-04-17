@@ -150,8 +150,8 @@ export const SearchScreen: FC<StackScreenProps<NavigatorParamList, "search">> = 
                   ]}
                   onPress={onPressSearch}
                 >
-                  <Icon name="magnifying-glass" color={color.palette.grayDark} size={18}></Icon>
-                  <Text tx="searchScreen.searchPlaceholder" style={utilSpacing.ml3}></Text>
+                  <Icon name="search" type="Octicons" color={color.palette.black} size={18}></Icon>
+                  <Text tx="mainScreen.search" style={utilSpacing.ml3}></Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -272,8 +272,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   search: {
-    backgroundColor: color.palette.whiteGray,
+    backgroundColor: color.palette.gray300,
     borderRadius: spacing[3],
+  },
+  shadow: {
+    elevation: 5,
+    shadowColor: color.palette.black,
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.15,
+
+    shadowRadius: 20,
   },
   text: {
     lineHeight: 20,

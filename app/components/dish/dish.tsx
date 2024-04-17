@@ -116,7 +116,6 @@ export const Dish = observer(function Dish(props: DishProps) {
                 currencyCode={currencyCode || dish.chef.currencyCode}
                 amount={dish.chef?.priceDelivery}
                 preset="delivery"
-                style={{ backgroundColor: palette.amber600 }}
               ></Price>
             )}
           </View>

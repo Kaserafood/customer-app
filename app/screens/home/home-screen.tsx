@@ -38,6 +38,7 @@ import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 import { ChefItemModel } from "../chefs/chef-item"
 import Categories from "../main/categories"
+import { ModalSearch } from "../search/modal-search"
 import { Banner } from "./banner"
 import { DataState, ListChef } from "./chef-list"
 import { DishParams } from "./dish.types"
@@ -49,6 +50,7 @@ const modalStateLocation = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
 const modalDeliveryDate = new ModalStateHandler()
 const modalStateWelcome = new ModalStateHandler()
+const modalStateSearch = new ModalStateHandler()
 const state = new DataState()
 const mixpanel = getInstanceMixpanel()
 /**
@@ -328,7 +330,33 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
 
     const handleSearch = () => {
       mixpanel.track("Search Dish Screen press")
-      navigation.navigate("search")
+      modalStateSearch.setVisible(true)
+    }
+
+    const toDetailDish = (dish: DishChef) => {
+      RNUxcam.logEvent("search: pressDish", {
+        id: dish.id,
+        name: dish.title,
+        chefId: dish.chef.id,
+        chefName: dish.chef.name,
+      })
+
+      mixpanel.track("Press dish in search screen", {
+        id: dish.id,
+        name: dish.title,
+        chefId: dish.chef.id,
+        chefName: dish.chef.name,
+      })
+
+      if (cartStore.hasItems) cartStore.cleanItems()
+      /**
+       *it is set to 0 so that the dishes can be obtained the first time it enters dish-detail
+       */
+      commonStore.setCurrentChefId(0)
+      dishStore.clearDishesChef()
+      navigation.navigate("dishDetail", {
+        ...dish,
+      })
     }
 
     return (
@@ -475,6 +503,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           isVisibleContinue={false}
         ></ModalDeliveryDate>
         <ModalWelcome modalState={modalStateWelcome}></ModalWelcome>
+        <ModalSearch modalState={modalStateSearch} onDishPress={toDetailDish}></ModalSearch>
       </Screen>
     )
   },

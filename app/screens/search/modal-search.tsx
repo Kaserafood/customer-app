@@ -21,9 +21,9 @@ import { Day } from "../../models/day-store"
 import { DishChef } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { getI18nText } from "../../utils/translate"
-import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 interface ModalSearchProps {
   modalState: ModalStateHandler
@@ -181,7 +181,7 @@ export const ModalSearch = observer(({ modalState, onDishPress }: ModalSearchPro
 
 const styles = StyleSheet.create({
   inputStyle: {
-    backgroundColor: color.palette.whiteGray,
+    backgroundColor: color.palette.gray300,
     borderRadius: spacing[3],
     color: color.text,
   },

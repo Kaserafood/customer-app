@@ -6,15 +6,7 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import { useChef } from "../../common/hooks/useChef"
-import {
-  Categories,
-  Chip,
-  Location,
-  ModalDeliveryDate,
-  Screen,
-  Separator,
-  Text,
-} from "../../components"
+import { Chip, Location, ModalDeliveryDate, Screen, Separator, Text } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { ModalLocation } from "../../components/location/modal-location"
 import { useStores } from "../../models"
@@ -178,10 +170,10 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
           ></DayDelivery> */}
 
           {/* <Separator style={utilSpacing.m4}></Separator> */}
-          <Categories
+          {/* <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
-          ></Categories>
+          ></Categories> */}
           <View style={utilSpacing.px5}>
             <Separator style={utilSpacing.my4}></Separator>
             <View
