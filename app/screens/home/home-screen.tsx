@@ -7,12 +7,10 @@ import * as RNLocalize from "react-native-localize"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 
 import LottieView from "lottie-react-native"
-import { TouchableOpacity } from "react-native-gesture-handler"
 import Ripple from "react-native-material-ripple"
 import RNUxcam from "react-native-ux-cam"
 import { ScreenType, useChef } from "../../common/hooks/useChef"
 import {
-  Categories,
   Chip,
   Dish,
   EmptyData,
@@ -31,7 +29,7 @@ import { Banner as BannerModel } from "../../models/banner-store"
 import { Category } from "../../models/category-store"
 import { Day } from "../../models/day-store"
 import { DishChef, DishChef as DishModel } from "../../models/dish-store"
-import { NavigatorParamList, goBack } from "../../navigators"
+import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { palette } from "../../theme/palette"
@@ -39,6 +37,7 @@ import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { loadString } from "../../utils/storage"
 import { ChefItemModel } from "../chefs/chef-item"
+import Categories from "../main/categories"
 import { Banner } from "./banner"
 import { DataState, ListChef } from "./chef-list"
 import { DishParams } from "./dish.types"
@@ -201,7 +200,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
     }, [])
 
     const fetch = async (useCurrentDate: boolean, tokenPagination: string) => {
-      commonStore.setVisibleLoading(true)
+      // commonStore.setVisibleLoading(true)
       /*
        * When is in environment development, not is necessary clean items in the cart because it produce an error  in checkout screen and others screens
        */
@@ -342,20 +341,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         <View
           style={[styles.containerLocation, utilSpacing.py4, utilFlex.flexRow, utilSpacing.px5]}
         >
-          {params && params?.showBackIcon && (
-            <TouchableOpacity
-              style={[styles.btnBack, utilSpacing.ml5]}
-              onPress={goBack}
-              activeOpacity={0.5}
-            >
-              <Icon
-                name="angle-left-1"
-                style={utilSpacing.mr2}
-                size={24}
-                color={color.palette.white}
-              ></Icon>
-            </TouchableOpacity>
-          )}
           <Location
             onPress={() => {
               modalStateLocation.setVisible(true)
@@ -390,12 +375,13 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         >
           <PopularDishes onPressDish={(dish) => toDetail(dish)}></PopularDishes>
 
-          <Separator style={utilSpacing.m5}></Separator>
-          <Categories
+          {/* <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
-          ></Categories>
-          <Separator style={utilSpacing.m4}></Separator>
+          ></Categories> */}
+
+          <Categories onPress={(category) => toCategory(category)}></Categories>
+          {/* <Separator style={utilSpacing.m4}></Separator> */}
           <Banner
             onPressNewChefs={() => navigation.navigate("newChefs")}
             onBannerPress={onBannerPress}
@@ -431,9 +417,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
                 toScreen={(screen, dish, chef) => toScreen(screen, chef)}
               ></ListChef>
             )}
-            {dishStore.dishes.slice(3, 5).length > 0 && (
+            {dishStore.dishes.slice(3, 6).length > 0 && (
               <ListDishes
-                dishes={dishStore.dishes.slice(3, 5)}
+                dishes={dishStore.dishes.slice(3, 6)}
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}
@@ -443,9 +429,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
                 toScreen={(screen, dish, chef) => toScreen(screen, chef)}
               ></ListChef>
             )}
-            {dishStore.dishes.slice(5, 8).length > 0 && (
+            {dishStore.dishes.slice(6, 9).length > 0 && (
               <ListDishes
-                dishes={dishStore.dishes.slice(5, 8)}
+                dishes={dishStore.dishes.slice(6, 9)}
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}
@@ -455,9 +441,9 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
                 toScreen={(screen, dish, chef) => toScreen(screen, chef)}
               ></ListChef>
             )}
-            {dishStore.dishes.slice(8, 500).length > 0 && (
+            {dishStore.dishes.slice(9).length > 0 && (
               <ListDishes
-                dishes={dishStore.dishes.slice(8, 500)}
+                dishes={dishStore.dishes.slice(9)}
                 toDetail={(dish) => toDetail(dish)}
               ></ListDishes>
             )}

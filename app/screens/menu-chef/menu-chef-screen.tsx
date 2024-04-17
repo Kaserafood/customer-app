@@ -135,18 +135,6 @@ export const MenuChefScreen: FC<StackScreenProps<NavigatorParamList, "menuChef">
       }
     }
 
-    // const onChangeDay = async (day: Day) => {
-    //   dayStore.setCurrentDay(day)
-    //   await getDishByChef()
-    //   RNUxcam.logEvent("changeDate", {
-    //     screen: "menuChef",
-    //   })
-
-    //   mixpanel.track("Change date", {
-    //     screen: "menuChef",
-    //   })
-    // }
-
     const getDishByChef = async () => {
       commonStore.setVisibleLoading(true)
       await dishStore

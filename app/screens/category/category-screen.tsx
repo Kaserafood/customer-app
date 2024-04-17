@@ -6,15 +6,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import * as RNLocalize from "react-native-localize"
 
 import RNUxcam from "react-native-ux-cam"
-import {
-  DayDelivery,
-  Dish,
-  Header,
-  ModalRequestDish,
-  Screen,
-  Separator,
-  Text,
-} from "../../components"
+import { DayDelivery, Dish, Header, ModalRequestDish, Screen, Separator } from "../../components"
 import { DayDeliveryModal } from "../../components/day-delivery/day-delivery-modal"
 import { EmptyData } from "../../components/empty-data/empty-data"
 import { useStores } from "../../models"
@@ -24,9 +16,9 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
+import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
 import { DishParams } from "../home/dish.types"
-import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateRequestDish = new ModalStateHandler()
@@ -73,7 +65,8 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
 
         await getAll(paramsDish)
           .catch((error) => {
-            messagesStore.showError(error.message)
+            __DEV__ && console.log(error)
+            messagesStore.showError()
           })
           .finally(() => {
             commonStore.setVisibleLoading(false)
@@ -123,7 +116,6 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
             style={utilSpacing.pl5}
           ></DayDelivery>
           <View style={styles.container}>
-            <Text tx="common.dishes" preset="bold" size="lg" style={utilSpacing.my3}></Text>
             <View style={utilSpacing.mb8}>
               {dishesCategory.map((dish, index) => (
                 <View key={dish.id}>
@@ -154,7 +146,7 @@ export const CategoryScreen: FC<StackScreenProps<NavigatorParamList, "category">
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: spacing[3],
+    // paddingHorizontal: spacing[3],
     paddingTop: spacing[3],
   },
 

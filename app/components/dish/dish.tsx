@@ -6,7 +6,9 @@ import Ripple from "react-native-material-ripple"
 import { DishChef as DishModel } from "../../models/dish-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import { palette } from "../../theme/palette"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { Icon } from "../icon/icon"
 import { Image } from "../image/image"
 import { Price } from "../price/price"
 import { Text } from "../text/text"
@@ -73,7 +75,7 @@ export const Dish = observer(function Dish(props: DishProps) {
 
   return (
     <Ripple
-      style={[utilSpacing.py3, utilSpacing.px5, style]}
+      style={[utilSpacing.py3, utilSpacing.px5, dish.badge && styles.badge, style]}
       rippleOpacity={0.2}
       rippleDuration={400}
       onPress={handlePress}
@@ -114,6 +116,7 @@ export const Dish = observer(function Dish(props: DishProps) {
                 currencyCode={currencyCode || dish.chef.currencyCode}
                 amount={dish.chef?.priceDelivery}
                 preset="delivery"
+                style={{ backgroundColor: palette.amber600 }}
               ></Price>
             )}
           </View>
@@ -127,12 +130,26 @@ export const Dish = observer(function Dish(props: DishProps) {
             <Image style={styles.imageChef} source={{ uri: dish.chef.image }}></Image>
           )}
         </View>
+
+        {dish.badge && (
+          <View style={[styles.containerIconStart, utilSpacing.px2, utilSpacing.py2]}>
+            <Icon
+              style={styles.iconStart}
+              name="heart"
+              size={18}
+              color={color.palette.amber600}
+            ></Icon>
+          </View>
+        )}
       </View>
     </Ripple>
   )
 })
 
 const styles = StyleSheet.create({
+  badge: {
+    backgroundColor: palette.amber50,
+  },
   chefDish: {
     alignSelf: "flex-start",
     color: color.palette.grayDark,
@@ -141,17 +158,25 @@ const styles = StyleSheet.create({
   column: {
     height: 125,
   },
+
+  containerIconStart: {
+    backgroundColor: color.palette.amber50,
+    borderRadius: spacing[2],
+    position: "absolute",
+    right: 8,
+    top: 8,
+  },
   containerTextDish: {
     flex: 1,
     marginRight: spacing[3],
   },
-
   h100: {
     height: 105,
   },
   h120: {
     height: 110,
   },
+  iconStart: {},
   imageChef: {
     borderColor: color.palette.white,
     borderRadius: 16,

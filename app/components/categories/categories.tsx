@@ -28,8 +28,8 @@ export const Categories = function Categories(props: CategoriesProps) {
 
   return (
     <View>
-      <Text size="lg" tx="categories.title" style={utilSpacing.ml4} preset="bold"></Text>
-      <ScrollView horizontal style={[styles.flex, utilSpacing.mt3]}>
+      {/* <Text size="lg" tx="categories.title" style={utilSpacing.ml4} preset="bold"></Text> */}
+      <ScrollView horizontal style={[styles.flex, utilSpacing.mt5]}>
         {categories.map((category, index) => (
           <Ripple
             onPress={() => onPress(category)}

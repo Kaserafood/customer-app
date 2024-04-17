@@ -65,7 +65,7 @@ export const DishStoreModel = types
       if (result && result.kind === "ok") {
         const formatted = result.data?.dishes
 
-        if (categoryId) applySnapshot(self.dishesCategory, formatted)
+        if (categoryId) applySnapshot(self.dishesCategory, result.data)
         else {
           self.currentTokenPagination = result.data?.tokenPagination
           if (tokenPagination) {

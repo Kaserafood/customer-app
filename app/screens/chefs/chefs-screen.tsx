@@ -9,7 +9,6 @@ import { useChef } from "../../common/hooks/useChef"
 import {
   Categories,
   Chip,
-  DayDelivery,
   Location,
   ModalDeliveryDate,
   Screen,
@@ -24,7 +23,7 @@ import { Day } from "../../models/day-store"
 import { Dish } from "../../models/dish"
 import { NavigatorParamList } from "../../navigators"
 import { color, spacing } from "../../theme"
-import { utilFlex, utilSpacing } from "../../theme/Util"
+import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { ModalStateHandler } from "../../utils/modalState"
 
 import RNUxcam from "react-native-ux-cam"
@@ -169,20 +168,21 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
             onPress={() => {
               modalStateLocation.setVisible(true)
             }}
-            style={utilSpacing.px4}
+            style={utilSpacing.px5}
           ></Location>
-          <DayDelivery
+          {/* <DayDelivery
             days={dayStore.days}
             onWhyPress={(state) => modalStateDay.setVisible(state)}
             onPress={onChangeDay}
-          ></DayDelivery>
+            style={utilSpacing.mx4}
+          ></DayDelivery> */}
 
-          <Separator style={utilSpacing.m4}></Separator>
+          {/* <Separator style={utilSpacing.m4}></Separator> */}
           <Categories
             categories={categoryStore.categories}
             onPress={(category) => toCategory(category)}
           ></Categories>
-          <View style={utilSpacing.px4}>
+          <View style={utilSpacing.px5}>
             <Separator style={utilSpacing.my4}></Separator>
             <View
               style={[
@@ -197,6 +197,7 @@ export const ChefsScreen: FC<StackScreenProps<NavigatorParamList, "chefs">> = ob
                 onPress={() => modalDeliveryDate.setVisible(true)}
                 text={dayStore.currentDay.dayName}
                 style={[utilSpacing.ml3, styles.chip]}
+                textstyle={utilText.bold}
               ></Chip>
             </View>
 

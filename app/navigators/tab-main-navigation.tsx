@@ -11,8 +11,7 @@ import { useQuery } from "react-query"
 import { Icon } from "../components"
 import { setLocaleI18n } from "../i18n"
 import { useStores } from "../models"
-import { HomeScreen, SearchScreen } from "../screens"
-import { MainScreen } from "../screens/main/main-screen"
+import { ChefsScreen, HomeScreen, SearchScreen } from "../screens"
 import { AccountResponse, Api, setLocale } from "../services/api"
 import { color, spacing, typographySize } from "../theme"
 import { utilSpacing } from "../theme/Util"
@@ -124,7 +123,7 @@ export function TabMainNavigation({ navigationRef }) {
           },
         }}
         name={getI18nText("tabMainNavigation.home")}
-        component={MainScreen}
+        component={HomeScreen}
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "Home" })
@@ -162,11 +161,11 @@ export function TabMainNavigation({ navigationRef }) {
         options={{
           // eslint-disable-next-line react/display-name
           tabBarIcon: ({ color }) => {
-            return <Icon style={utilSpacing.mt1} name="Asset-8" size={26} color={color} />
+            return <Icon style={utilSpacing.mt1} name="hat-chef" size={26} color={color} />
           },
         }}
-        name={getI18nText("tabMainNavigation.dishes")}
-        component={HomeScreen}
+        name={getI18nText("tabMainNavigation.chefs")}
+        component={ChefsScreen}
         listeners={{
           tabPress: () => {
             RNUxcam.logEvent("tabPress", { name: "chefs" })

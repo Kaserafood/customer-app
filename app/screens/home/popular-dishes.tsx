@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite"
 import React, { useEffect } from "react"
 import { ScrollView, StyleSheet, View } from "react-native"
 import * as RNLocalize from "react-native-localize"
-import { DishChef, Text } from "../../components"
+import { DishChef, Separator, Text } from "../../components"
 import { useStores } from "../../models"
 import { color } from "../../theme"
 import { utilSpacing } from "../../theme/Util"
@@ -30,22 +30,29 @@ const PopularDishes = observer(({ onPressDish }: Props) => {
   }, [])
 
   return (
-    <View style={[utilSpacing.pl5, utilSpacing.pt5]}>
-      <View style={styles.containerTitle}>
-        <Text tx="dishesScreen.moreWanted" preset="bold" size="lg"></Text>
-        <View style={styles.bar}></View>
-      </View>
-      <ScrollView horizontal>
-        {dishStore.dishesFavorites.map((dish) => (
-          <DishChef
-            onPress={() => onPressDish(dish)}
-            dish={dish}
-            key={dish.id}
-            currencyCode={userStore.account?.currency}
-          ></DishChef>
-        ))}
-      </ScrollView>
-    </View>
+    <>
+      {dishStore.dishesFavorites?.length > 0 && (
+        <View>
+          <Separator style={utilSpacing.m5}></Separator>
+          <View style={[utilSpacing.pl5, utilSpacing.pt5]}>
+            <View style={styles.containerTitle}>
+              <Text tx="dishesScreen.moreWanted" preset="bold" size="lg"></Text>
+              <View style={styles.bar}></View>
+            </View>
+            <ScrollView horizontal>
+              {dishStore.dishesFavorites.map((dish) => (
+                <DishChef
+                  onPress={() => onPressDish(dish)}
+                  dish={dish}
+                  key={dish.id}
+                  currencyCode={userStore.account?.currency}
+                ></DishChef>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      )}
+    </>
   )
 })
 

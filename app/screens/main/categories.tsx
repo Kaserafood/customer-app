@@ -12,6 +12,7 @@ import { Category } from "../../models/category-store"
 import { Api } from "../../services/api"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
+import SkeletonCategories from "../home/skeleton-categories"
 
 interface Props {
   onPress: (category: Category) => void
@@ -25,8 +26,14 @@ const Categories = ({ onPress }: Props) => {
   const navigation = useNavigation()
   const { messagesStore } = useStores()
 
-  const { data } = useQuery("categories-main", () => api.getAllCategories(), {
+  const { data, isLoading } = useQuery("categories-main", () => api.getAllCategories(), {
     onSuccess: (data: { data: Category[]; kind: string }) => {
+      data.data?.push({
+        id: -1,
+        name: "",
+        image: "",
+      })
+
       return data
     },
     onError: (error) => {
@@ -45,61 +52,61 @@ const Categories = ({ onPress }: Props) => {
   }
 
   return (
-    <View style={utilSpacing.p5}>
-      <View style={styles.containerTitle}>
+    <View style={[utilSpacing.p4, utilSpacing.mb3]}>
+      <View style={[styles.containerTitle, utilSpacing.mx2]}>
         <Text tx="mainScreen.homemadeStuff" preset="bold" size="lg"></Text>
         <View style={styles.bar}></View>
       </View>
+      {isLoading ? (
+        <SkeletonCategories></SkeletonCategories>
+      ) : (
+        <View style={[utilFlex.flexRow, utilSpacing.my4]}>
+          {data?.data?.slice(0, 3).map((category, index) => (
+            <Ripple
+              onPress={() => handleCategory(category)}
+              rippleOpacity={0.2}
+              rippleDuration={400}
+              rippleContainerBorderRadius={16}
+              key={category.id}
+              style={[
+                utilSpacing.p4,
+                styles.containerCategoryItem,
+                utilFlex.flex1,
+                utilSpacing.mx2,
+              ]}
+            >
+              <Image
+                defaultSource={images.category}
+                style={styles.imgCategory}
+                source={{ uri: category.image }}
+              ></Image>
+              <Text style={[utilSpacing.mt3, utilFlex.selfCenter]} text={category.name}></Text>
+            </Ripple>
+          ))}
+        </View>
+      )}
 
-      <View style={[utilFlex.flexRow, utilSpacing.my4]}>
-        {data?.data?.slice(0, 3).map((category, index) => (
-          <Ripple
-            onPress={() => handleCategory(category)}
-            rippleOpacity={0.2}
-            rippleDuration={400}
-            rippleContainerBorderRadius={16}
-            key={category.id}
-            style={[
-              utilSpacing.p4,
-              styles.containerCategoryItem,
-              utilFlex.flex1,
-              index !== 2 && utilSpacing.mr4,
-            ]}
-          >
-            <Image
-              defaultSource={images.category}
-              style={styles.imgCategory}
-              source={{ uri: category.image }}
-            ></Image>
-            <Text style={utilSpacing.mt3} text={category.name}></Text>
-          </Ripple>
-        ))}
-      </View>
       <View style={utilFlex.flexRow}>
-        {data?.data?.slice(4, 7).map((category, index) => (
+        {data?.data?.slice(3, 6).map((category, index) => (
           <Ripple
             key={category.id}
-            onPress={() => (index !== 2 ? handleCategory(category) : toSearch())}
+            onPress={() =>
+              category.id !== -1 && index !== 2 ? handleCategory(category) : toSearch()
+            }
             rippleOpacity={0.2}
             rippleDuration={400}
             rippleContainerBorderRadius={16}
-            style={[
-              utilSpacing.p4,
-              styles.containerCategoryItem,
-              index !== 2 && utilSpacing.mr4,
-
-              utilFlex.flex1,
-            ]}
+            style={[utilSpacing.p4, styles.containerCategoryItem, utilSpacing.mx2, utilFlex.flex1]}
           >
             <View>
-              {index !== 2 ? (
+              {category.id !== -1 && index !== 2 ? (
                 <View>
                   <Image
                     defaultSource={images.category}
                     style={styles.imgCategory}
                     source={{ uri: category.image }}
                   ></Image>
-                  <Text style={utilSpacing.mt3} text={category.name}></Text>
+                  <Text style={[utilSpacing.mt3, utilFlex.selfCenter]} text={category.name}></Text>
                 </View>
               ) : (
                 <View>

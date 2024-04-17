@@ -139,6 +139,7 @@ export function navigate(name: any, params?: any) {
 }
 
 export function goBack() {
+  console.log("GO_BACK_NOW", navigationRef.isReady() && navigationRef.canGoBack())
   if (navigationRef.isReady() && navigationRef.canGoBack()) {
     navigationRef.goBack()
   }

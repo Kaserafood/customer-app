@@ -82,7 +82,7 @@ export const ChefItem = observer(function ChefItem(props: ChefItemProps) {
         >
           {item.dishes.map((dish) => (
             <Ripple
-              key={dish.id}
+              key={`${item.id}- ${dish.id}`}
               rippleOpacity={0.2}
               rippleDuration={400}
               onPress={() => onChefPress()}

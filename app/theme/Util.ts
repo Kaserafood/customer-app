@@ -60,10 +60,6 @@ export const utilText = StyleSheet.create({
 })
 
 export const utilFlex = StyleSheet.create({
-  flexColumn: {
-    display: "flex",
-    flexDirection: "column",
-  },
   flex: {
     display: "flex",
   },
@@ -81,11 +77,15 @@ export const utilFlex = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-
   flexCenterVertical: {
     alignItems: "center",
     display: "flex",
     flexDirection: "row",
+  },
+
+  flexColumn: {
+    display: "flex",
+    flexDirection: "column",
   },
   flexRow: {
     display: "flex",

@@ -41,5 +41,6 @@ export const dish = types.model("Dish").props({
   image: types.maybeNull(types.string),
   imageThumbnail: types.maybeNull(types.string),
   addons: types.maybeNull(types.optional(types.array(addonItem), [])),
+  badge: types.maybeNull(types.boolean),
 })
 export interface Dish extends Instance<typeof dish> {}
