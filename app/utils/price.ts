@@ -1,7 +1,8 @@
 export function getFormat(amount: number, currencyCode: string): string {
-  if (!amount) return "0"
   let currency = "$"
   if (currencyCode === "GTQ") currency = "Q"
+
+  if (!amount) return `${currency}0`
 
   let format = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
 

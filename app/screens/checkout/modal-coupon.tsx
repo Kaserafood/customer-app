@@ -17,30 +17,42 @@ interface ModalCouponProps {
 
 export const ModalCoupon = (props: ModalCouponProps) => {
   const { ...methods } = useForm({ mode: "onBlur" })
-  const { commonStore, orderStore, userStore, messagesStore } = useStores()
+  const { commonStore, orderStore, userStore, messagesStore, cartStore } = useStores()
   const [isValidCoupon, setIsValidCoupon] = useState(false)
-  const [isSubmited, setIsSubmited] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
   const [textCoupon, setTextCoupon] = useState("")
   const { stateModal, onUseCoupon } = props
 
   const onSubmit = (data) => {
-    setIsSubmited(false)
+    setIsSubmitted(false)
+    cartStore.setDiscount(0)
     commonStore.setVisibleLoading(true)
     orderStore
       .getCoupon(data.coupon, userStore.userId, RNLocalize.getTimeZone())
       .then((response) => {
-        setIsSubmited(true)
+        setIsSubmitted(true)
         if (response && response.id > 0) {
           onUseCoupon(response)
-          setIsSubmited(true)
+          setIsSubmitted(true)
           setIsValidCoupon(true)
 
-          if (response.discountType === "percent") {
-            const text = getI18nText("modalCoupon.discountApply", {
-              percent: `${parseInt(response.amount.toString()).toString()}%`,
+          let text = ""
+          if (response.type === "percent") {
+            text = getI18nText("modalCoupon.discountApply", {
+              percent: `${parseInt(response.discountAmount.toString()).toString()}%`,
             })
-            setTextCoupon(text)
+            cartStore.setDiscount((response.discountAmount * cartStore.subtotal) / 100)
+          } else if (response.type === "fixed") {
+            text = getI18nText("modalCoupon.discountApply", {
+              percent: `Q${parseInt(response.discountAmount.toString()).toString()}`,
+            })
+
+            cartStore.setDiscount(response.discountAmount)
+          } else if (response.type === "deliveryFree") {
+            text = getI18nText("modalCoupon.deliveryFree")
           }
+
+          setTextCoupon(text)
         } else setIsValidCoupon(false)
       })
       .catch((error: Error) => {
@@ -55,7 +67,7 @@ export const ModalCoupon = (props: ModalCouponProps) => {
   }
 
   const hide = () => {
-    setIsSubmited(false)
+    setIsSubmitted(false)
     setIsValidCoupon(false)
     methods.reset()
     stateModal.setVisible(false)
@@ -72,7 +84,6 @@ export const ModalCoupon = (props: ModalCouponProps) => {
         ></Text>
         <FormProvider {...methods}>
           <InputText
-            preset="card"
             name="coupon"
             placeholderTx="modalCoupon.placeholderCoupon"
             labelTx="modalCoupon.labelCoupon"
@@ -85,7 +96,7 @@ export const ModalCoupon = (props: ModalCouponProps) => {
             autoCapitalize="characters"
           ></InputText>
 
-          {isSubmited && (
+          {isSubmitted && (
             <View>
               {isValidCoupon ? (
                 <Animatable.View animation="tada" style={utilFlex.selfCenter}>

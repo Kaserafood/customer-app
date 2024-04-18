@@ -286,7 +286,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         paymentMethodId: getPaymentMethodId(),
         paymentMethod: getPaymentMethodId() ? "card" : "cod", // Contra entrega o pago con tarjeta
         couponCode: coupon?.code,
-        total: getCurrentTotal(),
+        total: cartStore.calculateTotalForDishes(priceDelivery()),
       }
 
       orderStore
@@ -311,9 +311,13 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             __DEV__ && console.log("order added", res.data)
 
             // Track Result
-            AppEventsLogger.logPurchase(getCurrentTotal(), getCurrency(), {
-              description: "El usuario ha realizado un pedido",
-            })
+            AppEventsLogger.logPurchase(
+              cartStore.calculateTotalForDishes(priceDelivery()),
+              getCurrency(),
+              {
+                description: "El usuario ha realizado un pedido",
+              },
+            )
 
             RNUxcam.logEvent("checkout: successOrder")
 
@@ -435,7 +439,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
     const getTextButtonFooter = (): string => {
       let text: string
-      const total = getCurrentTotal()
+      const total = cartStore.calculateTotalForDishes(priceDelivery())
 
       if (isPlan) {
         text = `${getI18nText("checkoutScreen.pay")} ${userStore.account?.currency} ${total}`
@@ -448,15 +452,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       }
 
       return text
-    }
-
-    const getCurrentTotal = (): number => {
-      const tax = cartStore.calculateTaxAmount(priceDelivery(), plansStore.price)
-
-      if (isPlan) {
-        return plansStore.price + priceDelivery() + tax
-      }
-      return cartStore.subtotal + priceDelivery() + tax - (cartStore.discount ?? 0)
     }
 
     const getCurrency = (): string => {
@@ -483,16 +478,10 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
     }
 
     const priceDelivery = () => {
-      if (isPlan) {
-        if (plansStore.type === "test") return 0
-
-        return cartStore.calculateDeliveryPrice(
-          plansStore.totalCredits,
-          plansStore.config.pricePerDay,
-          plansStore.config.minimumQuantityFreeDelivery,
-        )
-      }
       if (cartStore.cart.length === 0) return 0
+
+      if (coupon?.type === "deliveryFree") return 0
+
       return cartStore.cart[0]?.dish.chef.priceDelivery
     }
 
@@ -662,7 +651,7 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
             <DeliveryLabel labelDeliveryTime={labelDeliveryTime} isPlan={isPlan}></DeliveryLabel>
 
             {/* Resume order */}
-            <Summary priceDelivery={priceDelivery()} coupon={coupon} isPlan={isPlan}></Summary>
+            <Summary priceDelivery={priceDelivery()}></Summary>
           </View>
         </ScrollView>
 

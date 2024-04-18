@@ -61,14 +61,12 @@ const orderDetail = orderOverviewModel.props({
   paymentPending: types.maybeNull(types.number),
 })
 
-const cuponCodeModel = types.model("CuponCode").props({
+const couponModel = types.model("Coupon").props({
   id: types.maybeNull(types.number),
   code: types.maybeNull(types.string),
-  amount: types.maybeNull(types.number),
-  discountType: types.maybeNull(types.string),
-  minimumAmount: types.maybeNull(types.number),
-  useageLimitPerUser: types.maybeNull(types.number),
-  freeShipping: types.maybeNull(types.boolean),
+  discountAmount: types.maybeNull(types.number),
+  type: types.maybeNull(types.string),
+  limitPerUser: types.maybeNull(types.number),
 })
 
 export interface Order extends SnapshotOut<typeof orderModel> {}
@@ -77,7 +75,7 @@ export interface MetaData extends Instance<typeof metaData> {}
 export interface Products extends Instance<typeof product> {}
 export interface OrderDetail extends Instance<typeof orderDetail> {}
 
-export interface Coupon extends SnapshotOut<typeof cuponCodeModel> {}
+export interface Coupon extends SnapshotOut<typeof couponModel> {}
 /**
  * Model for orders.
  */

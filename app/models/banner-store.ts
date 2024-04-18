@@ -35,7 +35,9 @@ export const BannerStoreModel = types
       const result = yield api.getBanners()
 
       if (result && result.kind === "ok") {
-        self.setBanners(result.data)
+        // self.setBanners(result.data)
+
+        return result.data
       }
     }),
 

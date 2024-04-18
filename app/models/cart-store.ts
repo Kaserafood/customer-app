@@ -126,24 +126,9 @@ export const CartStoreModel = types
       return (self.taxPercentage * totalWithoutTax) / 100
     },
     calculateTotalForDishes: (deliveryPrice?: number): number => {
-      const totalWithoutTax = self.subtotal + deliveryPrice - self.discount ?? 0
+      const total = self.subtotal + deliveryPrice - self.discount ?? 0
 
-      if (self.taxPercentage > 0) {
-        const taxAmount = (self.taxPercentage * totalWithoutTax) / 100
-        return totalWithoutTax + taxAmount
-      }
-
-      return totalWithoutTax
-    },
-    calculateTotalForPlans: (planPrice: number, deliveryPrice: number): number => {
-      const totalWithoutTax = planPrice + deliveryPrice
-
-      if (self.taxPercentage > 0) {
-        const taxAmount = (self.taxPercentage * totalWithoutTax) / 100
-        return taxAmount + totalWithoutTax
-      }
-
-      return totalWithoutTax
+      return total < 0 ? 0 : total
     },
   }))
   .actions((self) => ({

@@ -105,7 +105,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         name: banner.categoryName,
         image: "",
       }
-      RNUxcam.logEvent("bannerTap", {
+      RNUxcam.logEvent("Banner press", {
         category: category.name,
         id: category.id,
       })

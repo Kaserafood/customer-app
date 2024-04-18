@@ -633,7 +633,8 @@
     "labelCoupon": "Cupón",
     "couponInvalid": "El cupón no es válido",
     "use": "Aplicar",
-    "discountApply": "Descuento del {{percent}} aplicado"
+    "discountApply": "Descuento de {{percent}} aplicado",
+    "deliveryFree" : "Envío GRATIS aplicado"
   },
   "plansScreen": {
     "title": "Paquetes de almuerzos semanales",

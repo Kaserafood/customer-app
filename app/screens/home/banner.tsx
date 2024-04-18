@@ -7,6 +7,7 @@ import { ScrollView } from "react-native-gesture-handler"
 
 import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
+import { useQuery } from "react-query"
 import images from "../../assets/images"
 import { Icon, Text } from "../../components"
 import { TxKeyPath } from "../../i18n"
@@ -14,7 +15,7 @@ import { useStores } from "../../models"
 import { Banner as BannerModel } from "../../models/banner-store"
 import { color, spacing } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
-import { getInstanceMixpanel } from "../../utils/mixpanel"
+import SkeletonBanner from "./skeleton-banner"
 
 interface PropsBanner {
   onPressWelcome: () => void
@@ -29,9 +30,10 @@ export const Banner = observer((props: PropsBanner) => {
 
   const { bannerStore, userStore } = useStores()
 
+  const { data = [] } = useQuery("banners", () => bannerStore.getAll())
+
   useEffect(() => {
     ;(async () => {
-      await bannerStore.getAll()
       await bannerStore.getNewChefs()
       await bannerStore.getWelcome()
     })()
@@ -56,89 +58,98 @@ export const Banner = observer((props: PropsBanner) => {
 
   return (
     <View>
-      <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
-        {bannerStore.showWelcome && (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
-            onPress={onPressWelcomeBanner}
-          >
-            <Image
-              style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
-              source={userStore.countryId === 1 ? images.welcome : images.welcomeUs}
-            ></Image>
-            <View style={[styles.containerText, utilFlex.flex1, { justifyContent: "flex-end" }]}>
-              <View style={utilSpacing.mb4}>
-                <Button onPress={onPressWelcomeBanner} tx="banner.whatIsIt"></Button>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-        {bannerStore.banners.map((banner, index) => (
-          <TouchableOpacity
-            key={banner.id}
-            activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml5]}
-            onPress={() => onBannerPress(banner)}
-          >
-            <Image style={[styles.image, utilSpacing.mr3]} source={{ uri: banner.image }}></Image>
-
-            <View
-              style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter, utilFlex.flexRow]}
+      {data.length > 0 ? (
+        <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
+          {bannerStore.showWelcome && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles.containerImage, utilSpacing.mr3, utilSpacing.ml5]}
+              onPress={onPressWelcomeBanner}
             >
-              <View style={[utilFlex.flex1, utilSpacing.mx4]}>
-                <Text
-                  preset="bold"
-                  style={[
-                    styles.title,
-                    utilFlex.selfCenter,
-                    utilSpacing.mb1,
-                    banner.textWhite && styles.textWhite,
-                  ]}
-                  text={banner.title}
-                ></Text>
+              <Image
+                style={[styles.image, utilSpacing.mr3, { width: "100%", height: "100%" }]}
+                source={userStore.countryId === 1 ? images.welcome : images.welcomeUs}
+              ></Image>
+              <View style={[styles.containerText, utilFlex.flex1, { justifyContent: "flex-end" }]}>
+                <View style={utilSpacing.mb4}>
+                  <Button onPress={onPressWelcomeBanner} tx="banner.whatIsIt"></Button>
+                </View>
+              </View>
+            </TouchableOpacity>
+          )}
+          {data?.map((banner, index) => (
+            <TouchableOpacity
+              key={banner.id}
+              activeOpacity={0.7}
+              style={[styles.containerImage, utilSpacing.mr3, index === 0 && utilSpacing.ml5]}
+              onPress={() => onBannerPress(banner)}
+            >
+              <Image style={[styles.image, utilSpacing.mr3]} source={{ uri: banner.image }}></Image>
+
+              <View
+                style={[
+                  styles.containerText,
+                  utilFlex.flex1,
+                  utilFlex.flexCenter,
+                  utilFlex.flexRow,
+                ]}
+              >
+                <View style={[utilFlex.flex1, utilSpacing.mx4]}>
+                  <Text
+                    preset="bold"
+                    style={[
+                      styles.title,
+                      utilFlex.selfCenter,
+                      utilSpacing.mb1,
+                      banner.textWhite && styles.textWhite,
+                    ]}
+                    text={banner.title}
+                  ></Text>
+                  <Text
+                    preset="semiBold"
+                    style={[
+                      styles.description,
+                      utilSpacing.mt2,
+                      utilFlex.selfCenter,
+                      banner.textWhite && styles.textWhite,
+                    ]}
+                    text={banner.description}
+                  ></Text>
+                  {banner.buttonText?.trim().length > 0 && (
+                    <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
+                  )}
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+
+          {bannerStore.showNewChefs && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles.containerImage, utilSpacing.mr3]}
+              onPress={onPressNewChefsBanner}
+            >
+              <Image style={[styles.image, { left: 0, top: -20 }]} source={images.banner3}></Image>
+              <View style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter]}>
                 <Text
                   preset="semiBold"
-                  style={[
-                    styles.description,
-                    utilSpacing.mt2,
-                    utilFlex.selfCenter,
-                    banner.textWhite && styles.textWhite,
-                  ]}
-                  text={banner.description}
+                  style={[styles.description, styles.textWhite]}
+                  tx="banner.tryNewFlavors"
                 ></Text>
-                {banner.buttonText?.trim().length > 0 && (
-                  <Button onPress={() => onBannerPress(banner)} text={banner.buttonText}></Button>
-                )}
+                <Text
+                  preset="bold"
+                  style={[styles.title, styles.textWhite, utilSpacing.mt3]}
+                  tx="banner.newChefs"
+                ></Text>
+
+                <Button onPress={onPressNewChefsBanner} tx="banner.toKnow"></Button>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
-
-        {bannerStore.showNewChefs && (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles.containerImage, utilSpacing.mr3]}
-            onPress={onPressNewChefsBanner}
-          >
-            <Image style={[styles.image, { left: 0, top: -20 }]} source={images.banner3}></Image>
-            <View style={[styles.containerText, utilFlex.flex1, utilFlex.flexCenter]}>
-              <Text
-                preset="semiBold"
-                style={[styles.description, styles.textWhite]}
-                tx="banner.tryNewFlavors"
-              ></Text>
-              <Text
-                preset="bold"
-                style={[styles.title, styles.textWhite, utilSpacing.mt3]}
-                tx="banner.newChefs"
-              ></Text>
-
-              <Button onPress={onPressNewChefsBanner} tx="banner.toKnow"></Button>
-            </View>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+      ) : (
+        <SkeletonBanner></SkeletonBanner>
+      )}
     </View>
   )
 })
