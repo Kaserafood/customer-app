@@ -37,7 +37,7 @@ export const ModalCoupon = (props: ModalCouponProps) => {
           setIsValidCoupon(true)
 
           let text = ""
-          if (response.type === "percent") {
+          if (response.type === "percentage") {
             text = getI18nText("modalCoupon.discountApply", {
               percent: `${parseInt(response.discountAmount.toString()).toString()}%`,
             })

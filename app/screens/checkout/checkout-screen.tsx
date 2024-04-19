@@ -284,9 +284,11 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         taxId: taxId,
         uuid: getUniqueId(),
         paymentMethodId: getPaymentMethodId(),
-        paymentMethod: getPaymentMethodId() ? "card" : "cod", // Contra entrega o pago con tarjeta
+        paymentMethod: getPaymentMethodId() ? "card" : "cash", // Contra entrega o pago con tarjeta
         couponCode: coupon?.code,
         total: cartStore.calculateTotalForDishes(priceDelivery()),
+        discount: cartStore.discount,
+        couponType: coupon?.type,
       }
 
       orderStore
@@ -379,27 +381,20 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
 
       // Add chef id
       data.push({
-        key: "_dokan_vendor_id",
+        key: "chef_id",
         value: `${commonStore.currentChefId}`,
       })
 
       // Add delivery time
       data.push({
-        key: "dokan_delivery_time_slot",
+        key: "delivery_time",
         value: `${labelDeliveryTime}`,
       })
 
       // Add delivery date
       data.push({
-        key: "dokan_delivery_time_date",
+        key: "delivery_date",
         value: dayStore.currentDay.date,
-      })
-
-      // Add tax of the customer
-
-      data.push({
-        key: "_billing_taxid",
-        value: taxId,
       })
 
       data.push({
@@ -421,12 +416,6 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
         key: "app_version",
         value: getVersion(),
       })
-
-      if (cartStore.taxPercentage > 0)
-        data.push({
-          key: "_tax_amount",
-          value: `${cartStore.calculateTaxAmount(priceDelivery(), plansStore.price)}`,
-        })
 
       return data
     }

@@ -4,8 +4,7 @@ import React, { FC, useEffect } from "react"
 import { StyleSheet, View } from "react-native"
 import { ScrollView } from "react-native-gesture-handler"
 
-import { Card, Header, Icon, Price, Screen, Separator, Text } from "../../components"
-import { TxKeyPath } from "../../i18n"
+import { Card, Header, Price, Screen, Separator, Text } from "../../components"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
 import { goBack } from "../../navigators/navigation-utilities"
@@ -123,13 +122,19 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
                     style={utilFlex.flex1}
                     preset="semiBold"
                     caption
-                    tx="common.subtotal"
+                    tx="common.deliveryAmount"
                   ></Text>
-                  <Price
-                    preset="simple"
-                    amount={params.total - orderStore.orderDetail?.deliveryPrice ?? 0}
-                    currencyCode={params.currencyCode}
-                  ></Price>
+
+                  {orderStore.orderDetail?.deliveryPrice > 0 ? (
+                    <Price
+                      preset="simple"
+                      textStyle={utilText.bold}
+                      amount={orderStore.orderDetail?.deliveryPrice}
+                      currencyCode={params.currencyCode}
+                    ></Price>
+                  ) : (
+                    <Text tx="common.free" style={utilText.semiBold}></Text>
+                  )}
                 </View>
 
                 <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
@@ -137,14 +142,30 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
                     style={utilFlex.flex1}
                     preset="semiBold"
                     caption
-                    tx="common.deliveryAmount"
+                    tx="common.subtotal"
                   ></Text>
                   <Price
                     preset="simple"
-                    amount={orderStore.orderDetail?.deliveryPrice ?? 0}
+                    amount={params.total + (orderStore.orderDetail?.discount ?? 0)}
                     currencyCode={params.currencyCode}
                   ></Price>
                 </View>
+
+                {orderStore.orderDetail?.discount > 0 && (
+                  <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
+                    <Text
+                      style={utilFlex.flex1}
+                      preset="semiBold"
+                      caption
+                      tx="common.discount"
+                    ></Text>
+                    <Price
+                      preset="simple"
+                      amount={orderStore.orderDetail?.discount}
+                      currencyCode={params.currencyCode}
+                    ></Price>
+                  </View>
+                )}
 
                 <View style={[utilFlex.flexRow, utilSpacing.mb3]}>
                   <Text style={utilFlex.flex1} preset="bold" tx="common.total"></Text>
@@ -163,24 +184,6 @@ export const OrderDetailScreen: FC<StackScreenProps<NavigatorParamList, "orderDe
     )
   },
 )
-
-const StateItem = (params: { status: TxKeyPath; isActive?: boolean; isHideLine?: boolean }) => {
-  const { status, isActive, isHideLine } = params
-  return (
-    <View style={utilFlex.flexRow}>
-      <View style={utilFlex.flexColumn}>
-        <Icon
-          style={utilFlex.selfCenter}
-          name={isActive ? "heart" : "heart1"}
-          color={color.primary}
-          size={30}
-        ></Icon>
-        {!isHideLine && <View style={[styles.line, utilFlex.selfCenter]}></View>}
-      </View>
-      <Text preset="bold" style={[utilSpacing.mt3, utilSpacing.ml4]} tx={status}></Text>
-    </View>
-  )
-}
 
 const styles = StyleSheet.create({
   line: {

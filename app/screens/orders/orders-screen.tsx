@@ -12,8 +12,8 @@ import { goBack } from "../../navigators/navigation-utilities"
 import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color, spacing, typography } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
-import { getI18nText } from "../../utils/translate"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { getI18nText } from "../../utils/translate"
 
 const mixpanel = getInstanceMixpanel()
 

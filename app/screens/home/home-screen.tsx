@@ -43,7 +43,6 @@ import { Banner } from "./banner"
 import { DataState, ListChef } from "./chef-list"
 import { DishParams } from "./dish.types"
 import { ModalWelcome } from "./modal-welcome"
-import PopularDishes from "./popular-dishes"
 
 const modalStateWhy = new ModalStateHandler()
 const modalStateLocation = new ModalStateHandler()
@@ -401,7 +400,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           onScroll={onScroll}
         >
-          <PopularDishes onPressDish={(dish) => toDetail(dish)}></PopularDishes>
+          {/* <PopularDishes onPressDish={(dish) => toDetail(dish)}></PopularDishes> */}
 
           {/* <Categories
             categories={categoryStore.categories}

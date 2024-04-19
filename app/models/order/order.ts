@@ -37,7 +37,9 @@ const orderModel = types.model("Order").props({
   paymentMethodId: types.union(types.maybeNull(types.number), types.null, types.string),
   paymentMethod: types.maybeNull(types.string),
   couponCode: types.union(types.maybeNull(types.string), types.null),
+  couponType: types.maybeNull(types.string),
   total: types.maybeNull(types.number),
+  discount: types.maybeNull(types.number),
 })
 
 const orderOverviewModel = types.model("OrderOverview").props({
@@ -59,6 +61,7 @@ const orderDetail = orderOverviewModel.props({
   paymentMethod: types.maybeNull(types.string),
   deliveryPrice: types.maybeNull(types.number),
   paymentPending: types.maybeNull(types.number),
+  discount: types.maybeNull(types.number),
 })
 
 const couponModel = types.model("Coupon").props({
