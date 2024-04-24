@@ -639,13 +639,6 @@ export class Api {
   /**
    * @description Get plan config
    */
-  async getPlanConfig(): Promise<ValueResponse> {
-    return await this.request({}, `/plans/config`, "GET")
-  }
-
-  /**
-   * @description Get plan config
-   */
   async uploadInvoice(formData: any): Promise<ValueResponse> {
     return await this.request(formData, `/upload-file`, "POST")
   }

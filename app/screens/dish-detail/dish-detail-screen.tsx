@@ -110,7 +110,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         if (!dishStore.isUpdate) {
           setQuantity(1)
           setTotal(params.price)
-          cartStore.setSubmited(false)
+          cartStore.setSubmitted(false)
         }
 
         if (commonStore.currentChefId !== params.chef.id) {
@@ -175,7 +175,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
     }
 
     const onSubmit = (data) => {
-      if (!cartStore.isSubmited) cartStore.setSubmited(true)
+      if (!cartStore.isSubmited) cartStore.setSubmitted(true)
 
       if (!isValidAddons()) {
         AppEventsLogger.logEvent("IntentAddToCart", 1, {
@@ -211,7 +211,7 @@ export const DishDetailScreen: FC<StackScreenProps<NavigatorParamList, "dishDeta
         return
       }
 
-      cartStore.setSubmited(false)
+      cartStore.setSubmitted(false)
 
       const itemCart: ItemCart = {
         tempId: dishStore.isUpdate ? params.tempId : generateUUID(),

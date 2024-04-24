@@ -369,9 +369,10 @@ export const CheckoutScreen: FC<StackScreenProps<NavigatorParamList, "checkout">
       return cartStore.cart.map((item) => ({
         productId: item.dish.id,
         quantity: item.quantity,
-        price: item.total,
+        price: item.dish.price,
+        total: item.total,
         name: item.dish.title,
-        noteChef: item.noteChef, // Nota que desea agregar el cliente para el chef
+        noteChef: item.noteChef ?? "", // Nota que desea agregar el cliente para el chef
         metaData: item.metaData,
       }))
     }

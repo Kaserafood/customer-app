@@ -164,7 +164,7 @@ export const CartStoreModel = types
       detach(self.cart)
       OneSignal.deleteTags(["dishId", "dishName", "dishPrice", "dishImage", "dishQuantity"])
     },
-    setSubmited(isSubmited: boolean) {
+    setSubmitted(isSubmited: boolean) {
       self.isSubmited = isSubmited
     },
     setDiscount(discount: number) {

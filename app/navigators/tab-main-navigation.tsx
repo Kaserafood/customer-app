@@ -24,7 +24,7 @@ const mixpanel = getInstanceMixpanel()
 export function TabMainNavigation({ navigationRef }) {
   const Tab = createBottomTabNavigator()
   const insets = useSafeAreaInsets()
-  const { userStore, plansStore, messagesStore, addressStore, couponModalStore } = useStores()
+  const { userStore, plansStore, messagesStore } = useStores()
   const openDrawer = () => {
     navigationRef.current.dispatch(DrawerActions.openDrawer())
   }
@@ -47,16 +47,6 @@ export function TabMainNavigation({ navigationRef }) {
       },
     },
   )
-
-  useQuery("credit-config", () => api.getPlanConfig(), {
-    onSuccess(data) {
-      plansStore.setPlanConfig(data.data)
-    },
-    onError: (error) => {
-      console.log(error)
-      messagesStore.showError()
-    },
-  })
 
   useEffect(() => {
     if (userStore.countryId === 1) {
