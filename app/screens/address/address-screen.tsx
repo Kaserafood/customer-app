@@ -13,9 +13,8 @@ import { NavigatorParamList } from "../../navigators/navigator-param-list"
 import { color } from "../../theme"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { GUATEMALA } from "../../utils/constants"
-import { getMaskLength } from "../../utils/mask"
-import { saveString } from "../../utils/storage"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
+import { saveString } from "../../utils/storage"
 
 const mixpanel = getInstanceMixpanel()
 
@@ -127,7 +126,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                 styleContainer={utilSpacing.mb6}
                 rules={{
                   minLength: {
-                    value: getMaskLength(countryStore.selectedCountry?.maskPhone || ""),
+                    value:9,
                     message:
                       userStore.countryId === GUATEMALA
                         ? "registerFormScreen.phoneFormatIncorrectGt"
@@ -135,7 +134,7 @@ export const AddressScreen: FC<StackScreenProps<NavigatorParamList, "address">> 
                   },
                 }}
                 labelTx="addressScreen.phoneDelivery"
-                mask={countryStore.selectedCountry?.maskPhone}
+                mask={"[0000]-[0000]"}
               ></InputText>
             </FormProvider>
           </View>

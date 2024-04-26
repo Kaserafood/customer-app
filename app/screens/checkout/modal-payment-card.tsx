@@ -76,9 +76,9 @@ export const ModalPaymentCard = forwardRef(
       commonStore.setVisibleLoading(true)
       const model: Card = {
         name: data.name,
-        number: encrypt(data.number.replace(/\s/g, "")),
-        expirationDate: encrypt(data.expirationDate),
-        cvv: encrypt(data.cvv),
+        number: await encrypt(data.number.replace(/\s/g, "")),
+        expirationDate: await encrypt(data.expirationDate),
+        cvv: await encrypt(data.cvv),
         type: getCardType(data.number).toLocaleLowerCase(),
         address: addressStore.current.address,
         city: addressStore.current.city,
@@ -86,7 +86,7 @@ export const ModalPaymentCard = forwardRef(
         country: addressStore.current.country,
         customerName: `${userStore.displayName}`,
       }
-      __DEV__ && console.log({ model })
+      // __DEV__ && console.log({ model })
       await userStore
         .addPaymentMethod(userStore.userId, model)
         .then(async (res) => {

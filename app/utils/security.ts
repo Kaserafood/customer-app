@@ -1,23 +1,41 @@
-import JSEncrypt from "jsencrypt"
+import forge from "node-forge"
 
 const getPublicKey = () => {
   return `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArj/bWv1t9x0V0GxCsygE
-18THaPyS92u8qvxQ9X+aNDs/OGhxAgLYgS5cPDdbpY7ZULcxdGHn5ILm5bpUZrbg
-Ls3PZgRoBfKBKCeBhv7sn8hwG/yNHvSbmRRcn5IBGqzgutkF9Wt9vLkRI+ZoX3ba
-p1ProjiqTQmg4/VRptcS41nY4odlXyaVZ0imcWYvy94zlT89v8K/tPvB6Ri/LwXz
-xOyiHEoaRCNTN52qeJiN+TqGjs591K3/kb62LRgTSYYtW2ThoPujsYj04748Z65g
-u9afJuvfMq2tTVhwI5yrRgWnrpshBhx2z9AveW9KG53T3IeavfPGSOmIDsrq9Ub4
-EwIDAQAB
------END PUBLIC KEY-----
-`
+  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQ7zkizXaVHusN3UytFqyEXGXD
+  nyPO2ggSkuHEZEOXuBhpxVRgLEcnFWVL3AN5RUNDqe8R4ZRrmFUH2uOlutorw9RM
+  FmJDM3qkBietfnAp68sUgQFQ7/sAvL8hR12QWV9l8YFKVRf9gKWBH+/FQCvbD056
+  HDw6aoJpj4e+9+9WBwIDAQAB
+  -----END PUBLIC KEY-----
+  `
 }
 
 export function encrypt(toEncrypt: string): string {
-  const crypt = new JSEncrypt()
-  crypt.setKey(getPublicKey())
-  return crypt.encrypt(toEncrypt) || ""
+  const publicKeyObj = forge.pki.publicKeyFromPem(getPublicKey())
+  const encrypted = publicKeyObj.encrypt(toEncrypt, "RSA-OAEP")
+  const plaintext = forge.util.encode64(encrypted)
+
+  return plaintext
 }
+
+// export function encrypt(toEncrypt: string): Promise<string> {
+//   // RSA.generateKeys(4096) // set key size
+//   //   .then((keys) => {
+//   //     console.log("4096 private:", keys.private) // the private key
+//   //     console.log("4096 public:", keys.public) // the public key
+//   //     RSA.encrypt(toEncrypt, keys.public).then((encodedMessage) => {
+//   //       console.log(`the encoded message is ${encodedMessage}`)
+//   //       RSA.decrypt(encodedMessage, keys.private).then((decryptedMessage) => {
+//   //         console.log(`The original message was ${decryptedMessage}`)
+//   //       })
+//   //     })
+//   //   })
+
+//   // Assuming you have a public key
+//   const publicKeyObj = forge.pki.publicKeyFromPem(getPublicKey())
+//   const encrypted = publicKeyObj.encrypt(toEncrypt, "RSA-OAEP")
+//   return forge.util.encode64(encrypted)
+// }
 
 export function generateUUID(): string {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {

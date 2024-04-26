@@ -1,6 +1,6 @@
 import { StackScreenProps } from "@react-navigation/stack"
 import { observer } from "mobx-react-lite"
-import React, { FC, useEffect, useLayoutEffect } from "react"
+import React, { FC, useLayoutEffect } from "react"
 import { Image, StatusBar, StyleSheet, TouchableOpacity, View } from "react-native"
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
@@ -9,16 +9,13 @@ import OneSignal from "react-native-onesignal"
 import changeNavigationBarColor from "react-native-navigation-bar-color"
 import RNUxcam from "react-native-ux-cam"
 import { Button, Text } from "../../components"
-import { setLocaleI18n } from "../../i18n"
 import { useStores } from "../../models"
 import { NavigatorParamList } from "../../navigators"
-import { setCountryId, setLocale } from "../../services/api"
 import { utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { typographySize } from "../../theme/typography"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalStateHandler } from "../../utils/modalState"
-import { ModalCountry } from "./modal-country"
 
 const mixpanel = getInstanceMixpanel()
 const modalCountry = new ModalStateHandler()
@@ -53,26 +50,26 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
     //   // modalCountry.setVisible(true)
     // }, [])
 
-    useEffect(() => {
-      if (countryStore.countries?.length > 0) {
-        const countryId = countryStore.countries[0].id
-        userStore.setCountryId(countryId)
-        setCountryId(countryId)
-        if (countryId === 1) {
-          setLocale("es")
-          setLocaleI18n("es")
-        } else {
-          setLocale("en")
-          setLocaleI18n("en")
-        }
-      }
-    }, [countryStore.countries])
+    // useEffect(() => {
+    //   if (countryStore.countries?.length > 0) {
+    //     const countryId = countryStore.countries[0].id
+    //     userStore.setCountryId(countryId)
+    //     setCountryId(countryId)
+    //     if (countryId === 1) {
+    //       setLocale("es")
+    //       setLocaleI18n("es")
+    //     } else {
+    //       setLocale("en")
+    //       setLocaleI18n("en")
+    //     }
+    //   }
+    // }, [countryStore.countries])
 
-    useEffect(() => {
-      if (!modalCountry.isVisible) {
-        changeNavigationBarColor(color.primary, false, true)
-      }
-    }, [modalCountry.isVisible])
+    // useEffect(() => {
+    //   if (!modalCountry.isVisible) {
+    //     changeNavigationBarColor(color.primary, false, true)
+    //   }
+    // }, [modalCountry.isVisible])
 
     useLayoutEffect(() => {
       changeNavigationBarColor(color.primary, false, true)
@@ -142,7 +139,7 @@ export const InitScreen: FC<StackScreenProps<NavigatorParamList, "init">> = obse
             ></Text>
           </TouchableOpacity>
         </View>
-        <ModalCountry modalState={modalCountry}></ModalCountry>
+        {/* <ModalCountry modalState={modalCountry}></ModalCountry> */}
       </ScrollView>
     )
   },

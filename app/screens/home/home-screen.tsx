@@ -218,12 +218,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "dishes">> = ob
         tokenPagination,
       }
 
-      await Promise.all([
-        dishStore.getAll(params),
-        categoryStore.getAll(),
-        categoryStore.getSeasonal(),
-        dayStore.getDays(RNLocalize.getTimeZone()),
-      ])
+      await Promise.all([dishStore.getAll(params), dayStore.getDays(RNLocalize.getTimeZone())])
         .then(() => {
           if (dayStore.days?.length > 0) {
             if (useCurrentDate) dayStore.setCurrentDay(dayStore.currentDay)

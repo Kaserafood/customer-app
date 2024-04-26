@@ -95,18 +95,14 @@ export class Api {
     // Add a request interceptor
     this.apisauce.axiosInstance.interceptors.request.use(
       async function (config) {
-        if (!countryId) {
-          countryId = await loadString("countryId")
-        }
-
         if (!locale) {
           locale = await loadString("locale")
         }
         //  __DEV__ && console.log("Request: ", JSON.stringify(config, null, 2))
-        config.headers["country-id"] = parseInt(countryId || -1)
+        config.headers["country-id"] = 1
         config.headers["Accept-Language"] = locale
 
-        if (config.url === "/users/login") countryId = null
+        // if (config.url === "/users/login") countryId = null
         return config
       },
       function (error) {
@@ -312,14 +308,6 @@ export class Api {
    */
   async getAllCategories(): Promise<CategoryResponse> {
     return await this.request({}, "/categories", "GET")
-  }
-
-  /**
-   *
-   * @description Get category seasonal
-   */
-  async getCategorySeasonal(): Promise<CategoryResponse> {
-    return await this.request({}, "/categories/seasonal", "GET")
   }
 
   /**

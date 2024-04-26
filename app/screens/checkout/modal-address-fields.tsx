@@ -6,7 +6,6 @@ import { Button, InputText, Modal, Text } from "../../components"
 import { useStores } from "../../models"
 import { utilFlex, utilSpacing } from "../../theme/Util"
 import { GUATEMALA } from "../../utils/constants"
-import { getMaskLength } from "../../utils/mask"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 import { ModalState } from "../../utils/modalState"
 
@@ -17,7 +16,7 @@ interface Props {
 const mixpanel = getInstanceMixpanel()
 
 const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
-  const { countryStore, userStore } = useStores()
+  const { userStore } = useStores()
 
   const methods = useForm({ mode: "onBlur" })
 
@@ -68,7 +67,7 @@ const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
               styleContainer={utilSpacing.mb4}
               rules={{
                 minLength: {
-                  value: getMaskLength(countryStore.selectedCountry?.maskPhone || ""),
+                  value: 9,
                   message:
                     userStore.countryId === GUATEMALA
                       ? "registerFormScreen.phoneFormatIncorrectGt"
@@ -76,7 +75,7 @@ const ModalAddressFields: FC<Props> = ({ state, onOkPress }) => {
                 },
               }}
               labelTx="addressScreen.phoneDelivery"
-              mask={countryStore.selectedCountry?.maskPhone}
+              mask={"[0000]-[0000]"}
             ></InputText>
           </View>
 

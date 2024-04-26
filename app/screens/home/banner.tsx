@@ -5,7 +5,6 @@ import { Dimensions, Image, Platform, StyleSheet, TouchableOpacity, View } from 
 import { AppEventsLogger } from "react-native-fbsdk-next"
 import { ScrollView } from "react-native-gesture-handler"
 
-import { useNavigation } from "@react-navigation/native"
 import { observer } from "mobx-react-lite"
 import { useQuery } from "react-query"
 import images from "../../assets/images"
@@ -26,11 +25,10 @@ const windowWidth = Dimensions.get("window").width
 
 export const Banner = observer((props: PropsBanner) => {
   const { onPressWelcome, onPressNewChefs, onBannerPress } = props
-  const navigation = useNavigation()
 
   const { bannerStore, userStore } = useStores()
 
-  const { data = [] } = useQuery("banners", () => bannerStore.getAll())
+  const { data = [], isFetched } = useQuery("banners", () => bannerStore.getAll())
 
   useEffect(() => {
     ;(async () => {
@@ -58,7 +56,7 @@ export const Banner = observer((props: PropsBanner) => {
 
   return (
     <View>
-      {data.length > 0 ? (
+      {data.length > 0 || isFetched ? (
         <ScrollView horizontal style={[utilFlex.flexRow, utilSpacing.mb4]}>
           {bannerStore.showWelcome && (
             <TouchableOpacity

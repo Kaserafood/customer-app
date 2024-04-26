@@ -18,10 +18,10 @@ interface ModalCountryProps {
 export const ModalCountry = observer(({ modalState }: ModalCountryProps) => {
   const { countryStore, userStore } = useStores()
 
-  useEffect(() => {
-    // modalState.setVisible(true)
-    countryStore.getAll()
-  }, [])
+  // useEffect(() => {
+  //   // modalState.setVisible(true)
+  //   countryStore.getAll()
+  // }, [])
 
   useEffect(() => {
     const country = countryStore.selectedCountry

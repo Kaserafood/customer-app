@@ -20,7 +20,6 @@ import { spacing } from "../../theme"
 import { utilFlex, utilSpacing, utilText } from "../../theme/Util"
 import { color } from "../../theme/color"
 import { GUATEMALA, UNITED_STATES } from "../../utils/constants"
-import { getMaskLength } from "../../utils/mask"
 import { getInstanceMixpanel } from "../../utils/mixpanel"
 
 const hideTextFields = {
@@ -256,14 +255,14 @@ export const RegisterFormScreen: FC<
                 rules={{
                   required: "registerFormScreen.phoneRequired",
                   minLength: {
-                    value: getMaskLength(countryStore.selectedCountry.maskPhone),
+                    value: 9,
                     message:
                       userStore.countryId === GUATEMALA
                         ? "registerFormScreen.phoneFormatIncorrectGt"
                         : "registerFormScreen.phoneFormatIncorrect",
                   },
                 }}
-                mask={countryStore.selectedCountry.maskPhone}
+                mask={"[0000]-[0000]"}
                 prefix={
                   <TouchableOpacity
                     activeOpacity={0}
@@ -271,10 +270,7 @@ export const RegisterFormScreen: FC<
                       fieldPhone?.current.focus()
                     }}
                   >
-                    <Text
-                      style={[utilSpacing.ml3, utilText.textGray]}
-                      text={countryStore.selectedCountry.prefixPhone}
-                    ></Text>
+                    <Text style={[utilSpacing.ml3, utilText.textGray]} text={"+502"}></Text>
                   </TouchableOpacity>
                 }
               ></InputText>
